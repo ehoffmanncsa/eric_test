@@ -1,0 +1,41 @@
+# New recruit creds
+recruit:
+  firstname: 'qa'
+  lastname: 'automation'
+  homePhonePh1: '408'
+  homePhonePh2: '222'
+  homePhonePh3: '3333'
+  parent1FirstName: 'mom'
+  parent1LastName: 'mom'
+  parent1PhonePh1: '408'
+  parent1PhonePh2: '333'
+  parent1PhonePh3: '2222'
+
+# Admin login
+admin:
+  username: 'trea'
+  password: 'Secure.123'
+
+# Browser viewport sizes
+viewport:
+  desktop:
+    width: 1366
+    height: 800
+  ipad:
+    width: 768
+    height: 800
+  iphone:
+    width: 320
+    height: 800
+
+# Applitool keys
+applitool:
+  apikey: 'GFQTsnb1ZrKslZ1T217BddUZ2tp0UaB9geadrZ8uGYg110'
+  viewkey: 'P9zuZaromHL6j9e8lpKsn1v6V107glO5IhPLIY1rDT51E110'
+
+# Daily Monitor start points
+pages:
+  home_page: 'http://www.ncsasports.org/'
+  cost_page: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
+  review_page: 'www.ncsasports.org/ncsa-reviews'
+  events_page: 'www.ncsasports.org/events'
