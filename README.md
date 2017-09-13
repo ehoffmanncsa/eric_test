@@ -14,18 +14,18 @@ b. After installing, enable Command Line Tools in Preferences (or my favorite te
 
 c. To verify that it installed properly:
 
-  $ gcc --version
+    $ gcc --version
 
 ### Install Homebrew
 (Homebrew is needed for installing RVM)
 
 a. Type in Console:
 
-  $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go/install)"
+    $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go/install)"
 
 b. To cleanup intall, run:
 
-  $ brew doctor
+    $ brew doctor
 
  _See also [https://rvm.io/rvm/autolibs](https://rvm.io/rvm/autolibs) for brew questions etc (optional)._
 
@@ -33,12 +33,12 @@ b. To cleanup intall, run:
 ### Install RVM and Ruby
 a. Install RVM:
 
-  $ curl -sSL https://get.rvm.io | bash
+    $ curl -sSL https://get.rvm.io | bash
   
 b. Exit terminal and restart.
 c. Install version of Ruby we use:
 
-  $ rvm install <version> (Right now I'm using 2.4.0)
+    $ rvm install <version> (Right now I'm using 2.4.0)
   
 d. Last step:
   
@@ -46,7 +46,7 @@ d. Last step:
 
 **Note:** Follow the steps in the warning it generates - add the following line to '~/.bash_profile': source ~/.profile, you can do this with this command: 
 
-  $ echo source ~/.profile >> ~/.bash_profile
+    $ echo source ~/.profile >> ~/.bash_profile
 
 e. If you have multiple ruby binaries, you can use this command to set the default to the version installed in step 3b:
   
@@ -70,14 +70,20 @@ b. Run:
 c. Confirm path with:
   
     $ which git
-  (should be /usr/local/bin/git) 
+    (should be /usr/local/bin/git) 
 
-  If not, use below command
-  $ echo 'export PATH="/usr/local/bin:/usr/local/sbin:~/bin:$PATH"' >> ~/.bash_profile
+    If not, use below command
+    $ echo 'export PATH="/usr/local/bin:/usr/local/sbin:~/bin:$PATH"' >> ~/.bash_profile
 
 d. Setup configs:
   
     $ git config --global user.name "Mona Lisa"
+    $ git config user.name
+    > Mona Lisa
+    
+    $ git config --global user.email "email@example.com"
+    $ git config --global user.email
+    > email@example.com
 
 
 e. For more info on git settings/configs, click [here](https://help.github.com/articles/setting-your-username-in-git/)
@@ -86,9 +92,9 @@ f. To learn how to generate SSH key and add the key to your github, click [here]
 
 Last but not least, clone this repo. There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use). cd into the repo and do:
 
-  $ rvm gemset create qa (or whichever name you like it to be)
+    $ rvm gemset create qa (or whichever name you like it to be)
     $ rvm --default use ruby-2.4.0@qa 
-  $ gem install bundler
+    $ gem install bundler
     $ bundle install
 
 ### Ready - Set - Go!
