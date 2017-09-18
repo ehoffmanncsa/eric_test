@@ -1,45 +1,68 @@
 # encoding: utf-8
 require 'selenium-webdriver'
-require 'watir'
 
 class RemoteUI
-  def initialize
+
+  attr_accessor :driver
+
+  def initialize browser
     # Input capabilities
     caps = Selenium::WebDriver::Remote::Capabilities.new
-    caps['browser'] = 'chrome'
-    caps['browser_version'] = '60.0'
-    caps['os'] = 'OS X'
-    caps['os_version'] = 'Sierra'
-    caps['resolution'] = '1024x768'
+    caps['browser'] = browser
+    caps['resolution'] = '1600x1200'
+
+    case browser
+      when 'IE'
+        caps['os'] = 'Windows'
+        caps['os_version'] = '10'
+        caps['browser_version'] = '11.0'
+      when 'Edge'
+        caps['os'] = 'Windows'
+        caps['os_version'] = '10'
+      else
+        caps['os'] = 'OS X'
+        caps['os_version'] = 'Sierra'
+    end
+
     caps['browserstack.debug'] = true
     caps['browserstack.networkLogs'] = true
 
-    @driver = Selenium::WebDriver.for(
+    self.driver = Selenium::WebDriver.for(
       :remote,
-      url: "http://ncsadevelopers1:qJE6Y3NPPHD9YEwyp3bs@hub-cloud.browserstack.com/wd/hub",
+      url: 'http://tiffanyrea1:H6g4QMJ4wQwoWRwEuesF@hub-cloud.browserstack.com/wd/hub',
       desired_capabilities: caps)
   end
 
-  def goto(url)
-    @driver.navigate.to url
+  # def action
+  #   return self.driver
+  # end
 
-    @driver
-  end
+  # def goto url
+  #   self.driver.navigate.to url
+  # end
 
-  def admin_login(username, password)
-    page = @driver.goto('http://qa.ncsasports.org/ncsa-cas/login?' \
-             'service=https%3A%2F%2Fqa.ncsasports.org%2F' \
-             'fasttrack%2Fj_spring_cas_security_check')
+  # def wait_for seconds
+  #   self.driver.manage.timeouts.implicit_wait = seconds
+  # end
 
-    page.find_element(id: 'username').send_key username
-    page.find_element(id: 'password').send_key password
-    page.find_element(name: 'submit').click
-    raise '[ERROR] Cannot find fasttrack login page' unless @page.title =~ /Login/
+  # def resize_to width, height
+  #   self.driver.manage.window.resize_to(width, height)
+  # end
 
-    page
-  end
+  # def admin_login username, password
+  #   page = self.driver.goto('http://qa.ncsasports.org/ncsa-cas/login?' \
+  #            'service=https%3A%2F%2Fqa.ncsasports.org%2F' \
+  #            'fasttrack%2Fj_spring_cas_security_check')
 
-  def close
-    @driver.quit
-  end
+  #   page.find_element(id: 'username').send_key username
+  #   page.find_element(id: 'password').send_key password
+  #   page.find_element(name: 'submit').click
+  #   raise '[ERROR] Cannot find fasttrack login page' unless @page.title =~ /Login/
+
+  #   return page
+  # end
+
+  # def close
+  #   self.driver.quit
+  # end
 end
