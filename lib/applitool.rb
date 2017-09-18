@@ -9,18 +9,18 @@ class Applitool
     self.eyes = Applitools::Selenium::Eyes.new
     eyes.api_key = api_key
     eyes.force_full_page_screenshot = true
-    #eyes.use_css_transition = true;
     eyes.hide_scrollbars = true
-    eyes.match_timeout = 3
     eyes.match_level = match_level
+    eyes.stitch_mode = :css
   end
 
   def action
     return eyes
   end
 
-  def open driver, test_name
-    eyes.open(driver: driver, app_name: 'NCSA WWW', test_name: test_name)
+  def open driver, test_name, width, height
+    eyes.open(driver: driver, app_name: 'NCSA WWW', test_name: test_name,
+              viewport_size: { width: width, height: height })
   end
 
   def screenshot pic_name
