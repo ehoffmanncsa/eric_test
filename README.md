@@ -109,12 +109,12 @@ There is a simple Rake task to run all test scripts that ends with "_test.rb" in
 If you only want to run a single test, go into the directory of this repo on your local machine
 
     $ cd qa_regression
-    $ ruby test/<dir_name/<test_name_test.rb>
+    $ ruby test/<dir_name>/<test_name_test.rb>
     
 If you wanna run only 1 test method of a test script, do this
 
-    $ ruby test/<dir_name/<test_name_test.rb> -n test_method_name
+    $ ruby test/<dir_name>/<test_name_test.rb> -n test_method_name
 
 **Important:** Always remember to do "git pull" to run the latest code!
 
-### Ready - Set - Go!
+## Ready - Set - Go!
