@@ -30,7 +30,7 @@ class EventsPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-121 Test Events Page', width, height
       @browser.get @events_page
-      assert @browser.title.match(/Sports Camps and Events Calendar/)
+      assert @browser.title.match(/Sports Camps and Events Calendar/), @browser.title
 
       # Take snapshot events page with applitool eyes
       @eyes.check_ignore "Events page #{size.keys} view", @browser.find_element(:class, 'flex-viewport')
@@ -49,7 +49,7 @@ class EventsPageMonitorTest < Minitest::Test
       @browser.get @events_page
 
       # Verify iphone and hamburger exists
-      assert @browser.find_element(:id, 'block-block-62').enabled?
+      assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
 
@@ -68,10 +68,10 @@ class EventsPageMonitorTest < Minitest::Test
 
       %w[Parents Athletes].each do |button|
         @browser.get @events_page
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?
+        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
 
         @browser.find_element(link_text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/)
+        assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
@@ -93,36 +93,35 @@ class EventsPageMonitorTest < Minitest::Test
         @browser.get @events_page
         @browser.find_element(:class, 'fa-bars').click
         button = @browser.find_element(link_text: link_text)
-        assert button.enabled?
         
         case link_text
           when 'Athlete Log In'
             button.click
-            assert @browser.title.match(/Student-Athlete Sign In/)
+            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
             username_input = @browser.find_element(:id, 'user_account_login')
-            assert username_input.displayed?
+            assert username_input.displayed?, 'Username textbox not found'
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
           when 'Coach Log In'
             button.click
-            assert @browser.title.match(/College Coach Login/)
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?
+            assert @browser.title.match(/College Coach Login/), @browser.title
+            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
             @eyes.screenshot "#{size.keys} view - redir to #{link_text} from hamburger menu"
           when 'H.S. Coach'
             button.click
-            assert @browser.title.match(/High School Coach Login/)
-            assert @browser.find_element(link_text: 'Learn More').enabled?
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?
+            assert @browser.title.match(/High School Coach Login/), @browser.title
+            assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
+            assert @browser.find_element(link_text: 'Get Started Now').enabled? 'Get Started button not found'
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
           when 'Parents Start Here'
             @browser.find_element(:class, 'm-nav-start-link--parent').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/)
+            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
 
           when 'Athletes Start Here'
             @browser.find_element(:class, 'm-nav-start-link--athlete').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/)
+            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
         end
       end
 
@@ -133,15 +132,15 @@ class EventsPageMonitorTest < Minitest::Test
   def test_athlete_login_redir
     @browser.get @events_page
     login_button = @browser.find_element(class: 'menu-item-has-children')
-    assert login_button.enabled?
+    assert login_button.enabled?, 'Login button not found'
 
     @browser.action.move_to(login_button).perform
     ['Athlete Profile Login', 'College Coach Login', 'HS Coach Login'].each do |button|
-      assert @browser.find_element(link_text: button).enabled?
+      assert @browser.find_element(link_text: button).enabled?, "#{button} option not found"
     end
 
     @browser.find_element(link_text: 'Athlete Profile Login').click
-    assert @browser.title.match(/Student-Athlete Sign In/)
+    assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
   end
 
   def test_pick_your_sport_redir
@@ -153,19 +152,15 @@ class EventsPageMonitorTest < Minitest::Test
     dropdown = @browser.find_element(name: 'jump')
     options = dropdown.find_elements(tag_name: 'option')
     options.each { |option| (option.click; break) if option.text.strip =~ /Football/ }
-    assert @browser.page_source.match(/Football/)
+    assert @browser.page_source.match(/Football/), @browser.title
 
     #scroll down to trigger teaser image loading first
     @browser.find_elements(:class, 'teaser-image').each do |element|
-      element.location_once_scrolled_into_view
-      sleep 1
+      element.location_once_scrolled_into_view; sleep 0.5
     end
 
-    @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view
-    sleep 1
-
-    @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view
-    sleep 0.5
+    @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view; sleep 0.5
+    @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
     @eyes.screenshot 'Football Camp page desktop viewport'
     @eyes.action.close(false)
