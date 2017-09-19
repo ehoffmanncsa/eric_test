@@ -129,7 +129,7 @@ class ReviewPageMonitorTest < Minitest::Test
             button.click
             assert @browser.title.match(/High School Coach Login/), @browser.title
             assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.find_element(link_text: 'Get Started Now').enabled? 'Get Start button not found'
+            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Start button not found'
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
           when 'Parents Start Here'
