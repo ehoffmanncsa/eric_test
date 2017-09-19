@@ -90,11 +90,28 @@ e. For more info on git settings/configs, click [here](https://help.github.com/a
 
 f. To learn how to generate SSH key and add the key to your github, click [here](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
-Last but not least, clone this repo. There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use). cd into the repo and do:
+Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
+
+    $ git clone https://github.com/NCSAAthleticRecruiting/qa_regression.git
+    
+There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use). cd into the repo and do:
 
     $ rvm gemset create qa (or whichever name you like it to be)
     $ rvm --default use ruby-2.4.0@qa 
     $ gem install bundler
     $ bundle install
+    
+There is a simple Rake task to run all test scripts that ends with "_test.rb" in this repo, all you have to do is run
+
+    $ rake test
+    
+If you only want to run a single test, go into the directory of this repo on your local machine
+
+    $ cd qa_regression
+    $ ruby test/<dir_name/<test_name_test.rb>
+    
+If you wanna run only 1 test method of a test script, do this
+
+    $ ruby test/<dir_name/<test_name_test.rb> -n test_method_name
 
 ### Ready - Set - Go!
