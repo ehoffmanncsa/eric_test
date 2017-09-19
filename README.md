@@ -90,6 +90,7 @@ e. For more info on git settings/configs, click [here](https://help.github.com/a
 
 f. To learn how to generate SSH key and add the key to your github, click [here](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
+### Clone & Run
 Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
 
     $ git clone https://github.com/NCSAAthleticRecruiting/qa_regression.git
@@ -113,5 +114,7 @@ If you only want to run a single test, go into the directory of this repo on you
 If you wanna run only 1 test method of a test script, do this
 
     $ ruby test/<dir_name/<test_name_test.rb> -n test_method_name
+
+**Important:** Always remember to do "git pull" to run the latest code!
 
 ### Ready - Set - Go!
