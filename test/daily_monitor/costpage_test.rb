@@ -30,7 +30,7 @@ class CostPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-119 Test Cost Page', width, height
       @browser.get @costpage
-      assert @browser.title.match(/How much does NCSA Cost/)
+      assert @browser.title.match(/How much does NCSA Cost/), @browser.title
 
       # Take snapshot cost page with applitool eyes
       @eyes.screenshot "Cost page #{size.keys} view"
@@ -49,7 +49,7 @@ class CostPageMonitorTest < Minitest::Test
       @browser.get @costpage
 
       # Verify iphone and hamburger exists
-      assert @browser.find_element(:id, 'block-block-62').enabled?
+      assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
       
@@ -68,10 +68,10 @@ class CostPageMonitorTest < Minitest::Test
 
       %w[Parents Athletes].each do |button|
         @browser.get @costpage
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?
+        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here button not found"
 
         @browser.find_element(link_text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/)
+        assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
@@ -97,31 +97,31 @@ class CostPageMonitorTest < Minitest::Test
         case link_text
           when 'Athlete Log In'
             button.click
-            assert @browser.title.match(/Student-Athlete Sign In/)
+            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
             username_input = @browser.find_element(:id, 'user_account_login')
-            assert username_input.displayed?
+            assert username_input.displayed?, 'Username textbox not found'
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
           when 'Coach Log In'
             button.click
-            assert @browser.title.match(/College Coach Login/)
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?
+            assert @browser.title.match(/College Coach Login/), @browser.title
+            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
             @eyes.action.check_window "hamburger menu redir to #{link_text} #{size.keys} view"
           when 'H.S. Coach'
             button.click
-            assert @browser.title.match(/High School Coach Login/)
-            assert @browser.find_element(link_text: 'Learn More').enabled?
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?
+            assert @browser.title.match(/High School Coach Login/), @browser.title
+            assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
+            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
           when 'Parents Start Here'
             @browser.find_element(:class, 'm-nav-start-link--parent').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/)
+            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
 
           when 'Athletes Start Here'
             @browser.find_element(:class, 'm-nav-start-link--athlete').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/)
+            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
         end
       end
 
@@ -132,14 +132,14 @@ class CostPageMonitorTest < Minitest::Test
   def test_www_athlete_login_redir
     @browser.get @costpage
     login_button = @browser.find_element(class: 'menu-item-has-children')
-    assert login_button.enabled?
+    assert login_button.enabled?, 'Athlete Login button not found'
 
     @browser.action.move_to(login_button).perform
     ['Athlete Profile Login', 'College Coach Login', 'HS Coach Login'].each do |button|
-      assert @browser.find_element(link_text: button).enabled?
+      assert @browser.find_element(link_text: button).enabled?, "#{button} option not found"
     end
 
     @browser.find_element(link_text: 'Athlete Profile Login').click
-    assert @browser.title.match(/Student-Athlete Sign In/)
+    assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
   end
 end
