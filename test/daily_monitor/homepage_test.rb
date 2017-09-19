@@ -65,12 +65,10 @@ class HomePageMonitorTest < Minitest::Test
 
       #scroll down to trigger teaser image loading first
       @browser.find_elements(:class, 'teaser-image').each do |element|
-        element.location_once_scrolled_into_view
-        sleep 1
+        element.location_once_scrolled_into_view; sleep 1
       end
 
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view
-      sleep 0.5
+      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       @eyes.action.close(false)
