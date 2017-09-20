@@ -77,7 +77,6 @@ class ReviewPageMonitorTest < Minitest::Test
 
   def test_parents_athletes_start_here
     @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
       height = size.values[0]['height']
 
