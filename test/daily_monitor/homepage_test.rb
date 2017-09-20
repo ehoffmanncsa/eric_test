@@ -65,7 +65,7 @@ class HomePageMonitorTest < Minitest::Test
 
       #scroll down to trigger teaser image loading first
       @browser.find_elements(:class, 'teaser-image').each do |element|
-        element.location_once_scrolled_into_view; sleep 1
+        element.location_once_scrolled_into_view; sleep 0.5
       end
 
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
