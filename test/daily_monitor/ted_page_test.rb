@@ -42,15 +42,16 @@ class TEDPageMonitorTest < Minitest::Test
     # Find the free demo button 
     assert @browser.find_element(:link_text, 'Request a Free Demo').enabled?, 'Demo button not found'
 
+    # check top-nav, sub menu and coach login button
     if size == 'desktop'
       check_top_nav_and_sub_menu
+      assert @browser.find_element(:link_text, 'Coach Login').enabled?
     else
       check_hamburger_and_sub_menu
     end
 
-    # Verify breadcrum and Coach Login link exisit and clickable on this page
+    # Verify breadcrum is visible on this page
     assert @browser.find_element(:class, 'breadcrumb').displayed?
-    assert @browser.find_element(:link_text, 'Coach Login').enabled?
   end
 
   def check_top_nav_and_sub_menu
@@ -74,7 +75,7 @@ class TEDPageMonitorTest < Minitest::Test
 
     # Check options under burger
     @browser.find_element(:class, 'fa-bars').click; sleep 0.3
-    ['TEAM EDITION', 'WHY NCSA?', 'RESOURCE CENTER', 'GET STARTED'].each do |option|
+    ['Coach Login', 'TEAM EDITION', 'WHY NCSA?', 'RESOURCE CENTER', 'GET STARTED'].each do |option|
       assert @browser.find_element(:link_text, option).enabled?, "Team option #{option} not found"
     end
 
