@@ -10,9 +10,23 @@ It might be helpful if your computer is setup right so that you can execute any 
 ### Get Xcode (from Appstore)
 a. Find Xcode app from Appstore and install it.
 
-b. After installing, enable Command Line Tools in Preferences (or my favorite terminal at the time is iTerm).
+b. After installing, enable Command Line Tools in Preferences (or my favorite terminal at the time is iTerm). Check if the full Xcode package is already installed:
 
-c. To verify that it installed properly:
+    $ xcode-select -p
+
+If you see:
+
+    /Applications/Xcode.app/Contents/Developer
+
+the full Xcode package is already installed. Otherwise:
+
+    $ xcode-select --install
+
+You should see the pop up below on your screen. Click Install when it appears.
+
+Once the software is installed, click Done
+
+c. To verify that it installed properly and has the right version:
 
     $ gcc --version
 
