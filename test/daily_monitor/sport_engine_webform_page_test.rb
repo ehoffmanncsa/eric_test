@@ -12,7 +12,7 @@ class SportEngineWebFormPageMonitorTest < Minitest::Test
       { iphone: config['viewport']['iphone'] },
       { desktop: config['viewport']['desktop'] }
     ]
-    @eyes = Applitool.new config['applitool']['apikey'], 'Content'
+    @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
   end
 

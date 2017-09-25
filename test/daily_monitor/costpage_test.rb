@@ -12,7 +12,7 @@ class CostPageMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @costpage = config['pages']['cost_page']
-    @eyes = Applitool.new config['applitool']['apikey'], 'Content'
+    @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
   end
 
@@ -47,9 +47,9 @@ class CostPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-119 Test Cost Page with Hamburger Menu Open', width, height
       @browser.get @costpage
-
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
+
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
       

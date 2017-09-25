@@ -12,7 +12,7 @@ class EventsPageMonitorTest < Minitest::Test
       { iphone: config['viewport']['iphone'] },
       { desktop: config['viewport']['desktop'] }
     ]
-    @eyes = Applitool.new config['applitool']['apikey'], 'Content'
+    @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
   end
 
@@ -47,9 +47,9 @@ class EventsPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-121 Test Events Page with Hamburger Menu Open', width, height
       @browser.get @events_page
-
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
+
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
 
@@ -157,7 +157,6 @@ class EventsPageMonitorTest < Minitest::Test
     @browser.find_elements(:class, 'teaser-image').each do |element|
       element.location_once_scrolled_into_view; sleep 0.5
     end
-
     @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view; sleep 0.5
     @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 

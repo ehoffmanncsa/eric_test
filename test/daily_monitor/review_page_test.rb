@@ -1,8 +1,5 @@
-
 # encoding: utf-8
-
 require_relative '../test_helper'
-require 'eyes_selenium'
 
 # Daily Mornitor: TS-120
 # UI Test: Daily Monitor - Review Page
@@ -15,7 +12,7 @@ class ReviewPageMonitorTest < Minitest::Test
       { iphone: config['viewport']['iphone'] },
       { desktop: config['viewport']['desktop'] }
     ]
-    @eyes = Applitool.new config['applitool']['apikey'], 'Content'
+    @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
   end
 
@@ -39,7 +36,6 @@ class ReviewPageMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'teaser-image').each do |element|
         element.location_once_scrolled_into_view; sleep 0.5
       end
-
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       # Take snapshot review page with applitool eyes
@@ -57,12 +53,11 @@ class ReviewPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-120 Test Review Page with Hamburger Menu Open', width, height
       @browser.get @review_page
-
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
+
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
-
       #scroll down to trigger teaser image loading first
       @browser.find_elements(:class, 'teaser-image').each do |element|
         element.location_once_scrolled_into_view; sleep 0.5
@@ -148,7 +143,7 @@ class ReviewPageMonitorTest < Minitest::Test
   def test_www_athlete_login_redir
     @browser.get @review_page
     login_button = @browser.find_element(class: 'menu-item-has-children')
-    assert login_button.enabled?, 'Athlete Login button not found'
+    assert login_button.enabled?, 'Login button not found'
 
     @browser.action.move_to(login_button).perform
     ['Athlete Profile Login', 'College Coach Login', 'HS Coach Login'].each do |button|

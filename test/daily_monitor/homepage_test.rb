@@ -12,7 +12,7 @@ class HomePageMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @homepage = config['pages']['home_page']
-    @eyes = Applitool.new config['applitool']['apikey'], 'Content'
+    @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
   end
 
@@ -38,7 +38,6 @@ class HomePageMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'teaser-image').each do |element|
         element.location_once_scrolled_into_view; sleep 0.5
       end
-
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       # Snapshot Homepage with applitool 
@@ -57,12 +56,11 @@ class HomePageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-118 Test Homepage with Hamburger Menu Open', width, height
       @browser.get @homepage
-
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
+
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
-
       #scroll down to trigger teaser image loading first
       @browser.find_elements(:class, 'teaser-image').each do |element|
         element.location_once_scrolled_into_view; sleep 0.5
