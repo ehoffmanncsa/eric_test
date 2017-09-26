@@ -30,6 +30,14 @@ c. To verify that it installed properly and has the right version:
 
     $ gcc --version
 
+This is what i see:
+
+    Configured with: --prefix=/Applications/Xcode.app/Contents/Developer/usr --with-gxx-include-dir=/usr/include/c++/4.2.1
+    Apple LLVM version 9.0.0 (clang-900.0.37)
+    Target: x86_64-apple-darwin16.7.0
+    Thread model: posix
+    InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
 ### Install Homebrew
 (Homebrew is needed for installing RVM)
 
