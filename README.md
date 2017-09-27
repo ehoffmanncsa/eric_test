@@ -127,6 +127,19 @@ There is a Gemfile with a collection of gems I have added on the go (of course w
 There is a simple Rake task to run all test scripts that ends with "_test.rb" in this repo, all you have to do is run
 
     $ rake test
+
+`rake test` is the default rake task. You can run this task by running: 
+
+    $ rake default
+    $ rake test
+    OR
+    $ rake test['<tests directory>'] ... e.g. rake test['daily_monitor']
+    
+Running rake test only will execute tests in all directories within the test/ directory. Providing a directory name will only execute tests within that directory. The work flow is: execute tests once, produce result, run all failed test one more time and give final result.
+
+If you wanna know what rake tasks are available in this repo, run:
+
+    $ rake -T
     
 If you only want to run a single test, go into the directory of this repo on your local machine
 
