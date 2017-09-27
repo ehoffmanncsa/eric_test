@@ -1,20 +1,39 @@
+require 'rake/testtask'
 require 'minitest-ci'
 
 Minitest::Ci.new.start
 
-desc 'run smoke tests in parallel..."'
-task :tests_exec do
-  test_files = FileList['test/**/*_test.rb']
-  test_files.reject! { |e| e.empty? }
-  test_files.each { |f| puts "[INFO] Executing....#{f}" }
+namespace :first_run do 
+  desc 'execute all tests....'
+  task :exec, [:dir] do |t, args|
+    puts "[INFO] First run attempt"
 
-  begin
-    Rake::TestTask.new do |t|
-      t.test_files = FileList[test_files]
-      t.verbose = false
-      t.warning = false  
+    args.with_defaults(dir: '**')
+    test_files = FileList["test/#{args.dir}/*_test.rb"]
+    test_files.reject! { |e| e.empty? }
+
+    test_files.each do |file|
+      puts "\n[INFO] Executing ..... #{file}"
+      begin
+        Rake::TestTask.new(file) do |t|
+          t.test_files = FileList[file]
+          t.verbose = false
+          t.warning = false
+        end
+
+        task(file).execute
+      rescue StandardError => e
+        puts "Rake Rescue: failures/errors #{e} running #{file}"
+      end
     end
-  rescue StandardError => e
-    puts "Rake Rescue: failures/errors running #{e}"
+  end
+
+  desc 'display test run results....'
+  task :result do
+    begin 
+      ruby 'calc.rb'
+    rescue StandardError => e
+      pp "[ERROR] Running calc.rb - #{e}"
+    end
   end
 end

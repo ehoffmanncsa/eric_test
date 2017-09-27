@@ -1,15 +1,15 @@
+#!/usr/bin/env ruby
 require 'rake/testtask'
-require 'parallel'
-require 'rake'
 
 # save tasks in the tasks dir to keep this Rakefile cleaner
-Dir.glob("#{File.expand_path('../tasks', __FILE__)}/*.rake").each { |f| import f }
+tasks = '../tasks/*.rake'
+Dir.glob(File.expand_path(tasks, __FILE__)) { |f| import f }
 
-task :test do
-  task(:tests_exec).execute
-  # task(:tests_result).execute
-  # task(:tests_rerun).execute
-  # task(:tests_result).execute
-end
-
+# default rake task is test task
+# you can run this task by running: rake default, rake test, rake test <directory name>
+# running rake test only will execute tests in all directories within the test/ directory
+# providing a directory name will only execute tests within that directory
+# the work flow is: execute tests once, produce results,
+# run all failed test one more time and give final result
 task default: :test
+task :test, [:dir] => ['first_run:exec', 'first_run:result', 'second_run:exec', 'second_run:result'] do |t, arg|; end
