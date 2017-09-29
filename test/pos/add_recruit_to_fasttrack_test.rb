@@ -39,13 +39,6 @@ class AddRecruitToFasttrackTest < Minitest::Test
 
     assert @browser.find_element(:class, 'dataTables_wrapper').displayed?, 'Cannot find search result data table'
 
-    # begin
-    #   wait.until { @browser.find_element(:class, 'dataTables_wrapper').displayed? }
-    # rescue StandardError => e
-    #   puts "[ERROR] #{e}"
-    #   exit
-    # end
-
     table = @browser.find_element(:class, 'breakdowndatatable')
     refute_empty table.find_elements(:tag_name, 'input'), 'Cannot find the buttons in data table'
   end
