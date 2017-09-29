@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require_relative '../../preps/add_new_recruit_to_fasttrack'
 
 # TS-38
 # UI Test: POS Regression - How to Add New Recruit to Fasttrack
@@ -38,11 +37,14 @@ class AddRecruitToFasttrackTest < Minitest::Test
     @browser.find_element(:name, 'Submit').click
     @browser.manage.timeouts.implicit_wait = 30
 
-    begin
-      wait.until { @browser.find_element(:class, 'dataTables_wrapper').displayed? }
-    rescue StandardError => e
-      puts "[ERROR] #{e}"
-    end
+    assert @browser.find_element(:class, 'dataTables_wrapper').displayed?, 'Cannot find search result data table'
+
+    # begin
+    #   wait.until { @browser.find_element(:class, 'dataTables_wrapper').displayed? }
+    # rescue StandardError => e
+    #   puts "[ERROR] #{e}"
+    #   exit
+    # end
 
     table = @browser.find_element(:class, 'breakdowndatatable')
     refute_empty table.find_elements(:tag_name, 'input'), 'Cannot find the buttons in data table'

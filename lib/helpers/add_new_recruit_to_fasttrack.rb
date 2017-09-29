@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative '../test/test_helper'
+require_relative '../../test/test_helper'
 require 'securerandom'
 
 # TS-38
@@ -58,7 +58,7 @@ class FasttrackAddNewRecruit
       @browser.find_element(:name, email).send_key addr
 
       if email.eql? 'emailPrimary'
-        open('recruit_emails', 'a') { |f| f << "#{addr}, " }
+        open('recruit_emails', 'a') { |f| f << "#{addr}," }
         @recruit_email = addr
       end
     end
@@ -79,8 +79,12 @@ class FasttrackAddNewRecruit
 
     btn = @browser.find_elements(:name, '/lead/Submit').last
     @browser.find_element(:id, 'footer').location_once_scrolled_into_view; sleep 0.1; btn.click
+
+    raise "[ERROR] Not successfully added new recruit" unless @browser.current_url.include? "lead/GeneralInfoSubmit.do"
     @browser.quit
 
     @recruit_email
   end
 end
+
+#https://qa.ncsasports.org/fasttrack/lead/GeneralInfoSubmit.do

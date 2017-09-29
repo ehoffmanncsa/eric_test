@@ -7,3 +7,11 @@
 # Gemfile.lock #
 ################
 Gemfile.lock
+
+# Recruit emails list #
+#######################
+recruit_emails
+
+# Test Reports #
+################
+test/reports/*
