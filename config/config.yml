@@ -1,7 +1,7 @@
 # New recruit creds
 recruit:
-  firstname: 'qa'
-  lastname: 'automation'
+  firstName: 'qa'
+  lastName: 'automation'
   homePhonePh1: '408'
   homePhonePh2: '222'
   homePhonePh3: '3333'
@@ -13,7 +13,7 @@ recruit:
 
 # Admin login
 admin:
-  username: 'trea'
+  username: 'automation'
   password: 'Secure.123'
 
 # Browser viewport sizes
@@ -46,3 +46,4 @@ pages:
   contact_us_page: 'http://www.ncsasports.org/contact-us-address'
   press_media_page: 'http://www.ncsasports.org/about-us/press-media'
   site_map: 'http://www.ncsasports.org/sitemap.xml'
+  fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
