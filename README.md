@@ -121,8 +121,9 @@ Last but not least, clone this repo (make sure your current directory is where y
 
     $ git clone https://github.com/NCSAAthleticRecruiting/qa_regression.git
     
-There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use). cd into the repo and do:
+There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use)
 
+    $ cd qa_regression
     $ rvm gemset create qa (or whichever name you like it to be)
     $ rvm --default use ruby-2.4.0@qa 
     $ gem install bundler
