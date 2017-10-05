@@ -70,7 +70,7 @@ class POSSetup
   end
 
   def setup_billing
-    @ui.wait(20) { @browser.find_elements(:class, 'custom-select')[2].displayed? }
+    @ui.wait(45) { @browser.find_elements(:class, 'custom-select')[2].displayed? }
 
     # fill out registration form
     specialists = @browser.find_elements(:class, 'custom-select')[1]
@@ -172,5 +172,3 @@ class POSSetup
     [membership, firt_pymt]
   end
 end
-
-#POSSetup.new.setup('automatione7d4@ncsasports.org', 'automatione7d4', 'mvp')
