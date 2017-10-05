@@ -8,7 +8,7 @@ class EnrollEliteSeniorTest < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
-    # add a new freshman recruit, get back his email address and username
+    # add a new senior recruit, get back his email address and username
     grad_year = 'senior'; @package = 'elite'
     @recruit_email, @username = FasttrackAddNewRecruit.new.main(grad_year)
   end
