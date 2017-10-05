@@ -3,11 +3,10 @@ require_relative '../../test/test_helper'
 require 'securerandom'
 
 # TS-38
-# To add new recruit via Fasttrack
+# To add new recruit via Fasttrack and return his email and username
 class FasttrackAddNewRecruit
   def initialize
     config = YAML.load_file('config/config.yml')
-
     username = config['admin']['username']
     password = config['admin']['password']
     @info = config['recruit']
@@ -15,6 +14,8 @@ class FasttrackAddNewRecruit
     @ui = LocalUI.new(true)
     @browser = @ui.driver
     @wait = @ui.wait
+
+    @username = "automation#{SecureRandom.hex(2)}"
   end
 
   def goto_recruit_info_form
@@ -32,42 +33,71 @@ class FasttrackAddNewRecruit
     @info.each do |attribute, value|
       @browser.find_element(:name, attribute).send_key value
     end
-    sleep 0.5
   end
 
   def select_dropdowns
-    %w[gender eventID highSchoolStateId highSchoolId 
-       sport highSchoolGradYear primaryPhoneType
-       parent1Relationship parent1PrimaryPhoneType
-       scoutID rcUserID].each do |attribute|
-      sleep 0.3; list = @browser.find_element(:name, attribute); sleep 0.3
+    %w[primaryPhoneType parent1Relationship parent1PrimaryPhoneType
+       scoutID rcUserID gender eventID highSchoolStateId sport highSchoolId].each do |attribute|
+      sleep 0.1; list = @browser.find_element(:name, attribute);
       options = list.find_elements(:tag_name, 'option')
+      options.shift
       options.sample.click
     end
   end
 
+  def select_hs_grad_year(enroll_yr = nil)
+    grad_yr = Time.now.year
+    month = Time.now.month
+    case enroll_yr
+      when 'freshman'
+        month > 6 ? grad_yr += 4 : grad_yr += 3
+      when 'sophomore'
+        month > 6 ? grad_yr += 3 : grad_yr += 2
+      when 'junior'
+        month > 6 ? grad_yr += 2 : grad_yr += 1
+      when 'senior'
+        month > 6 ? grad_yr += 1 : grad_yr
+    end
+
+    list = @browser.find_element(:name, 'highSchoolGradYear'); sleep 0.2
+    options = list.find_elements(:tag_name, 'option')
+    options.shift
+
+    if enroll_yr.nil?
+      options.sample.click; sleep 0.2
+    else
+      options.each { |opt| opt.click if (opt.text == grad_yr) }; sleep 0.2
+    end
+  end
+
   def select_attendee
-    sleep 0.3; @browser.find_element(:class, 'mg-btm-1').location_once_scrolled_into_view; sleep 0.5
+    sleep 0.1; @browser.find_element(:class, 'mg-btm-1').location_once_scrolled_into_view; sleep 0.2
     attendees = @browser.find_elements(:name, 'eventAtendees')
     attendees.sample.click
   end
 
   def create_save_emails
     %w[emailPrimary parent1EmailPrimary].each do |email|
-      addr = "automation#{SecureRandom.hex(2)}@ncsasports.org"
-      @browser.find_element(:name, email).send_key addr
+      @recruit_email = "#{@username}@ncsasports.org"
+      @browser.find_element(:name, email).send_key @recruit_email
 
       if email.eql? 'emailPrimary'
-        open('recruit_emails', 'a') { |f| f << "#{addr}," }
-        @recruit_email = addr
+        open('recruit_emails', 'a') { |f| f << "#{@recruit_email}," }
       end
     end
   end
 
-  def main
+  def main(enroll_yr = nil)
     goto_recruit_info_form
     fill_in_static_configs
-    select_dropdowns
+
+    begin
+      select_dropdowns
+    rescue => e
+      select_dropdowns
+    end
+
+    select_hs_grad_year(enroll_yr)
 
     begin
       select_attendee
@@ -78,13 +108,9 @@ class FasttrackAddNewRecruit
     create_save_emails
 
     btn = @browser.find_elements(:name, '/lead/Submit').last
-    @browser.find_element(:id, 'footer').location_once_scrolled_into_view; sleep 0.1; btn.click
+    @browser.find_element(:id, 'footer').location_once_scrolled_into_view; sleep 0.2; btn.click; sleep 0.5
+    @browser.close
 
-    raise "[ERROR] Not successfully added new recruit" unless @browser.current_url.include? "lead/GeneralInfoSubmit.do"
-    @browser.quit
-
-    @recruit_email
+    [@recruit_email, @username]
   end
 end
-
-#https://qa.ncsasports.org/fasttrack/lead/GeneralInfoSubmit.do

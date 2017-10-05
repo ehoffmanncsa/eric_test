@@ -10,4 +10,5 @@ require 'json'
 
 Minitest::Ci.clean = false
 
-Dir.glob(File.expand_path('../../lib/**/*.rb', __FILE__)) { |f| require_relative f }
+Dir.glob(File.expand_path('../../lib/*.rb', __FILE__)) { |f| require_relative f }
+Dir.glob(File.expand_path('../../lib/helpers/*.rb', __FILE__)) { |f| require_relative f }

@@ -5,19 +5,15 @@ require_relative '../test_helper'
 # UI Test: POS Regression - How to Add New Recruit to Fasttrack
 class AddRecruitToFasttrackTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
-    @fasttrack_login = config['pages']['fasttrack_login']
-    @info = config['recruit']
-
-    # add a new recruit and get back his email address
-    @recruit_email = FasttrackAddNewRecruit.new.main
-
     @ui = LocalUI.new(true)
     @browser = @ui.driver
+
+    # add a new recruit and get back his email address
+    @recruit_email, _username = FasttrackAddNewRecruit.new.main
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   # verify the new recruit we added earlier can be found
@@ -26,9 +22,7 @@ class AddRecruitToFasttrackTest < Minitest::Test
     @ui.fasttrack_login
 
     wait = @ui.wait(30)
-    update = @browser.find_element(:xpath, '//*[@id="nav"]/li[2]')
-    @browser.action.move_to(update).perform
-    @browser.find_element(:link_text, 'Recruit').click
+    @browser.get 'https://qa.ncsasports.org/fasttrack/lead/Search.do?method=preSearch'
 
     wait.until { @browser.find_element(:id, 'content').displayed? }
     assert (@browser.page_source.include? 'Search Recruits'), 'Search Recruits form not found'

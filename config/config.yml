@@ -2,7 +2,7 @@
 recruit:
   firstName: 'qa'
   lastName: 'automation'
-  homePhonePh1: '408'
+  homePhonePh1: '888'
   homePhonePh2: '222'
   homePhonePh3: '3333'
   parent1FirstName: 'mom'
@@ -10,6 +10,19 @@ recruit:
   parent1PhonePh1: '408'
   parent1PhonePh2: '333'
   parent1PhonePh3: '2222'
+
+# Fake billing info
+billing:
+  order_card_holder_first_name: 'q'
+  order_card_holder_mi_name: 'a'
+  order_card_holder_last_name: 'automation'
+  order_card_number: '4242424242424242'
+  order_cvv_code: '123'
+  order_account_holder_phone: '4445556666'
+  order_account_holder_email: 'automation@ncsasports.org'
+  order_billing_address: '1333 N Kingsbury'
+  order_billing_city: 'Chicago'
+  order_billing_zip: '60642'
 
 # Admin login
 admin:
@@ -47,3 +60,4 @@ pages:
   press_media_page: 'http://www.ncsasports.org/about-us/press-media'
   site_map: 'http://www.ncsasports.org/sitemap.xml'
   fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
+  user_login: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'

@@ -9,7 +9,7 @@ class LocalUI
     @config = YAML.load_file('config/config.yml')
 
     options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
-    self.driver = gui ? (Selenium::WebDriver.for(:chrome)) : (Selenium::WebDriver.for(:chrome, options: options))
+    self.driver = gui ? (Selenium::WebDriver.for(:firefox)) : (Selenium::WebDriver.for(:chrome, options: options))
   end
 
   def wait(timeout = nil)
@@ -28,5 +28,16 @@ class LocalUI
 
     #waiting for the right title
     wait.until { driver.title.match(/Recruit-Match Home/) }
+  end
+
+  def user_login(username)
+    driver.get @config['pages']['user_login']
+
+    driver.find_element(:id, 'user_account_login').send_keys username
+    driver.find_element(:id, 'user_account_password').send_keys 'ncsa'
+    driver.find_element(:name, 'commit').click
+
+    #waiting for the right title
+    wait.until { driver.title.match(/NCSA Client Recruiting Management System/) }
   end
 end
