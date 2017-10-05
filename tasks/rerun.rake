@@ -7,9 +7,11 @@ end
 namespace :second_run do
   desc 're-run failed tests from first run attempt....'
   task :exec do
-    puts "\n[INFO] Re-running failed tests from first run attempt"
   	test_files = read_first_run_fail_files
+    exit if test_files.empty?
+
     test_files.reject! { |e| e.empty? }
+    puts "\n[INFO] Re-running failed tests from first run attempt"
 
     test_files.each do |file|
       puts "\n[INFO] Executing....#{file}"
