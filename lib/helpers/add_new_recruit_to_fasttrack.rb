@@ -64,9 +64,9 @@ class FasttrackAddNewRecruit
     options.shift
 
     if enroll_yr.nil?
-      options.sample.click; sleep 0.2
+      options.sample.click; sleep 0.5
     else
-      options.each { |opt| opt.click if (opt.text == grad_yr) }; sleep 0.2
+      options.each { |opt| opt.click if (opt.text.to_i == grad_yr) }; sleep 0.5
     end
   end
 
