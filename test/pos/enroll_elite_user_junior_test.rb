@@ -17,7 +17,7 @@ class EnrollEliteJuniorTest < Minitest::Test
     @browser.close
   end
 
-  def test_enroll_champion_freshman
+  def test_enroll_elite_junior
     membership, expect_first_pymt = POSSetup.new.setup(@recruit_email, @username, @package)
     expect_remain_balance = membership - expect_first_pymt
 
