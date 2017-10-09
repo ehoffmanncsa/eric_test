@@ -154,7 +154,38 @@ class POSSetup
     (((full_price * interest_rate) / months) * pay_rate).round * months
   end
 
-  def setup(email, username, package)
+  def pick_VIP_items(email)
+    @ui.user_login(email)
+    @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
+
+    @browser.find_element(:class, 'alacarte-features').location_once_scrolled_into_view
+    @browser.find_element(:class, 'alacarte-features').find_element(:class, 'vip-toggle-js').click; sleep 2
+
+    count = 0
+    item_prices = []
+    @browser.find_elements(:class, 'alacarte-block').each do |block|
+      item_prices << block.find_element(:class, 'feature-price').text.gsub!(/[^0-9|\.]/, '').to_i
+      pp item_prices
+      block.find_element(:class, 'button--medium').click; sleep 1
+
+      count += 1
+      cart_count = @browser.find_element(:id, 'shopping-cart').find_element(:class, 'js-cart-count').text.gsub!(/[^0-9]/, '').to_i
+      raise "[ERROR] Cart count #{cart_count} after selecting a package" unless cart_count.eql? count
+    end
+
+    pp count
+    pp item_prices
+
+    sum = 0
+    item_prices.each { |e| sum += e }
+    pp sum
+
+    @browser.find_element(:id, 'shopping-cart').click; sleep 0.2
+    pp @browser.find_element(:class, 'shopping-cart-open').find_element(:class, 'total-pricing').find_element(:class, 'js-cart-total').text
+    sleep 5
+  end
+
+  def enroll(email, username, package)
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
@@ -170,5 +201,14 @@ class POSSetup
     firt_pymt = (membership / 6)
     
     [membership, firt_pymt]
+  end
+
+  def buy_VIP_items(email, username)
+    @ui = LocalUI.new(true)
+    @browser = @ui.driver
+
+    #set_username(email, username)
+    #make_commitment
+    pick_VIP_items(email)
   end
 end

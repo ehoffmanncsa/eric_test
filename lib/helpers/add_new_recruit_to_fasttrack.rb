@@ -18,6 +18,16 @@ class FasttrackAddNewRecruit
     @username = "automation#{SecureRandom.hex(2)}"
   end
 
+  def make_name
+    charset = Array('a'..'z')
+    Array.new(10) { charset.sample }.join
+  end
+
+  def make_number(digits)
+    charset = Array('0'..'9')
+    Array.new(digits) { charset.sample }.join
+  end
+
   def goto_recruit_info_form
     @ui.fasttrack_login
 
@@ -28,10 +38,18 @@ class FasttrackAddNewRecruit
     raise '[ERROR] Cannot find Add/Recruit page' unless @browser.title =~ /Enter Recruit Information/
   end
 
-  def fill_in_static_configs
+  def fill_in_configs
     @wait.until { @browser.find_element(:id, 'footer').displayed? }
-    @info.each do |attribute, value|
-      @browser.find_element(:name, attribute).send_key value
+    %w[firstName lastName parent1FirstName parent1LastName].each do |attribute|
+      @browser.find_element(:name, attribute).send_key make_name
+    end
+
+    %w[homePhonePh1 homePhonePh2 parent1PhonePh1 parent1PhonePh2].each do |attribute|
+      @browser.find_element(:name, attribute).send_key make_number(3)
+    end
+    
+    %w[homePhonePh3 parent1PhonePh3].each do |attribute|
+      @browser.find_element(:name, attribute).send_key make_number(4)
     end
   end
 
@@ -64,7 +82,7 @@ class FasttrackAddNewRecruit
     options.shift
 
     if enroll_yr.nil?
-      options.sample.click; sleep 0.5
+       options.sample.click; sleep 0.5
     else
       options.each { |opt| opt.click if (opt.text.to_i == grad_yr) }; sleep 0.5
     end
@@ -89,22 +107,17 @@ class FasttrackAddNewRecruit
 
   def main(enroll_yr = nil)
     goto_recruit_info_form
-    fill_in_static_configs
+    fill_in_configs
 
     begin
+      retries ||= 0
       select_dropdowns
+      select_attendee
     rescue => e
-      select_dropdowns
+      retry if (retries += 1) < 3
     end
 
     select_hs_grad_year(enroll_yr)
-
-    begin
-      select_attendee
-    rescue => e
-      select_attendee
-    end
-
     create_save_emails
 
     btn = @browser.find_elements(:name, '/lead/Submit').last
