@@ -5,7 +5,10 @@ require_relative '../../test/test_helper'
 # choosing and returning 6 payments financing option as default 
 # that way we can test for remaining balance and first payment made
 class POSSetup
-  def initialize; end
+  def initialize
+    @ui = LocalUI.new(true)
+    @browser = @ui.driver
+  end
 
   def set_username(email, username)
     @ui.user_login(email)
@@ -20,11 +23,10 @@ class POSSetup
   def make_commitment
     @ui.wait.until { @browser.find_element(:class, 'fa-angle-down').displayed? }
 
-    # verify the swoosh is enabled
+    # find the swoosh and go to commitment page
     swoosh = @browser.find_elements(:class, 'fa-swoosh')[4]
     raise '[ERROR] Cannot find swoosh' unless swoosh.enabled?
 
-    # go to commitment page, make sure the right page loads
     @browser.find_element(:class, 'fa-angle-down').click; swoosh.click; 
     raise "[ERROR] Swoosh redir to #{@browser.title}" unless @browser.title.match(/Client Recruiting Management System/)
 
@@ -39,27 +41,52 @@ class POSSetup
     raise '[ERROR] Cannot find activate button' unless get_activate.enabled?; get_activate.click
   end
 
+  def get_cart_count
+    count = @browser.find_element(:id, 'shopping-cart').find_element(:class, 'js-cart-count').text
+    return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
+  end
+
   def choose_a_package(package)
     @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
 
-    # scroll down and open up choose payment plan grid
+    # get initial cart count
+    cart_count = get_cart_count.nil? ? 0 : get_cart_count
+
+    # scroll down and open up payment plan grid
     @browser.find_elements(:class, 'fa-swoosh')[0].location_once_scrolled_into_view
     @browser.find_elements(:class, 'financing')[0].find_element(:class, 'financing-js').click; sleep 0.5
 
+    # get the cells from the last row for highest price options
     row = @browser.find_elements(:class, 'table-grid')[1].find_elements(:class, 'grid-row').last
     row.location_once_scrolled_into_view; sleep 0.2
     cells = row.find_elements(:class, 'cell')
 
+    # select package as assigned, increment cart count by 1
+    # return price of the selection
     case package
-      when 'champion' then cells[2].click
-      when  'elite' then cells[3].click
-      when 'mvp' then cells[4].click
+      when 'champion'
+        cells[2].click 
+        price = cells[2].find_element(:class, 'full').text.gsub!(/[^0-9]/, '').to_i
+        cart_count += 1
+      when  'elite'
+        cells[3].click
+        price = cells[3].find_element(:class, 'full').text.gsub!(/[^0-9]/, '').to_i
+        cart_count += 1
+      when 'mvp'
+        cells[4].click
+        price = cells[4].text.gsub!(/[^0-9]/, '').to_i
+        cart_count += 1
     end; sleep 1
 
-    cart_count = @browser.find_element(:id, 'shopping-cart').find_element(:class, 'js-cart-count').text.gsub!(/[^0-9]/, '').to_i
-    raise "[ERROR] Cart count #{cart_count} after selecting a package" unless cart_count.eql? 1
+    # compare cart count before and after selecting package
+    new_cart_count = get_cart_count
+    raise "[ERROR] Cart count #{new_cart_count} after selecting a package" unless cart_count.eql? new_cart_count
 
-    @browser.find_element(:class, 'button--next').click; sleep 1
+    # go to next step
+    @browser.find_element(:class, 'button--next').location_once_scrolled_into_view
+    @browser.find_element(:class, 'button--next').click; sleep 0.5
+
+    price
   end
 
   def choose_payment_plan
@@ -67,6 +94,14 @@ class POSSetup
 
     @browser.find_elements(:class, 'payment-block')[1].click
     @browser.find_element(:class, 'summary-js').click; sleep 1
+  end
+
+  # some selection will not need agreement and some does
+  # so ignore this method when agreement not found
+  def agreement_check
+    begin
+      @browser.find_element(:class, 'agreement-js').click
+    rescue; end
   end
 
   def setup_billing
@@ -84,7 +119,7 @@ class POSSetup
     @browser.find_element(:class, 'registration-js').click
 
     # billing agreement
-    @browser.find_element(:class, 'agreement-js').click
+    agreement_check
 
     # fill out billing info
     config = YAML.load_file('config/config.yml')
@@ -105,11 +140,17 @@ class POSSetup
 
   def check_discount_calculate
     @ui.wait(20).until { @browser.find_element(:class, 'discount-js').displayed? }
+
+    # activate discount feature
     @browser.find_element(:class, 'discount-js').location_once_scrolled_into_view
     @browser.find_element(:class, 'discount-js').click
 
     failure = []
     @full_price = @browser.find_elements(:class, 'payment-block')[0].attribute('data-total').gsub!(/[^0-9]/, '').to_i
+
+    # Apply both discount code, one at a time
+    # Collect all the prices and do calculation on the side
+    # Compare the 2 numbers to make sure the displayed prices are calculated accurately
     ['NSLP', 'Military'].each do |code|
       @browser.find_element(:class, 'discount-code').click
       @browser.find_element(:class, 'discount-code').send_keys(code)
@@ -154,41 +195,50 @@ class POSSetup
     (((full_price * interest_rate) / months) * pay_rate).round * months
   end
 
-  def pick_VIP_items(email)
-    @ui.user_login(email)
+  def pick_VIP_items
     @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
 
-    @browser.find_element(:class, 'alacarte-features').location_once_scrolled_into_view
-    @browser.find_element(:class, 'alacarte-features').find_element(:class, 'vip-toggle-js').click; sleep 2
+    # get initial cart count
+    cart_count = get_cart_count.nil? ? 0 : get_cart_count
 
-    count = 0
-    item_prices = []
+    # activate alacarte table
+    @browser.find_element(:class, 'alacarte-features').location_once_scrolled_into_view
+    @browser.find_element(:class, 'alacarte-features').find_element(:class, 'vip-toggle-js').click; sleep 0.5
+
+    expect_total = 0
+
+    # add one of each alacarte options into cart
+    # and make sure cart count increments
     @browser.find_elements(:class, 'alacarte-block').each do |block|
-      item_prices << block.find_element(:class, 'feature-price').text.gsub!(/[^0-9|\.]/, '').to_i
-      pp item_prices
+      expect_total += block.find_element(:class, 'feature-price').text.gsub!(/[^0-9|\.]/, '').to_i
       block.find_element(:class, 'button--medium').click; sleep 1
 
-      count += 1
-      cart_count = @browser.find_element(:id, 'shopping-cart').find_element(:class, 'js-cart-count').text.gsub!(/[^0-9]/, '').to_i
-      raise "[ERROR] Cart count #{cart_count} after selecting a package" unless cart_count.eql? count
+      cart_count += 1
+      raise "[ERROR] Cart count #{cart_count} after selecting a package" unless cart_count.eql? get_cart_count
     end
 
-    pp count
-    pp item_prices
+    @browser.find_element(:class, 'button--next').click; sleep 0.5
 
-    sum = 0
-    item_prices.each { |e| sum += e }
-    pp sum
-
-    @browser.find_element(:id, 'shopping-cart').click; sleep 0.2
-    pp @browser.find_element(:class, 'shopping-cart-open').find_element(:class, 'total-pricing').find_element(:class, 'js-cart-total').text
-    sleep 5
+    expect_total
   end
 
-  def enroll(email, username, package)
-    @ui = LocalUI.new(true)
-    @browser = @ui.driver
+  # make sure the total price displayed on summary page 
+  # matches with the price found in cart before checkout
+  def check_summary_page(expect_total)
+    @ui.wait(45) { @browser.find_element(:class, 'total-price').displayed? }
 
+    label = @browser.find_element(:class, 'total-price')
+    actual_total = label.find_element(:class, 'js-total-price').text.gsub!(/[^0-9]/, '').to_i
+
+    msg = "[ERROR] Total price is incorrect - Actual $#{actual_total} vs $#{expect_total}"
+    raise msg unless actual_total.eql? expect_total
+
+    @browser.find_element(:class, 'summary-js').click
+  end
+
+  # to purchase only membership package
+  def buy_package(email, username, package)
+    retries ||= 0
     set_username(email, username)
     make_commitment
     choose_a_package(package)
@@ -198,17 +248,30 @@ class POSSetup
     @browser.close
 
     membership = calculate(@full_price, 6)
-    firt_pymt = (membership / 6)
+    first_pymt = (membership / 6)
     
-    [membership, firt_pymt]
+    [membership, first_pymt]
   end
 
-  def buy_VIP_items(email, username)
-    @ui = LocalUI.new(true)
-    @browser = @ui.driver
+  # to purchase only alacarte items
+  def buy_alacarte(email, username)
+    set_username(email, username)
+    make_commitment
+    expect_total = pick_VIP_items
+    check_summary_page(expect_total)
+    setup_billing
 
-    #set_username(email, username)
-    #make_commitment
-    pick_VIP_items(email)
+    @browser.close
+  end
+
+  # to purchase both a membership package and some alacarte items
+  def buy_combo(email, username, package)
+    set_username(email, username)
+    make_commitment
+    expect_total = choose_a_package(package) + pick_VIP_items
+    check_summary_page(expect_total)
+    setup_billing
+
+    @browser.close
   end
 end

@@ -18,7 +18,7 @@ class EnrollMVPJuniorTest < Minitest::Test
   end
 
   def test_enroll_mvp_junior
-    membership, expect_first_pymt = POSSetup.new.enroll(@recruit_email, @username, @package)
+    membership, expect_first_pymt = POSSetup.new.buy_package(@recruit_email, @username, @package)
     expect_remain_balance = membership - expect_first_pymt
 
     @ui.user_login(@recruit_email)

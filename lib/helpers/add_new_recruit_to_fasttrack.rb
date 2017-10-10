@@ -114,7 +114,7 @@ class FasttrackAddNewRecruit
       select_dropdowns
       select_attendee
     rescue => e
-      retry if (retries += 1) < 3
+      (retries += 1) < 3 ? retry : (puts e)
     end
 
     select_hs_grad_year(enroll_yr)
