@@ -25,6 +25,6 @@ class SiteMapXMLTest < Minitest::Test
       links << e.attribute('href')
     end
     
-    assert_empty links, 'Cannot find any URL on sitemap'
+    refute_empty links, 'Cannot find any URL on sitemap'
   end
 end
