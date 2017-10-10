@@ -20,14 +20,11 @@ class SiteMapXMLTest < Minitest::Test
     assert @browser.title.match(/Sitemap/), @browser.title
 
     list = @browser.find_elements(:tag_name, 'a'); list.pop
-    failure = []
+    links = []
     list.each do |e|
-      link = e.attribute('href')
-      status = Faraday.get(link).status
-      failure << "#{link} gives #{status}" unless status.eql? 200
+      links << e.attribute('href')
     end
     
-    assert_empty failure
-    assert list.length.eql? 969, "Found #{list.length} links"
+    assert_empty links, 'Cannot find any URL on sitemap'
   end
 end
