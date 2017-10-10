@@ -28,6 +28,8 @@ class PurchaseOnlyVIPItemsTests < Minitest::Test
     @ui.wait(30) { @browser.find_elements(:tag_name, 'div.row.major').each { |e| e.displayed? } }
 
     box1 = @browser.find_element(:class, 'purchase-summary-js').find_element(:class, 'package-features')
+    title = box1.find_element(:class, 'title-js').text.downcase
+    failure << 'Activation Membership Features not found' unless title.match(/activation membership features/)
     failure << 'Activation Membership Features items not found' if box1.find_elements(:tag_name, 'li').empty?
 
     box2 = @browser.find_element(:class, 'purchase-summary-js').find_element(:css, 'div.column.third')     
