@@ -195,7 +195,7 @@ class POSSetup
     (((full_price * interest_rate) / months) * pay_rate).round * months
   end
 
-  def pick_VIP_items
+  def pick_VIP_items(all = false)
     @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
 
     # get initial cart count
@@ -209,7 +209,16 @@ class POSSetup
 
     # add one of each alacarte options into cart
     # and make sure cart count increments
-    @browser.find_elements(:class, 'alacarte-block').each do |block|
+    if all
+      @browser.find_elements(:class, 'alacarte-block').each do |block|
+        expect_total += block.find_element(:class, 'feature-price').text.gsub!(/[^0-9|\.]/, '').to_i
+        block.find_element(:class, 'button--medium').click; sleep 1
+
+        cart_count += 1
+        raise "[ERROR] Cart count #{cart_count} after selecting a package" unless cart_count.eql? get_cart_count
+      end
+    else
+      block = @browser.find_elements(:class, 'alacarte-block').sample
       expect_total += block.find_element(:class, 'feature-price').text.gsub!(/[^0-9|\.]/, '').to_i
       block.find_element(:class, 'button--medium').click; sleep 1
 
@@ -225,7 +234,7 @@ class POSSetup
   # make sure the total price displayed on summary page 
   # matches with the price found in cart before checkout
   def check_summary_page(expect_total)
-    @ui.wait(45) { @browser.find_element(:class, 'total-price').displayed? }
+    @ui.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
 
     label = @browser.find_element(:class, 'total-price')
     actual_total = label.find_element(:class, 'js-total-price').text.gsub!(/[^0-9]/, '').to_i
@@ -236,11 +245,19 @@ class POSSetup
     @browser.find_element(:class, 'summary-js').click
   end
 
+  def get_cart_total
+    # open shopping cart
+    @browser.find_element(:id, 'shopping-cart').click
+    cart = @browser.find_element(:class, 'shopping-cart-open')
+    
+    total_price = cart.find_element(:class, 'total-pricing').text.gsub!(/[^0-9|\.]/, '').to_i
+  end
+
   # to purchase only membership package
   def buy_package(email, username, package)
-    retries ||= 0
     set_username(email, username)
     make_commitment
+
     choose_a_package(package)
     choose_payment_plan
     setup_billing
@@ -254,10 +271,11 @@ class POSSetup
   end
 
   # to purchase only alacarte items
-  def buy_alacarte(email, username)
+  def buy_alacarte(email, username, all = true)
     set_username(email, username)
     make_commitment
-    expect_total = pick_VIP_items
+
+    expect_total = pick_VIP_items(all)
     check_summary_page(expect_total)
     setup_billing
 
@@ -268,7 +286,11 @@ class POSSetup
   def buy_combo(email, username, package)
     set_username(email, username)
     make_commitment
-    expect_total = choose_a_package(package) + pick_VIP_items
+
+    package_price = choose_a_package(package)
+    items_price = pick_VIP_items
+    expect_total =  package_price + items_price
+
     check_summary_page(expect_total)
     setup_billing
 

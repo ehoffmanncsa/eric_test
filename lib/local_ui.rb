@@ -27,7 +27,11 @@ class LocalUI
     driver.get @config['pages']['fasttrack_login']
 
     #waiting for the right title
-    wait.until { driver.title.match(/Recruit-Match Home/) }
+    begin
+      wait.until { driver.title.match(/Recruit-Match Home/) }
+    rescue => e
+      puts e; driver.close
+    end
   end
 
   def user_login(username)
@@ -38,6 +42,10 @@ class LocalUI
     driver.find_element(:name, 'commit').click
 
     #waiting for the right title
-    wait.until { driver.title.match(/NCSA Client Recruiting Management System/) }
+    begin
+      wait.until { !driver.title.match(/Student-Athlete Sign In/) }
+    rescue => e
+      puts e; driver.close
+    end
   end
 end
