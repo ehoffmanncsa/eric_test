@@ -34,7 +34,9 @@ class EventsPageMonitorTest < Minitest::Test
 
       # Take snapshot events page with applitool eyes
       @eyes.check_ignore "Events page #{size.keys} view", @browser.find_element(:class, 'flex-viewport')
-      @eyes.action.close(false)
+
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Events page #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -54,7 +56,9 @@ class EventsPageMonitorTest < Minitest::Test
       @browser.find_element(:class, 'fa-bars').click
 
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'flex-viewport')
-      @eyes.action.close(false)
+
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -75,7 +79,8 @@ class EventsPageMonitorTest < Minitest::Test
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -124,7 +129,8 @@ class EventsPageMonitorTest < Minitest::Test
         end
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -161,6 +167,7 @@ class EventsPageMonitorTest < Minitest::Test
     @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
     @eyes.screenshot 'Football Camp page desktop viewport'
-    @eyes.action.close(false)
+    result = @eyes.action.close(false)
+    assert_equal result.mismatches, 0, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
   end
 end

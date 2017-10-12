@@ -43,7 +43,8 @@ class HomePageMonitorTest < Minitest::Test
       # Snapshot Homepage with applitool 
       @eyes.screenshot "Home page #{size.keys} view"
       # prevent eyes from closing before done looping
-      @eyes.action.close(false)      
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Home page #{size.keys} view - #{result.mismatches} mismatches found"    
     end
   end
 
@@ -69,7 +70,8 @@ class HomePageMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -92,7 +94,8 @@ class HomePageMonitorTest < Minitest::Test
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"        
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -113,7 +116,8 @@ class HomePageMonitorTest < Minitest::Test
 
       # Take page snapshot but ignore the banner
       @eyes.check_ignore "Coaches login #{size.keys} view", @browser.find_element(:class, 'banner')
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Coach login #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -164,7 +168,8 @@ class HomePageMonitorTest < Minitest::Test
         end
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 

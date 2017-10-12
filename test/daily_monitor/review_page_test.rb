@@ -40,7 +40,8 @@ class ReviewPageMonitorTest < Minitest::Test
 
       # Take snapshot review page with applitool eyes
       @eyes.screenshot "Review page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Review page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -66,7 +67,8 @@ class ReviewPageMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Review #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -87,7 +89,8 @@ class ReviewPageMonitorTest < Minitest::Test
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -136,7 +139,8 @@ class ReviewPageMonitorTest < Minitest::Test
         end
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Buger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 

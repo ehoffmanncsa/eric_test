@@ -34,7 +34,9 @@ class CostPageMonitorTest < Minitest::Test
 
       # Take snapshot cost page with applitool eyes
       @eyes.screenshot "Cost page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+
+      assert_equal result.mismatches, 0, "Cost page - #{result.mismatches} mismatches found"
     end
   end
 
@@ -54,7 +56,9 @@ class CostPageMonitorTest < Minitest::Test
       @browser.find_element(:class, 'fa-bars').click
       
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+
+      assert_equal result.mismatches, 0, "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -76,7 +80,8 @@ class CostPageMonitorTest < Minitest::Test
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Cost page #{size.keys} view #{button} Start Here - #{result.mismatches} mismatches found"
     end
   end
 
@@ -107,7 +112,7 @@ class CostPageMonitorTest < Minitest::Test
             assert @browser.title.match(/College Coach Login/), @browser.title
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            @eyes.action.check_window "hamburger menu redir to #{link_text} #{size.keys} view"
+            @eyes.action.check_window "Hamburger menu redir to #{link_text} #{size.keys} view"
           when 'H.S. Coach'
             button.click
             assert @browser.title.match(/High School Coach Login/), @browser.title
@@ -125,7 +130,8 @@ class CostPageMonitorTest < Minitest::Test
         end
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 

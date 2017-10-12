@@ -32,7 +32,7 @@ class ContactUsPagesMonitorTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def test_contact_us_page
@@ -57,7 +57,8 @@ class ContactUsPagesMonitorTest < Minitest::Test
 
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Contact Us page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Contact Us page - #{result.mismatches} mismatches found"
     end
   end
 

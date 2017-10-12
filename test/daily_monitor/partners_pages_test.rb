@@ -96,7 +96,8 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       # Take snapshot events page with applitool eyes
       @eyes.check_ignore "Partners page #{size.keys} view", @browser.find_element(:class, 'field-name-field-dices')
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Partners page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -124,7 +125,8 @@ class PartnersPagesMonitorTest < Minitest::Test
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Contact Us page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -147,7 +149,8 @@ class PartnersPagesMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.2
 
       @eyes.check_ignore "All partners #{size.keys} view", @browser.find_element(:class, 'views-view-grid')
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "All partners page #{size.keys} - #{result.mismatches} mismatches found"
 
       # check returning to partners page
       button = @browser.find_element(:link_text, 'Partners')
@@ -191,7 +194,8 @@ class PartnersPagesMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'field-name-field-dices')
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -214,7 +218,8 @@ class PartnersPagesMonitorTest < Minitest::Test
       assert (email_address.attribute('href').include? 'mailto:'), 'Email href not including mailto'
 
       @eyes.screenshot "Apply Partnership page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      assert_equal result.mismatches, 0, "Apply Partnership page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 end
