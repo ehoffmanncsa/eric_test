@@ -44,7 +44,7 @@ class HomePageMonitorTest < Minitest::Test
       @eyes.screenshot "Home page #{size.keys} view"
       # prevent eyes from closing before done looping
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Home page #{size.keys} view - #{result.mismatches} mismatches found"    
+      assert_equal 0, result.mismatches, "Home page #{size.keys} view - #{result.mismatches} mismatches found"    
     end
   end
 
@@ -71,7 +71,7 @@ class HomePageMonitorTest < Minitest::Test
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -95,7 +95,7 @@ class HomePageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} view - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -117,7 +117,7 @@ class HomePageMonitorTest < Minitest::Test
       # Take page snapshot but ignore the banner
       @eyes.check_ignore "Coaches login #{size.keys} view", @browser.find_element(:class, 'banner')
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Coach login #{size.keys} view - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Coach login #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -169,7 +169,7 @@ class HomePageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 

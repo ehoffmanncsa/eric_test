@@ -97,7 +97,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       # Take snapshot events page with applitool eyes
       @eyes.check_ignore "Partners page #{size.keys} view", @browser.find_element(:class, 'field-name-field-dices')
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Partners page #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Partners page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -126,7 +126,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Contact Us page #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -195,7 +195,7 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'field-name-field-dices')
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -219,7 +219,7 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @eyes.screenshot "Apply Partnership page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Apply Partnership page #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Apply Partnership page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 end

@@ -36,7 +36,7 @@ class EventsPageMonitorTest < Minitest::Test
       @eyes.check_ignore "Events page #{size.keys} view", @browser.find_element(:class, 'flex-viewport')
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Events page #{size.keys} view - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Events page #{size.keys} view - #{result.mismatches} mismatches found"
     end
   end
 
@@ -58,7 +58,7 @@ class EventsPageMonitorTest < Minitest::Test
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'flex-viewport')
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -80,7 +80,7 @@ class EventsPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} view - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -130,7 +130,7 @@ class EventsPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -168,6 +168,6 @@ class EventsPageMonitorTest < Minitest::Test
 
     @eyes.screenshot 'Football Camp page desktop viewport'
     result = @eyes.action.close(false)
-    assert_equal result.mismatches, 0, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
+    assert_equal 0, result.mismatches, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
   end
 end

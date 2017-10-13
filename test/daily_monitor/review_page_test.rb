@@ -41,7 +41,7 @@ class ReviewPageMonitorTest < Minitest::Test
       # Take snapshot review page with applitool eyes
       @eyes.screenshot "Review page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Review page #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Review page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -68,7 +68,7 @@ class ReviewPageMonitorTest < Minitest::Test
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Review #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Review #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -90,7 +90,7 @@ class ReviewPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "#{button} Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 

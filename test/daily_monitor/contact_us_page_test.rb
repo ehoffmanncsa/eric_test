@@ -58,7 +58,7 @@ class ContactUsPagesMonitorTest < Minitest::Test
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Contact Us page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Contact Us page - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Contact Us page - #{result.mismatches} mismatches found"
     end
   end
 

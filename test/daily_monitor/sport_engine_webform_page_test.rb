@@ -48,7 +48,7 @@ class SportEngineWebFormPageMonitorTest < Minitest::Test
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Sport Engine page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Sport Engine page #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Sport Engine page #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 end

@@ -36,7 +36,7 @@ class CostPageMonitorTest < Minitest::Test
       @eyes.screenshot "Cost page #{size.keys} view"
       result = @eyes.action.close(false)
 
-      assert_equal result.mismatches, 0, "Cost page - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Cost page - #{result.mismatches} mismatches found"
     end
   end
 
@@ -58,7 +58,7 @@ class CostPageMonitorTest < Minitest::Test
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
 
-      assert_equal result.mismatches, 0, "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found"
     end
   end
 
@@ -81,7 +81,7 @@ class CostPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Cost page #{size.keys} view #{button} Start Here - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
@@ -131,7 +131,7 @@ class CostPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      assert_equal 0, result.mismatches, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
     end
   end
 
