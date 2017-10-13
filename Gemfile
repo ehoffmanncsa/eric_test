@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'eyes_selenium'
-gem 'faraday'
 gem 'mail'
 gem 'mechanize'
 gem 'minitest'

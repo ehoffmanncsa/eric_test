@@ -36,5 +36,7 @@ namespace :second_run do
     rescue StandardError => e
       puts "[ERROR] Running calc.rb - #{e}"
     end
+
+    exit 1 unless test_files.empty?
   end
 end

@@ -70,16 +70,23 @@ class PartnersPagesMonitorTest < Minitest::Test
     logos = @browser.find_elements(:class, 'field-name-field-image')
 
     # make sure all url from logos give status code 200
-    failure = []
-    logos.each do |logo|
-      url = logo.find_element(:tag_name, 'a').attribute('href')
-      status = Faraday.get(url).status
-      failure << "#{url} gives status #{status}" unless status.eql? 200
+    failure = []; hrefs = []
+    logos.each { |logo| hrefs << logo.find_element(:tag_name, 'a').attribute('href') }
+
+    hrefs.each do |url|
+      begin
+        resp = Net::HTTP.get_response(URI(url))
+      rescue => e
+        failure << "#{url} gives error #{e}"; next
+      end
+
+      failure << "#{url} gives #{resp.code}" unless resp.code.to_i.eql? 200
     end
+
     assert_empty failure
 
     # make sure no duplicate urls
-    dupe = logos.select{|e| logos.count(e) > 1 }
+    dupe = hrefs.select{|e| hrefs.count(e) > 1 }
     assert_empty dupe
   end
 
@@ -165,13 +172,21 @@ class PartnersPagesMonitorTest < Minitest::Test
     @browser.find_element(:link_text, 'All Partners Page').click
 
     # make sure all links attached to each logo gives 200
-    failure = []
+    failure = []; hrefs = []
     @browser.find_element(:class, 'views-view-grid').find_elements(:class, 'row').each do |row|
       row.find_elements(:class, 'views-field-field-partner-image').each do |logo|
-        href = logo.find_element(:tag_name, 'a').attribute('href')
-        status = Faraday.get(href).status
-        failure << "#{href} gives #{status}" unless status.eql? 200
+        hrefs << logo.find_element(:tag_name, 'a').attribute('href')
       end
+    end
+
+    hrefs.each do |url|
+      begin
+        resp = Net::HTTP.get_response(URI(url))
+      rescue => e
+        failure << "#{url} gives error #{e}"; next
+      end
+
+      failure << "#{url} gives #{resp.code}" unless resp.code.to_i.eql? 200
     end
 
     assert_empty failure
@@ -184,13 +199,13 @@ class PartnersPagesMonitorTest < Minitest::Test
       height = size.values[0]['height']
 
       @eyes.open @browser, 'TS-169 Test Partners Page with Hamburger Menu Open', width, height
-      @browser.get @partners_page
+      @browser.get @partners_page 
 
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?
+
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
-
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'field-name-field-dices')

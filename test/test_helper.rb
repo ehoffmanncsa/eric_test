@@ -3,13 +3,11 @@ require 'minitest/autorun'
 require 'pp'
 require 'yaml'
 require 'parallel'
-require 'faraday'
 require 'mechanize'
 require 'minitest-ci'
 require 'json'
 require 'openssl'
-
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+require 'net/http'
 
 Minitest::Ci.clean = false
 
