@@ -37,6 +37,7 @@ namespace :second_run do
       puts "[ERROR] Running calc.rb - #{e}"
     end
 
+    test_files = read_first_run_fail_files
     exit 1 unless test_files.empty?
   end
 end
