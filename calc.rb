@@ -137,7 +137,7 @@ class Calc
   end
 
   def open_first_run_failed_tests
-    @first_run_failed_tests = open('/tmp/first_run_failed_tests', 'w')
+    @first_run_failed_tests = open('first_run_failed_tests', 'w')
   end
 
   def write_first_run_failed_tests(file)

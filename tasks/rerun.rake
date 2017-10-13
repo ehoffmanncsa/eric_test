@@ -1,7 +1,7 @@
 require 'rake/testtask'
 
 def read_first_run_fail_files
-  File.read('/tmp/first_run_failed_tests').split(',')
+  File.read('first_run_failed_tests').split(',')
 end
 
 namespace :second_run do
