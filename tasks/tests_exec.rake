@@ -9,7 +9,7 @@ namespace :first_run do
     puts "[INFO] First run attempt"
 
     args.with_defaults(dir: '**')
-    test_files = FileList["test/#{args.dir}/*_test.rb"]
+    test_files = FileList["test/daily_monitor/partners_pages_test.rb"]#["test/#{args.dir}/*_test.rb"]
     test_files.reject! { |e| e.empty? }
 
     test_files.each do |file|
