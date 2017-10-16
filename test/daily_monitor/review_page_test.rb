@@ -24,6 +24,7 @@ class ReviewPageMonitorTest < Minitest::Test
   # Within the session loop through different viewport size
   # and navigate to review page, verify page title
   def test_review_page_views
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -41,12 +42,15 @@ class ReviewPageMonitorTest < Minitest::Test
       # Take snapshot review page with applitool eyes
       @eyes.screenshot "Review page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Review page #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Review page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify hamburger menu and phone icon enable for iphone and ipad view
   def test_views_with_hamburger_menu_open
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -68,11 +72,14 @@ class ReviewPageMonitorTest < Minitest::Test
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Review #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      failure << "Review #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_parents_athletes_start_here
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -90,11 +97,14 @@ class ReviewPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_hamburger_menu_options_and_redirs
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -140,8 +150,10 @@ class ReviewPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "Buger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Buger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_www_athlete_login_redir

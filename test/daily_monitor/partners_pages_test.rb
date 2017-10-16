@@ -91,6 +91,7 @@ class PartnersPagesMonitorTest < Minitest::Test
   end
 
   def test_partners_page_views
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -104,11 +105,14 @@ class PartnersPagesMonitorTest < Minitest::Test
       # Take snapshot events page with applitool eyes
       @eyes.check_ignore "Partners page #{size.keys} view", @browser.find_element(:class, 'field-name-field-dices')
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Partners page #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Partners page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_parents_athletes_start_here_buttons
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -133,12 +137,15 @@ class PartnersPagesMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # combining testing for all partners page views and redirecting back to partners page
   def test_all_partners_page
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -157,7 +164,7 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @eyes.check_ignore "All partners #{size.keys} view", @browser.find_element(:class, 'views-view-grid')
       result = @eyes.action.close(false)
-      assert_equal result.mismatches, 0, "All partners page #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "All partners page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
 
       # check returning to partners page
       button = @browser.find_element(:link_text, 'Partners')
@@ -165,6 +172,8 @@ class PartnersPagesMonitorTest < Minitest::Test
       @browser.get button.attribute('href')
       assert @browser.title.match(/NCSA Partners/), @browser.title
     end
+
+    assert_empty failure
   end
 
   def test_logos_on_all_partners_page
@@ -193,6 +202,7 @@ class PartnersPagesMonitorTest < Minitest::Test
   end
 
   def test_views_with_hamburger_menu_open
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -210,11 +220,14 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'field-name-field-dices')
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found"
+      failure << "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_apply_partnership_page
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -234,7 +247,9 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @eyes.screenshot "Apply Partnership page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Apply Partnership page #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Apply Partnership page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 end

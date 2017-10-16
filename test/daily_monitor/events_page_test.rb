@@ -24,6 +24,7 @@ class EventsPageMonitorTest < Minitest::Test
   # Within the session loop through different viewport size
   # and navigate to events page, verify page title
   def test_events_page_views
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -36,12 +37,15 @@ class EventsPageMonitorTest < Minitest::Test
       @eyes.check_ignore "Events page #{size.keys} view", @browser.find_element(:class, 'flex-viewport')
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Events page #{size.keys} view - #{result.mismatches} mismatches found"
+      failure << "Events page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify hamburger menu and phone icon enable for iphone and ipad view
   def test_views_with_hamburger_menu_open
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -58,11 +62,14 @@ class EventsPageMonitorTest < Minitest::Test
       @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'flex-viewport')
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      failure << "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_parents_athletes_start_here
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -80,11 +87,14 @@ class EventsPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_hamburger_menu_options_and_redirs
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -130,8 +140,10 @@ class EventsPageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_athlete_login_redir

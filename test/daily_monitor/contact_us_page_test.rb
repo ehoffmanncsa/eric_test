@@ -36,6 +36,7 @@ class ContactUsPagesMonitorTest < Minitest::Test
   end
 
   def test_contact_us_page
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -58,8 +59,10 @@ class ContactUsPagesMonitorTest < Minitest::Test
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Contact Us page #{size.keys} view"
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Contact Us page - #{result.mismatches} mismatches found"
+      failure << "Contact Us page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_nav_bar_buttons_redir

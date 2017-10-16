@@ -91,6 +91,7 @@ class TEDPageMonitorTest < Minitest::Test
   # Within the session loop through different viewport size
   # and navigate to TED page, verify page title and take page snapshot for comparison
   def test_ted_page_views
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -115,8 +116,11 @@ class TEDPageMonitorTest < Minitest::Test
 
       # Take snapshot TED page with applitool eyes
       @eyes.screenshot "TED page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "TED page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_TED_menu_headers
@@ -126,6 +130,7 @@ class TEDPageMonitorTest < Minitest::Test
 
   # Verify Free Demo button, redir and page spotcheck
   def test_request_demo_button_redir
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -138,12 +143,16 @@ class TEDPageMonitorTest < Minitest::Test
       assert @browser.title.match(/Signup for NCSA Team Edition/), @browser.title
 
       @eyes.screenshot "Get Started form #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "Get Started form #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify hamburger menu and phone icon enable for iphone and ipad view
   def test_views_with_hamburger_menu_open
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -157,12 +166,16 @@ class TEDPageMonitorTest < Minitest::Test
       @browser.find_element(:link_text, 'TEAM EDITION').click
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "#{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify coach login page redir and page spotcheck
   def test_coach_login_page
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -181,8 +194,11 @@ class TEDPageMonitorTest < Minitest::Test
       assert @browser.title.match(/Recruiting Management System/), @browser.title
 
       @eyes.screenshot "Coach login page #{size.keys} view"
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "Coach login page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify feature pages redir and content spotcheck
@@ -198,19 +214,22 @@ class TEDPageMonitorTest < Minitest::Test
       height = size.values[0]['height']
 
       @eyes.open @browser, 'TS-122 Test TED Feature Pages', width, height
+      fails = []
       pages.each do |page, expect_title|
         goto_feature_page(size.keys[0].to_s, page)
         real_title = @browser.title
 
         # Make sure we are on the right page
-        failure << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
-        failure << "#{size.keys} - Side-nav bar not found" unless @browser.page_source.include? 'block-menu-block-8--2'
+        fails << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
+        fails << "#{size.keys} - Side-nav bar not found" unless @browser.page_source.include? 'block-menu-block-8--2'
 
         @eyes.screenshot "#{page} page #{size.keys} view"
         page_spot_check(size.keys[0].to_s)
       end
+      assert_empty fails
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "#{page} page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -226,20 +245,23 @@ class TEDPageMonitorTest < Minitest::Test
       width = size.values[0]['width']
       height = size.values[0]['height']
 
+      fails = []
       @eyes.open @browser, 'TS-122 Test TED Pages from Header Menu', width, height
       pages.each do |page, expect_title|
         goto_feature_page(size.keys[0].to_s, page)
         real_title = @browser.title
 
         # Make sure we are on the right page and spot check
-        failure << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
-        failure << "#{size.keys} - Side-nav bar found where it should not"  if @browser.page_source.include? 'block-menu-block-8--2'
+        fails << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
+        fails << "#{size.keys} - Side-nav bar found where it should not"  if @browser.page_source.include? 'block-menu-block-8--2'
 
         @eyes.screenshot "#{page} page #{size.keys} view"
         page_spot_check(size.keys[0].to_s)
       end
+      assert_empty fails
 
-      @eyes.action.close(false)
+      result = @eyes.action.close(false)
+      failure << "#{page} page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure

@@ -25,6 +25,7 @@ class HomePageMonitorTest < Minitest::Test
   # and navigate to WWW site homepage, verify page title
   # using remote UI - BrowserStack
   def test_homepage
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -44,12 +45,15 @@ class HomePageMonitorTest < Minitest::Test
       @eyes.screenshot "Home page #{size.keys} view"
       # prevent eyes from closing before done looping
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Home page #{size.keys} view - #{result.mismatches} mismatches found"    
+      failure << "Home page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0    
     end
+
+    assert_empty failure
   end
 
   # Verify hamburger menu and phone icon enable for iphone and ipad view
   def test_homepage_view_with_hamburger_menu
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -71,13 +75,16 @@ class HomePageMonitorTest < Minitest::Test
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      failure << "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify the Start Here buttons are enabled
   # and redirect correctly by verifying redirected page title
   def test_parents_athletes_start_here_buttons
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -95,11 +102,14 @@ class HomePageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   def test_coaches_start_here
+    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
@@ -117,13 +127,16 @@ class HomePageMonitorTest < Minitest::Test
       # Take page snapshot but ignore the banner
       @eyes.check_ignore "Coaches login #{size.keys} view", @browser.find_element(:class, 'banner')
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Coach login #{size.keys} view - #{result.mismatches} mismatches found"
+      failure << "Coach login #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
   # Verify Hamburger menu in ipad and iphone views
   # and its buttons redirect correctly
   def test_hamburger_menu_options_and_redirs
+    failure = []
     @viewports.each do |size|
       next if size.keys.to_s =~ /desktop/
       width = size.values[0]['width']
@@ -169,8 +182,10 @@ class HomePageMonitorTest < Minitest::Test
       end
 
       result = @eyes.action.close(false)
-      assert_equal 0, result.mismatches, "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      failure << "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
+
+    assert_empty failure
   end
 
 
