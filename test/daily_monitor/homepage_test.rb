@@ -145,39 +145,45 @@ class HomePageMonitorTest < Minitest::Test
       @eyes.open @browser, 'TS-118 Test Hamburger Menu and Redirs', width, height
 
       ['Athlete Log In', 'Coach Log In', 'H.S. Coach',
-       'Parents Start Here', 'Athletes Start Here'].each do |link_text|
+       'Parents Start Here', 'Athletes Start Heres'].each do |link_text|
         @browser.get @homepage
         @browser.find_element(:class, 'fa-bars').click
-        button = @browser.find_element(link_text: link_text)
 
-        case link_text
-          when 'Athlete Log In'
-            button.click
-            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
-            username_input = @browser.find_element(:id, 'user_account_login')
-            assert username_input.displayed?, 'Username textbox not found'
+        begin
+          retries ||= 0
+          button = @browser.find_element(link_text: link_text)
+          case link_text
+            when 'Athlete Log In'
+              button.click
+              assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
+              username_input = @browser.find_element(:id, 'user_account_login')
+              assert username_input.displayed?, 'Username textbox not found'
 
-            # Ignore the username textbox because it has blinking cursor
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
-          when 'Coach Log In'
-            button.click
-            assert @browser.title.match(/College Coach Login/), @browser.title
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
+              # Ignore the username textbox because it has blinking cursor
+              @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
+            when 'Coach Log In'
+              button.click
+              assert @browser.title.match(/College Coach Login/), @browser.title
+              assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-          when 'H.S. Coach'
-            button.click
-            assert @browser.title.match(/High School Coach Login/), @browser.title
-            assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
+            when 'H.S. Coach'
+              button.click
+              assert @browser.title.match(/High School Coach Login/), @browser.title
+              assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
+              assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
-          when 'Parents Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--parent').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
+              @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
+            when 'Parents Start Here'
+              @browser.find_element(:class, 'm-nav-start-link--parent').click
+              assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
 
-          when 'Athletes Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--athlete').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
+            when 'Athletes Start Here'
+              @browser.find_element(:class, 'm-nav-start-link--athlete').click
+              assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
+          end
+        rescue => e
+          puts "Encounter error #{e} - at #{link_text}", 'Trying again....'
+          retry if (retries += 1) < 3
         end
       end
 

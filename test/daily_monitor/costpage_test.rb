@@ -33,6 +33,9 @@ class CostPageMonitorTest < Minitest::Test
       @browser.get @costpage
       assert @browser.title.match(/How much does NCSA Cost/), @browser.title
 
+      #scroll to bottom for bottom icons to load
+      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+
       # Take snapshot cost page with applitool eyes
       @eyes.screenshot "Cost page #{size.keys} view"
       result = @eyes.action.close(false)
@@ -57,6 +60,9 @@ class CostPageMonitorTest < Minitest::Test
 
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
+
+      #scroll to bottom for bottom icons to load
+      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
       
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
