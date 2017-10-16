@@ -86,8 +86,6 @@ class POSSetup
       when 'small' then @browser.find_elements(:class, 'payment-block')[2].click
       else; @browser.find_elements(:class, 'payment-block')[1].click
     end
-
-    @browser.find_element(:class, 'summary-js').click; sleep 1
   end
 
   def pick_VIP_items(all = false)
@@ -118,7 +116,19 @@ class POSSetup
     @browser.find_element(:class, 'button--next').click; sleep 0.5
   end
 
-  def pick_ACH_payment
+  def fill_out_credit
+    config = YAML.load_file('config/config.yml')
+    config['credit_billing'].each do |id, value|
+      @browser.find_element(:id, id).send_keys value
+    end
+  end
+
+  def fill_out_ACH
+    @browser.find_element(:class, 'checking-js').click; sleep 0.5
+    config = YAML.load_file('config/config.yml')
+    config['checking_billing'].each do |id, value|
+      @browser.find_element(:id, id).send_keys value
+    end
   end
 
   # some selections will not need agreement and some does
@@ -129,7 +139,7 @@ class POSSetup
     rescue; end
   end
 
-  def setup_billing
+  def setup_billing(ach = false)
     # quickly pass through summary page, cannot check total here until cart bug is fixed,
     # items selected will be checked in membership/payment page
     @ui.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
@@ -152,13 +162,10 @@ class POSSetup
     # billing agreement
     agreement_check
 
-    # fill out billing info
-    config = YAML.load_file('config/config.yml')
-    billing_info = config['billing']
-    billing_info.each do |id, value|
-      @browser.find_element(:id, id).send_keys value
-    end
+    # fill in payment info
+    (ach.eql? true) ? fill_out_ACH : fill_out_credit
 
+    # select state for billing address
     @browser.find_element(:id, 'order_billing_state_code').find_elements(:tag_name, 'option').sample.click
     @browser.find_element(:class, 'billing-js').click
 
@@ -177,6 +184,7 @@ class POSSetup
     @browser.find_element(:class, 'discount-js').click
 
     failure = []
+    @ui.wait(20).until { @browser.find_elements(:class, 'payment-block')[0].displayed? }
     @full_price = @browser.find_elements(:class, 'payment-block')[0].attribute('data-total').gsub!(/[^0-9]/, '').to_i
 
     # Apply both discount code, one at a time
@@ -273,5 +281,22 @@ class POSSetup
     setup_billing
 
     @browser.close
+  end
+
+  # to make payment using ACH instead of credit card
+  def buy_with_ACH_payment(email, username, package)
+    set_username(email, username)
+    make_commitment
+
+    choose_a_package(package)
+    choose_payment_plan
+    setup_billing(true)
+
+    @browser.close
+
+    membership = calculate(@full_price, 6)
+    first_pymt = (membership / 6)
+    
+    [membership, first_pymt]
   end
 end
