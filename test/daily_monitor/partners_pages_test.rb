@@ -14,7 +14,11 @@ class PartnersPagesMonitorTest < Minitest::Test
     ]
     @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
-    @whitelist = ['http://www.usatf.org/Home.aspx', 'https://recruitingrealities.com/']
+
+    # these are problematic urls and is controled by third parties
+    # hence add them to whitelist and ignore during test
+    @whitelist = ['http://www.usatf.org/Home.aspx', 'https://recruitingrealities.com/',
+                  'https://www.hspdnj.com/', 'https://lemonaidrecruiting.com/']
   end
 
   def teardown
@@ -66,7 +70,7 @@ class PartnersPagesMonitorTest < Minitest::Test
     assert_empty failure
   end
 
-  def test_partner_logos_on_partners_page
+  def test_logos_on_partners_page
     @browser.get @partners_page
     logos = @browser.find_elements(:class, 'field-name-field-image')
 
