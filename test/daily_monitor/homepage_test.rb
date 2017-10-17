@@ -145,7 +145,7 @@ class HomePageMonitorTest < Minitest::Test
       @eyes.open @browser, 'TS-118 Test Hamburger Menu and Redirs', width, height
 
       ['Athlete Log In', 'Coach Log In', 'H.S. Coach',
-       'Parents Start Here', 'Athletes Start Heres'].each do |link_text|
+       'Parents Start Here', 'Athletes Start Here'].each do |link_text|
         @browser.get @homepage
         @browser.find_element(:class, 'fa-bars').click
 

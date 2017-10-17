@@ -15,3 +15,4 @@ recruit_emails
 # Test Reports #
 ################
 test/reports/*
+first_run_failed_tests

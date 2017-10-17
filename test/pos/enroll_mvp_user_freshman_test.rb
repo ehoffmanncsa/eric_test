@@ -8,9 +8,10 @@ class EnrollMVPFreshmanTest < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
-    # add a new freshman recruit, get back his email address and username
-    grad_year = 'freshman'; @package = 'mvp'
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main(grad_year)
+    # add a new freshman recruit, get back his username
+    _resp, _post, @username = RecruitAPI.new('freshman').ppost
+    @recruit_email = "#{@username}@ncsasports.org"
+    @package = 'mvp'
   end
 
   def teardown

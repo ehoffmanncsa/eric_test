@@ -9,8 +9,9 @@ class EnrollEliteJuniorTest < Minitest::Test
     @browser = @ui.driver
 
     # add a new junior recruit, get back his email address and username
-    grad_year = 'junior'; @package = 'elite'
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main(grad_year)
+    _resp, _post, @username = RecruitAPI.new('junior').ppost
+    @recruit_email = "#{@username}@ncsasports.org"
+    @package = 'elite'
   end
 
   def teardown

@@ -67,7 +67,7 @@ class POSSetup
       when 'champion' then cells[2].click; cart_count += 1
       when  'elite' then cells[3].click; cart_count += 1
       when 'mvp' then cells[4].click; cart_count += 1
-    end; sleep 1
+    end; sleep 3
 
     # compare cart count before and after selecting package
     new_cart_count = get_cart_count

@@ -9,7 +9,8 @@ class PurchaseEliteAndVIPItemsTests < Minitest::Test
     @browser = @ui.driver
 
     # add a new recruit, get back his email address and username
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main('senior')
+    _resp, _post, @username = RecruitAPI.new.ppost
+    @recruit_email = "#{@username}@ncsasports.org"
   end
 
   def teardown

@@ -55,12 +55,17 @@ class FasttrackAddNewRecruit
 
   def select_dropdowns
     %w[primaryPhoneType parent1Relationship parent1PrimaryPhoneType
-       scoutID rcUserID gender eventID highSchoolStateId sport highSchoolId].each do |attribute|
-      sleep 0.1; list = @browser.find_element(:name, attribute);
+       scoutID rcUserID gender highSchoolStateId sport highSchoolId].each do |attribute|
+      sleep 0.1; list = @browser.find_element(:name, attribute)
       options = list.find_elements(:tag_name, 'option')
       options.shift
       options.sample.click
     end
+  end
+
+  def select_event
+    list = @browser.find_element(:name, 'eventID')
+    list.find_elements(:tag_name, 'option')[1].click
   end
 
   def select_hs_grad_year(enroll_yr = nil)
@@ -116,6 +121,8 @@ class FasttrackAddNewRecruit
     rescue => e
       (retries += 1) < 3 ? retry : (puts e)
     end
+
+    select_event
 
     select_hs_grad_year(enroll_yr)
     create_save_emails

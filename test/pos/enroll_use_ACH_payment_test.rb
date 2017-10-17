@@ -9,7 +9,8 @@ class EnrollUsingACHPaymentTest < Minitest::Test
     @browser = @ui.driver
 
     # add a new recruit random, get back his email address and username
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main
+    _resp, _post, @username = RecruitAPI.new.ppost
+    @recruit_email = "#{@username}@ncsasports.org"
   end
 
   def teardown

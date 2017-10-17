@@ -10,7 +10,8 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
 
     # add a new recruit, get back his email address and username
     # cannot add lead with random grad year until packages discount calculation is fixed for any year lower than senior
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main('senior')
+    _resp, _post, @username = RecruitAPI.new('senior').ppost
+    @recruit_email = "#{@username}@ncsasports.org"
   end
 
   def teardown

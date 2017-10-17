@@ -5,12 +5,14 @@ require_relative '../test_helper'
 # UI Test: Enroll as a Champion User - Freshman
 class EnrollChampionFreshmanTest < Minitest::Test
   def setup
+    #@browser = RemoteUI.new('firefox').driver 
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
     # add a new freshman recruit, get back his email address and username
-    grad_year = 'freshman'; @package = 'champion'
-    @recruit_email, @username = FasttrackAddNewRecruit.new.main(grad_year)
+    resp, post, @username = RecruitAPI.new('freshman').ppost
+    @recruit_email = "#{@username}@ncsasports.org"
+    @package = 'champion'
   end
 
   def teardown

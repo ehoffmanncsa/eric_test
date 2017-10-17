@@ -14,10 +14,11 @@ class PartnersPagesMonitorTest < Minitest::Test
     ]
     @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
+    @whitelist = ['http://www.usatf.org/Home.aspx', 'https://recruitingrealities.com/']
   end
 
   def teardown
-    @browser.quit
+    begin @browser.quit; rescue; end
   end
 
   # spotcheck partners page in different views:
@@ -74,6 +75,7 @@ class PartnersPagesMonitorTest < Minitest::Test
     logos.each { |logo| hrefs << logo.find_element(:tag_name, 'a').attribute('href') }
 
     hrefs.each do |url|
+      next if @whitelist.include? url
       begin
         resp = Net::HTTP.get_response(URI(url))
       rescue => e
@@ -189,6 +191,7 @@ class PartnersPagesMonitorTest < Minitest::Test
     end
 
     hrefs.each do |url|
+      next if @whitelist.include? url
       begin
         resp = Net::HTTP.get_response(URI(url))
       rescue => e
