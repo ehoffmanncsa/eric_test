@@ -229,14 +229,14 @@ class TEDPageMonitorTest < Minitest::Test
       assert_empty fails
 
       result = @eyes.action.close(false)
-      failure << "#{page} page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      failure << "Feature pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure
   end
 
   # Verify pages from headers redir and content spotcheck
-  def test_why_NCSA_page
+  def test_header_pages
     failure = []
     pages = { 'WHY NCSA?': 'About NCSA Team Edition',
               'RESOURCE CENTER': 'Recruiting Resources for Club & High School Coaches' }
@@ -261,7 +261,7 @@ class TEDPageMonitorTest < Minitest::Test
       assert_empty fails
 
       result = @eyes.action.close(false)
-      failure << "#{page} page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      failure << "#Header pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure
