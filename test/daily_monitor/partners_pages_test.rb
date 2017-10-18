@@ -14,18 +14,13 @@ class PartnersPagesMonitorTest < Minitest::Test
     ]
     @eyes = Applitool.new 'Content'
     @browser = (RemoteUI.new 'chrome').driver
-
-    # these are problematic urls and is controled by third parties
-    # hence add them to whitelist and ignore during test
-    @whitelist = ['http://www.usatf.org/Home.aspx', 'https://recruitingrealities.com/',
-                  'https://www.hspdnj.com/', 'https://lemonaidrecruiting.com/']
   end
 
   def teardown
     begin @browser.quit; rescue; end
   end
 
-  # spotcheck partners page in different views:
+  # spotcheck partners page in different views
   # all logos links give 200, breadcrumbs show up and side-nav bar buttons redir correctly
   def test_partners_page_spotcheck
     failure = []
@@ -74,21 +69,23 @@ class PartnersPagesMonitorTest < Minitest::Test
     @browser.get @partners_page
     logos = @browser.find_elements(:class, 'field-name-field-image')
 
-    # make sure all url from logos give status code 200
-    failure = []; hrefs = []
+    # check url response
+    # 200 is good, 300 .. 399 should be reported, 400+ should fail the test
+    status_report = []; hrefs = []; failure = []
     logos.each { |logo| hrefs << logo.find_element(:tag_name, 'a').attribute('href') }
 
     hrefs.each do |url|
-      next if @whitelist.include? url
       begin
         resp = Net::HTTP.get_response(URI(url))
       rescue => e
-        failure << "#{url} gives error #{e}"; next
+        status_report << "#{url} gives error #{e}"; next
       end
 
-      failure << "#{url} gives #{resp.code}" unless resp.code.to_i.eql? 200
+      status_report << "#{url} gives #{resp.code}" if (300 .. 399).include? resp.code.to_i
+      failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     end
 
+    pp status_report
     assert_empty failure
 
     # make sure no duplicate urls
@@ -186,8 +183,9 @@ class PartnersPagesMonitorTest < Minitest::Test
     @browser.get @partners_page
     @browser.find_element(:link_text, 'All Partners Page').click
 
-    # make sure all links attached to each logo gives 200
-    failure = []; hrefs = []
+    # check url response
+    # 200 is good, 300 .. 399 should be reported, 400+ should fail the test
+    status_report = []; hrefs = []; failure = []
     @browser.find_element(:class, 'views-view-grid').find_elements(:class, 'row').each do |row|
       row.find_elements(:class, 'views-field-field-partner-image').each do |logo|
         hrefs << logo.find_element(:tag_name, 'a').attribute('href')
@@ -195,16 +193,17 @@ class PartnersPagesMonitorTest < Minitest::Test
     end
 
     hrefs.each do |url|
-      next if @whitelist.include? url
       begin
         resp = Net::HTTP.get_response(URI(url))
       rescue => e
-        failure << "#{url} gives error #{e}"; next
+        status_report << "#{url} gives error #{e}"; next
       end
 
-      failure << "#{url} gives #{resp.code}" unless resp.code.to_i.eql? 200
+      status_report << "#{url} gives #{resp.code}" if (300 .. 399).include? resp.code.to_i
+      failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     end
 
+    pp status_report
     assert_empty failure
   end
 
