@@ -178,7 +178,7 @@ class EventsPageMonitorTest < Minitest::Test
     @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view; sleep 0.5
     @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
-    @eyes.screenshot 'Football Camp page desktop viewport'
+    @eyes.check_ignore 'Football Camp page desktop viewport', @browser.find_element(:css, 'div.group-slices.push-content')
     result = @eyes.action.close(false)
     assert_equal 0, result.mismatches, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
   end

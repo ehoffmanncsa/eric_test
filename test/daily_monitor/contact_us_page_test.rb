@@ -32,7 +32,7 @@ class ContactUsPagesMonitorTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    @browser.quit
   end
 
   def test_contact_us_page
