@@ -2,8 +2,6 @@
 require 'minitest/autorun'
 require 'pp'
 require 'yaml'
-require 'parallel'
-require 'mechanize'
 require 'minitest-ci'
 require 'json'
 require 'openssl'
