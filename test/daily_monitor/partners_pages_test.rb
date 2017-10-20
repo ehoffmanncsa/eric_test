@@ -148,12 +148,11 @@ class PartnersPagesMonitorTest < Minitest::Test
 
   # combining testing for all partners page views and redirecting back to partners page
   def test_all_partners_page
-    failure = []
     @viewports.each do |size|
       width = size.values[0]['width']
       height = size.values[0]['height']
 
-      @eyes.open @browser, 'TS-169 Test All Partners Page', width, height
+      @browser.manage.window.resize_to(width, height)
       @browser.get @partners_page
       @browser.find_element(:link_text, 'All Partners Page').click
       assert @browser.title.match(/View all NCSA partners/), @browser.title
@@ -165,18 +164,12 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.2
 
-      @eyes.check_ignore "All partners #{size.keys} view", @browser.find_element(:class, 'views-view-grid')
-      result = @eyes.action.close(false)
-      failure << "All partners page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-
       # check returning to partners page
       button = @browser.find_element(:link_text, 'Partners')
       assert button.enabled?, 'Partners button not found'
       @browser.get button.attribute('href')
       assert @browser.title.match(/NCSA Partners/), @browser.title
     end
-
-    assert_empty failure
   end
 
   def test_logos_on_all_partners_page

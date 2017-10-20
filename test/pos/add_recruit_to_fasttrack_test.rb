@@ -1,8 +1,8 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-38
-# UI Test: POS Regression - How to Add New Recruit to Fasttrack
+# TS-38: POS Regression
+# UI Test:  How to Add New Recruit to Fasttrack
 class AddRecruitToFasttrackTest < Minitest::Test
   def setup
     @ui = LocalUI.new(true)
