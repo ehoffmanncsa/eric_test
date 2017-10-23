@@ -38,11 +38,6 @@ checking_billing:
   order_billing_city: 'Chicago'
   order_billing_zip: '60642'
 
-# Fasttrack Admin login
-admin:
-  username: 'automation'
-  password: 'Secure.123'
-
 # Browser viewport sizes
 viewport:
   desktop:
