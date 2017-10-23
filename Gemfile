@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'eyes_selenium'
-gem 'mail'
+gem 'gmail'
 gem 'mechanize'
 gem 'minitest'
 gem 'minitest-ci'

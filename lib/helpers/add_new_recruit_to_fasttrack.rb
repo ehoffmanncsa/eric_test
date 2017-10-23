@@ -6,9 +6,9 @@ require 'securerandom'
 # To add new recruit via Fasttrack and return his email and username
 class FasttrackAddNewRecruit
   def initialize
-    config = YAML.load_file('config/config.yml')
-    username = config['admin']['username']
-    password = config['admin']['password']
+    config = YAML.load_file('config/.creds.yml')
+    username = config['fasttrack_admin']['username']
+    password = config['fasttrack_admin']['password']
     @info = config['recruit']
 
     @ui = LocalUI.new(true)

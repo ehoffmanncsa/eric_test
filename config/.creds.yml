@@ -1,0 +1,16 @@
+# Fasttrack Admin login
+fasttrack_admin:
+  username: 'automation'
+  password: 'Secure.123'
+
+# TED coach login
+ted:
+  username: 'cdickson197@gmail.com'
+  password: 'ncsa'
+
+# automation gmail
+gmail:
+  username: 'ncsa.automation@gmail.com'
+  app_pass: 'axkhemudrqgwaldq'
+  password: 'oz4efpwaYpJivWZDbAGrJMJf'
+  google_voice: '802-676-0642'

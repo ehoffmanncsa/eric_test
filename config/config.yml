@@ -38,7 +38,7 @@ checking_billing:
   order_billing_city: 'Chicago'
   order_billing_zip: '60642'
 
-# Admin login
+# Fasttrack Admin login
 admin:
   username: 'automation'
   password: 'Secure.123'
@@ -75,3 +75,7 @@ pages:
   site_map: 'http://www.ncsasports.org/sitemap.xml'
   fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
   user_login: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
+
+TED_coach_app:
+  login_staging: 'https://team-staging.ncsasports.org/sign_in'
+  login_prod: 'https://team.ncsasports.org/sign_in'
