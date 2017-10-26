@@ -70,7 +70,10 @@ class UploadSingleVideoTest < Minitest::Test
     list = container.find_element(:class, 'compilation-list')
     str = list.find_element(:class, 'compilation-list-item').text.split('-')
     date = str[0..2].join('-')
+    file_name = str.last
+
     assert_equal date, Time.now.strftime('%Y-%m-%d'), 'Date is not today'
+    assert_equal file_name, 'sample.mp4', 'Find unexpected file name'
   end
 
   def send_to_video_team
