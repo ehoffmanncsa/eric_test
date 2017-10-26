@@ -69,6 +69,7 @@ class UploadMultipleVideosTest < Minitest::Test
     failure = []; loaded_files = []
     container = @browser.find_element(:class, 'js-video-files-container')
     list = container.find_element(:class, 'compilation-list')
+
     # check date for each uploaded file
     list.find_elements(:class, 'compilation-list-item').each do |elem|
       str = elem.text.split('-')
@@ -76,13 +77,12 @@ class UploadMultipleVideosTest < Minitest::Test
       loaded_files << str.last
       failure << "#{date} is not today" unless date.eql? Time.now.strftime('%Y-%m-%d')
     end
-    assert_empty failure
 
     # check file name for each uploaded file
     org_files = %w[sample.avi sample.mp4 sample.mov]
-    all = loaded_files + org_files
-    diff = all.reject { |f| all.count(f) > 1 }
-    assert_empty diff, 'Find unexpected file names'
+    loaded_files.each { |file| failure << "File name #{file} is incorrect" unless org_files.include? file }
+
+    assert_empty failure
   end
 
   def send_to_video_team
