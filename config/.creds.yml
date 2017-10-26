@@ -8,6 +8,11 @@ ted:
   username: 'cdickson197@gmail.com'
   password: 'ncsa'
 
+# sample video user login
+video_user:
+  username: 'elite2'
+  password: 'ncsa'
+
 # automation gmail
 gmail:
   username: 'ncsa.automation@gmail.com'

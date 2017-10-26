@@ -1,17 +1,17 @@
 # encoding: utf-8
-require 'rest-client'
 require 'json'
 require 'securerandom'
 
 class RecruitAPI
   def initialize(enroll_yr = nil)
+    @api = Api.new
+    @username = "automation#{SecureRandom.hex(2)}"
+
     @enroll_yr = enroll_yr
     @url = 'https://qa.ncsasports.org/api/submit/v1/new_recruit'
     @sport_ids = [17633, 17634, 17635, 17638, 17639, 17644, 17645, 17652, 17653, 17659, 17660, 
                   17665, 17666, 17683, 17684, 17687, 17688, 17689, 17690, 17691, 17692, 17695, 
                   17696, 17701, 17702, 17706, 17707, 17708, 17711]
-
-    @username = "automation#{SecureRandom.hex(2)}"
   end
 
   def make_name
@@ -43,7 +43,7 @@ class RecruitAPI
     grad_yr
   end
 
-  def post
+  def ppost
     body = { recruit: {
                athlete_email: "#{@username}@ncsasports.org",
                athlete_first_name: make_name,
@@ -56,20 +56,11 @@ class RecruitAPI
               }
             }
 
-    RestClient.post @url, body
-  end
+    resp_code, resp_body = @api.ppost @url, body
 
-  # return JSON from the provided HTTP response.body
-  def parse(response, element = nil)
-    if element
-      return JSON.parse("#{response}")["#{element}"]
-    else
-      return JSON.parse("#{response}")
-    end
-  end
-
-  def ppost
-    response = post
-    [response.code, parse(response), @username]
+    [resp_code, resp_body, @username]
   end
 end
+
+# resp, post, username = RecruitAPI.new.ppost
+# puts post, username

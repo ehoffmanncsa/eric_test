@@ -9,7 +9,7 @@ class LocalUI
     @config = YAML.load_file('config/config.yml')
 
     options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
-    self.driver = gui ? (Selenium::WebDriver.for(:firefox)) : (Selenium::WebDriver.for(:chrome, options: options))
+    self.driver = gui ? (Selenium::WebDriver.for :firefox) : (Selenium::WebDriver.for :chrome, options: options)
   end
 
   def wait(timeout = nil)
@@ -18,10 +18,11 @@ class LocalUI
   end
 
   def fasttrack_login
+    creds = YAML.load_file('config/.creds.yml')
     driver.get @config['pages']['fasttrack_login']
 
-    driver.find_element(:id, 'username').send_keys @config['admin']['username']
-    driver.find_element(:id, 'password').send_keys @config['admin']['password']
+    driver.find_element(:id, 'username').send_keys creds['fasttrack_admin']['username']
+    driver.find_element(:id, 'password').send_keys creds['fasttrack_admin']['password']
     driver.find_element(:name, 'submit').click
 
     driver.get @config['pages']['fasttrack_login']
@@ -34,11 +35,12 @@ class LocalUI
     end
   end
 
-  def user_login(username)
+  def user_login(username, pwd = nil)
+    password = pwd ? pwd : 'ncsa'
     driver.get @config['pages']['user_login']
 
     driver.find_element(:id, 'user_account_login').send_keys username
-    driver.find_element(:id, 'user_account_password').send_keys 'ncsa'
+    driver.find_element(:id, 'user_account_password').send_keys password
     driver.find_element(:name, 'commit').click
 
     #waiting for the right title
