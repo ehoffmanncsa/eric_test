@@ -9,24 +9,11 @@ class UploadSingleVideoTest < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
-    begin
-      resp_code, resp_body, @username = RecruitAPI.new('freshman').ppost
-      unless resp_code.eql? 200
-        puts "POST new recuite to API gives #{resp_code}"
-        @browser.quit; exit
-      end
-    rescue => e
-      puts e; @browser.quit; exit
-    end
+    resp_code, resp_body, @username = RecruitAPI.new('freshman').ppost
+    raise "POST new recuite to API gives #{resp_code}" unless resp_code.eql? 200
 
     @client_id = resp_body['client_id']
     @recruit_email = "#{@username}@ncsasports.org"
-
-    begin
-      POSSetup.new.buy_package(@recruit_email, @username, 'elite')
-    rescue => e
-      puts e; @browser.quit; exit
-    end
   end
 
   def teardown
@@ -34,6 +21,8 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def test_upload_single_video
+    POSSetup.new.buy_package(@recruit_email, @username, 'elite')
+
     # upload video, also check for the form and buttons in the form
     @ui.user_login(@username)
     @browser.find_element(:id, 'profile_summary_button').click
