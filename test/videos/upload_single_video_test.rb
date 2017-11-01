@@ -23,7 +23,7 @@ class UploadSingleVideoTest < Minitest::Test
   def test_upload_single_video
     POSSetup.new.buy_package(@recruit_email, @username, 'elite')
 
-    # upload video, also check for the form and buttons in the form
+    upload video, also check for the form and buttons in the form
     @ui.user_login(@username)
     @browser.find_element(:id, 'profile_summary_button').click
 

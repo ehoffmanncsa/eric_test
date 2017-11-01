@@ -10,6 +10,10 @@ class POSSetup
     @browser = @ui.driver
   end
 
+  def teardown
+    @browser.quit
+  end
+
   def set_username(email, username)
     @ui.user_login(email)
     @ui.wait.until { @browser.find_element(:name, 'commit').displayed? }
@@ -251,7 +255,7 @@ class POSSetup
     choose_payment_plan
     setup_billing
 
-    @browser.close
+    teardown
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)
@@ -267,7 +271,7 @@ class POSSetup
     pick_VIP_items(all)
     setup_billing
 
-    @browser.close
+    teardown
   end
 
   # to purchase both a membership package and some alacarte items
@@ -280,7 +284,7 @@ class POSSetup
     pick_VIP_items
     setup_billing
 
-    @browser.close
+    teardown
   end
 
   # to make payment using ACH instead of credit card
@@ -292,7 +296,7 @@ class POSSetup
     choose_payment_plan
     setup_billing(true)
 
-    @browser.close
+    teardown
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)

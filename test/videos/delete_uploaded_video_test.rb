@@ -49,7 +49,9 @@ class DeleteUploadedVideoTest < Minitest::Test
     assert modal.find_element(:class, 'button--cancel').enabled?
 
     modal.find_element(:class, 'button--red').click; sleep 1
-    assert @browser.page_source.include? "File deleted from your videos."
-    assert @browser.page_source.include? "You don't have any videos on your profile."
+    assert (@browser.page_source.include? 'File deleted from your videos.'), 'Video deleted message not found'
+
+    msg = "Cannot find message - You don't have any videos on your profile"
+    assert (@browser.page_source.include? "You don't have any videos on your profile."), msg
   end
 end
