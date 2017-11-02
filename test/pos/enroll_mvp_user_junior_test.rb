@@ -4,6 +4,8 @@ require_relative '../test_helper'
 # TS-60: POS Regression
 # UI Test: Enroll as a MVP User - Junior
 class EnrollMVPJuniorTest < Minitest::Test
+  include POSSetup
+
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -19,7 +21,8 @@ class EnrollMVPJuniorTest < Minitest::Test
   end
 
   def test_enroll_mvp_junior
-    membership, expect_first_pymt = POSSetup.new.buy_package(@recruit_email, @username, @package)
+    POSSetup.setup(@ui)
+    membership, expect_first_pymt = POSSetup.buy_package(@recruit_email, @username, @package)
     expect_remain_balance = membership - expect_first_pymt
 
     @ui.user_login(@recruit_email)

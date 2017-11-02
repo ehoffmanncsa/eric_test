@@ -4,6 +4,8 @@ require_relative '../test_helper'
 # TS-65: POS Regression
 # UI Test: Purchase Champion + VIP Item (any grad year)
 class PurchaseChampionAndVIPItemsTests < Minitest::Test
+  include POSSetup
+
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -18,7 +20,8 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
   end
 
   def test_purchase_champion_and_VIP_items
-    POSSetup.new.buy_combo(@recruit_email, @username, 'champion')
+    POSSetup.setup(@ui)
+    POSSetup.buy_combo(@recruit_email, @username, 'champion')
     
     @ui.user_login(@username)
     @ui.wait { @browser.find_element(:class, 'fa-angle-down').enabled? }

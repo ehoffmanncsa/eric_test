@@ -4,17 +4,17 @@ require_relative '../../test/test_helper'
 # Set up a new lead for POS base 2 conditions: grad year and package type
 # choosing and returning 6 payments financing option as default 
 # that way we can test for remaining balance and first payment made
-class POSSetup
-  def initialize
-    @ui = LocalUI.new(true)
-    @browser = @ui.driver
+module POSSetup
+  def self.setup(ui_object)
+    @ui = ui_object
+    @browser = ui_object.driver
   end
 
-  def teardown
-    @browser.quit
+  def self.clear_cookies # clear cache
+    @browser.manage.delete_all_cookies
   end
 
-  def set_username(email, username)
+  def self.set_username(email, username)
     @ui.user_login(email)
     @ui.wait.until { @browser.find_element(:name, 'commit').displayed? }
 
@@ -24,7 +24,7 @@ class POSSetup
     @browser.find_element(:name, 'commit').click
   end
 
-  def make_commitment
+  def self.make_commitment
     @ui.wait.until { @browser.find_element(:class, 'fa-angle-down').displayed? }
 
     # find the swoosh and go to commitment page
@@ -45,12 +45,12 @@ class POSSetup
     raise '[ERROR] Cannot find activate button' unless get_activate.enabled?; get_activate.click
   end
 
-  def get_cart_count
+  def self.get_cart_count
     count = @browser.find_element(:id, 'shopping-cart').find_element(:class, 'js-cart-count').text
     return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
   end
 
-  def choose_a_package(package)
+  def self.choose_a_package(package)
     @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
 
     # get initial cart count
@@ -82,7 +82,7 @@ class POSSetup
     @browser.find_element(:class, 'button--next').click; sleep 0.5
   end
 
-  def choose_payment_plan(size = 'medium')
+  def self.choose_payment_plan(size = 'medium')
     check_discount_calculate
 
     # choose 6 months payment plan by default for testing purpose
@@ -92,7 +92,7 @@ class POSSetup
     end
   end
 
-  def pick_VIP_items(all = false)
+  def self.pick_VIP_items(all = false)
     @browser.get 'https://qa.ncsasports.org/clientrms/membership/offerings'
 
     # get initial cart count
@@ -120,14 +120,14 @@ class POSSetup
     @browser.find_element(:class, 'button--next').click; sleep 0.5
   end
 
-  def fill_out_credit
+  def self.fill_out_credit
     config = YAML.load_file('config/config.yml')
     config['credit_billing'].each do |id, value|
       @browser.find_element(:id, id).send_keys value
     end
   end
 
-  def fill_out_ACH
+  def self.fill_out_ACH
     @browser.find_element(:class, 'checking-js').click; sleep 0.5
     config = YAML.load_file('config/config.yml')
     config['checking_billing'].each do |id, value|
@@ -137,13 +137,13 @@ class POSSetup
 
   # some selections will not need agreement and some does
   # so ignore this method when agreement not found
-  def agreement_check
+  def self.agreement_check
     begin
       @browser.find_element(:class, 'agreement-js').click
     rescue; end
   end
 
-  def setup_billing(ach = false)
+  def self.setup_billing(ach = false)
     # quickly pass through summary page, cannot check total here until cart bug is fixed,
     # items selected will be checked in membership/payment page
     @ui.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
@@ -180,7 +180,7 @@ class POSSetup
     @browser.find_element(:id, 'order-submit').click
   end
 
-  def check_discount_calculate
+  def self.check_discount_calculate
     @ui.wait(20).until { @browser.find_element(:class, 'discount-js').displayed? }
 
     # activate discount feature
@@ -220,7 +220,7 @@ class POSSetup
     raise "[ERROR] Discount calculation is off #{failure}" unless failure.empty?
   end
 
-  def calculate(full_price, months, discount_code = nil)
+  def self.calculate(full_price, months, discount_code = nil)
     interest_rate = 1
     pay_rate = 1
 
@@ -238,7 +238,7 @@ class POSSetup
     (((full_price * interest_rate) / months) * pay_rate).round * months
   end
 
-  def get_cart_total
+  def self.get_cart_total
     # open shopping cart
     @browser.find_element(:id, 'shopping-cart').click
     cart = @browser.find_element(:class, 'shopping-cart-open')
@@ -247,7 +247,7 @@ class POSSetup
   end
 
   # to purchase only membership package
-  def buy_package(email, username, package)
+  def self.buy_package(email, username, package)
     set_username(email, username)
     make_commitment
 
@@ -255,7 +255,7 @@ class POSSetup
     choose_payment_plan
     setup_billing
 
-    teardown
+    clear_cookies
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)
@@ -264,18 +264,18 @@ class POSSetup
   end
 
   # to purchase only alacarte items
-  def buy_alacarte(email, username, all = true)
+  def self.buy_alacarte(email, username, all = true)
     set_username(email, username)
     make_commitment
 
     pick_VIP_items(all)
     setup_billing
 
-    teardown
+    clear_cookies
   end
 
   # to purchase both a membership package and some alacarte items
-  def buy_combo(email, username, package)
+  def self.buy_combo(email, username, package)
     set_username(email, username)
     make_commitment
 
@@ -284,11 +284,11 @@ class POSSetup
     pick_VIP_items
     setup_billing
 
-    teardown
+    clear_cookies
   end
 
   # to make payment using ACH instead of credit card
-  def buy_with_ACH_payment(email, username, package)
+  def self.buy_with_ACH_payment(email, username, package)
     set_username(email, username)
     make_commitment
 
@@ -296,7 +296,7 @@ class POSSetup
     choose_payment_plan
     setup_billing(true)
 
-    teardown
+    clear_cookies
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)

@@ -4,8 +4,9 @@ require_relative '../test_helper'
 # TS-54: POS Regression
 # UI Test: Enroll as a Champion User - Freshman
 class EnrollChampionFreshmanTest < Minitest::Test
+  include POSSetup
+
   def setup
-    #@browser = RemoteUI.new('firefox').driver 
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
@@ -20,7 +21,8 @@ class EnrollChampionFreshmanTest < Minitest::Test
   end
 
   def test_enroll_champion_freshman
-    membership, expect_first_pymt = POSSetup.new.buy_package(@recruit_email, @username, @package)
+    POSSetup.setup(@ui)
+    membership, expect_first_pymt = POSSetup.buy_package(@recruit_email, @username, @package)
     expect_remain_balance = membership - expect_first_pymt
 
     @ui.user_login(@recruit_email)

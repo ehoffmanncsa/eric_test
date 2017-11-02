@@ -4,6 +4,8 @@ require_relative '../test_helper'
 # TS-73: POS Regression
 # UI Test: Enroll using ACH as Payment (Any Membership)
 class EnrollUsingACHPaymentTest < Minitest::Test
+  include POSSetup
+
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -18,8 +20,11 @@ class EnrollUsingACHPaymentTest < Minitest::Test
   end
 
   def test_enroll_use_ACH_payment
-    package = %w(champion elite).sample # pick a random package, cant pick mvp right now because discount calculation is off
-    membership, expect_first_pymt = POSSetup.new.buy_with_ACH_payment(@recruit_email, @username, package)
+    # pick a random package, cant pick mvp right now because discount calculation is off
+    package = %w(champion elite).sample
+
+    POSSetup.setup(@ui)
+    membership, expect_first_pymt = POSSetup.buy_with_ACH_payment(@recruit_email, @username, package)
     expect_remain_balance = membership - expect_first_pymt
 
     @ui.user_login(@username)

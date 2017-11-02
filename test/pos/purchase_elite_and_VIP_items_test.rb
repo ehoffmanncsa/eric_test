@@ -4,6 +4,8 @@ require_relative '../test_helper'
 # TS-66: POS Regression
 # UI Test: Purchase Elite + VIP Item (any grad year)
 class PurchaseEliteAndVIPItemsTests < Minitest::Test
+  include POSSetup
+
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -18,7 +20,8 @@ class PurchaseEliteAndVIPItemsTests < Minitest::Test
   end
 
   def test_purchase_elite_and_VIP_items
-    POSSetup.new.buy_combo(@recruit_email, @username, 'elite')
+    POSSetup.setup(@ui)
+    POSSetup.buy_combo(@recruit_email, @username, 'elite')
     
     @ui.user_login(@username)
 
