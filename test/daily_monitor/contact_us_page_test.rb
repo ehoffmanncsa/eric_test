@@ -19,12 +19,11 @@ class ContactUsPagesMonitorTest < Minitest::Test
     @pages = { 'About Us': 'About NCSA Next College Student Athlete',
                'What We Do': 'What We Do',
                'How We Do It': 'What to Expect with NCSA',
-               'NCSA Reviews': 'reviews from Parents and Athletes',
                'What Does NCSA Cost?': 'How much does NCSA Cost',
                'Products': 'NCSA Product',
                'Getting Started': '3 Easy Steps to Get Started with NCSA',
                'Our Mission': 'Our Mission',
-               'Our People': 'NCSA Athletic Recruiting',
+               'Our People': 'Meet the NCSA Team',
                'Partners': 'NCSA Partners',
                'Press & Media': 'Press and Media',
                'Careers': 'NCSA Careers',
@@ -69,10 +68,10 @@ class ContactUsPagesMonitorTest < Minitest::Test
     failure = []
     @pages.each do |link_text, expect_title|
       @browser.get @contact_us
-      @browser.find_element(:link_text, link_text).click
+      @browser.find_element(:link_text, link_text).click; sleep 1
       real_title = @browser.title
 
-      failure << "#{real_title} vs #{expect_title}" unless real_title.match expect_title
+      failure << "#{link_text} page title: #{real_title} vs #{expect_title}" unless real_title.match expect_title
     end
     assert_empty failure
   end
