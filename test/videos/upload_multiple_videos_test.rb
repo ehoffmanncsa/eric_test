@@ -5,6 +5,8 @@ require 'securerandom'
 # TS-6: Video regression
 # UI Test: Upload a multiple videos
 class UploadMultipleVideosTest < Minitest::Test
+  include POSSetup
+
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -21,7 +23,8 @@ class UploadMultipleVideosTest < Minitest::Test
   end
 
   def test_upload_multiple_videos
-    POSSetup.new.buy_package(@recruit_email, @username, 'champion')
+    POSSetup.setup(@ui)
+    POSSetup.buy_package(@recruit_email, @username, 'champion')
 
     # upload video, also check for the form and buttons in the form
     @ui.user_login(@username)

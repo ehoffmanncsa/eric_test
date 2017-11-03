@@ -181,7 +181,7 @@ module POSSetup
   end
 
   def self.check_discount_calculate
-    @ui.wait(20).until { @browser.find_element(:class, 'discount-js').displayed? }
+    @ui.wait(45).until { @browser.find_element(:class, 'discount-js').displayed? }
 
     # activate discount feature
     @browser.find_element(:class, 'discount-js').location_once_scrolled_into_view
