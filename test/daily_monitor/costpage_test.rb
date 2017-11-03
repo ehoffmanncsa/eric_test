@@ -135,12 +135,12 @@ class CostPageMonitorTest < Minitest::Test
 
             @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
           when 'Parents Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--parent').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
+            msg = 'Parent Start Here button not found in hamburger'
+            assert @browser.find_element(:class, 'm-nav-start-link--parent').enabled?, msg
 
           when 'Athletes Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--athlete').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
+            msg = 'Athlete Start Here not found in hamburger'
+            assert @browser.find_element(:class, 'm-nav-start-link--athlete').enabled?, msg
         end
       end
 
