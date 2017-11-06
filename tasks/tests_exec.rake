@@ -3,15 +3,22 @@ require 'minitest-ci'
 
 Minitest::Ci.new.start
 
+exceptions = []
+
 namespace :first_run do 
   desc 'execute all tests....'
   task :exec, [:dir] do |t, args|
     puts "[INFO] First run attempt"
 
     args.with_defaults(dir: '**')
-    test_files = FileList["test/#{args.dir}/*_test.rb"]
-    test_files.reject! { |e| e.empty? }
 
+    if exceptions.empty?
+      test_files = FileList["test/#{args.dir}/*_test.rb"]
+    else
+      test_files = FileList["test/#{args.dir}/*_test.rb"] - exceptions
+    end
+
+    test_files.reject! { |e| e.empty? }
     test_files.each do |file|
       puts "\n[INFO] Executing ..... #{file}"
       begin
