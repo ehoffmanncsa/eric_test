@@ -122,8 +122,13 @@ module POSSetup
 
   def self.fill_out_credit
     config = YAML.load_file('config/config.yml')
-    config['credit_billing'].each do |id, value|
-      @browser.find_element(:id, id).send_keys value
+    begin
+      retries ||= 0
+      config['credit_billing'].each do |id, value|
+        @browser.find_element(:id, id).send_keys value
+      end
+    rescue => e
+      retry if (retries += 1) < 3
     end
   end
 
