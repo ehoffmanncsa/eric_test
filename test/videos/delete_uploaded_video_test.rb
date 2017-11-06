@@ -6,8 +6,6 @@ require 'securerandom'
 # UI Test: Student athlete is able to delete a video
 #          from the “MY VIDEO FILES” section of video page
 class DeleteUploadedVideoTest < Minitest::Test
-  include POSSetup
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -23,17 +21,18 @@ class DeleteUploadedVideoTest < Minitest::Test
     @browser.quit
   end
 
-  def test_delete_a_video
+  def buy_premium_package
     POSSetup.setup(@ui)
     POSSetup.buy_package(@recruit_email, @username, 'elite')
+  end
 
-    action = Video.new(@username, @recruit_email)
-    action.upload_video
-    action.teardown
+  def test_delete_a_video
+    buy_premium_package
 
-    @ui.user_login(@username)
-    @browser.get 'https://qa.ncsasports.org/clientrms/profile/video'
+    Video.setup(@ui, @username)
+    Video.upload_video
 
+    # now delete and see if it is successfully deleted
     @browser.find_element(:class, 'fa-remove').click
     modal = @browser.find_element(:class, 'video-confirm-modal')
     assert modal.find_element(:class, 'button--red').enabled?

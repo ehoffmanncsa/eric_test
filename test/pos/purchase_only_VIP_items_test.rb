@@ -4,8 +4,6 @@ require_relative '../test_helper'
 # TS-63: POS Regression
 # UI Test: Purchase only VIP items
 class PurchaseOnlyVIPItemsTests < Minitest::Test
-  include POSSetup
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver

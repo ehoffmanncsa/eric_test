@@ -5,8 +5,6 @@ require 'securerandom'
 # TS-17: Video regression
 # UI Test: Student athlete is able play video on Preview Profile UX
 class AthletePlayPublishedVideoTest < Minitest::Test
-  include POSSetup, Video
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver

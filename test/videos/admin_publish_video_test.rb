@@ -5,8 +5,6 @@ require 'securerandom'
 # TS-18: Video regression
 # UI Test: Admin/video editing team user can Publish a Video
 class AdminPublishVideoTest < Minitest::Test
-  include POSSetup, Video
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver

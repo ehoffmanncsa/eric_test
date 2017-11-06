@@ -4,8 +4,6 @@ require_relative '../test_helper'
 # TS-73: POS Regression
 # UI Test: Enroll using ACH as Payment (Any Membership)
 class EnrollUsingACHPaymentTest < Minitest::Test
-  include POSSetup
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver

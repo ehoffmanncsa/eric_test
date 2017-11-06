@@ -4,8 +4,6 @@ require_relative '../test_helper'
 # TS-56: POS Regression
 # UI Test: Enroll as a Elite User - Junior
 class EnrollEliteJuniorTest < Minitest::Test
-  include POSSetup
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver

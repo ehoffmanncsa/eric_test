@@ -5,8 +5,6 @@ require 'securerandom'
 # TS-5: Video regression
 # UI Test: Upload a single video
 class UploadSingleVideoTest < Minitest::Test
-  include POSSetup
-
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -26,7 +24,7 @@ class UploadSingleVideoTest < Minitest::Test
     POSSetup.setup(@ui)
     POSSetup.buy_package(@recruit_email, @username, 'elite')
 
-    upload video, also check for the form and buttons in the form
+    #upload video, also check for the form and buttons in the form
     @ui.user_login(@username)
     @browser.find_element(:id, 'profile_summary_button').click
 
