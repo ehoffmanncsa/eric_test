@@ -120,6 +120,8 @@ module POSSetup
     @browser.find_element(:class, 'button--next').click; sleep 0.5
   end
 
+  # intermitten failure because of element not visible
+  # therefore retry upto 3 times if this happens
   def self.fill_out_credit
     config = YAML.load_file('config/config.yml')
     begin
