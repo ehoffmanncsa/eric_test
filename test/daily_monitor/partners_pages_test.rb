@@ -13,7 +13,8 @@ class PartnersPagesMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = LocalUI.new(true) #(RemoteUI.new 'chrome').driver
+    @browser = @ui.driver
   end
 
   def teardown
@@ -70,13 +71,15 @@ class PartnersPagesMonitorTest < Minitest::Test
     logos = @browser.find_elements(:class, 'field-name-field-image')
 
     # check url response
-    # 200 is good, 300 .. 399 should be reported, 400+ should fail the test
+    # 200 is good so do nothing and go to next url, 
+    # 300 .. 399 and any error should be reported, 
+    # 400+ should fail the test
     status_report = []; hrefs = []; failure = []
     logos.each { |logo| hrefs << logo.find_element(:tag_name, 'a').attribute('href') }
 
     hrefs.each do |url|
       begin
-        resp = Net::HTTP.get_response(URI(url))
+        resp = RestClient::Request.execute(method: :get, url: url, timeout: 15)
       rescue => e
         status_report << "#{url} gives error #{e}"; next
       end
@@ -85,7 +88,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     end
 
-    pp status_report
+    pp status_report unless status_report.empty?
     assert_empty failure
 
     # make sure no duplicate urls
@@ -187,7 +190,7 @@ class PartnersPagesMonitorTest < Minitest::Test
 
     hrefs.each do |url|
       begin
-        resp = Net::HTTP.get_response(URI(url))
+        resp = RestClient::Request.execute(method: :get, url: url, timeout: 10)
       rescue => e
         status_report << "#{url} gives error #{e}"; next
       end
@@ -196,7 +199,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     end
 
-    pp status_report
+    pp status_report unless status_report.empty?
     assert_empty failure
   end
 
