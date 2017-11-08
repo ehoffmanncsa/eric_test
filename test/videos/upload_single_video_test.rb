@@ -44,7 +44,7 @@ class UploadSingleVideoTest < Minitest::Test
 
     path = File.absolute_path('test/videos/sample.mp4')
     @browser.find_element(:id, 'profile-video-upload-file-input').send_keys path
-    @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 1
+    @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 2
 
     check_video_uploaded
     send_to_video_team
@@ -53,7 +53,7 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def check_video_uploaded
-    @ui.wait(30) { @browser.find_element(:class, 'js-video-files-container').displayed? }
+    @ui.wait { @browser.find_element(:class, 'js-video-files-container').displayed? }
     assert @browser.find_element(:class, 'progress').displayed?, 'Cannot find progress bar'
 
     container = @browser.find_element(:class, 'js-video-files-container')
@@ -62,7 +62,7 @@ class UploadSingleVideoTest < Minitest::Test
     date = str[0..2].join('-')
     file_name = str.last
 
-    assert_equal date, Time.now.strftime('%Y-%m-%d'), 'Date is not today'
+    assert_equal date, Time.now.strftime('%Y-%-m-%-d'), 'Date is not today'
     assert_equal file_name, 'sample.mp4', 'Find unexpected file name'
   end
 

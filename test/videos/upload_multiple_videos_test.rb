@@ -43,7 +43,7 @@ class UploadMultipleVideosTest < Minitest::Test
 
       path = File.absolute_path("test/videos/sample.#{extention}")
       @browser.find_element(:id, 'profile-video-upload-file-input').send_keys path
-      @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 1
+      @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 2
     end
 
     check_videos_uploaded
@@ -53,7 +53,7 @@ class UploadMultipleVideosTest < Minitest::Test
   end
 
   def check_videos_uploaded
-    @ui.wait(30) { @browser.find_element(:class, 'js-video-files-container').displayed? }
+    @ui.wait { @browser.find_element(:class, 'js-video-files-container').displayed? }
     assert @browser.find_element(:class, 'progress').displayed?, 'Cannot find progress bar'
 
     failure = []; loaded_files = []
@@ -65,7 +65,7 @@ class UploadMultipleVideosTest < Minitest::Test
       str = elem.text.split('-')
       date = str[0..2].join('-')
       loaded_files << str.last
-      failure << "#{date} is not today" unless date.eql? Time.now.strftime('%Y-%m-%d')
+      failure << "#{date} is not today" unless date.eql? Time.now.strftime('%Y-%-m-%-d')
     end
 
     # check file name for each uploaded file
