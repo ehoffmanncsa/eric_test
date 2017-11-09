@@ -2,6 +2,7 @@
 require 'xmlsimple'
 require 'pp'
 require 'open3'
+require 'json'
 
 class Calc
   def initialize; end
@@ -105,11 +106,9 @@ class Calc
     failures = []
     errors = []
     skipped = [0]
-    fail_files = []
+    fail_files = Hash.new
 
     get_xml_files.each do |file|
-      fails = []
-      errs = []
       r = parse_xml(file)
       timings << r[1] unless r[1] == []
       failures << r[2] unless r[2] == []
@@ -117,9 +116,30 @@ class Calc
       tests << r[4] unless r[4] == []
       assertions << r[5] unless r[5] == []
       skipped << r[6] unless r[6] == []
-      fail_files << r[7] unless r[7] == []
 
       test_suite_reports(r[0])
+    end
+
+    unless errors.empty?
+      errors.each do |e|
+        file = e[0].split(' ')[0]
+        fucntion = e[0].split(' ')[1].split('.')[1]
+        fail_files[file] = fucntion
+      end
+    end
+
+    unless failures.empty?
+      failures.each do |f|
+        file = f[0].split(' ')[0]
+        fucntion = f[0].split(' ')[1].split('.')[1]
+        temp[file] = fucntion
+      end
+    end
+
+    unless fail_files.empty?
+      File.open('first_run_failed_tests.json', 'w') do |f|
+        f.write(JSON.pretty_generate(fail_files))
+      end
     end
 
     ##########
@@ -130,23 +150,10 @@ class Calc
     summary = "#{sum1} #{sum2} #{sum3}"
 
     summary_display(summary, failures, errors)
-
-    unless fail_files.empty?
-      fail_files.each { |file| write_first_run_failed_tests(file) unless file.nil? }
-    end
-  end
-
-  def open_first_run_failed_tests
-    @first_run_failed_tests = open('first_run_failed_tests', 'w')
-  end
-
-  def write_first_run_failed_tests(file)
-    @first_run_failed_tests << "#{file},"
   end
 
   def main
     puts "\n[INFO] Tests run result...."
-    open_first_run_failed_tests
     iterate_through_files
   end
 end

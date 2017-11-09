@@ -15,4 +15,9 @@ recruit_emails
 # Test Reports #
 ################
 test/reports/*
-first_run_failed_tests
+first_run_failed_tests.json
+
+# Selenium Grid files #
+#######################
+node_modules/*
+package-lock.json
