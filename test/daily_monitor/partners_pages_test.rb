@@ -13,7 +13,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @ui = LocalUI.new(true) #(RemoteUI.new 'chrome').driver
+    @ui = (RemoteUI.new 'chrome').driver
     @browser = @ui.driver
   end
 
