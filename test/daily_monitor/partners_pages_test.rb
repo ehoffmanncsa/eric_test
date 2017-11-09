@@ -78,7 +78,7 @@ class PartnersPagesMonitorTest < Minitest::Test
 
     hrefs.each do |url|
       begin
-        resp = RestClient::Request.execute(method: :get, url: url, timeout: 15)
+        resp = RestClient::Request.execute(method: :get, url: url, timeout: 10)
       rescue => e
         status_report << "#{url} gives error #{e}"; next
       end
