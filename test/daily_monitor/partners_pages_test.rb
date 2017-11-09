@@ -13,8 +13,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @ui = (RemoteUI.new 'chrome').driver
-    @browser = @ui.driver
+    @browser = (RemoteUI.new 'chrome').driver
   end
 
   def teardown
@@ -127,16 +126,22 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       %w[Parents Athletes].each do |button|
         @browser.get @partners_page
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
 
-        @browser.find_element(link_text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/), @browser.title
+        case size.keys[0].to_s
+          when 'desktop'
+            block = @browser.find_element(:id, 'block-block-71--2')
+            assert block.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
 
-        # Make sure the url includes NW_Partners or WWW_Mobile
-        if size.keys[0].to_s =~ /desktop/
-          assert (@browser.current_url.include? 'NW_Partners'), 'URL not including NW_Partners'
-        else
-          assert (@browser.current_url.include? 'WWW_Mobile'), 'URL not including WWW_Mobile'
+            block.find_element(link_text: "#{button} Start Here").click
+            assert @browser.title.match(/Athletic Recruiting/), @browser.title
+            assert (@browser.current_url.include? 'NW_Partners'), 'URL not including NW_Partners'
+          else
+            block = @browser.find_element(:id, 'block-menu-menu-mobile-cta-buttons')
+            assert block.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
+
+            block.find_element(link_text: "#{button} Start Here").click
+            assert @browser.title.match(/Athletic Recruiting/), @browser.title
+            assert (@browser.current_url.include? 'WWW_Mobile'), 'URL not including WWW_Mobile'
         end
 
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
