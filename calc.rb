@@ -132,7 +132,7 @@ class Calc
       failures.each do |f|
         file = f[0].split(' ')[0]
         fucntion = f[0].split(' ')[1].split('.')[1]
-        temp[file] = fucntion
+        fail_files[file] = fucntion
       end
     end
 
