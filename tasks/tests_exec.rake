@@ -3,7 +3,7 @@ require 'minitest-ci'
 
 Minitest::Ci.new.start
 
-exceptions = []
+exceptions = ['test/daily_monitor/sport_engine_webform_page_test.rb']
 
 namespace :first_run do 
   desc 'execute all tests....'
