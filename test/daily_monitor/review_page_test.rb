@@ -31,7 +31,8 @@ class ReviewPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-120 Test Review Page', width, height
       @browser.get @review_page
-      assert @browser.title.match(/reviews from Parents and Athletes/), @browser.title
+      str = 'Reviews from Parents, Athletes and College Coaches'
+      assert (@browser.title.include? str), @browser.title
 
       #scroll down to trigger teaser image loading first
       @browser.find_elements(:class, 'teaser-image').each do |element|
