@@ -23,7 +23,7 @@ namespace :second_run do
 
   desc 'display test run results....'
   task :result do
-    begin 
+    begin
       ruby 'calc.rb'
     rescue StandardError => e
       puts "[ERROR] Running calc.rb - #{e}"
