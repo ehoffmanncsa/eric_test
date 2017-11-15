@@ -26,5 +26,19 @@ class SiteMapXMLTest < Minitest::Test
     # end
     
     # refute_empty links, 'Cannot find any URL on sitemap'
+
+    # links.each do |url|
+    #   begin
+    #     resp = RestClient::Request.execute(method: :get, url: url, timeout: 10)
+    #   rescue => e
+    #     status_report << "#{url} gives error #{e}"; next
+    #   end
+
+    #   status_report << "#{url} gives #{resp.code}" if (300 .. 399).include? resp.code.to_i
+    #   failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
+    # end
+
+    # pp status_report unless status_report.empty?
+    # assert_empty failure
   end
 end
