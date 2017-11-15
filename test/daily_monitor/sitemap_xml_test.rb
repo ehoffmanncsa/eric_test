@@ -24,7 +24,6 @@ class SiteMapXMLTest < Minitest::Test
     # list.each do |e|
     #   links << e.attribute('href')
     # end
-    
     # refute_empty links, 'Cannot find any URL on sitemap'
 
     # links.each do |url|
@@ -37,7 +36,6 @@ class SiteMapXMLTest < Minitest::Test
     #   status_report << "#{url} gives #{resp.code}" if (300 .. 399).include? resp.code.to_i
     #   failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     # end
-
     # pp status_report unless status_report.empty?
     # assert_empty failure
   end

@@ -30,6 +30,6 @@ namespace :second_run do
     end
 
     test_files = JSON.parse(File.read('first_run_failed_tests.json'))
-    exit 1 unless test_files.empty?
+    (test_files.empty?) ? (exit 0) : (exit 1)
   end
 end
