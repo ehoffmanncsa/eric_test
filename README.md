@@ -50,6 +50,14 @@ b. To cleanup intall, run:
     $ brew doctor
 
  _See also [https://rvm.io/rvm/autolibs](https://rvm.io/rvm/autolibs) for brew questions etc (optional)._
+ 
+c. Install geckodriver (for firefox, so you will need to have firefox installed in your machine as well, I use Firefox 52.3.0esr.dmg installer)
+
+    $ brew install geckodriver
+
+d. Install chromedriver
+
+    $ brew install chromedriver
 
   
 ### Install RVM and Ruby
