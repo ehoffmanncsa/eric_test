@@ -13,7 +13,8 @@ class PressMediaZipDownloadTest < Minitest::Test
     File.expand_path('downloads/', __FILE__)
 
     @agent = Mechanize.new
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
   end
 
   def teardown

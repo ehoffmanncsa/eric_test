@@ -13,7 +13,9 @@ class EventsPageMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -33,8 +35,11 @@ class EventsPageMonitorTest < Minitest::Test
       @browser.get @events_page
       assert @browser.title.match(/Sports Camps and Events Calendar/), @browser.title
 
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
       # Take snapshot events page with applitool eyes
-      @eyes.check_ignore "Events page #{size.keys} view", @browser.find_element(:class, 'flex-viewport')
+      @eyes.check_ignore "Events page #{size.keys} view", [@browser.find_element(:class, 'flex-viewport')]
 
       result = @eyes.action.close(false)
       failure << "Events page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
@@ -59,7 +64,10 @@ class EventsPageMonitorTest < Minitest::Test
       # Click on hamburger menu to open it
       @browser.find_element(:class, 'fa-bars').click
 
-      @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'flex-viewport')
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
+      @eyes.check_ignore "#{size.keys} view with hamburger menu open", [@browser.find_element(:class, 'flex-viewport')]
 
       result = @eyes.action.close(false)
       failure << "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
@@ -83,7 +91,14 @@ class EventsPageMonitorTest < Minitest::Test
         @browser.find_element(link_text: "#{button} Start Here").click
         assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
-        @eyes.screenshot "#{button} recruiting form #{size.keys} view"
+        viewport = size.keys[0].to_s
+        if viewport != 'desktop'
+          subfooter = UIActions.get_subfooter
+          UIActions.check_subfooter_msg(subfooter, viewport)
+          @eyes.check_ignore "#{button} recruiting form #{size.keys} view", [subfooter]
+        else
+          @eyes.screenshot "#{button} recruiting form #{size.keys} view"
+        end
       end
 
       result = @eyes.action.close(false)
@@ -115,7 +130,7 @@ class EventsPageMonitorTest < Minitest::Test
             username_input = @browser.find_element(:id, 'user_account_login')
             assert username_input.displayed?, 'Username textbox not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
           when 'Coach Log In'
             button.click
             assert @browser.title.match(/College Coach Login/), @browser.title
@@ -128,7 +143,7 @@ class EventsPageMonitorTest < Minitest::Test
             assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'banner_bg')]
           when 'Parents Start Here'
             @browser.find_element(:class, 'm-nav-start-link--parent').click
             assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
@@ -178,7 +193,13 @@ class EventsPageMonitorTest < Minitest::Test
     @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view; sleep 0.5
     @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
-    @eyes.check_ignore 'Football Camp page desktop viewport', @browser.find_element(:css, 'div.group-slices.push-content')
+    subfooter = UIActions.get_subfooter
+    UIActions.check_subfooter_msg(subfooter, 'desktop')
+
+    elem = @browser.find_element(:class, 'group-slices').find_element(:class, 'holder')
+    rows = elem.find_element(:class, 'view-content').find_elements(:class, 'img_left_half_teaser')
+
+    @eyes.check_ignore 'Football Camp page desktop viewport', rows
     result = @eyes.action.close(false)
     assert_equal 0, result.mismatches, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
   end

@@ -14,7 +14,9 @@ class ContactUsPagesMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
 
     @pages = { 'About Us': 'About NCSA Next College Student Athlete',
                'What We Do': 'What We Do',
@@ -53,7 +55,12 @@ class ContactUsPagesMonitorTest < Minitest::Test
       end
       assert_empty failure
 
+      #scroll to bottom for bottom icons to load
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+
+      # Make sure subfooter has correct phone number for different viewports
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Contact Us page #{size.keys} view"

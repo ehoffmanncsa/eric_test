@@ -80,7 +80,8 @@ class TEDPageMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
   end
 
   def teardown

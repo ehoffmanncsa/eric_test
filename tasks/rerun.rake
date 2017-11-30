@@ -1,22 +1,25 @@
 require 'rake/testtask'
-require 'json'
 require 'pp'
 
 namespace :second_run do
   desc 're-run failed tests from first run attempt....'
   task :exec do
-    test_files = JSON.parse(File.read('first_run_failed_tests.json'))
-    exit if test_files.empty?
+    exit 0 if File.read('first_run_failed_tests').empty?
+    test_files = File.read('first_run_failed_tests').split(',')
 
-    test_files.reject! { |e| e.empty? }
     puts "\n[INFO] Re-running failed tests from first run attempt"
-
-    test_files.each do |file, function|
-      puts "\n[INFO] Executing....#{file} case #{function}"
+    test_files.each do |file|
+      puts "\n[INFO] Executing ..... #{file}"
       begin
-        ruby "#{file} -n #{function}"
+        Rake::TestTask.new(file) do |t|
+          t.test_files = FileList[file]
+          t.verbose = false
+          t.warning = false
+        end
+
+        task(file).execute
       rescue StandardError => e
-        puts "Rake Rescue: failures/errors running #{file} case #{function}"
+        puts "Rake Rescue: failures/errors #{e} running #{file}"
       end
     end
   end
@@ -29,7 +32,7 @@ namespace :second_run do
       puts "[ERROR] Running calc.rb - #{e}"
     end
 
-    test_files = JSON.parse(File.read('first_run_failed_tests.json'))
-    (test_files.empty?) ? (exit 0) : (exit 1)
+    files = File.read('first_run_failed_tests')
+    (files.empty?) ? (exit 0) : (exit 1)
   end
 end

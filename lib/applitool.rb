@@ -29,7 +29,12 @@ class Applitool
     eyes.check_window pic_name
   end
 
-  def check_ignore pic_name, element
-    eyes.check pic_name, Applitools::Selenium::Target.window.ignore(element)
+  def check_ignore pic_name, elements = []
+    window = Applitools::Selenium::Target.window
+    elements.each do |e|
+      @target = window.ignore(e)
+    end
+
+    eyes.check pic_name, @target
   end
 end

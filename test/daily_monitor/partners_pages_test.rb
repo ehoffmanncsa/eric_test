@@ -13,7 +13,9 @@ class PartnersPagesMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -107,8 +109,11 @@ class PartnersPagesMonitorTest < Minitest::Test
 
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
       # Take snapshot events page with applitool eyes
-      @eyes.check_ignore "Partners page #{size.keys} view", @browser.find_element(:class, 'field-name-field-dices')
+      @eyes.check_ignore "Partners page #{size.keys} view", [@browser.find_element(:class, 'field-name-field-dices')]
       result = @eyes.action.close(false)
       failure << "Partners page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
@@ -143,6 +148,9 @@ class PartnersPagesMonitorTest < Minitest::Test
             assert @browser.title.match(/Athletic Recruiting/), @browser.title
             assert (@browser.current_url.include? 'WWW_Mobile'), 'URL not including WWW_Mobile'
         end
+
+        subfooter = UIActions.get_subfooter
+        UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
@@ -225,7 +233,10 @@ class PartnersPagesMonitorTest < Minitest::Test
       @browser.find_element(:class, 'fa-bars').click
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
-      @eyes.check_ignore "#{size.keys} view with hamburger menu open", @browser.find_element(:class, 'field-name-field-dices')
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
+      @eyes.check_ignore "#{size.keys} view with hamburger menu open", [@browser.find_element(:class, 'field-name-field-dices')]
       result = @eyes.action.close(false)
       failure << "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
@@ -251,6 +262,9 @@ class PartnersPagesMonitorTest < Minitest::Test
       email_address = @browser.find_element(:link_text, 'partnerships@ncsasports.org')
       assert email_address.enabled?, 'Cannot find mailto email address'
       assert (email_address.attribute('href').include? 'mailto:'), 'Email href not including mailto'
+
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       @eyes.screenshot "Apply Partnership page #{size.keys} view"
       result = @eyes.action.close(false)

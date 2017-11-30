@@ -15,7 +15,7 @@ recruit_emails
 # Test Reports #
 ################
 test/reports/*
-first_run_failed_tests.json
+first_run_failed_tests
 
 # Selenium Grid files #
 #######################

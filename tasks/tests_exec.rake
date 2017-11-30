@@ -11,7 +11,6 @@ namespace :first_run do
     puts "[INFO] First run attempt"
 
     args.with_defaults(dir: '**')
-
     if exceptions.empty?
       test_files = FileList["test/#{args.dir}/*_test.rb"]
     else

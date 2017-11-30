@@ -13,7 +13,9 @@ class CostPageMonitorTest < Minitest::Test
     ]
     @costpage = config['pages']['cost_page']
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -35,6 +37,9 @@ class CostPageMonitorTest < Minitest::Test
 
       #scroll to bottom for bottom icons to load
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       # Take snapshot cost page with applitool eyes
       @eyes.screenshot "Cost page #{size.keys} view"
@@ -63,7 +68,10 @@ class CostPageMonitorTest < Minitest::Test
 
       #scroll to bottom for bottom icons to load
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
-      
+
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
       failure << "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
@@ -88,6 +96,8 @@ class CostPageMonitorTest < Minitest::Test
         @browser.find_element(link_text: "#{button} Start Here").click
         assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
+        subfooter = UIActions.get_subfooter
+        UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
@@ -120,20 +130,20 @@ class CostPageMonitorTest < Minitest::Test
             username_input = @browser.find_element(:id, 'user_account_login')
             assert username_input.displayed?, 'Username textbox not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
           when 'Coach Log In'
             button.click
             assert @browser.title.match(/College Coach Login/), @browser.title
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            @eyes.action.check_window "Hamburger menu redir to #{link_text} #{size.keys} view"
+            @eyes.screenshot "Hamburger menu redir to #{link_text} #{size.keys} view"
           when 'H.S. Coach'
             button.click
             assert @browser.title.match(/High School Coach Login/), @browser.title
             assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'banner_bg')]
           when 'Parents Start Here'
             msg = 'Parent Start Here button not found in hamburger'
             assert @browser.find_element(:class, 'm-nav-start-link--parent').enabled?, msg

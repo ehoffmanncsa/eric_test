@@ -13,7 +13,9 @@ class SportEngineWebFormPageMonitorTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -45,6 +47,9 @@ class SportEngineWebFormPageMonitorTest < Minitest::Test
       @browser.find_elements(:class, 'content').each do |element|
         element.location_once_scrolled_into_view; sleep 0.5
       end
+
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       # Take snapshot events page with applitool eyes
       @eyes.screenshot "Sport Engine page #{size.keys} view"

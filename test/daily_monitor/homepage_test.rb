@@ -13,7 +13,9 @@ class HomePageMonitorTest < Minitest::Test
     ]
     @homepage = config['pages']['home_page']
     @eyes = Applitool.new 'Content'
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -40,6 +42,9 @@ class HomePageMonitorTest < Minitest::Test
         element.location_once_scrolled_into_view; sleep 0.5
       end
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       # Snapshot Homepage with applitool 
       @eyes.screenshot "Home page #{size.keys} view"
@@ -72,7 +77,8 @@ class HomePageMonitorTest < Minitest::Test
       end
 
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
-
+      subfooter = UIActions.get_subfooter
+      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
       failure << "Home page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
@@ -125,7 +131,7 @@ class HomePageMonitorTest < Minitest::Test
       assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
       # Take page snapshot but ignore the banner
-      @eyes.check_ignore "Coaches login #{size.keys} view", @browser.find_element(:class, 'banner')
+      @eyes.check_ignore "Coaches login #{size.keys} view", [@browser.find_element(:class, 'banner')]
       result = @eyes.action.close(false)
       failure << "Coach login #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
@@ -160,19 +166,20 @@ class HomePageMonitorTest < Minitest::Test
               assert username_input.displayed?, 'Username textbox not found'
 
               # Ignore the username textbox because it has blinking cursor
-              @eyes.check_ignore "#{link_text} login #{size.keys} view", username_input
+              @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
             when 'Coach Log In'
               button.click
               assert @browser.title.match(/College Coach Login/), @browser.title
               assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
+              @eyes.screenshot "#{size.keys} view - redir to #{link_text} from hamburger menu"
             when 'H.S. Coach'
               button.click
               assert @browser.title.match(/High School Coach Login/), @browser.title
               assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
               assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-              @eyes.check_ignore "#{link_text} login #{size.keys} view", @browser.find_element(:class, 'banner_bg')
+              @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'banner_bg')]
             when 'Parents Start Here'
               @browser.find_element(:class, 'm-nav-start-link--parent').click
               assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title

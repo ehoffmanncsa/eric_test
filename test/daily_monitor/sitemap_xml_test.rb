@@ -8,7 +8,8 @@ class SiteMapXMLTest < Minitest::Test
     config = YAML.load_file('config/config.yml')
     @site_map = config['pages']['site_map']
 
-    @browser = (RemoteUI.new 'chrome').driver
+    @ui = UI.new 'browserstack', 'chrome'
+    @browser = @ui.driver
   end
 
   def teardown
@@ -36,6 +37,7 @@ class SiteMapXMLTest < Minitest::Test
     #   status_report << "#{url} gives #{resp.code}" if (300 .. 399).include? resp.code.to_i
     #   failure << "#{url} gives #{resp.code}" if (400 .. 599).include? resp.code.to_i
     # end
+
     # pp status_report unless status_report.empty?
     # assert_empty failure
   end
