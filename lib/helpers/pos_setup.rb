@@ -18,7 +18,6 @@ module POSSetup
     @ui.user_login(email)
     @ui.wait.until { @browser.find_element(:name, 'commit').displayed? }
 
-    @browser.find_element(:id, 'user_account_username').send_keys username
     @browser.find_element(:id, 'user_account_password').send_keys 'ncsa'
     @browser.find_element(:id, 'user_account_password_confirmation').send_keys 'ncsa'
     @browser.find_element(:name, 'commit').click
