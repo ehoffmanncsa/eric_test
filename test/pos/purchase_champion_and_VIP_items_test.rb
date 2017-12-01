@@ -19,9 +19,9 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
 
   def test_purchase_champion_and_VIP_items
     POSSetup.setup(@ui)
-    POSSetup.buy_combo(@recruit_email, @username, 'champion')
+    POSSetup.buy_combo(@recruit_email, 'champion')
     
-    @ui.user_login(@username)
+    @ui.user_login(@recruit_email)
     @ui.wait { @browser.find_element(:class, 'fa-angle-down').enabled? }
     @browser.find_element(:class, 'fa-angle-down').click
     @browser.find_element(:id, 'secondary-nav-menu').find_element(:link_text, 'Membership Info').click

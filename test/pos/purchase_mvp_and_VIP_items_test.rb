@@ -20,9 +20,9 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
 
   def test_purchase_mvp_and_VIP_items
     POSSetup.setup(@ui)
-    POSSetup.buy_combo(@recruit_email, @username, 'mvp')
+    POSSetup.buy_combo(@recruit_email, 'mvp')
     
-    @ui.user_login(@username)
+    @ui.user_login(@recruit_email)
 
     @ui.wait(30) { @browser.find_element(:class, 'fa-angle-down').enabled? }
     @browser.find_element(:class, 'fa-angle-down').click

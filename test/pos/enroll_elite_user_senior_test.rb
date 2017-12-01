@@ -20,7 +20,7 @@ class EnrollEliteSeniorTest < Minitest::Test
 
   def test_enroll_elite_senior
     POSSetup.setup(@ui)
-    membership, expect_first_pymt = POSSetup.buy_package(@recruit_email, @username, @package)
+    membership, expect_first_pymt = POSSetup.buy_package(@recruit_email, @package)
     expect_remain_balance = membership - expect_first_pymt
 
     @ui.user_login(@recruit_email)

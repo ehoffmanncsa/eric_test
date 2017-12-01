@@ -22,10 +22,10 @@ class EnrollUsingACHPaymentTest < Minitest::Test
     package = %w(champion elite).sample
 
     POSSetup.setup(@ui)
-    membership, expect_first_pymt = POSSetup.buy_with_ACH_payment(@recruit_email, @username, package)
+    membership, expect_first_pymt = POSSetup.buy_with_ACH_payment(@recruit_email, package)
     expect_remain_balance = membership - expect_first_pymt
 
-    @ui.user_login(@username)
+    @ui.user_login(@recruit_email)
     @browser.find_element(:class, 'fa-angle-down').click
     @browser.find_element(:id, 'secondary-nav-menu').find_element(:link_text, 'Payments').click
 

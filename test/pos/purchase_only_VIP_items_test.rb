@@ -19,9 +19,9 @@ class PurchaseOnlyVIPItemsTests < Minitest::Test
 
   def test_purchase_only_VIP_items
     POSSetup.setup(@ui)
-    POSSetup.buy_alacarte(@recruit_email, @username)
+    POSSetup.buy_alacarte(@recruit_email)
     
-    @ui.user_login(@username)
+    @ui.user_login(@recruit_email)
     @ui.wait { @browser.find_element(:class, 'fa-angle-down').enabled? }
     @browser.find_element(:class, 'fa-angle-down').click
     @browser.find_element(:id, 'secondary-nav-menu').find_element(:link_text, 'Membership Info').click

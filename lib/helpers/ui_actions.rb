@@ -29,11 +29,11 @@ module UIActions
     end
   end
 
-  def self.user_login(username, pwd = nil)
+  def self.user_login(email_addr, pwd = nil)
     password = pwd ? pwd : 'ncsa'
     @driver.get @config['pages']['user_login']
 
-    @driver.find_element(:id, 'user_account_login').send_keys username
+    @driver.find_element(:id, 'user_account_login').send_keys email_addr
     @driver.find_element(:id, 'user_account_password').send_keys password
     @driver.find_element(:name, 'commit').click
 

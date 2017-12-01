@@ -14,7 +14,7 @@ module POSSetup
     @browser.manage.delete_all_cookies
   end
 
-  def self.set_username(email, username)
+  def self.set_password(email)
     @ui.user_login(email)
     @ui.wait.until { @browser.find_element(:name, 'commit').displayed? }
 
@@ -253,8 +253,8 @@ module POSSetup
   end
 
   # to purchase only membership package
-  def self.buy_package(email, username, package)
-    set_username(email, username)
+  def self.buy_package(email, package)
+    set_password(email)
     make_commitment
 
     choose_a_package(package)
@@ -270,8 +270,8 @@ module POSSetup
   end
 
   # to purchase only alacarte items
-  def self.buy_alacarte(email, username, all = true)
-    set_username(email, username)
+  def self.buy_alacarte(email, all = true)
+    set_password(email)
     make_commitment
 
     pick_VIP_items(all)
@@ -281,8 +281,8 @@ module POSSetup
   end
 
   # to purchase both a membership package and some alacarte items
-  def self.buy_combo(email, username, package)
-    set_username(email, username)
+  def self.buy_combo(email, package)
+    set_password(email)
     make_commitment
 
     choose_a_package(package)
@@ -294,8 +294,8 @@ module POSSetup
   end
 
   # to make payment using ACH instead of credit card
-  def self.buy_with_ACH_payment(email, username, package)
-    set_username(email, username)
+  def self.buy_with_ACH_payment(email, package)
+    set_password(email)
     make_commitment
 
     choose_a_package(package)
