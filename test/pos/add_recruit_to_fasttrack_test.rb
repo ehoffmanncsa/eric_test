@@ -7,6 +7,7 @@ class AddRecruitToFasttrackTest < Minitest::Test
   def setup
     @ui = LocalUI.new(true)
     @browser = @ui.driver
+    UIActions.setup(@browser)
 
     # add a new recruit and get back his email address
     @recruit_email, _username = FasttrackAddNewRecruit.new.main
@@ -19,9 +20,9 @@ class AddRecruitToFasttrackTest < Minitest::Test
   # verify the new recruit we added earlier can be found
   # also verify the edit, delete and duplicate buttons are available
   def test_find_new_recruit
-    @ui.fasttrack_login
+    UIActions.fasttrack_login
 
-    wait = @ui.wait(30)
+    wait = UIActions.wait(30)
     @browser.get 'https://qa.ncsasports.org/fasttrack/lead/Search.do?method=preSearch'
 
     wait.until { @browser.find_element(:id, 'content').displayed? }

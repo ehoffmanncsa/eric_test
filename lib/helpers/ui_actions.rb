@@ -4,6 +4,9 @@ require_relative '../../test/test_helper'
 module UIActions
   def self.setup(driver)
     @driver = driver
+    @config = YAML.load_file('config/config.yml')
+    @creds = YAML.load_file('config/.creds.yml')
+    sleep 1
   end
 
   def self.wait(timeout = nil)
@@ -12,11 +15,10 @@ module UIActions
   end
 
   def self.fasttrack_login
-    creds = YAML.load_file('config/.creds.yml')
     @driver.get @config['pages']['fasttrack_login']
 
-    @driver.find_element(:id, 'username').send_keys creds['fasttrack_admin']['username']
-    @driver.find_element(:id, 'password').send_keys creds['fasttrack_admin']['password']
+    @driver.find_element(:id, 'username').send_keys @creds['fasttrack_admin']['username']
+    @driver.find_element(:id, 'password').send_keys @creds['fasttrack_admin']['password']
     @driver.find_element(:name, 'submit').click
 
     @driver.get @config['pages']['fasttrack_login']
@@ -43,6 +45,13 @@ module UIActions
     rescue => e
       puts e; @driver.close
     end
+  end
+
+  def self.coach_login
+    @driver.get config['TED_coach_app']['login_staging']
+    @driver.find_elements(:tag_name, 'input')[0].send_keys creds['ted']['username']
+    @driver.find_elements(:tag_name, 'input')[1].send_keys creds['ted']['password']
+    @driver.find_element(:tag_name, 'button').click; sleep 1
   end
 
   def self.get_subfooter
