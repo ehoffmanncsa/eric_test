@@ -7,7 +7,9 @@ namespace :second_run do
     exit 0 if File.read('first_run_failed_tests').empty?
     test_files = File.read('first_run_failed_tests').split(',')
 
-    puts "\n[INFO] Re-running failed tests from first run attempt"
+    puts "\n[INFO] Re-running below failed tests from first run attempt:"
+    puts test_files
+
     test_files.each do |file|
       puts "\n[INFO] Executing ..... #{file}"
       begin
@@ -21,6 +23,7 @@ namespace :second_run do
       rescue StandardError => e
         puts "Rake Rescue: failures/errors #{e} running #{file}"
       end
+      sleep 1
     end
   end
 
