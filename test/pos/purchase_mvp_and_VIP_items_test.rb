@@ -8,10 +8,10 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
-    # add a new recruit, get back his email address and username
+    # add a new recruit, get back his email address
     # cannot add lead with random grad year until packages discount calculation is fixed for any year lower than senior
-    _resp, _post, @username = RecruitAPI.new('senior').ppost
-    @recruit_email = "#{@username}@ncsasports.org"
+    _resp, _post, post_body = RecruitAPI.new('senior').ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
   end
 
   def teardown

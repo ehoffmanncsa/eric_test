@@ -1,4 +1,5 @@
 # encoding: utf-8
+require_relative '../../test/test_helper'
 require 'json'
 require 'securerandom'
 
@@ -44,12 +45,15 @@ class RecruitAPI
   end
 
   def ppost
+    firstname = make_name
+    lastname = make_name
+    grad_yr = year
     body = { recruit: {
                athlete_email: "#{@username}@ncsasports.org",
-               athlete_first_name: make_name,
-               athlete_last_name: make_name,
+               athlete_first_name: firstname,
+               athlete_last_name: lastname,
                athlete_phone: make_number(10),
-               graduation_year: year,
+               graduation_year: grad_yr,
                state_code: 'IL',
                sport_id: @sport_ids.sample.to_s,
                event_id: '3285'
@@ -58,9 +62,9 @@ class RecruitAPI
 
     resp_code, resp_body = @api.ppost @url, body
 
-    [resp_code, resp_body, @username]
+    [resp_code, resp_body, body]
   end
 end
 
-# resp, post, username = RecruitAPI.new.ppost
-# puts post, username
+# resp, post, body = RecruitAPI.new.ppost
+# puts body

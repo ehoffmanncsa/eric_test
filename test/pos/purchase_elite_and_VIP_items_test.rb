@@ -9,8 +9,8 @@ class PurchaseEliteAndVIPItemsTests < Minitest::Test
     @browser = @ui.driver
 
     # add a new recruit, get back his email address and username
-    _resp, _post, @username = RecruitAPI.new.ppost
-    @recruit_email = "#{@username}@ncsasports.org"
+    _resp, _post, post_body = RecruitAPI.new.ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
   end
 
   def teardown

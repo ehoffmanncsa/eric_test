@@ -47,10 +47,13 @@ module UIActions
     end
   end
 
-  def self.coach_login
-    @driver.get config['TED_coach_app']['login_staging']
-    @driver.find_elements(:tag_name, 'input')[0].send_keys creds['ted']['username']
-    @driver.find_elements(:tag_name, 'input')[1].send_keys creds['ted']['password']
+  def self.coach_login(username = nil, password = nil)
+    @driver.get @config['TED_coach_app']['login_staging']
+
+    username = username.nil? ? @creds['ted']['username'] : username
+    password = password.nil? ? @creds['ted']['password'] : password
+    @driver.find_elements(:tag_name, 'input')[0].send_keys username
+    @driver.find_elements(:tag_name, 'input')[1].send_keys password
     @driver.find_element(:tag_name, 'button').click; sleep 1
   end
 

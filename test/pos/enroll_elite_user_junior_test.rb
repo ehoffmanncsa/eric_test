@@ -8,9 +8,9 @@ class EnrollEliteJuniorTest < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
 
-    # add a new junior recruit, get back his email address and username
-    _resp, _post, @username = RecruitAPI.new('junior').ppost
-    @recruit_email = "#{@username}@ncsasports.org"
+    # add a new junior recruit, get back his email address
+    _resp, _post, post_body = RecruitAPI.new('junior').ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
     @package = 'elite'
   end
 
