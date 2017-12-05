@@ -17,7 +17,7 @@ class GmailCalls
 
   # get mails from specific mail box and filter
   # keep trying for 15 seconds
-  def body(keyword = nil, filter = nil)
+  def parse_body(keyword = nil, filter = nil)
     mails = []
     begin
       Timeout::timeout(15) {
@@ -43,5 +43,22 @@ class GmailCalls
     end
 
     @msg
+  end
+
+  # check if new email is received in a specific mailbox by subject
+  def get_emails_by_subject
+    mails = []
+    Timeout::timeout(60) {
+      loop do
+        mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)
+        break unless mails.empty?
+      end
+    }
+
+    mails
+  end
+
+  def delete(emails)
+    emails.each { |e| e.read!; e.delete! }
   end
 end

@@ -57,7 +57,7 @@ class TEDAddACoachTest < Minitest::Test
     end
 
     # use keyword password to look for password in email
-    msg = @gmail.body('password', from: @gmail.sender)
+    msg = @gmail.parse_body('password', from: @gmail.sender)
     coach_password = msg[1].split(':').last.split()[0]
 
     # signout

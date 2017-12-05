@@ -6,7 +6,7 @@ require 'securerandom'
 class RecruitAPI
   def initialize(enroll_yr = nil)
     @api = Api.new
-    @username = "automation#{SecureRandom.hex(2)}"
+    @username = "ncsa.automation+#{SecureRandom.hex(2)}"
 
     @enroll_yr = enroll_yr
     @url = 'https://qa.ncsasports.org/api/submit/v1/new_recruit'
@@ -49,7 +49,7 @@ class RecruitAPI
     lastname = make_name
     grad_yr = year
     body = { recruit: {
-               athlete_email: "#{@username}@ncsasports.org",
+               athlete_email: "#{@username}@gmail.com",
                athlete_first_name: firstname,
                athlete_last_name: lastname,
                athlete_phone: make_number(10),

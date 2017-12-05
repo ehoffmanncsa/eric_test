@@ -6,6 +6,7 @@ require 'minitest-ci'
 require 'json'
 require 'openssl'
 require 'net/http'
+require 'time'
 
 Minitest::Ci.clean = false
 
