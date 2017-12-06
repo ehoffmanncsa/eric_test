@@ -5,12 +5,12 @@ require_relative '../test_helper'
 # UI Test:  How to Add New Recruit to Fasttrack
 class AddRecruitToFasttrackTest < Minitest::Test
   def setup
+    # add a new recruit and get back his email address
+    @recruit_email, _username = FasttrackAddNewRecruit.new.main
+
     @ui = LocalUI.new(true)
     @browser = @ui.driver
     UIActions.setup(@browser)
-
-    # add a new recruit and get back his email address
-    @recruit_email, _username = FasttrackAddNewRecruit.new.main
   end
 
   def teardown

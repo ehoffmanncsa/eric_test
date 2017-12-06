@@ -6,17 +6,13 @@ require_relative '../../test/test_helper'
 # that way we can test for remaining balance and first payment made
 module POSSetup
   def self.setup(ui_object)
-    @ui = ui_object
     @browser = ui_object.driver
-  end
-
-  def self.clear_cookies # clear cache
-    @browser.manage.delete_all_cookies
+    UIActions.setup(@browser)
   end
 
   def self.set_password(email)
-    @ui.user_login(email)
-    @ui.wait.until { @browser.find_element(:name, 'commit').displayed? }
+    UIActions.user_login(email)
+    UIActions.wait.until { @browser.find_element(:name, 'commit').displayed? }
 
     username = email.split('@')[0].delete('.').delete('+')
     @browser.find_element(:id, 'user_account_username').clear()
@@ -27,7 +23,7 @@ module POSSetup
   end
 
   def self.make_commitment
-    @ui.wait.until { @browser.find_element(:class, 'fa-angle-down').displayed? }
+    UIActions.wait.until { @browser.find_element(:class, 'fa-angle-down').displayed? }
 
     # find the swoosh and go to commitment page
     swoosh = @browser.find_elements(:class, 'fa-swoosh')[4]
@@ -155,11 +151,11 @@ module POSSetup
   def self.setup_billing(ach = false)
     # quickly pass through summary page, cannot check total here until cart bug is fixed,
     # items selected will be checked in membership/payment page
-    @ui.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
+    UIActions.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
     @browser.find_element(:class, 'summary-js').location_once_scrolled_into_view; sleep 0.5
     @browser.find_element(:class, 'summary-js').click
 
-    @ui.wait(45) { @browser.find_elements(:class, 'custom-select')[2].displayed? }
+    UIActions.wait(45) { @browser.find_elements(:class, 'custom-select')[2].displayed? }
 
     # fill out registration form
     specialists = @browser.find_elements(:class, 'custom-select')[1]
@@ -183,21 +179,21 @@ module POSSetup
     @browser.find_element(:class, 'billing-js').click
 
     # sign and authorize
-    @ui.wait(20).until { @browser.find_element(:id, 'order-submit').displayed? }
+    UIActions.wait(20).until { @browser.find_element(:id, 'order-submit').displayed? }
     @browser.find_element(:id, 'order_authorization_signature').click; sleep 0.2
     @browser.find_element(:id, 'order_authorization_signature').send_keys 'qa automation'
     @browser.find_element(:id, 'order-submit').click
   end
 
   def self.check_discount_calculate
-    @ui.wait(45).until { @browser.find_element(:class, 'discount-js').displayed? }
+    UIActions.wait(45).until { @browser.find_element(:class, 'discount-js').displayed? }
 
     # activate discount feature
     @browser.find_element(:class, 'discount-js').location_once_scrolled_into_view
     @browser.find_element(:class, 'discount-js').click
 
     failure = []
-    @ui.wait(20).until { @browser.find_elements(:class, 'payment-block')[0].displayed? }
+    UIActions.wait(20).until { @browser.find_elements(:class, 'payment-block')[0].displayed? }
     @full_price = @browser.find_elements(:class, 'payment-block')[0].attribute('data-total').gsub!(/[^0-9]/, '').to_i
 
     # Apply both discount code, one at a time
@@ -264,7 +260,7 @@ module POSSetup
     choose_payment_plan
     setup_billing
 
-    clear_cookies
+    UIActions.clear_cookies
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)
@@ -280,7 +276,7 @@ module POSSetup
     pick_VIP_items(all)
     setup_billing
 
-    clear_cookies
+    UIActions.clear_cookies
   end
 
   # to purchase both a membership package and some alacarte items
@@ -293,7 +289,7 @@ module POSSetup
     pick_VIP_items
     setup_billing
 
-    clear_cookies
+    UIActions.clear_cookies
   end
 
   # to make payment using ACH instead of credit card
@@ -305,7 +301,7 @@ module POSSetup
     choose_payment_plan
     setup_billing(true)
 
-    clear_cookies
+    UIActions.clear_cookies
 
     membership = calculate(@full_price, 6)
     first_pymt = (membership / 6)

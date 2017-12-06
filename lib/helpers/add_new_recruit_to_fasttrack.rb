@@ -13,7 +13,7 @@ class FasttrackAddNewRecruit
 
     @ui = LocalUI.new(true)
     @browser = @ui.driver
-    @wait = @ui.wait
+    UIActions.setup(@browser)
 
     @username = "automation#{SecureRandom.hex(2)}"
   end
@@ -29,7 +29,7 @@ class FasttrackAddNewRecruit
   end
 
   def goto_recruit_info_form
-    @ui.fasttrack_login
+    UIActions.fasttrack_login
 
     add = @browser.find_element(:xpath, '//*[@id="nav"]/li[1]')
     @browser.action.move_to(add).perform
@@ -39,7 +39,7 @@ class FasttrackAddNewRecruit
   end
 
   def fill_in_configs
-    @wait.until { @browser.find_element(:id, 'footer').displayed? }
+    UIActions.wait.until { @browser.find_element(:id, 'footer').displayed? }
     %w[firstName lastName parent1FirstName parent1LastName].each do |attribute|
       @browser.find_element(:name, attribute).send_key make_name
     end
@@ -129,7 +129,7 @@ class FasttrackAddNewRecruit
 
     btn = @browser.find_elements(:name, '/lead/Submit').last
     @browser.find_element(:id, 'footer').location_once_scrolled_into_view; sleep 0.2; btn.click; sleep 0.5
-    @browser.close
+    @browser.quit
 
     [@recruit_email, @username]
   end

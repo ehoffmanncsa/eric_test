@@ -76,4 +76,8 @@ module UIActions
     raise "#{viewport_size} - subfooter message not found" unless subfooter_msg.displayed?
     raise "#{viewport_size} - wrong subfooter phone number" unless subfooter_msg.text.include? phone_number
   end
+
+  def self.clear_cookies
+    @driver.manage.delete_all_cookies
+  end
 end
