@@ -22,6 +22,16 @@ class CostPageMonitorTest < Minitest::Test
     @browser.quit
   end
 
+  def check_and_remove_chatra
+    chatra = @browser.find_element(:id, 'chatra')
+    if chatra.displayed?
+      hide = "arguments[0].style.visibility='hidden'"
+      @browser.execute_script(hide, chatra)
+    else
+      puts '[WARNING] Chatra not found...'
+    end
+  end
+
   # Start a applitool eye test session
   # Within the session loop through different viewport size
   # and navigate to cost page, verify page title
@@ -38,6 +48,7 @@ class CostPageMonitorTest < Minitest::Test
       #scroll to bottom for bottom icons to load
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
+      check_and_remove_chatra
       subfooter = UIActions.get_subfooter
       UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
@@ -69,6 +80,7 @@ class CostPageMonitorTest < Minitest::Test
       #scroll to bottom for bottom icons to load
       @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
 
+      check_and_remove_chatra
       subfooter = UIActions.get_subfooter
       UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
