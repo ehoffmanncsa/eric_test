@@ -9,7 +9,7 @@ class EnrollMVPJuniorTest < Minitest::Test
     @browser = @ui.driver
 
     # add a new junoir recruit, get back his email
-    _resp, _post, post_body = RecruitAPI.new('junior').ppost
+    _post, post_body = RecruitAPI.new('junior').ppost
     @recruit_email = post_body[:recruit][:athlete_email]
     @package = 'mvp'
   end

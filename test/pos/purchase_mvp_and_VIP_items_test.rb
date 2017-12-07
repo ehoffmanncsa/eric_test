@@ -10,7 +10,7 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
 
     # add a new recruit, get back his email address
     # cannot add lead with random grad year until packages discount calculation is fixed for any year lower than senior
-    _resp, _post, post_body = RecruitAPI.new('senior').ppost
+    _post, post_body = RecruitAPI.new('senior').ppost
     @recruit_email = post_body[:recruit][:athlete_email]
   end
 

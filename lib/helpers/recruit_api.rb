@@ -61,10 +61,14 @@ class RecruitAPI
             }
 
     resp_code, resp_body = @api.ppost @url, body
+    msg = "[ERROR] Gens #{resp_code} when POST new recruit via API"
+    raise msg unless resp_code.eql? 200
 
-    [resp_code, resp_body, body]
+    # pp resp_body
+    # pp body
+
+    [resp_body, body]
   end
 end
 
-# resp, post, body = RecruitAPI.new.ppost
-# puts body
+#puts RecruitAPI.new.ppost

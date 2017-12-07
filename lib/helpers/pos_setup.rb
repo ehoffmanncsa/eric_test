@@ -202,7 +202,7 @@ module POSSetup
     ['NSLP', 'Military'].each do |code|
       @browser.find_element(:class, 'discount-code').click
       @browser.find_element(:class, 'discount-code').send_keys(code)
-      @browser.find_element(:class, 'apply').click; sleep 0.5
+      @browser.find_element(:class, 'apply').click; sleep 1
 
       dsc_pmts = []
       @browser.find_elements(:class, 'payment-block').each do |block|

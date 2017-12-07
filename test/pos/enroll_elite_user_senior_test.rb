@@ -9,7 +9,7 @@ class EnrollEliteSeniorTest < Minitest::Test
     @browser = @ui.driver
 
     # add a new senior recruit, get back his email address
-    _resp, _post, post_body = RecruitAPI.new('senior').ppost
+    _post, post_body = RecruitAPI.new('senior').ppost
     @recruit_email = post_body[:recruit][:athlete_email]
     @package = 'elite'
   end
