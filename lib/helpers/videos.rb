@@ -30,7 +30,7 @@ module Video
     @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 3
   end
 
-  def self.upload_youtube
+  def self.upload_youtube(admin = true)
     url = 'https://www.youtube.com/watch?v=YtfZeoFU0J0'
     @browser.find_element(:class, 'js-upload-options').find_element(:class, 'fa-youtube').click
     form = @browser.find_element(:id, 'profile-youtube-video-upload')
@@ -38,7 +38,7 @@ module Video
     # fill out the upload form
     form.find_element(:id, 'external_video_title').send_keys SecureRandom.hex(4)
     form.find_element(:id, 'external_video_embed_code').send_keys url
-    form.find_element(:id, 'verified').click
+    form.find_element(:id, 'verified').click if admin
 
     form.submit
     UIActions.wait.until { 
@@ -46,7 +46,7 @@ module Video
     }
   end
 
-  def self.upload_hudl
+  def self.upload_hudl(admin = true)
     url = 'http://www.hudl.com/video/3/8650926/58f3b097bee0b52f8c96bfd5'
     @browser.find_element(:class, 'js-upload-options').find_element(:class, 'fa-custom-hudl').click
     form = @browser.find_element(:id, 'hudl-embed-video-upload')
@@ -54,7 +54,7 @@ module Video
     # fill out the upload form
     form.find_element(:id, 'external_video_title').send_keys SecureRandom.hex(4)
     form.find_element(:id, 'external_video_embed_code').send_keys url
-    form.find_element(:id, 'verified').click
+    form.find_element(:id, 'verified').click if admin
 
     form.submit
     UIActions.wait.until { 

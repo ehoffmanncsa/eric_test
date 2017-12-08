@@ -34,8 +34,8 @@ module POSSetup
 
     # select all checkboxes
     ['profile', 'website', 'communication', 'supporting', 'process'].each do |commit|
-      @browser.find_element(:id, commit).click; sleep 0.2
-      @browser.find_element(:xpath, "//*[@id=\"#{commit}\"]/div[2]/div/div[2]/div/i").click; sleep 0.2
+      @browser.find_element(:id, commit).click
+      @browser.find_element(:xpath, "//*[@id=\"#{commit}\"]/div[2]/div/div[2]/div/i").click
     end
 
     # then get activated
