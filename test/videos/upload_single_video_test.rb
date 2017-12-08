@@ -12,6 +12,9 @@ class UploadSingleVideoTest < Minitest::Test
     @ui = LocalUI.new(true)
     @browser = @ui.driver
     UIActions.setup(@browser)
+    POSSetup.setup(@ui)
+
+    POSSetup.buy_package(@recruit_email, 'elite')
   end
 
   def teardown
@@ -19,9 +22,6 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def test_upload_single_video
-    POSSetup.setup(@ui)
-    POSSetup.buy_package(@recruit_email, 'elite')
-
     #upload video, also check for the form and buttons in the form
     UIActions.user_login(@recruit_email)
     @browser.find_element(:id, 'profile_summary_button').click
