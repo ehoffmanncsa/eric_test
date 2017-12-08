@@ -6,14 +6,26 @@ require 'securerandom'
 # UI Test: Student athlete is able play video on Preview Profile UX
 class AthletePlayPublishedVideoTest < Minitest::Test
   def setup
+    _post, post_body = RecruitAPI.new.ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
+    
     @ui = LocalUI.new(true)
     @browser = @ui.driver
+    UIActions.setup(@browser)
+    POSSetup.setup(@ui)
+    Video.setup(@ui)
 
-    resp_code, _resp_body, @username = RecruitAPI.new.ppost
-    raise "POST new recuite to API gives #{resp_code}" unless resp_code.eql? 200
+    POSSetup.buy_package(@recruit_email, 'elite')
+    UIActions.user_login(@recruit_email)
 
-    @recruit_email = "#{@username}@ncsasports.org"
     @file_name = 'sample.mp4'
+    Video.goto_video
+    Video.upload_video(@file_name)
+    Video.send_to_video_team
+    Video.impersonate(@recruit_email)
+    Video.goto_publish
+    Video.activate_first_row_of_new_video
+    Video.publish_video(@file_name)
   end
 
   def teardown
@@ -21,9 +33,6 @@ class AthletePlayPublishedVideoTest < Minitest::Test
   end
 
   def test_athlete_play_published_video
-    buy_premium_package
-    publish_video
-
     # check if the url in data-transcodings has the right file name
     Video.goto_preview_profile
     Video.wait_for_video_thumbnail
@@ -46,19 +55,5 @@ class AthletePlayPublishedVideoTest < Minitest::Test
     url = player_cont.find_elements(:tag_name, 'source')[1].attribute('src')
 
     assert (url.include? @file_name), "Video player url pointing to wrong file #{url} .. Expect #{@file_name}"
-  end
-
-  def buy_premium_package
-    POSSetup.setup(@ui)
-    POSSetup.buy_package(@recruit_email, @username, 'elite')
-  end
-
-  def publish_video
-    Video.setup(@ui, @username)
-
-    Video.impersonate(@recruit_email)
-    Video.goto_publish
-    Video.activate_first_row_of_new_video
-    Video.publish_video(@file_name)
   end
 end

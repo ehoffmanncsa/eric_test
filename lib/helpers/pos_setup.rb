@@ -175,7 +175,13 @@ module POSSetup
     (ach.eql? true) ? fill_out_ACH : fill_out_credit
 
     # select state for billing address
-    @browser.find_element(:id, 'order_billing_state_code').find_elements(:tag_name, 'option').sample.click
+    begin
+      state = @browser.find_element(:id, 'order_billing_state_code')
+      state.find_elements(:tag_name, 'option').sample.click
+    rescue
+      retry
+    end
+
     @browser.find_element(:class, 'billing-js').click
 
     # sign and authorize
@@ -202,7 +208,7 @@ module POSSetup
     ['NSLP', 'Military'].each do |code|
       @browser.find_element(:class, 'discount-code').click
       @browser.find_element(:class, 'discount-code').send_keys(code)
-      @browser.find_element(:class, 'apply').click; sleep 1
+      @browser.find_element(:class, 'apply').click; sleep 0.5
 
       dsc_pmts = []
       @browser.find_elements(:class, 'payment-block').each do |block|

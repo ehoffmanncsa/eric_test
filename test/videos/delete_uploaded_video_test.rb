@@ -7,30 +7,31 @@ require 'securerandom'
 #          from the “MY VIDEO FILES” section of video page
 class DeleteUploadedVideoTest < Minitest::Test
   def setup
+    _post, post_body = RecruitAPI.new.ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
+    
     @ui = LocalUI.new(true)
     @browser = @ui.driver
+    UIActions.setup(@browser)
+    POSSetup.setup(@ui)
+    Video.setup(@ui)
 
-    resp_code, resp_body, @username = RecruitAPI.new.ppost
-    raise "POST new recuite to API gives #{resp_code}" unless resp_code.eql? 200
-
-    @client_id = resp_body['client_id']
-    @recruit_email = "#{@username}@ncsasports.org"
+    POSSetup.buy_package(@recruit_email, 'elite')
+    UIActions.user_login(@recruit_email)
   end
 
   def teardown
     @browser.quit
   end
 
-  def buy_premium_package
-    POSSetup.setup(@ui)
-    POSSetup.buy_package(@recruit_email, @username, 'elite')
-  end
 
   def test_delete_a_video
-    buy_premium_package
+    file_name = 'sample.mp4'
+    Video.goto_video
+    Video.upload_video(file_name)
 
-    Video.setup(@ui, @username)
-    Video.upload_video
+    container = @browser.find_element(:class, 'js-video-files-container')
+    UIActions.wait.until { container.find_element(:class, 'row').displayed? }
 
     # now delete and see if it is successfully deleted
     @browser.find_element(:class, 'fa-remove').click

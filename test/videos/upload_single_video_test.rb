@@ -6,14 +6,12 @@ require 'securerandom'
 # UI Test: Upload a single video
 class UploadSingleVideoTest < Minitest::Test
   def setup
+    _post, post_body = RecruitAPI.new('freshman').ppost
+    @recruit_email = post_body[:recruit][:athlete_email]
+
     @ui = LocalUI.new(true)
     @browser = @ui.driver
-
-    resp_code, resp_body, @username = RecruitAPI.new('freshman').ppost
-    raise "POST new recuite to API gives #{resp_code}" unless resp_code.eql? 200
-
-    @client_id = resp_body['client_id']
-    @recruit_email = "#{@username}@ncsasports.org"
+    UIActions.setup(@browser)
   end
 
   def teardown
@@ -22,10 +20,10 @@ class UploadSingleVideoTest < Minitest::Test
 
   def test_upload_single_video
     POSSetup.setup(@ui)
-    POSSetup.buy_package(@recruit_email, @username, 'elite')
+    POSSetup.buy_package(@recruit_email, 'elite')
 
     #upload video, also check for the form and buttons in the form
-    @ui.user_login(@username)
+    UIActions.user_login(@recruit_email)
     @browser.find_element(:id, 'profile_summary_button').click
 
     @browser.find_element(:class, 'subheader').find_element(:id, 'edit_video_link').click
@@ -53,7 +51,7 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def check_video_uploaded
-    @ui.wait { @browser.find_element(:class, 'js-video-files-container').displayed? }
+    UIActions.wait { @browser.find_element(:class, 'js-video-files-container').displayed? }
     assert @browser.find_element(:class, 'progress').displayed?, 'Cannot find progress bar'
 
     container = @browser.find_element(:class, 'js-video-files-container')
@@ -76,10 +74,10 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def impersonate
-    @ui.fasttrack_login
+    UIActions.fasttrack_login
     @browser.get 'https://qa.ncsasports.org/fasttrack/client/Search.do'
 
-    @ui.wait.until { @browser.find_element(:id, 'content').displayed? }
+    UIActions.wait.until { @browser.find_element(:id, 'content').displayed? }
     @browser.find_element(:name, 'emailAddress').send_keys @recruit_email
     @browser.find_element(:name, 'button').click
     @browser.manage.timeouts.implicit_wait = 10

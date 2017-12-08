@@ -3,11 +3,9 @@ require_relative '../../test/test_helper'
 
 # This helper is to help in performing video related actions
 module Video
-  def self.setup(ui, username)
-    @ui = ui
-    @browser = ui.driver
-
-    @username = username
+  def self.setup(ui_object)
+    @browser = ui_object.driver
+    UIActions.setup(@browser)
   end
 
   def self.teardown
@@ -17,11 +15,9 @@ module Video
   def self.upload_video(file = nil)
     file ||= 'sample.mp4'
     path = File.absolute_path("test/videos/#{file}")
-    @ui.user_login(@username)
 
     # Go to video page and open upload section
-    goto_video
-    @browser.find_element(:class, 'js-upload-options').find_element(:class, 'upload-options-text').click
+    @browser.find_element(:class, 'js-upload-options').find_element(:class, 'fa-plus').click
 
     # fill out the upload form
     @browser.find_element(:id, 'uploaded_video_as_is').find_elements(:tag_name, 'option')[1].click
@@ -31,9 +27,40 @@ module Video
 
     # send in file path and upload
     @browser.find_element(:id, 'profile-video-upload-file-input').send_keys path
-    @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 2
+    @browser.find_element(:class, 'action-buttons').find_element(:class, 'button--primary').click; sleep 3
   end
 
+  def self.upload_youtube
+    url = 'https://www.youtube.com/watch?v=YtfZeoFU0J0'
+    @browser.find_element(:class, 'js-upload-options').find_element(:class, 'fa-youtube').click
+    form = @browser.find_element(:id, 'profile-youtube-video-upload')
+
+    # fill out the upload form
+    form.find_element(:id, 'external_video_title').send_keys SecureRandom.hex(4)
+    form.find_element(:id, 'external_video_embed_code').send_keys url
+    form.find_element(:id, 'verified').click
+
+    form.submit
+    UIActions.wait.until { 
+      form.find_element(:class, 'action-spinner').attribute('style') == 'display: none;'
+    }
+  end
+
+  def self.upload_hudl
+    url = 'http://www.hudl.com/video/3/8650926/58f3b097bee0b52f8c96bfd5'
+    @browser.find_element(:class, 'js-upload-options').find_element(:class, 'fa-custom-hudl').click
+    form = @browser.find_element(:id, 'hudl-embed-video-upload')
+
+    # fill out the upload form
+    form.find_element(:id, 'external_video_title').send_keys SecureRandom.hex(4)
+    form.find_element(:id, 'external_video_embed_code').send_keys url
+    form.find_element(:id, 'verified').click
+
+    form.submit
+    UIActions.wait.until { 
+      form.find_element(:class, 'action-spinner').attribute('style') == 'display: none;'
+    }
+  end
 
   def self.send_to_video_team
     section = @browser.find_element(:class, 'js-video-files-container')
@@ -42,11 +69,12 @@ module Video
   end
 
   def self.impersonate(recruit_email)
-    @ui.fasttrack_login
-    @browser.get 'https://qa.ncsasports.org/fasttrack/client/Search.do'
+    UIActions.fasttrack_login
+    client_seach = 'https://qa.ncsasports.org/fasttrack/client/Search.do'
+    @browser.get client_seach
 
     # search for client via email address
-    @ui.wait.until { @browser.find_element(:id, 'content').displayed? }
+    UIActions.wait.until { @browser.find_element(:id, 'content').displayed? }
 
     Timeout::timeout(180) {
       loop do
@@ -57,7 +85,8 @@ module Video
 
           @table = @browser.find_element(:class, 'breakdowndatatable')
         rescue => e
-          @browser.navigate.refresh; sleep 5 ; retry
+          @browser.find_element(:name, 'emailAddress').clear
+          @browser.get client_seach; sleep 5 ; retry
         end
 
         break if @table
