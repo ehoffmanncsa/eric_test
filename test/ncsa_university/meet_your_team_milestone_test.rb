@@ -1,12 +1,13 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-201: NCSA University Regression
+# TS-202: NCSA University Regression
 # UI Test: Meet Your Team Milestone
 class MeetYourTeamMilestoneTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
+    pp @email
 
     @ui = LocalUI.new(true)
     @browser = @ui.driver
@@ -32,7 +33,7 @@ class MeetYourTeamMilestoneTest < Minitest::Test
       sticky_wrap.find_element(:class, 'button--wide').click
     end
 
-    @browser.find_element(:class, 'recu').click
+    @browser.find_element(:class, 'recu').click; sleep 3
     timeline_history = @browser.find_element(:class, 'timeline-history')
     milestone = timeline_history.find_elements(:css, 'li.milestone.point.complete').last
     title = milestone.find_element(:class, 'title').text
