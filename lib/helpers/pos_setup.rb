@@ -12,6 +12,13 @@ module POSSetup
 
   def self.set_password(email)
     UIActions.user_login(email)
+
+    begin
+      UIActions.wait(2).until { @browser.find_element(:class, 'mfp-content').displayed? }
+      popup = @browser.find_element(:class, 'mfp-content')
+      popup.find_element(:class, 'button--secondary').click
+    rescue; end
+
     UIActions.wait.until { @browser.find_element(:name, 'commit').displayed? }
 
     username = email.split('@')[0].delete('.').delete('+')

@@ -28,7 +28,7 @@ class RecruitAPI
       when 'senior'
         month > 6 ? grad_yr += 1 : grad_yr
       else
-        grad_yr = ((grad_yr - 5) .. (grad_yr + 10)).to_a.sample
+        grad_yr = MakeRandom.grad_yr
     end
 
     grad_yr

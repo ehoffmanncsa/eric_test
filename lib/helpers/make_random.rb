@@ -8,4 +8,9 @@ module MakeRandom
     charset = Array('a'..'z')
     Array.new(10) { charset.sample }.join
   end
+
+  def self.grad_yr
+  	year = Time.now.year
+    ((year - 5) .. (year + 10)).to_a.sample
+  end
 end
