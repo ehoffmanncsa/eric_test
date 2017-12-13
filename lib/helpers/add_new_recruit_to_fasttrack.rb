@@ -18,16 +18,6 @@ class FasttrackAddNewRecruit
     @username = "automation#{SecureRandom.hex(2)}"
   end
 
-  def make_name
-    charset = Array('a'..'z')
-    Array.new(10) { charset.sample }.join
-  end
-
-  def make_number(digits)
-    charset = Array('0'..'9')
-    Array.new(digits) { charset.sample }.join
-  end
-
   def goto_recruit_info_form
     UIActions.fasttrack_login
 
@@ -41,15 +31,15 @@ class FasttrackAddNewRecruit
   def fill_in_configs
     UIActions.wait.until { @browser.find_element(:id, 'footer').displayed? }
     %w[firstName lastName parent1FirstName parent1LastName].each do |attribute|
-      @browser.find_element(:name, attribute).send_key make_name
+      @browser.find_element(:name, attribute).send_key MakeRandom.name
     end
 
     %w[homePhonePh1 homePhonePh2 parent1PhonePh1 parent1PhonePh2].each do |attribute|
-      @browser.find_element(:name, attribute).send_key make_number(3)
+      @browser.find_element(:name, attribute).send_key MakeRandom.number(3)
     end
     
     %w[homePhonePh3 parent1PhonePh3].each do |attribute|
-      @browser.find_element(:name, attribute).send_key make_number(4)
+      @browser.find_element(:name, attribute).send_key MakeRandom.number(4)
     end
   end
 

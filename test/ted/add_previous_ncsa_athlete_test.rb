@@ -1,18 +1,10 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-239: TED Regression
 # UI Test: Add/Invite Previous NCSA Athlete
 class TEDAddPreviousAthlete < Minitest::Test
-  def setup
-    config = YAML.load_file('config/config.yml')
-    @coach_login = config['TED_coach_app']['login_staging']
-
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_user = creds['ted']['username']
-    @admin_pwd = creds['ted']['password']
-    
+  def setup    
     @ui = LocalUI.new(true)
     @browser = @ui.driver
     UIActions.setup(@browser)
@@ -30,16 +22,11 @@ class TEDAddPreviousAthlete < Minitest::Test
 
   def create_athlete
     # add a new freshman recruit, get back his email address and username
-    _resp, _post, post_body = RecruitAPI.new.ppost
+    _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
     @grad_yr = post_body[:recruit][:graduation_year]
-  end
-
-  def make_number(digits)
-    charset = Array('0'..'9')
-    Array.new(digits) { charset.sample }.join
   end
 
   def go_to_athlete_tab
@@ -69,9 +56,9 @@ class TEDAddPreviousAthlete < Minitest::Test
     modal.find_elements(:tag_name, 'input')[0].send_keys @first_name        # first name
     modal.find_elements(:tag_name, 'input')[1].send_keys @last_name         # last name
     modal.find_elements(:tag_name, 'input')[2].send_keys @grad_yr           # graduation year
-    modal.find_elements(:tag_name, 'input')[3].send_keys make_number(5)     # zipcode
+    modal.find_elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
     modal.find_elements(:tag_name, 'input')[4].send_keys @email             # email
-    modal.find_elements(:tag_name, 'input')[5].send_keys make_number(10)    # phone
+    modal.find_elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
     
     # find add athlete button and click
     # not sure why but without recognizing the text, the button won't click

@@ -15,16 +15,6 @@ class RecruitAPI
                   17696, 17701, 17702, 17706, 17707, 17708, 17711]
   end
 
-  def make_name
-    charset = Array('a'..'z')
-    Array.new(10) { charset.sample }.join
-  end
-
-  def make_number(digits)
-    charset = Array('0'..'9')
-    Array.new(digits) { charset.sample }.join
-  end
-
   def year
     grad_yr = Time.now.year
     month = Time.now.month
@@ -45,14 +35,12 @@ class RecruitAPI
   end
 
   def ppost
-    firstname = make_name
-    lastname = make_name
     grad_yr = year
     body = { recruit: {
                athlete_email: "#{@username}@gmail.com",
-               athlete_first_name: firstname,
-               athlete_last_name: lastname,
-               athlete_phone: make_number(10),
+               athlete_first_name: MakeRandom.name,
+               athlete_last_name: MakeRandom.name,
+               athlete_phone: MakeRandom.number(10),
                graduation_year: grad_yr,
                state_code: 'IL',
                sport_id: @sport_ids.sample.to_s,
@@ -63,9 +51,6 @@ class RecruitAPI
     resp_code, resp_body = @api.ppost @url, body
     msg = "[ERROR] Gens #{resp_code} when POST new recruit via API"
     raise msg unless resp_code.eql? 200
-
-    # pp resp_body
-    # pp body
 
     [resp_body, body]
   end
