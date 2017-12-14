@@ -127,7 +127,9 @@ class HomePageMonitorTest < Minitest::Test
 
       button.location_once_scrolled_into_view if size.keys.to_s =~ /iphone/
       button.click
-      assert @browser.title.match(/College Coach Login/), @browser.title
+      str = 'NCSA Login for College, Club and HS Coaches'
+      msg = "Browser title: #{@browser.title} not as expected: #{str}"
+      assert_equal str, @browser.title, @browser.title, msg
       assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
       # Take page snapshot but ignore the banner
