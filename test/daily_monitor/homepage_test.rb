@@ -13,7 +13,7 @@ class HomePageMonitorTest < Minitest::Test
     ]
     @homepage = config['pages']['home_page']
     @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end
@@ -109,33 +109,6 @@ class HomePageMonitorTest < Minitest::Test
 
       result = @eyes.action.close(false)
       failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_coaches_start_here
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-118 Test Coaches Start Here Button', width, height
-      @browser.get @homepage
-      button = @browser.find_element(link_text: "Coaches Start Here")
-      assert button.enabled?, 'Coaches Start Here not found'
-
-      button.location_once_scrolled_into_view if size.keys.to_s =~ /iphone/
-      button.click
-      str = 'NCSA Login for College, Club and HS Coaches'
-      msg = "Browser title: #{@browser.title} not as expected: #{str}"
-      assert_equal str, @browser.title, @browser.title, msg
-      assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
-
-      # Take page snapshot but ignore the banner
-      @eyes.check_ignore "Coaches login #{size.keys} view", [@browser.find_element(:class, 'banner')]
-      result = @eyes.action.close(false)
-      failure << "Coach login #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure
