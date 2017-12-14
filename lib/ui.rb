@@ -67,6 +67,6 @@ class UI
   end
 
   def local
-    Selenium::WebDriver.for :"#{browser}"
+    self.driver = Selenium::WebDriver.for :"#{browser}"
   end
 end
