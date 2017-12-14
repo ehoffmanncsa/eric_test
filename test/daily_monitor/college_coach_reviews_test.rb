@@ -71,7 +71,7 @@ class CollegeCoachReviewsTest < Minitest::Test
       section = @browser.find_element(:class, 'node-title-reviews--do-coaches-use-ncsa-copy-block---blockquotes')
       field = section.find_element(:class, 'row').find_element(:class, 'field-name-body')
       field.find_elements(:tag_name, 'blockquote').last.location_once_scrolled_into_view
-      sleep 5
+      sleep 0.5
       @browser.find_element(:link_text, 'testimonials page').click
 
       # scroll down to trigger image loading first
