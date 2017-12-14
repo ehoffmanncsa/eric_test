@@ -13,7 +13,7 @@ class CollegeCoachReviewsTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end
@@ -28,9 +28,9 @@ class CollegeCoachReviewsTest < Minitest::Test
     menu = nav_bar.find_element(:class, 'menu')
     menu.find_element(:class, 'menu-mlid-6233').click
 
-    # str = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
-    # msg = "Browser title: #{@browser.title} is not as expected: #{str}"
-    # assert_equal str, @browser.title, msg
+    str = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
+    msg = "Browser title: #{@browser.title} is not as expected: #{str}"
+    assert_equal str, @browser.title, msg
 
     # scroll down to trigger image loading first
     @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view
