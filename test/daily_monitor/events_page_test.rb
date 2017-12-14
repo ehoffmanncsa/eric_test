@@ -176,9 +176,6 @@ class EventsPageMonitorTest < Minitest::Test
   end
 
   def test_pick_your_sport_redir
-    width = @viewports[2].values[0]['width']
-    height = @viewports[2].values[0]['height']
-    @eyes.open @browser, 'TS-121 Test Pick Your Sport and Redir to Football Page', width, height
     @browser.get @events_page
 
     dropdown = @browser.find_element(name: 'jump')
@@ -186,21 +183,11 @@ class EventsPageMonitorTest < Minitest::Test
     options.each { |option| (option.click; break) if option.text.strip =~ /Football/ }
     assert @browser.page_source.match(/Football/), @browser.title
 
-    #scroll down to trigger teaser image loading first
-    @browser.find_elements(:class, 'teaser-image').each do |element|
-      element.location_once_scrolled_into_view; sleep 0.5
-    end
-    @browser.find_element(:class, 'prefooter-blocks').location_once_scrolled_into_view; sleep 0.5
-    @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
-
     subfooter = UIActions.get_subfooter
     UIActions.check_subfooter_msg(subfooter, 'desktop')
 
     elem = @browser.find_element(:class, 'group-slices').find_element(:class, 'holder')
     rows = elem.find_element(:class, 'view-content').find_elements(:class, 'img_left_half_teaser')
-
-    @eyes.check_ignore 'Football Camp page desktop viewport', rows
-    result = @eyes.action.close(false)
-    assert_equal 0, result.mismatches, "Football Camp page desktop viewport - #{result.mismatches} mismatches found"
+    refute_empty rows, 'No events found on Football Events page'
   end
 end
