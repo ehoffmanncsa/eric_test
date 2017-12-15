@@ -13,7 +13,7 @@ class CollegeCoachReviewsTest < Minitest::Test
       { desktop: config['viewport']['desktop'] }
     ]
     @eyes = Applitool.new 'Content'
-    @ui = UI.new 'local', 'chrome'
+    @ui = UI.new 'browserstack', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end

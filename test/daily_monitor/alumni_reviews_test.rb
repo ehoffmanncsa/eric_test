@@ -2,7 +2,6 @@
 require_relative '../test_helper'
 require 'net/http'
 
-
 # Daily Mornitor: TS-262
 # UI Test: Reviews Page - Alumni Reviews
 class AlumniReviewsTest < Minitest::Test
