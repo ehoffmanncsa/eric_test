@@ -13,7 +13,7 @@ class HomePageMonitorTest < Minitest::Test
     ]
     @homepage = config['pages']['home_page']
     @eyes = Applitool.new 'Content'
-    @ui = UI.new 'local', 'chrome'
+    @ui = UI.new 'browserstack', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end
