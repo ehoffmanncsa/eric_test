@@ -13,7 +13,7 @@ class CostPageMonitorTest < Minitest::Test
     ]
     @costpage = config['pages']['cost_page']
     @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end
@@ -23,11 +23,11 @@ class CostPageMonitorTest < Minitest::Test
   end
 
   def check_and_remove_chatra
-    chatra = @browser.find_element(:id, 'chatra')
-    if chatra.displayed?
+    begin
+      chatra = @browser.find_element(:id, 'chatra')
       hide = "arguments[0].style.visibility='hidden'"
       @browser.execute_script(hide, chatra)
-    else
+    rescue
       puts '[WARNING] Chatra not found...'
     end
   end
