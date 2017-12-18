@@ -8,7 +8,7 @@ class AdminAddExternalVideo < Minitest::Test
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
     
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
