@@ -6,7 +6,7 @@ require 'securerandom'
 # UI Test: Add a Coach
 class TEDAddACoachTest < Minitest::Test
   def setup
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
 
@@ -20,17 +20,12 @@ class TEDAddACoachTest < Minitest::Test
     @browser.close
   end
 
-  def make_number(digits)
-    charset = Array('0'..'9')
-    Array.new(digits) { charset.sample }.join
-  end
-
   # add a coach and get back his email, password, and position
   # not sure why cannot find elements by id or xpath
   # hence using tag name
   def add_a_coach
-    rand_text = SecureRandom.hex(3)
-    coach_email = "ncsa.automation+#{rand_text}@gmail.com"
+    position = MakeRandom.name
+    coach_email = MakeRandom.email
     UIActions.ted_coach_login; sleep 5
 
     # go to administration -> staff
@@ -43,12 +38,12 @@ class TEDAddACoachTest < Minitest::Test
     end
 
     # fill out staff info
-    @ui.wait(30) { @browser.find_elements(:tag_name, 'input')[4].displayed? }
-    @browser.find_elements(:tag_name, 'input')[0].send_keys rand_text         # first name
-    @browser.find_elements(:tag_name, 'input')[1].send_keys rand_text         # last name
-    @browser.find_elements(:tag_name, 'input')[2].send_keys coach_email       # email
-    @browser.find_elements(:tag_name, 'input')[3].send_keys make_number(10)   # phone
-    @browser.find_elements(:tag_name, 'input')[4].send_keys rand_text         # position
+    UIActions.wait(30) { @browser.find_elements(:tag_name, 'input')[4].displayed? }
+    @browser.find_elements(:tag_name, 'input')[0].send_keys MakeRandom.name         # first name
+    @browser.find_elements(:tag_name, 'input')[1].send_keys MakeRandom.name         # last name
+    @browser.find_elements(:tag_name, 'input')[2].send_keys coach_email             # email
+    @browser.find_elements(:tag_name, 'input')[3].send_keys MakeRandom.number(10)   # phone
+    @browser.find_elements(:tag_name, 'input')[4].send_keys position                # position
 
     # find add coach button and click
     # not sure why but without recognizing the text, the button won't click
@@ -64,7 +59,7 @@ class TEDAddACoachTest < Minitest::Test
     sidebar = @browser.find_element(:class, 'sidebar')
     sidebar.find_element(:class, 'signout').click
 
-    [coach_email, coach_password, rand_text]
+    [coach_email, coach_password, position]
   end
 
   def test_new_added_coach

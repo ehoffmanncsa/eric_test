@@ -6,7 +6,7 @@ require 'securerandom'
 # UI Test:  Add/Invite New Athlete
 class TEDAddNewAthleteTest < Minitest::Test
   def setup    
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
@@ -16,7 +16,7 @@ class TEDAddNewAthleteTest < Minitest::Test
     @gmail.mail_box = 'TED_Welcome'
     @gmail.subject = 'Welcome to NCSA Team Edition'
 
-    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
+    @email = MakeRandom.email
     @first_name = MakeRandom.name
     @last_name = MakeRandom.name
   end
@@ -93,8 +93,7 @@ class TEDAddNewAthleteTest < Minitest::Test
   end
 
   def check_athlete_profile
-    #UIActions.user_login(@email)
-    POSSetup.set_password(@email)
+    POSSetup.set_password(@email); sleep 1
 
     @browser.find_element(:class, 'fa-angle-down').click
     navbar = @browser.find_element(:id, 'secondary-nav-menu')

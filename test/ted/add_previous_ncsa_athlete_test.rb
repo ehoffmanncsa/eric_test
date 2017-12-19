@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Add/Invite Previous NCSA Athlete
 class TEDAddPreviousAthlete < Minitest::Test
   def setup    
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)

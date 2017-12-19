@@ -13,4 +13,8 @@ module MakeRandom
   	year = Time.now.year
     ((year - 5) .. (year + 10)).to_a.sample
   end
+
+  def self.email
+    "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
+  end
 end
