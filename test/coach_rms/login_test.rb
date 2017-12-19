@@ -15,7 +15,7 @@ class CoachRMSLoginTest < Minitest::Test
   end
 
   def test_coach_rms_login
-  	UIActions.coach_rms_login; sleep 4
+  	UIActions.coach_rms_login
 
   	expected_title = "Home | NCSA Coach Recruiting Management System"
   	title = @browser.title
