@@ -43,7 +43,7 @@ class TEDAddPreviousAthlete < Minitest::Test
 
   def add_athlete
     # go to administration -> athlete
-    UIActions.coach_login; sleep 5
+    UIActions.ted_coach_login; sleep 5
     go_to_athlete_tab
 
     # find add athlete button and click
@@ -114,7 +114,7 @@ class TEDAddPreviousAthlete < Minitest::Test
   end
 
   def check_athlete_accepted_status
-    UIActions.coach_login; sleep 5
+    UIActions.ted_coach_login; sleep 5
     go_to_athlete_tab; sleep 1
     get_rows.each do |row|
       athlete_name = row.find_elements(:tag_name, 'td')[0].text

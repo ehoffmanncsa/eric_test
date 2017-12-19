@@ -31,7 +31,7 @@ class TEDAddACoachTest < Minitest::Test
   def add_a_coach
     rand_text = SecureRandom.hex(3)
     coach_email = "ncsa.automation+#{rand_text}@gmail.com"
-    UIActions.coach_login; sleep 5
+    UIActions.ted_coach_login; sleep 5
 
     # go to administration -> staff
     @browser.find_element(:css, 'a.icon.administration').click
@@ -69,7 +69,7 @@ class TEDAddACoachTest < Minitest::Test
 
   def test_new_added_coach
     username, password, position = add_a_coach; sleep 2
-    UIActions.coach_login(username, password); sleep 5
+    UIActions.ted_coach_login(username, password); sleep 5
 
     modal = @browser.find_element(:class, 'modal-content')
     modal.find_elements(:tag_name, 'input')[0].send_keys 'ncsa'

@@ -47,11 +47,11 @@ module UIActions
     end
   end
 
-  def self.coach_login(username = nil, password = nil)
+  def self.ted_coach_login(username = nil, password = nil)
     @driver.get @config['TED_coach_app']['login_staging']
 
-    username = username.nil? ? @creds['ted']['username'] : username
-    password = password.nil? ? @creds['ted']['password'] : password
+    username = username.nil? ? @creds['ted_coach']['username'] : username
+    password = password.nil? ? @creds['ted_coach']['password'] : password
     @driver.find_elements(:tag_name, 'input')[0].send_keys username
     @driver.find_elements(:tag_name, 'input')[1].send_keys password
     @driver.find_element(:tag_name, 'button').click; sleep 1
@@ -79,5 +79,15 @@ module UIActions
 
   def self.clear_cookies
     @driver.manage.delete_all_cookies
+  end
+
+  def self.coach_rms_login(username = nil, password = nil)
+    @driver.get @config['pages']['coach_rms_login']
+
+    username = username.nil? ? @creds['coach_rms']['username'] : username
+    password = password.nil? ? @creds['coach_rms']['password'] : password
+    @driver.find_element(:id, 'j_username').send_keys username
+    @driver.find_element(:id, 'j_password').send_keys password
+    @driver.find_element(:name, '_submit').click; sleep 1
   end
 end

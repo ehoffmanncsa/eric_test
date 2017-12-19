@@ -4,7 +4,7 @@ fasttrack_admin:
   password: 'Secure.123'
 
 # TED coach login
-ted:
+ted_coach:
   username: 'cdickson197@gmail.com'
   password: 'ncsa'
 
@@ -19,3 +19,8 @@ gmail:
   app_pass: 'axkhemudrqgwaldq'
   password: 'oz4efpwaYpJivWZDbAGrJMJf'
   google_voice: '802-676-0642'
+
+# Coach RMS
+coach_rms:
+  username: 'lajball@yopmail.com'
+  password: 'ncsa123'

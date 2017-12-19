@@ -70,6 +70,7 @@ pages:
   site_map: 'http://www.ncsasports.org/sitemap.xml'
   fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
   user_login: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
+  coach_rms_login: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
 
 TED_coach_app:
   login_staging: 'https://team-staging.ncsasports.org/sign_in'
