@@ -90,4 +90,8 @@ module UIActions
     @driver.find_element(:id, 'j_password').send_keys password
     @driver.find_element(:name, '_submit').click; sleep 1
   end
+
+  def self.goto_edit_profile
+    @driver.find_element(:id, 'profile_summary_button').click
+  end
 end
