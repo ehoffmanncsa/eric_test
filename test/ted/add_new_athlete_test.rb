@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-229: TED Regression
 # UI Test:  Add/Invite New Athlete

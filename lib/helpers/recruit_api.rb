@@ -1,7 +1,5 @@
 # encoding: utf-8
 require_relative '../../test/test_helper'
-require 'json'
-require 'securerandom'
 
 class RecruitAPI
   def initialize(enroll_yr = nil)

@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-7: Video regression
 # UI Test: Student athlete is able to delete a video

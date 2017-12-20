@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-189: TED Regression
 # UI Test: Add a Coach

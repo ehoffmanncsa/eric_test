@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-6: Video regression
 # UI Test: Upload a multiple videos

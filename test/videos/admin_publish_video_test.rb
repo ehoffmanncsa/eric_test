@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../test_helper'
-require 'securerandom'
 
 # TS-18: Video regression
 # UI Test: Admin/video editing team user can Publish a Video

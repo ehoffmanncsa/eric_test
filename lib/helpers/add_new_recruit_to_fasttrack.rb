@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_relative '../../test/test_helper'
-require 'securerandom'
 
 # TS-38
 # To add new recruit via Fasttrack and return his email and username
