@@ -12,10 +12,10 @@ class AdminAddExternalVideo < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
-    Video.setup(@ui)
+    C3PO.setup(@ui)
 
     POSSetup.buy_package(@email, 'elite')
-    Video.impersonate(@email)
+    C3PO.impersonate(@email)
   end
 
   def teardown
@@ -33,10 +33,10 @@ class AdminAddExternalVideo < Minitest::Test
     bad_msg = []; bad_count = []; failure = []
 
     # Add Youtube video
-    Video.goto_video    
+    C3PO.goto_video    
     counter = get_video_count
 
-    Video.upload_youtube
+    C3PO.upload_youtube
     browser_msg = @browser.find_element(:class, '_js-success-text')
     bad_msg << 'Youtube added success message not found' unless browser_msg.displayed?
     
@@ -49,10 +49,10 @@ class AdminAddExternalVideo < Minitest::Test
     bad_count << msg unless counter == get_video_count 
 
     # Add Hudl video
-    Video.goto_video
+    C3PO.goto_video
     counter = get_video_count
 
-    Video.upload_hudl
+    C3PO.upload_hudl
     browser_msg = @browser.find_element(:class, '_js-success-text')
     bad_msg << 'Hudl added success message not found' unless browser_msg.displayed?
 

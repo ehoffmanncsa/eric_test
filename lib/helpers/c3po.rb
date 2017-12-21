@@ -2,7 +2,7 @@
 require_relative '../../test/test_helper'
 
 # This helper is to help in performing video related actions
-module Video
+module C3PO
   def self.setup(ui_object)
     @browser = ui_object.driver
     UIActions.setup(@browser)

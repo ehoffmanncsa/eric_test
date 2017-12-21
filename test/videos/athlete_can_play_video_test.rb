@@ -12,19 +12,19 @@ class AthletePlayPublishedVideoTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
-    Video.setup(@ui)
+    C3PO.setup(@ui)
 
     POSSetup.buy_package(@recruit_email, 'elite')
     UIActions.user_login(@recruit_email)
 
     @file_name = 'sample.mp4'
-    Video.goto_video
-    Video.upload_video(@file_name)
-    Video.send_to_video_team
-    Video.impersonate(@recruit_email)
-    Video.goto_publish
-    Video.activate_first_row_of_new_video
-    Video.publish_video(@file_name)
+    C3PO.goto_video
+    C3PO.upload_video(@file_name)
+    C3PO.send_to_video_team
+    C3PO.impersonate(@recruit_email)
+    C3PO.goto_publish
+    C3PO.activate_first_row_of_new_video
+    C3PO.publish_video(@file_name)
   end
 
   def teardown
@@ -33,8 +33,8 @@ class AthletePlayPublishedVideoTest < Minitest::Test
 
   def test_athlete_play_published_video
     # check if the url in data-transcodings has the right file name
-    Video.goto_preview_profile
-    Video.wait_for_video_thumbnail
+    C3PO.goto_preview_profile
+    C3PO.wait_for_video_thumbnail
     video = @browser.find_element(:class, 'video-link')
     data_transcodings = video.attribute('data-transcodings')
     refute_empty data_transcodings, "Video's data-transcodings attribute is nil"

@@ -12,10 +12,10 @@ class AdminDeleteExternalVideo < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
-    Video.setup(@ui)
+    C3PO.setup(@ui)
 
     POSSetup.buy_package(@email, 'elite')
-    Video.impersonate(@email)
+    C3PO.impersonate(@email)
   end
 
   def teardown
@@ -24,8 +24,8 @@ class AdminDeleteExternalVideo < Minitest::Test
 
   def test_admin_delete_external_videos
     # Add video
-    Video.goto_video
-    Video.upload_youtube
+    C3PO.goto_video
+    C3PO.upload_youtube
 
     # find video and delete it
     item = @browser.find_element(:class, 'uploads-item')

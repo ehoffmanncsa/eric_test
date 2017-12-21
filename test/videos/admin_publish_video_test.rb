@@ -10,7 +10,7 @@ class AdminPublishVideoTest < Minitest::Test
 
     @ui = LocalUI.new(true)
     @browser = @ui.driver
-    Video.setup(@ui)
+    C3PO.setup(@ui)
     POSSetup.setup(@ui)
     UIActions.setup(@browser)
 
@@ -18,9 +18,9 @@ class AdminPublishVideoTest < Minitest::Test
     UIActions.user_login(@recruit_email)
 
     @file_name = 'sample.mov'
-    Video.goto_video
-    Video.upload_video(@file_name)
-    Video.send_to_video_team
+    C3PO.goto_video
+    C3PO.upload_video(@file_name)
+    C3PO.send_to_video_team
   end
 
   def teardown
@@ -59,18 +59,18 @@ class AdminPublishVideoTest < Minitest::Test
 
   def test_admin_publish_video
     # now check the video publish page as admin
-    Video.impersonate(@recruit_email)
-    Video.goto_publish
-    Video.activate_first_row_of_new_video
+    C3PO.impersonate(@recruit_email)
+    C3PO.goto_publish
+    C3PO.activate_first_row_of_new_video
     check_uploaded_video_table
     check_publish_video_table
     
     # publish it
-    Video.publish_video(@file_name)
+    C3PO.publish_video(@file_name)
     
     # now check if the published video shows up in the athlete's profile
     # giving 300 seconds grace period
-    Video.goto_preview_profile
+    C3PO.goto_preview_profile
     Timeout::timeout(180) {
       loop do
         begin

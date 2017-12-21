@@ -13,7 +13,7 @@ class DeleteUploadedVideoTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
-    Video.setup(@ui)
+    C3PO.setup(@ui)
 
     POSSetup.buy_package(@recruit_email, 'elite')
     UIActions.user_login(@recruit_email)
@@ -26,8 +26,8 @@ class DeleteUploadedVideoTest < Minitest::Test
 
   def test_delete_a_video
     file_name = 'sample.mp4'
-    Video.goto_video
-    Video.upload_video(file_name)
+    C3PO.goto_video
+    C3PO.upload_video(file_name)
 
     container = @browser.find_element(:class, 'js-video-files-container')
     UIActions.wait.until { container.find_element(:class, 'row').displayed? }
