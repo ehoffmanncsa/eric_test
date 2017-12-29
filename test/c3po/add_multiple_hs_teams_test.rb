@@ -7,10 +7,11 @@ class AddMultipleHSTeamsTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-    
+
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
+    C3PO.setup(@browser)
 
     POSSetup.setup(@ui)
     POSSetup.buy_package(@email, 'elite')
@@ -19,54 +20,6 @@ class AddMultipleHSTeamsTest < Minitest::Test
   def teardown
     @browser.quit
   end
-
-  def add_hs_teams
-    hs_section = @browser.find_element(:class, 'high_school_seasons')
-    hs_section.find_element(:class, 'add_icon').click
-
-    form = @browser.find_element(:id, 'high_school_season_form_container')
-    dropdowns = form.find_elements(:class, 'custom-select')
-
-    # select random year
-    years_dropdown = dropdowns.first
-    years_dropdown.click
-    years = years_dropdown.find_elements(:tag_name, 'option')
-    years.shift; years.sample.click
-
-    # select random team
-    teams_dropdown = dropdowns.last
-    teams_dropdown.click
-    teams = teams_dropdown.find_elements(:tag_name, 'option')
-    teams.shift; teams.sample.click; sleep 0.5
-
-    # click radio button and give jersey number
-    # sometimes these 2 dont show up so just ignore them
-    begin
-      form.find_element(:name, 'season_team_info[starter]').click
-      form.find_element(:name, 'season_team_info[jersey_number]').send_keys MakeRandom.number(2)
-    rescue; end
-
-    # add schedule file
-    path = File.absolute_path('test/c3po/cat.png')
-    upload_form = form.find_element(:id, 'schedule_upload_form')
-    upload_form.find_element(:id, 'file').send_keys path
-    form.send_keys :arrow_down
-
-    # check boxes left table
-    tables = form.find_elements(:class, 'athletic_awards')
-    tables.each do |table|
-      rows = table.find_elements(:tag_name, 'tr')
-      rows.shift
-      for i in 0 .. rows.length - 2
-        rows[i].find_elements(:class, 'cb_award').sample.click
-      end
-
-      rows.last.find_element(:class, 'text_award').send_keys MakeRandom.name
-    end
-    
-    #submit
-    form.find_element(:class, 'submit').click; sleep 1
-   end
 
   def check_added_teams
     teams_section = @browser.find_element(:class, 'high_school_seasons')
@@ -89,16 +42,13 @@ class AddMultipleHSTeamsTest < Minitest::Test
     UIActions.user_login(@email)
     UIActions.goto_edit_profile
 
-    # go to Athletics
-    subheader = @browser.find_element(:class, 'subheader')
-    subheader.find_element(:id, 'edit_athletic_link').click
-
-    # add 4 HS teams
+    C3PO.goto_athletics
+    # add 4 HS teams (4 is maximum)
     for i in 1 .. 4
-      add_hs_teams
+      C3PO.add_hs_team
     end
-    
-    check_added_team
+
+    check_added_teams
     check_profile_history
   end
 end

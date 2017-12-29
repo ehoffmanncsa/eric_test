@@ -4,7 +4,7 @@ require_relative '../../test/test_helper'
 # This helper is to help in performing video related actions
 module C3PO
   def self.setup(ui_object)
-    @browser = ui_object.driver
+    @browser = ui_object
     UIActions.setup(@browser)
   end
 
@@ -156,5 +156,86 @@ module C3PO
         break if @thumbnail
       end
     }
+  end
+
+  def self.goto_athletics
+    # go to Athletics
+    subheader = @browser.find_element(:class, 'subheader')
+    subheader.find_element(:id, 'edit_athletic_link').click
+  end
+
+  def self.add_hs_team
+    hs_section = @browser.find_element(:class, 'high_school_seasons')
+    hs_section.find_element(:class, 'add_icon').click
+
+    form = @browser.find_element(:id, 'high_school_season_form_container')
+    dropdowns = form.find_elements(:class, 'custom-select')
+
+    # select random year
+    years_dropdown = dropdowns.first
+    years_dropdown.click
+    years = years_dropdown.find_elements(:tag_name, 'option')
+    years.shift; years.sample.click
+
+    # select random team
+    teams_dropdown = dropdowns.last
+    teams_dropdown.click
+    teams = teams_dropdown.find_elements(:tag_name, 'option')
+    teams.shift; teams.sample.click; sleep 0.5
+
+    # click radio button and give jersey number
+    # sometimes these 2 dont show up so just ignore them
+    begin
+      form.find_element(:name, 'season_team_info[starter]').click
+      form.find_element(:name, 'season_team_info[jersey_number]').send_keys MakeRandom.number(2)
+    rescue; end
+
+    # add schedule file
+    path = File.absolute_path('test/c3po/cat.png')
+    upload_form = form.find_element(:id, 'schedule_upload_form')
+    upload_form.find_element(:id, 'file').send_keys path
+    form.send_keys :arrow_down
+
+    # check boxes left table
+    tables = form.find_elements(:class, 'athletic_awards')
+    tables.each do |table|
+      rows = table.find_elements(:tag_name, 'tr')
+      rows.shift
+      for i in 0 .. rows.length - 2
+        rows[i].find_elements(:class, 'cb_award').sample.click
+      end
+
+      rows.last.find_element(:class, 'text_award').send_keys MakeRandom.name
+    end
+    
+    #submit
+    form.find_element(:class, 'submit').click; sleep 1
+   end
+
+   def self.open_hs_team
+    teams_section = @browser.find_element(:class, 'high_school_seasons')
+    team = teams_section.find_elements(:class, 'box_list').first
+    team.click; sleep 0.5
+  end
+
+  def self.add_stats_hs_team
+    hs_form = @browser.find_element(:id, 'high_school_season_form_container')
+    edit_btn = hs_form.find_element(:class, 'edit_stats')
+    edit_btn.location_once_scrolled_into_view; sleep 0.5
+    hs_form.find_element(:class, 'edit_stats').click; sleep 0.5
+
+    stats_form = @browser.find_element(:id, 'high_school_season_stats_form')
+    content_cards = stats_form.find_elements(:class, 'm-content-card')
+    stat_headers = []
+    content_cards.each do |card|
+      stat_headers << card.find_element(:tag_name, 'legend').text.downcase
+      card.find_elements(:tag_name, 'input').sample.send_keys MakeRandom.name
+      sleep 1
+    end
+
+    stats_form.find_element(:class, 'm-button').click; sleep 1
+    hs_form.find_element(:class, 'submit').click; sleep 1
+
+    stat_headers.join(',')
   end
 end
