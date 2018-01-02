@@ -1,0 +1,62 @@
+# encoding: utf-8
+require_relative '../test_helper'
+
+# TS-311: C3PO Regression
+# UI Test: Add Club Teams with STATS
+class AddClubTeamWithStatsTest < Minitest::Test
+  def setup
+    _post, post_body = RecruitAPI.new.ppost
+    @email = post_body[:recruit][:athlete_email]
+    
+    @ui = UI.new 'local', 'firefox'
+    @browser = @ui.driver
+    UIActions.setup(@browser)
+    C3PO.setup(@browser)
+
+    POSSetup.setup(@ui)
+    POSSetup.buy_package(@email, 'elite')
+  end
+
+  def teardown
+    @browser.quit
+  end
+
+  def open_club_team
+    teams_section = @browser.find_element(:class, 'club_seasons')
+    team = teams_section.find_elements(:class, 'box_list').first
+    team.click; sleep 0.5
+  end
+
+  # add stats club team and get back stats headers
+  def add_stats_club_team
+    hs_form = @browser.find_element(:id, 'club_season_form_container')
+    edit_btn = hs_form.find_element(:class, 'edit_stats')
+    edit_btn.location_once_scrolled_into_view; sleep 0.5
+    hs_form.find_element(:class, 'edit_stats').click; sleep 0.5
+
+    stats_form = @browser.find_element(:id, 'club_season_stats_form')
+    content_cards = stats_form.find_elements(:class, 'm-content-card')
+    stat_headers = []
+    content_cards.each do |card|
+      stat_headers << card.find_element(:tag_name, 'legend').text.downcase
+      card.find_elements(:tag_name, 'input').sample.send_keys MakeRandom.name
+    end
+
+    stats_form.find_element(:class, 'm-button').click; sleep 1
+    hs_form.find_element(:class, 'submit').click; sleep 1
+
+    stat_headers.join(',')
+  end
+
+  def test_add_club_team_with_stats
+    UIActions.user_login(@email)
+    UIActions.goto_edit_profile
+
+    C3PO.goto_athletics
+    C3PO.add_club_team
+    open_club_team
+    stat_headers = add_stats_club_team
+    popup_headers = C3PO.get_popup_stats_headers
+    assert_includes popup_headers, stat_headers, 'Stats headers not found'
+  end
+end
