@@ -21,20 +21,31 @@ class AddHSTeamWithStatsTest < Minitest::Test
     @browser.quit
   end
 
-  def check_stats_in_popup
-    @browser.find_element(:class, 'button--primary').click; sleep 1
+  def open_hs_team
+    teams_section = @browser.find_element(:class, 'high_school_seasons')
+    team = teams_section.find_elements(:class, 'box_list').first
+    team.click; sleep 0.5
+  end
 
-    UIActions.wait(40).until { @browser.find_element(:id, 'athletic-section').displayed? }
-    history_section = @browser.find_element(:id, 'athletic-section')
-    history_section.location_once_scrolled_into_view; sleep 1
+  # add stats hs team and get back stats headers
+  def add_stats_hs_team
+    hs_form = @browser.find_element(:id, 'high_school_season_form_container')
+    edit_btn = hs_form.find_element(:class, 'edit_stats')
+    edit_btn.location_once_scrolled_into_view; sleep 0.5
+    hs_form.find_element(:class, 'edit_stats').click; sleep 0.5
 
-    stat = history_section.find_elements(:tag_name, 'li').first
-    stat.find_element(:class, 'mg-right-1').click; sleep 1
-    popup = @browser.find_element(:class, 'mfp-content')
-    headers = []
-    popup.find_elements(:tag_name, 'h6').each { |e| headers << e.text.downcase }
+    stats_form = @browser.find_element(:id, 'high_school_season_stats_form')
+    content_cards = stats_form.find_elements(:class, 'm-content-card')
+    stat_headers = []
+    content_cards.each do |card|
+      stat_headers << card.find_element(:tag_name, 'legend').text.downcase
+      card.find_elements(:tag_name, 'input').sample.send_keys MakeRandom.name
+    end
 
-    headers.join(',')
+    stats_form.find_element(:class, 'm-button').click; sleep 1
+    hs_form.find_element(:class, 'submit').click; sleep 1
+
+    stat_headers.join(',')
   end
 
   def test_add_hs_team_with_stats
@@ -43,9 +54,9 @@ class AddHSTeamWithStatsTest < Minitest::Test
 
     C3PO.goto_athletics
     C3PO.add_hs_team
-    C3PO.open_hs_team
-    stat_headers = C3PO.add_stats_hs_team
-    popup_headers = check_stats_in_popup
+    open_hs_team
+    stat_headers = add_stats_hs_team
+    popup_headers = C3PO.get_popup_stats_headers
     assert_includes popup_headers, stat_headers, 'Stats headers not found'
   end
 end

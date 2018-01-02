@@ -7,10 +7,11 @@ class AddClubSeasonTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-    
+
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
+    C3PO.setup(@browser)
 
     POSSetup.setup(@ui)
     POSSetup.buy_package(@email, 'elite')
@@ -28,49 +29,18 @@ class AddClubSeasonTest < Minitest::Test
     @browser.find_element(:id, 'club_season_form_container')
   end
 
-  def submit_form
-    form.find_element(:class, 'submit').click
-  end
-
   def check_incomplete_form_error_msg
-    submit_form
+    # open and submit blank form
+    club_section.find_element(:class, 'add_icon').click
+    form.find_element(:class, 'submit').click
     assert form.find_element(:class, 'errors'), 'Error banner not found'
 
     error_msg = form.find_element(:class, 'errors').text
     expected_msg = "Club Name cannot be blank.\n" + 'Year must be selected.'
     assert_equal expected_msg, error_msg, "Incorrect error message"
-  end
 
-  def fill_out_form
-    url = 'https://chicago.suntimes.com/'
-    path = File.absolute_path('test/c3po/cat.png')
-
-    ['name', 'team_level', 'notes'].each do |name|
-      form.find_element(:name, name).send_keys MakeRandom.name
-    end
-
-    # give jersey number
-    # sometimes it doesnt show up so just ignore
-    begin
-      form.find_element(:name, 'jersey_number').send_keys MakeRandom.number(2)
-    rescue; end
-
-    form.find_element(:name, 'external_schedule_url').send_keys url
-    form.find_element(:id, 'file').send_keys path
-  end
-
-  def select_year
-    # select random year
-    dropdown = form.find_element(:class, 'custom-select')
-    dropdown.click
-    years = dropdown.find_elements(:tag_name, 'option')
-    years.shift; years.sample.click
-  end
-
-  def add_club
-    fill_out_form
-    select_year
-    submit_form
+    # close form
+    form.find_element(:class, 'cancel_form').click
   end
 
   def check_added_club
@@ -79,14 +49,8 @@ class AddClubSeasonTest < Minitest::Test
   end
 
   def check_profile_history
-    @browser.find_element(:class, 'button--primary').click
-    UIActions.wait(40).until { @browser.find_element(:class, 'client-data').displayed? }
-    history_section = @browser.find_element(:id, 'athletic-section')
-    list = history_section.find_elements(:tag_name, 'li')
-    refute_empty list, 'No club in history'
-
-    list.sample.find_element(:class, 'mg-right-1').click; sleep 1
-    msg = 'No popup clicking team Stats'
+    C3PO.open_athlete_history_popup
+    msg = 'No popup after clicking club Stats'
     assert @browser.find_element(:class, 'mfp-content'), msg
   end
 
@@ -94,14 +58,10 @@ class AddClubSeasonTest < Minitest::Test
     UIActions.user_login(@email)
     UIActions.goto_edit_profile
 
-    # go to Athletics
-    subheader = @browser.find_element(:class, 'subheader')
-    subheader.find_element(:id, 'edit_athletic_link').click
-
-    # open add club form
-    club_section.find_element(:class, 'add_icon').click
+    C3PO.goto_athletics
     check_incomplete_form_error_msg
-    add_club
+    C3PO.add_club_team
+    check_added_club
     check_profile_history
   end
 end

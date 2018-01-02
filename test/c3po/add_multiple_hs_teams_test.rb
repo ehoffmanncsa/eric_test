@@ -28,12 +28,7 @@ class AddMultipleHSTeamsTest < Minitest::Test
   end
 
   def check_profile_history
-    @browser.find_element(:class, 'button--primary').click
-    history_section = @browser.find_element(:id, 'athletic-section')
-    list = history_section.find_elements(:tag_name, 'li')
-    assert_equal 4, list.length, "#{list.length} teams in history - Expected 4"
-
-    list.sample.find_element(:class, 'mg-right-1').click; sleep 1
+    C3PO.open_athlete_history_popup
     msg = 'No popup clicking team Stats'
     assert @browser.find_element(:class, 'mfp-content'), msg
   end

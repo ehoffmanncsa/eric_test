@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../../test/test_helper'
 
-# This helper is to help in performing video related actions
+# This helper is to help in performing C3PO related actions
 module C3PO
   def self.setup(ui_object)
     @browser = ui_object
@@ -210,32 +210,56 @@ module C3PO
     
     #submit
     form.find_element(:class, 'submit').click; sleep 1
-   end
-
-   def self.open_hs_team
-    teams_section = @browser.find_element(:class, 'high_school_seasons')
-    team = teams_section.find_elements(:class, 'box_list').first
-    team.click; sleep 0.5
   end
 
-  def self.add_stats_hs_team
-    hs_form = @browser.find_element(:id, 'high_school_season_form_container')
-    edit_btn = hs_form.find_element(:class, 'edit_stats')
-    edit_btn.location_once_scrolled_into_view; sleep 0.5
-    hs_form.find_element(:class, 'edit_stats').click; sleep 0.5
+  def self.add_club_team
+    url = 'https://chicago.suntimes.com/'
+    path = File.absolute_path('test/c3po/cat.png')
 
-    stats_form = @browser.find_element(:id, 'high_school_season_stats_form')
-    content_cards = stats_form.find_elements(:class, 'm-content-card')
-    stat_headers = []
-    content_cards.each do |card|
-      stat_headers << card.find_element(:tag_name, 'legend').text.downcase
-      card.find_elements(:tag_name, 'input').sample.send_keys MakeRandom.name
-      sleep 1
+    # open club form
+    club_section = @browser.find_element(:class, 'club_seasons')
+    club_section.find_element(:class, 'add_icon').click
+
+    # fill out form
+    club_form = @browser.find_element(:id, 'club_season_form_container')
+    ['name', 'team_level', 'notes'].each do |name|
+      club_form.find_element(:name, name).send_keys MakeRandom.name
     end
+    # some sport doesnt require jersey number so just ignore
+    begin
+      club_form.find_element(:name, 'jersey_number').send_keys MakeRandom.number(2)
+    rescue; end
 
-    stats_form.find_element(:class, 'm-button').click; sleep 1
-    hs_form.find_element(:class, 'submit').click; sleep 1
+    club_form.find_element(:name, 'external_schedule_url').send_keys url
+    club_form.find_element(:id, 'file').send_keys path
 
-    stat_headers.join(',')
+    # select random year
+    dropdown = club_form.find_element(:class, 'custom-select')
+    dropdown.click
+    years = dropdown.find_elements(:tag_name, 'option')
+    years.shift; years.sample.click; sleep 1
+
+    # submit form
+    club_form.find_element(:class, 'submit').click; sleep 1
+  end
+
+  def self.open_athlete_history_popup
+    @browser.find_element(:class, 'button--primary').click; sleep 1
+
+    UIActions.wait(40).until { @browser.find_element(:id, 'athletic-section').displayed? }
+    history_section = @browser.find_element(:id, 'athletic-section')
+    history_section.location_once_scrolled_into_view; sleep 1
+
+    stat = history_section.find_elements(:tag_name, 'li').sample
+    stat.find_element(:class, 'mg-right-1').click; sleep 1
+  end
+
+  def self.get_popup_stats_headers
+    self.open_athlete_history_popup
+    headers = []
+    popup = @browser.find_element(:class, 'mfp-content')
+    popup.find_elements(:tag_name, 'h6').each { |e| headers << e.text.downcase }
+
+    headers.join(',')
   end
 end
