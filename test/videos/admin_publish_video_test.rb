@@ -69,20 +69,8 @@ class AdminPublishVideoTest < Minitest::Test
     C3PO.publish_video(@file_name)
     
     # now check if the published video shows up in the athlete's profile
-    # giving 300 seconds grace period
-    C3PO.goto_preview_profile
-    Timeout::timeout(180) {
-      loop do
-        begin
-          @thumbnail = @browser.find_element(:class, 'thumbnail')
-        rescue => e
-          @browser.navigate.refresh; retry
-        end
-
-        break if @thumbnail
-      end
-    }
-
+    # giving 180 seconds grace period in helper method
+    C3PO.wait_for_video_thumbnail
     assert @thumbnail.enabled?, 'Video thumbnail not clickable'
   end
 end

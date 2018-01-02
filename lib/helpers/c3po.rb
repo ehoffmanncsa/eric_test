@@ -138,19 +138,18 @@ module C3PO
     @browser.find_element(:name, 'commit').click; sleep 1
   end
 
-  def self.goto_preview_profile
+  def self.wait_for_video_thumbnail
+    # goto Preview Profile
     @browser.find_element(:class, 'profile-button-link').click; sleep 1
     @browser.switch_to.window(@browser.window_handles[2].to_s)
-  end
 
-  def self.wait_for_video_thumbnail
-    Timeout::timeout(300) {
+    # keep refresh browser for 180s or until thumbnail shows up
+    Timeout::timeout(180) {
       loop do
         begin
-          @browser.navigate.refresh
           @thumbnail = @browser.find_element(:class, 'thumbnail')
         rescue => e
-          retry
+          @browser.navigate.refresh; retry
         end
 
         break if @thumbnail
@@ -243,7 +242,10 @@ module C3PO
     club_form.find_element(:class, 'submit').click; sleep 1
   end
 
+  def self.goto_preview_profile
+
   def self.open_athlete_history_popup
+    # go to Preview Profile
     @browser.find_element(:class, 'button--primary').click; sleep 1
 
     UIActions.wait(40).until { @browser.find_element(:id, 'athletic-section').displayed? }

@@ -15,16 +15,8 @@ class AthletePlayPublishedVideoTest < Minitest::Test
     C3PO.setup(@ui)
 
     POSSetup.buy_package(@recruit_email, 'elite')
-    UIActions.user_login(@recruit_email)
 
     @file_name = 'sample.mp4'
-    C3PO.goto_video
-    C3PO.upload_video(@file_name)
-    C3PO.send_to_video_team
-    C3PO.impersonate(@recruit_email)
-    C3PO.goto_publish
-    C3PO.activate_first_row_of_new_video
-    C3PO.publish_video(@file_name)
   end
 
   def teardown
@@ -32,8 +24,19 @@ class AthletePlayPublishedVideoTest < Minitest::Test
   end
 
   def test_athlete_play_published_video
+    # upload video as user
+    UIActions.user_login(@recruit_email)
+    C3PO.goto_video
+    C3PO.upload_video(@file_name)
+    C3PO.send_to_video_team
+
+    # publish video as admin
+    C3PO.impersonate(@recruit_email)
+    C3PO.goto_publish
+    C3PO.activate_first_row_of_new_video
+    C3PO.publish_video(@file_name)
+
     # check if the url in data-transcodings has the right file name
-    C3PO.goto_preview_profile
     C3PO.wait_for_video_thumbnail
     video = @browser.find_element(:class, 'video-link')
     data_transcodings = video.attribute('data-transcodings')
