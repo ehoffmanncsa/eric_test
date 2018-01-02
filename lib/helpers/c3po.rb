@@ -242,8 +242,6 @@ module C3PO
     club_form.find_element(:class, 'submit').click; sleep 1
   end
 
-  def self.goto_preview_profile
-
   def self.open_athlete_history_popup
     # go to Preview Profile
     @browser.find_element(:class, 'button--primary').click; sleep 1
