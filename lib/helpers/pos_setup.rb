@@ -126,16 +126,11 @@ module POSSetup
   end
 
   # intermitten failure because of element not visible
-  # therefore retry upto 3 times if this happens
+  # therefore sleep 1
   def self.fill_out_credit
-    config = YAML.load_file('config/config.yml')
-    begin
-      retries ||= 0
-      config['credit_billing'].each do |id, value|
-        @browser.find_element(:id, id).send_keys value
-      end
-    rescue => e
-      retry if (retries += 1) < 3
+    config = YAML.load_file('config/config.yml'); sleep 1
+    config['credit_billing'].each do |id, value|
+      @browser.find_element(:id, id).send_keys value
     end
   end
 
@@ -158,11 +153,11 @@ module POSSetup
   def self.setup_billing(ach = false)
     # quickly pass through summary page, cannot check total here until cart bug is fixed,
     # items selected will be checked in membership/payment page
-    UIActions.wait(45) { @browser.find_element(:class, 'package-summary').displayed? }
+    UIActions.wait(45).until { @browser.find_element(:class, 'package-summary').displayed? }
     @browser.find_element(:class, 'summary-js').location_once_scrolled_into_view; sleep 0.5
     @browser.find_element(:class, 'summary-js').click
 
-    UIActions.wait(45) { @browser.find_elements(:class, 'custom-select')[2].displayed? }
+    UIActions.wait(45).until { @browser.find_elements(:class, 'custom-select')[2].displayed? }
 
     # fill out registration form
     specialists = @browser.find_elements(:class, 'custom-select')[1]
@@ -183,6 +178,7 @@ module POSSetup
 
     # select state for billing address
     begin
+      UIActions.wait.until { @browser.find_element(:id, 'order_billing_state_code').displayed? }
       state = @browser.find_element(:id, 'order_billing_state_code')
       state.find_elements(:tag_name, 'option').sample.click
     rescue
@@ -213,9 +209,9 @@ module POSSetup
     # Collect all the prices and do calculation on the side
     # Compare the 2 numbers to make sure the displayed prices are calculated accurately
     ['NSLP', 'Military'].each do |code|
-      @browser.find_element(:class, 'discount-code').click
+      @browser.find_element(:class, 'discount-code').click; sleep 0.5
       @browser.find_element(:class, 'discount-code').send_keys(code)
-      @browser.find_element(:class, 'apply').click; sleep 0.5
+      @browser.find_element(:class, 'apply').click; sleep 1
 
       dsc_pmts = []
       @browser.find_elements(:class, 'payment-block').each do |block|

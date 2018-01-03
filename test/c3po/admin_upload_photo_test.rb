@@ -15,7 +15,7 @@ class AdminUploadPhotoTest < Minitest::Test
     POSSetup.setup(@ui)
     POSSetup.buy_package(@email, 'elite')
 
-    C3PO.setup(@ui)
+    C3PO.setup(@browser)
     C3PO.impersonate(@email)
   end
 

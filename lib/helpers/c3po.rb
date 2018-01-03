@@ -251,7 +251,12 @@ module C3PO
     history_section.location_once_scrolled_into_view; sleep 1
 
     stat = history_section.find_elements(:tag_name, 'li').sample
-    stat.find_element(:class, 'mg-right-1').click; sleep 1
+    begin
+      tries ||= 0
+      stat.find_element(:class, 'mg-right-1').click; sleep 0.5
+    rescue
+      retry if (tries += 1) < 3
+    end
   end
 
   def self.get_popup_stats_headers

@@ -12,7 +12,7 @@ class ClientAddExternalVideo < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@ui)
-    C3PO.setup(@ui)
+    C3PO.setup(@browser)
 
     POSSetup.buy_package(@email, 'elite')
     UIActions.user_login(@email)

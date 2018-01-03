@@ -11,10 +11,11 @@ class AdminAddExternalVideo < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@ui)
-    C3PO.setup(@ui)
 
+    POSSetup.setup(@ui)
     POSSetup.buy_package(@email, 'elite')
+
+    C3PO.setup(@browser)
     C3PO.impersonate(@email)
   end
 
