@@ -56,6 +56,8 @@ class AddClubTeamWithStatsTest < Minitest::Test
     C3PO.add_club_team
     open_club_team
     stat_headers = add_stats_club_team
+
+    C3PO.open_section_popup('athletic-section')
     popup_headers = C3PO.get_popup_stats_headers
     assert_includes popup_headers, stat_headers, 'Stats headers not found'
   end
