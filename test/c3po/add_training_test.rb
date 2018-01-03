@@ -68,6 +68,8 @@ class AddTrainingTest < Minitest::Test
     actual_note = row.find_elements(:css, 'div.col.td').last.text
     msg = "Expected note: #{@training_note} - Actual note: #{actual_note}"
     failure << msg unless actual_note.eql? @training_note
+
+    assert_empty failure
   end
 
   def test_add_coach_references
