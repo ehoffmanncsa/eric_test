@@ -42,7 +42,7 @@ class UploadTranscriptMilestoneTest < Minitest::Test
     nav_menu = @browser.find_element(:tag_name, 'nav')
     dashboard = nav_menu.find_elements(:tag_name, 'a')[0].attribute('href')
     @browser.get dashboard
-    @browser.find_element(:class, 'recu').click
+    UIActions.goto_ncsa_university
 
     @browser.find_element(:class, 'show-completed').click; sleep 2
     timeline_history = @browser.find_element(:class, 'timeline-history')
@@ -54,7 +54,7 @@ class UploadTranscriptMilestoneTest < Minitest::Test
   def test_upload_transcript_milestone
     file_name = 'sample_transcript.pdf'
     path = File.absolute_path("test/ncsa_university/#{file_name}")
-    @browser.find_element(:class, 'recu').click
+    UIActions.goto_ncsa_university
     milestone = @browser.find_element(:link_text, 'Upload your transcript').click
 
     for i in 1 .. 3

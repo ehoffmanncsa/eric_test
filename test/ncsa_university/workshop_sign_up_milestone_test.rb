@@ -22,7 +22,7 @@ class WorkshopSignUpMilestoneTest < Minitest::Test
   end
 
   def test_complete_workshop_signup_milestone
-    @browser.find_element(:class, 'recu').click
+    UIActions.goto_ncsa_university
     milestone = @browser.find_element(:link_text, 'Sign up for Rookie Orientation').click
 
     for i in 1 .. 3

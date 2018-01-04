@@ -94,4 +94,8 @@ module UIActions
   def self.goto_edit_profile
     @driver.find_element(:id, 'profile_summary_button').click
   end
+
+  def self.goto_ncsa_university
+    @driver.find_element(:class, 'recu').click
+  end
 end

@@ -53,5 +53,3 @@ class RecruitAPI
     [resp_body, body]
   end
 end
-
-#puts RecruitAPI.new.ppost

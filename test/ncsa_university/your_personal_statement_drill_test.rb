@@ -22,7 +22,7 @@ class YourPersonalStatementDrillTest < Minitest::Test
   end
 
   def test_complete_your_personal_statement_drill
-    @browser.find_element(:class, 'recu').click
+    UIActions.goto_ncsa_university
     drill = @browser.find_elements(:class, 'drill')[2]
     banner = drill.find_element(:class, 'recruiting_u_default').find_element(:class, 'clr').click
     @browser.find_element(:class, 'button--secondary').click

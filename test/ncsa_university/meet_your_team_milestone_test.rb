@@ -23,7 +23,7 @@ class MeetYourTeamMilestoneTest < Minitest::Test
   end
 
   def test_complete_your_personal_statement_drill
-    @browser.find_element(:class, 'recu').click
+    UIActions.goto_ncsa_university
     milestone = @browser.find_element(:link_text, 'Meet my team').click
     @browser.find_element(:class, 'button--wide').click
 
