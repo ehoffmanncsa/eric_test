@@ -265,6 +265,8 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
 
   def test_complete_get_infront_of_coach_drill
     select_drill
+
+    # verify each page of the progress except for last page
     loop do
       url = @browser.current_url
       end_point = url.split('/').last
@@ -272,6 +274,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
       send("verify_#{end_point}")
     end
 
+    # verify last page
     verify_done
 
     # now drill should be marked completed
