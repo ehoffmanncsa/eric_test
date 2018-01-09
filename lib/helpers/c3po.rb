@@ -233,13 +233,13 @@ module C3PO
     club_form.find_element(:id, 'file').send_keys path
 
     # select random year
-    dropdown = club_form.find_element(:class, 'custom-select')
+    dropdown = club_form.find_element(:name, 'year'); sleep 0.5
     dropdown.click
     years = dropdown.find_elements(:tag_name, 'option')
     years.shift; years.sample.click; sleep 1
 
     # submit form
-    club_form.find_element(:class, 'submit').click; sleep 1
+    club_form.find_element(:class, 'submit').click; sleep 2
   end
 
   def self.open_athlete_history_popup
