@@ -63,7 +63,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     msg = 'Drill questions not found on commitment page'
     assert content_area.element(:class, 'drill-questions').visible?, msg
     questions = content_area.elements(:class, 'button--clear-dark').to_a
-    questions.sample.click; sleep 1
+    questions.sample.click
   end
 
   def verify_location
@@ -88,11 +88,11 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # do some checks on the skip modal
     verify_skip_modal
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def verify_skip_modal
-    form.elements(:class, 'skip-screen').last.click; sleep 1
+    form.elements(:class, 'skip-screen').last.click
     assert @browser.element(:id, 'skipping'), 'Skipping modal not visible'
 
     # make sure header text is right
@@ -109,7 +109,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert_empty failure
 
     # close modal to continue
-    modal.element(:id, 'skip-close').click; sleep 1
+    modal.element(:id, 'skip-close').click; sleep 0.5
   end
 
   def verify_position
@@ -124,7 +124,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def verify_player_stats
@@ -142,7 +142,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def select_key_stats
@@ -183,7 +183,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def verify_familiar
@@ -196,7 +196,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert content_area.element(:class, 'drill-questions').visible?, msg
 
     questions = content_area.elements(:class, 'button--clear-dark').to_a
-    questions.sample.click; sleep 1
+    questions.sample.click
   end
 
   def verify_customize
@@ -214,7 +214,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def verify_club_information
@@ -237,7 +237,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:id, 'next').click; sleep 1
+    form.element(:id, 'next').click
   end
 
   def verify_done
