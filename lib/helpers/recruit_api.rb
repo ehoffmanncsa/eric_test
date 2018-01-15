@@ -46,6 +46,8 @@ class RecruitAPI
               }
             }
 
+    pp "Athete created in this script: #{body[:recruit][:athlete_email]}" 
+
     resp_code, resp_body = @api.ppost @url, body
     msg = "[ERROR] Gens #{resp_code} when POST new recruit via API"
     raise msg unless resp_code.eql? 200
