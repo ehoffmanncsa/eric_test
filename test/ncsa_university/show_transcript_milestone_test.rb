@@ -26,7 +26,7 @@ class UploadTranscriptMilestoneTest < Minitest::Test
   end
 
   def check_uploaded_file
-    @browser.link(:text, 'Official Transcript').click; sleep 1
+    @browser.link(:text, 'Official Transcript').click; sleep 2
     @browser.window(:index, 1).use
 
     url = @browser.url
