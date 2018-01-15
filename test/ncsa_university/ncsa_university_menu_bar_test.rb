@@ -8,22 +8,23 @@ class NCSAUniversityMenuBarTest < Minitest::Test
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    @browser = LocalUI.new(true).driver
+    @ui = UI.new 'local', 'firefox'
+    @browser = @ui.driver
     UIActions.setup(@browser)
     UIActions.user_login(@email)
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def test_ncsa_university_menu_bar
-    @browser.find_element(:class, 'recu').click
-    menu_bar = @browser.find_element(:class, 'subheader')
+    UIActions.goto_ncsa_university
+    menu_bar = @browser.element(:class, 'subheader')
     expect_txt = ['Path to College', 'Recruiting Classes', 
                   'Video Library', 'Resource Library']
     failure = []
-    menu_bar.find_elements(:tag_name, 'a').each do |btn|
+    menu_bar.elements(:tag_name, 'a').each do |btn|
       failure << "Found unexpected button #{btn}" unless expect_txt.include? btn.text
       failure << "#{btn} not clickable" unless btn.enabled?
     end
