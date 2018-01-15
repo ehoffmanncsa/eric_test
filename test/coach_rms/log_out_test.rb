@@ -11,21 +11,21 @@ class CoachRMSLogoutTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def test_coach_rms_logout
   	UIActions.coach_rms_login
-  	user_info = @browser.find_element(:class, 'header__user-info')
-  	menu = user_info.find_element(:class, 'header__user-info__menu-button')
+  	user_info = @browser.element(:class, 'header__user-info')
+  	menu = user_info.element(:class, 'header__user-info__menu-button')
 
-    menu.click; sleep 0.5
-    list = menu.find_element(:class, 'header__user-info__list')
-    logout = list.find_elements(:tag_name, 'li').last
-    logout.find_element(:tag_name, 'a').click
+    menu.click
+    list = menu.element(:class, 'header__user-info__list')
+    logout = list.elements(:tag_name, 'li').last
+    logout.element(:tag_name, 'a').click
 
     expected_url = 'http://coach-qa.ncsasports.org/coach/coachrms/login'
-    url = @browser.current_url
+    url = @browser.url
     assert_equal expected_url, url, 'Logout not redir to login page'
   end
 end

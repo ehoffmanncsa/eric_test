@@ -13,24 +13,24 @@ class AddMultipleHSTeamsTest < Minitest::Test
     UIActions.setup(@browser)
     C3PO.setup(@browser)
 
-    POSSetup.setup(@ui)
+    POSSetup.setup(@browser)
     POSSetup.buy_package(@email, 'elite')
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def check_added_teams
-    teams_section = @browser.find_element(:class, 'high_school_seasons')
-    boxes = teams_section.find_elements(:class, 'box_list')
+    teams_section = @browser.element(:class, 'high_school_seasons')
+    boxes = teams_section.elements(:class, 'box_list').to_a
     assert_equal 4, boxes.length, "#{boxes.length} box show up after adding 4 teams"
   end
 
   def check_profile_history
     C3PO.open_athlete_history_popup
     msg = 'No popup clicking team Stats'
-    assert @browser.find_element(:class, 'mfp-content'), msg
+    assert @browser.element(:class, 'mfp-content'), msg
   end
 
   def test_add_multiple_highschool_teams

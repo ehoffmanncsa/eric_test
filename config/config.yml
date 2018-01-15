@@ -57,20 +57,20 @@ applitool:
 
 # Daily Monitor start points
 pages:
-  home_page: 'http://www.ncsasports.org/'
-  cost_page: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
-  review_page: 'http://www.ncsasports.org/ncsa-reviews'
-  events_page: 'http://www.ncsasports.org/events'
-  ted_page: 'http://www.ncsasports.org/team'
-  free_demo_request: 'http://www.ncsasports.org/team/getting-started-form'
-  sport_engine_webform: 'http://www.ncsasports.org/lp/sports-engine-team-edition-getting-started-form'
-  partners_page: 'http://www.ncsasports.org/who-is-ncsa/how-ncsa-works/ncsas-partners'
-  contact_us_page: 'http://www.ncsasports.org/contact-us-address'
-  press_media_page: 'http://www.ncsasports.org/about-us/press-media'
-  site_map: 'http://www.ncsasports.org/sitemap.xml'
-  fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
-  user_login: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
   coach_rms_login: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
+  contact_us_page: 'http://www.ncsasports.org/contact-us-address'
+  cost_page: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
+  events_page: 'http://www.ncsasports.org/events'
+  fasttrack_login: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
+  free_demo_request: 'http://www.ncsasports.org/team/getting-started-form'
+  home_page: 'http://www.ncsasports.org/'
+  partners_page: 'http://www.ncsasports.org/who-is-ncsa/how-ncsa-works/ncsas-partners'
+  press_media_page: 'http://www.ncsasports.org/about-us/press-media'
+  review_page: 'http://www.ncsasports.org/ncsa-reviews'
+  site_map: 'http://www.ncsasports.org/sitemap.xml'
+  sport_engine_webform: 'http://www.ncsasports.org/lp/sports-engine-team-edition-getting-started-form'
+  ted_page: 'http://www.ncsasports.org/team'
+  user_login: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
 
 TED_coach_app:
   login_staging: 'https://team-staging.ncsasports.org/sign_in'

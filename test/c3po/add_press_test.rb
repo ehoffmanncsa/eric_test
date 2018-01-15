@@ -22,45 +22,44 @@ class AddPressTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def press_section
-    @browser.find_element(:class, 'athletic_presses')
+    @browser.element(:class, 'athletic_presses')
   end
 
   def fill_out_form
     # open form
-    press_section.find_element(:class, 'add_icon').click; sleep 0.5
-    form = @browser.find_element(:id, 'athletic_presses_edit')
+    press_section.element(:class, 'add_icon').click
+    form = @browser.element(:id, 'athletic_presses_edit')
 
     # fill out textboxes
-    form.find_element(:name, 'title').send_keys @title
-    form.find_element(:name, 'link').send_keys @link
-    form.find_element(:name, 'notes').send_keys @notes
+    form.element(:name, 'title').send_keys @title
+    form.element(:name, 'link').send_keys @link
+    form.element(:name, 'notes').send_keys @notes
 
     # submit form
-    form.find_element(:class, 'save').click; sleep 1
+    form.element(:class, 'save').click; sleep 1
   end
 
   def check_added_press
-    boxes = press_section.find_elements(:class, 'box_list')
+    boxes = press_section.elements(:class, 'box_list')
     refute_empty boxes, 'No box show up after added press'
   end
 
   def check_profile_history
     # go to Preview Profile
-    @browser.find_element(:class, 'button--primary').click; sleep 1
+    @browser.element(:class, 'button--primary').click; sleep 1
 
-    UIActions.wait.until { @browser.find_element(:id, 'athletic-section').displayed? }
-    section =  @browser.find_element(:id, 'athletic-section')
-    press = section.find_elements(:tag_name, 'a').sample
+    section =  @browser.element(:id, 'athletic-section')
+    press = section.elements(:tag_name, 'a').to_a.sample
 
     actual_link = press.attribute('href')
     assert_equal @link, actual_link, 'Incorrect press url'
 
     press.click
-    assert (@browser.window_handles.length > 1), 'Clicking press not open new tab'
+    assert (@browser.windows.length > 1), 'Clicking press not open new tab'
   end
 
   def test_add_press

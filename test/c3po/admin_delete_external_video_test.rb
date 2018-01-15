@@ -11,7 +11,7 @@ class AdminDeleteExternalVideo < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@ui)
+    POSSetup.setup(@browser)
     C3PO.setup(@browser)
 
     POSSetup.buy_package(@email, 'elite')
@@ -19,7 +19,7 @@ class AdminDeleteExternalVideo < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def test_admin_delete_external_videos
@@ -28,14 +28,14 @@ class AdminDeleteExternalVideo < Minitest::Test
     C3PO.upload_youtube
 
     # find video and delete it
-    item = @browser.find_element(:class, 'uploads-item')
-    item.find_element(:class, 'remove').click; sleep 0.5
+    item = @browser.element(:class, 'uploads-item')
+    item.element(:class, 'remove').click
 
-    modal = @browser.find_element(:class, 'mfp-content')
-    modal.find_element(:class, 'js-button-confirm').click; sleep 1
+    modal = @browser.element(:class, 'mfp-content')
+    modal.element(:class, 'js-button-confirm').click; sleep 1
 
     expected_msg = 'Video successfully deleted from your profile.'
-    actual_msg = @browser.find_element(:class, '_js-success-text').text
+    actual_msg = @browser.element(:class, '_js-success-text').text
     msg = "Video delete confirm message: #{actual_msg} not as expected: #{expected_msg}"
     assert_equal expected_msg, actual_msg, msg
   end

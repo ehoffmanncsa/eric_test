@@ -11,7 +11,7 @@ class CoachRMSLoginTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def test_coach_rms_login
@@ -22,8 +22,8 @@ class CoachRMSLoginTest < Minitest::Test
   	assert_equal expected_title, title, "Page title: #{title} - Not as expected: #{expected_title}"
 
   	expected_name = 'LaJay Ball'
-  	user_info = @browser.find_element(:class, 'header__user-info')
-  	user_name = user_info.find_element(:class, 'header__user-info__menu-button__user__data').text
+  	user_info = @browser.element(:class, 'header__user-info')
+  	user_name = user_info.element(:class, 'header__user-info__menu-button__user__data').text
   	assert_equal expected_name, user_name, "User's name: #{user_name} - Not as expected #{expected_name}"
   end
 end

@@ -11,7 +11,7 @@ class ClientAddExternalVideo < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@ui)
+    POSSetup.setup(@browser)
     C3PO.setup(@browser)
 
     POSSetup.buy_package(@email, 'elite')
@@ -19,14 +19,14 @@ class ClientAddExternalVideo < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def get_video_count
-    area = @browser.find_element(:class, 'mg-btm-1')
-    section = area.find_elements(:class, 'remaining')[1]
+    area = @browser.element(:class, 'mg-btm-1')
+    section = area.elements(:class, 'remaining').to_a
     
-    section.find_element(:class, 'js-external-videos-count').text.to_i
+    section[1].element(:class, 'js-external-videos-count').text.to_i
   end
 
   def test_client_add_external_video
@@ -37,8 +37,8 @@ class ClientAddExternalVideo < Minitest::Test
     counter = get_video_count
 
     C3PO.upload_youtube(false)
-    browser_msg = @browser.find_element(:class, '_js-success-text')
-    bad_msg << 'Youtube added success message not found' unless browser_msg.displayed?
+    browser_msg = @browser.element(:class, '_js-success-text')
+    bad_msg << 'Youtube added success message not found' unless browser_msg.visible?
     
     expect_msg = 'Your YouTube video was added to your profile.'
     msg = "Wrong success Youtube added message - #{browser_msg.text}"
@@ -53,8 +53,8 @@ class ClientAddExternalVideo < Minitest::Test
     counter = get_video_count
 
     C3PO.upload_hudl(false)
-    browser_msg = @browser.find_element(:class, '_js-success-text')
-    bad_msg << 'Hudl added success message not found' unless browser_msg.displayed?
+    browser_msg = @browser.element(:class, '_js-success-text')
+    bad_msg << 'Hudl added success message not found' unless browser_msg.visible?
 
     expect_msg = 'Your Hudl video was added to your profile.'
     msg = "Wrong success Hudl added message - #{browser_msg.text}"

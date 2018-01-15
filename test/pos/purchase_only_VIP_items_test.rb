@@ -5,8 +5,9 @@ require_relative '../test_helper'
 # UI Test: Purchase only VIP items
 class PurchaseOnlyVIPItemsTests < Minitest::Test
   def setup
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
+    UIActions.setup(@browser)
 
     # add a new recruit, get back his email address
     _post, post_body = RecruitAPI.new.ppost
@@ -18,24 +19,21 @@ class PurchaseOnlyVIPItemsTests < Minitest::Test
   end
 
   def test_purchase_only_VIP_items
-    POSSetup.setup(@ui)
+    POSSetup.setup(@browser)
     POSSetup.buy_alacarte(@recruit_email)
     
-    @ui.user_login(@recruit_email)
-    @ui.wait { @browser.find_element(:class, 'fa-angle-down').enabled? }
-    @browser.find_element(:class, 'fa-angle-down').click
-    @browser.find_element(:id, 'secondary-nav-menu').find_element(:link_text, 'Membership Info').click
+    UIActions.user_login(@recruit_email)
+    @browser.element(:class, 'fa-angle-down').click
+    @browser.element(:id, 'secondary-nav-menu').link(:text, 'Membership Info').click
 
     failure = []
-    @ui.wait(30) { @browser.find_elements(:tag_name, 'div.row.major').each { |e| e.displayed? } }
-
-    box1 = @browser.find_element(:class, 'purchase-summary-js').find_element(:class, 'package-features')
-    title = box1.find_element(:class, 'title-js').text.downcase
+    box1 = @browser.element(:class, 'purchase-summary-js').element(:class, 'package-features')
+    title = box1.element(:class, 'title-js').text.downcase
     failure << 'Activation Membership Features not found' unless title.match(/activation membership features/)
-    failure << 'Activation Membership Features items not found' if box1.find_elements(:tag_name, 'li').empty?
+    failure << 'Activation Membership Features items not found' if box1.elements(:tag_name, 'li').to_a.empty?
 
-    box2 = @browser.find_element(:class, 'purchase-summary-js').find_element(:css, 'div.column.third')     
-    failure << 'VIP items not found' if box2.find_elements(:tag_name, 'li').empty?
+    box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')     
+    failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
     
     assert_empty failure
   end

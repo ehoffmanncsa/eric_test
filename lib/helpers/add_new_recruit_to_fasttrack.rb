@@ -1,60 +1,66 @@
 # encoding: utf-8
 require_relative '../../test/test_helper'
+require_relative 'make_random'
 
 # TS-38
 # To add new recruit via Fasttrack and return his email and username
 class FasttrackAddNewRecruit
   def initialize
-    config = YAML.load_file('config/.creds.yml')
-    username = config['fasttrack_admin']['username']
-    password = config['fasttrack_admin']['password']
-    @info = config['recruit']
-
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
 
-    @username = "automation#{SecureRandom.hex(2)}"
+    @recruit_email = "automation#{SecureRandom.hex(2)}@ncsasports.org"
+    @firstName = MakeRandom.name; @lastName = MakeRandom.name
   end
 
   def goto_recruit_info_form
     UIActions.fasttrack_login
 
-    add = @browser.find_element(:xpath, '//*[@id="nav"]/li[1]')
-    @browser.action.move_to(add).perform
-    @browser.find_element(:link_text, 'Recruit').click
-
-    raise '[ERROR] Cannot find Add/Recruit page' unless @browser.title =~ /Enter Recruit Information/
+    nav_bar = @browser.element(:id, 'nav')
+    list = nav_bar.elements(:tag_name, 'li')
+    add = list.detect { |e| e.text == 'Add' }
+    add.hover; add.link(:text, 'Recruit').click
+    Watir::Wait.until { @browser.title =~ /Enter Recruit Information/ }
   end
 
   def fill_in_configs
-    UIActions.wait.until { @browser.find_element(:id, 'footer').displayed? }
-    %w[firstName lastName parent1FirstName parent1LastName].each do |attribute|
-      @browser.find_element(:name, attribute).send_key MakeRandom.name
+    @browser.text_field(:name, 'firstName').set @firstName
+    @browser.text_field(:name, 'lastName').set @lastName
+
+    %w[parent1FirstName parent1LastName].each do |attr_name|
+      @browser.text_field(:name, attr_name).set MakeRandom.name
     end
 
-    %w[homePhonePh1 homePhonePh2 parent1PhonePh1 parent1PhonePh2].each do |attribute|
-      @browser.find_element(:name, attribute).send_key MakeRandom.number(3)
+    %w[homePhonePh1 homePhonePh2 parent1PhonePh1 parent1PhonePh2].each do |attr_name|
+      @browser.text_field(:name, attr_name).set MakeRandom.number(3)
     end
     
-    %w[homePhonePh3 parent1PhonePh3].each do |attribute|
-      @browser.find_element(:name, attribute).send_key MakeRandom.number(4)
+    %w[homePhonePh3 parent1PhonePh3].each do |attr_name|
+      @browser.text_field(:name, attr_name).set MakeRandom.number(4)
     end
   end
 
   def select_dropdowns
-    %w[primaryPhoneType parent1Relationship parent1PrimaryPhoneType
-       scoutID rcUserID gender highSchoolStateId sport highSchoolId].each do |attribute|
-      sleep 0.1; list = @browser.find_element(:name, attribute)
-      options = list.find_elements(:tag_name, 'option')
-      options.shift
-      options.sample.click
+    Watir::Wait.until { @browser.select_list(:name, 'highSchoolId').present? }
+    %w[parent1Relationship parent1PrimaryPhoneType
+       scoutID rcUserID gender sport highSchoolId].each do |attr_name|
+      list = @browser.select_list(:name, attr_name); list.click
+      options = list.options.to_a; options.shift
+      list.select(options.sample.text)
     end
   end
 
-  def select_event
-    list = @browser.find_element(:name, 'eventID')
-    list.find_elements(:tag_name, 'option')[1].click
+  def select_specials
+    # these dropdowns have too many special cases
+    # selecting random is a bad idea
+    # so select fix value
+    { 'eventID' => 'TAKKLE Free RFEs',
+      'primaryPhoneType' => 'My Mobile',
+      'highSchoolStateId' => 'AB' }.each do |k, v|
+      list = @browser.select_list(:name, k)
+      list.select(v)
+    end
   end
 
   def select_hs_grad_year(enroll_yr = nil)
@@ -71,27 +77,24 @@ class FasttrackAddNewRecruit
         month > 6 ? grad_yr += 1 : grad_yr
     end
 
-    list = @browser.find_element(:name, 'highSchoolGradYear'); sleep 0.2
-    options = list.find_elements(:tag_name, 'option')
-    options.shift
+    list = @browser.element(:name, 'highSchoolGradYear'); list.click
+    options = list.options.to_a; options.shift
 
     if enroll_yr.nil?
-       options.sample.click; sleep 0.5
+      options.sample.click
     else
-      options.each { |opt| opt.click if (opt.text.to_i == grad_yr) }; sleep 0.5
+      options.each { |opt| opt.click if opt.text == grad_yr.to_s }
     end
   end
 
   def select_attendee
-    sleep 0.1; @browser.find_element(:class, 'mg-btm-1').location_once_scrolled_into_view; sleep 0.2
-    attendees = @browser.find_elements(:name, 'eventAtendees')
-    attendees.sample.click
+    attendees = @browser.radios(:name, 'eventAtendees').to_a
+    attendees.sample.set
   end
 
   def create_save_emails
     %w[emailPrimary parent1EmailPrimary].each do |email|
-      @recruit_email = "#{@username}@ncsasports.org"
-      @browser.find_element(:name, email).send_key @recruit_email
+      @browser.text_field(:name, email).set @recruit_email
 
       if email.eql? 'emailPrimary'
         open('recruit_emails', 'a') { |f| f << "#{@recruit_email}," }
@@ -102,24 +105,19 @@ class FasttrackAddNewRecruit
   def main(enroll_yr = nil)
     goto_recruit_info_form
     fill_in_configs
-
-    begin
-      retries ||= 0
-      select_dropdowns
-      select_attendee
-    rescue => e
-      (retries += 1) < 3 ? retry : (puts e)
-    end
-
-    select_event
-
+    select_attendee
+    select_specials
+    select_dropdowns
     select_hs_grad_year(enroll_yr)
     create_save_emails
 
-    btn = @browser.find_elements(:name, '/lead/Submit').last
-    @browser.find_element(:id, 'footer').location_once_scrolled_into_view; sleep 0.2; btn.click; sleep 0.5
-    @browser.quit
+    # find submit button and click it then close browser
+    tables = @browser.elements(:class, 'filter').to_a
+    col = tables[2].elements(:tag_name, 'td').last
+    btn = col.elements(:tag_name, 'input').last
+    btn.click
+    @browser.close
 
-    [@recruit_email, @username]
+    [@recruit_email, @firstName, @lastName]
   end
 end

@@ -1,5 +1,6 @@
 # encoding: utf-8
-require 'selenium-webdriver'
+#require 'selenium-webdriver'
+require 'watir'
 
 class UI
   attr_accessor :driver
@@ -67,6 +68,7 @@ class UI
   end
 
   def local
-    self.driver = Selenium::WebDriver.for :"#{browser}"
+    #self.driver = Selenium::WebDriver.for :"#{browser}"
+    self.driver = Watir::Browser.new :"#{browser}"
   end
 end

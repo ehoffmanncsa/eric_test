@@ -5,10 +5,10 @@ require_relative '../test_helper'
 # UI Test:  How to Add New Recruit to Fasttrack
 class AddRecruitToFasttrackTest < Minitest::Test
   def setup
-    # add a new recruit and get back his email address
-    @recruit_email, _username = FasttrackAddNewRecruit.new.main
+    # add a new recruit and get back his email address and name
+    @recruit_email, @firstName, @lastName = FasttrackAddNewRecruit.new.main
 
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
   end
@@ -22,19 +22,39 @@ class AddRecruitToFasttrackTest < Minitest::Test
   def test_find_new_recruit
     UIActions.fasttrack_login
 
-    wait = UIActions.wait(30)
-    @browser.get 'https://qa.ncsasports.org/fasttrack/lead/Search.do?method=preSearch'
+    @browser.goto 'https://qa.ncsasports.org/fasttrack/lead/Search.do?method=preSearch'
+    content = @browser.div(:id, 'content')
+    header = content.element(:tag_name, 'h1').text
+    assert_equal 'Search Recruits', header, 'Search Recruits form not found'
 
-    wait.until { @browser.find_element(:id, 'content').displayed? }
-    assert (@browser.page_source.include? 'Search Recruits'), 'Search Recruits form not found'
+    # data comes back quite slow at times
+    # give it a grace period and 3 tries before failing test
+    begin
+      retries ||= 0
+      @browser.text_field(:name, 'emailAddress').set @recruit_email
+      @browser.button(:name, 'Submit').click
 
-    @browser.find_element(:name, 'emailAddress').send_keys @recruit_email
-    @browser.find_element(:name, 'Submit').click
-    @browser.manage.timeouts.implicit_wait = 30
+      Watir::Wait.until { @browser.table(:class, 'breakdowndatatable').exists? }
+      @table = @browser.table(:class, 'breakdowndatatable')
+    rescue
+      @browser.text_field(:name, 'emailAddress').clear
+      retry if (retries += 1) < 3
+    end
 
-    assert @browser.find_element(:class, 'dataTables_wrapper').displayed?, 'Cannot find search result data table'
+    assert @table.visible?, 'Cannot find newly added recruit after 30sec wait'
 
-    table = @browser.find_element(:class, 'breakdowndatatable')
-    refute_empty table.find_elements(:tag_name, 'input'), 'Cannot find the buttons in data table'
+    # check if the return data has the correct name
+    recruit_name = @table[1][3].text
+    assert_equal "#{@firstName} #{@lastName}", recruit_name, 'Search data is incorrect'
+
+    # make sure all buttons present and enabled
+    btns = @table.elements(:tag_name, 'input')
+    refute_empty btns, 'Cannot find the buttons in data table'
+
+    failure = []
+    btns.each do |b|
+      failure << "#{b.text} button not enabled" unless b.enabled?
+    end
+    assert_empty failure
   end
 end

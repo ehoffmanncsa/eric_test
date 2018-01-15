@@ -13,37 +13,36 @@ class AddClubTeamWithStatsTest < Minitest::Test
     UIActions.setup(@browser)
     C3PO.setup(@browser)
 
-    POSSetup.setup(@ui)
+    POSSetup.setup(@browser)
     POSSetup.buy_package(@email, 'elite')
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def open_club_team
-    teams_section = @browser.find_element(:class, 'club_seasons')
-    team = teams_section.find_elements(:class, 'box_list').first
-    team.click; sleep 0.5
+    teams_section = @browser.element(:class, 'club_seasons')
+    team = teams_section.elements(:class, 'box_list').first
+    team.click
   end
 
   # add stats club team and get back stats headers
   def add_stats_club_team
-    hs_form = @browser.find_element(:id, 'club_season_form_container')
-    edit_btn = hs_form.find_element(:class, 'edit_stats')
-    edit_btn.location_once_scrolled_into_view; sleep 0.5
-    hs_form.find_element(:class, 'edit_stats').click; sleep 0.5
+    hs_form = @browser.element(:id, 'club_season_form_container')
+    edit_btn = hs_form.element(:class, 'edit_stats')
+    hs_form.element(:class, 'edit_stats').click; sleep 0.5
 
-    stats_form = @browser.find_element(:id, 'club_season_stats_form')
-    content_cards = stats_form.find_elements(:class, 'm-content-card')
+    stats_form = @browser.element(:id, 'club_season_stats_form')
+    content_cards = stats_form.elements(:class, 'm-content-card')
     stat_headers = []
     content_cards.each do |card|
-      stat_headers << card.find_element(:tag_name, 'legend').text.downcase
-      card.find_elements(:tag_name, 'input').sample.send_keys MakeRandom.name
+      stat_headers << card.element(:tag_name, 'legend').text.downcase
+      card.elements(:tag_name, 'input').to_a.sample.send_keys MakeRandom.name
     end
 
-    stats_form.find_element(:class, 'm-button').click; sleep 1
-    hs_form.find_element(:class, 'submit').click; sleep 1
+    stats_form.element(:class, 'm-button').click
+    hs_form.element(:class, 'submit').click
 
     stat_headers.join(',')
   end

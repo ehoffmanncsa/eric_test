@@ -8,6 +8,9 @@ require 'openssl'
 require 'net/http'
 require 'time'
 require 'securerandom'
+require 'watir'
+require 'watir-scroll'
+require 'watir-webdriver'
 
 Minitest::Ci.clean = false
 

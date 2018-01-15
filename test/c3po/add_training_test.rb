@@ -21,51 +21,50 @@ class AddTrainingTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def training_section
-    @browser.find_element(:class, 'athletic_trainings_section')
+    @browser.element(:class, 'athletic_trainings_section')
   end
 
   def fill_out_form
     # open form
-    training_section.find_element(:class, 'add_icon').click; sleep 0.5
-    form = @browser.find_element(:id, 'athletic_training_edit')
+    training_section.element(:class, 'add_icon').click
+    form = @browser.element(:id, 'athletic_training_edit')
 
     # fill out textboxes
-    form.find_element(:name, 'training_type').send_keys @training_type
-    form.find_element(:name, 'notes').send_keys @training_note
+    form.element(:name, 'training_type').send_keys @training_type
+    form.element(:name, 'notes').send_keys @training_note
 
     # select random year
-    dropdown = form.find_element(:name, 'years')
-    options = dropdown.find_elements(:tag_name, 'option')
+    dropdown = form.element(:name, 'years')
+    options = dropdown.elements(:tag_name, 'option').to_a
     options.shift; options.sample.click
 
     # submit form
-    form.find_element(:class, 'save').click; sleep 1
+    form.element(:class, 'save').click; sleep 1
   end
 
   def check_added_training
-    boxes = training_section.find_elements(:class, 'box_list')
+    boxes = training_section.elements(:class, 'box_list')
     refute_empty boxes, 'No box show up after added training'
   end
 
   def check_profile_history
     # go to Preview Profile
-    @browser.find_element(:class, 'button--primary').click; sleep 1
+    @browser.element(:class, 'button--primary').click; sleep 1
 
-    UIActions.wait(40).until { @browser.find_element(:id, 'about-section').displayed? }
-    section =  @browser.find_element(:id, 'about-section')
-    training_section = section.find_element(:id, 'training-section')
-    row = training_section.find_elements(:tag_name, 'li').sample
+    section =  @browser.element(:id, 'about-section')
+    training_section = section.element(:id, 'training-section')
+    row = training_section.elements(:tag_name, 'li').to_a.sample
 
     failure = []
-    actual_type = row.find_element(:css, 'div.col.th').text.downcase
+    actual_type = row.element(:css, 'div.col.th').text.downcase
     msg = "Expected type: #{@training_type} - Actual type: #{actual_type}"
     failure << msg unless actual_type.eql? @training_type
 
-    actual_note = row.find_elements(:css, 'div.col.td').last.text
+    actual_note = row.elements(:css, 'div.col.td').last.text
     msg = "Expected note: #{@training_note} - Actual note: #{actual_note}"
     failure << msg unless actual_note.eql? @training_note
 
