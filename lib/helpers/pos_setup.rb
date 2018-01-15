@@ -33,12 +33,14 @@ module POSSetup
 
   def self.make_commitment
     Watir::Wait.until { @browser.element(:class, 'fa-angle-down').visible? }
+    @browser.element(:class, 'fa-angle-down').click
 
     # find the swoosh and go to commitment page
-    swoosh = @browser.element(:class, %w(fa-swoosh text--color-secondary text--size-small))
+    dropdown = @browser.element(:class, 'jq-dropdown-panel')
+    swoosh = dropdown.element(:class, 'fa-swoosh')
     raise '[ERROR] Cannot find swoosh' unless swoosh.enabled?
 
-    @browser.element(:class, 'fa-angle-down').click; swoosh.click; 
+    swoosh.click; 
     raise "[ERROR] Swoosh redir to #{@browser.title}" unless @browser.title.match(/Client Recruiting Management System/)
 
     # select all checkboxes
