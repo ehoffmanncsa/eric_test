@@ -39,7 +39,6 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
   end
 
   def select_drill
-    UIActions.user_login(@email)
     UIActions.goto_ncsa_university
     drills = @browser.elements(:class, 'drill')
     drills.each do |d|
