@@ -8,6 +8,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
     @firstname = post_body[:recruit][:athlete_first_name]
+    pp @email, @firstname
     @firstname[0] = @firstname[0].capitalize
 
     @ui = UI.new 'local', 'firefox'
@@ -226,8 +227,8 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
 
     # fill out form
-    radios = form.elements(:type, 'radio').to_a
-    radios[0..1].sample.click; radios[2..3].sample.click
+    # radios = form.elements(:type, 'radio').to_a
+    # radios[0..1].sample.click; radios[2..3].sample.click
     form.element(:id, 'club_data_club_name-selectized').send_keys MakeRandom.name
     form.element(:id, 'club_data_name').send_keys MakeRandom.name
     form.element(:id, 'club_data_phone').send_keys MakeRandom.number(10)
