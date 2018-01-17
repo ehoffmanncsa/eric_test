@@ -131,28 +131,34 @@ module C3PO
     inject_id = "return arguments[0].value = #{video_id}"
     @browser.execute_script(inject_id, assoc_id)
 
-    @browser.file_field(:id, 'direct-upload').element(:id, 'file').set path
-    @browser.element(:id, 'email_subject').set SecureRandom.hex(4)
-    @browser.element(:name, 'commit').click
+    @browser.form(:id, 'direct-upload').file_field(:id, 'file').send_keys path
+    @browser.element(:id, 'email_subject').send_keys SecureRandom.hex(4); sleep 2
+    @browser.button(:value, 'Send Email').click
   end
 
   def self.wait_for_video_thumbnail
     # goto Preview Profile
-    @browser.element(:class, 'profile-button-link').click
-    @browser.switch_to.window(@browser.window_handles[2].to_s)
+    @browser.element(:class, 'profile-button-link').click; sleep 2
+    @browser.window(:index, 2).use
+    Watir::Wait.until { @browser.title.include? 'NCSA Client Recruiting' }
 
+    section = @browser.element(:id, 'video-section')
+    div = section.div(:class, 'video-link')
     # keep refresh browser for 180s or until thumbnail shows up
     Timeout::timeout(180) {
       loop do
         begin
-          @thumbnail = @browser.element(:class, 'thumbnail')
+          div.element(:class, 'thumbnail').visible?
+          @thumbnail = div.element(:class, 'thumbnail')
         rescue => e
-          @browser.navigate.refresh; retry
+          @browser.refresh; retry
         end
 
         break if @thumbnail
       end
     }
+
+    @thumbnail
   end
 
   def self.goto_athletics

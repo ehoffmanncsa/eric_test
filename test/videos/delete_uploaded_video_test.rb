@@ -9,18 +9,18 @@ class DeleteUploadedVideoTest < Minitest::Test
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
     
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@ui)
-    C3PO.setup(@ui)
+    POSSetup.setup(@browser)
+    C3PO.setup(@browser)
 
     POSSetup.buy_package(@recruit_email, 'elite')
     UIActions.user_login(@recruit_email)
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
 
@@ -29,19 +29,18 @@ class DeleteUploadedVideoTest < Minitest::Test
     C3PO.goto_video
     C3PO.upload_video(file_name)
 
-    container = @browser.find_element(:class, 'js-video-files-container')
-    UIActions.wait.until { container.find_element(:class, 'row').displayed? }
+    container = @browser.element(:class, 'js-video-files-container')
 
     # now delete and see if it is successfully deleted
-    @browser.find_element(:class, 'fa-remove').click
-    modal = @browser.find_element(:class, 'video-confirm-modal')
-    assert modal.find_element(:class, 'button--red').enabled?
-    assert modal.find_element(:class, 'button--cancel').enabled?
+    @browser.element(:class, 'fa-remove').click
+    modal = @browser.element(:class, 'video-confirm-modal')
+    assert modal.element(:class, 'button--red').enabled?
+    assert modal.element(:class, 'button--cancel').enabled?
 
-    modal.find_element(:class, 'button--red').click; sleep 1
-    assert (@browser.page_source.include? 'File deleted from your videos.'), 'Video deleted message not found'
+    modal.element(:class, 'button--red').click; sleep 1
+    assert (@browser.html.include? 'File deleted from your videos.'), 'Video deleted message not found'
 
     msg = "Cannot find message - You don't have any videos on your profile"
-    assert (@browser.page_source.include? "You don't have any videos on your profile."), msg
+    assert (@browser.html.include? "You don't have any videos on your profile."), msg
   end
 end

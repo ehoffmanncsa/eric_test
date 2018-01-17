@@ -44,14 +44,19 @@ class RecruitAPI
                sport_id: @sport_ids.sample.to_s,
                event_id: '3285'
               }
-            }
+            } 
 
-    pp "Athete created in this script: #{body[:recruit][:athlete_email]}" 
+    begin
+      retries ||= 0
+      resp_code, resp_body = @api.ppost @url, body
+    rescue
+      retry if (retries += 1) < 3
+    end
 
-    resp_code, resp_body = @api.ppost @url, body
-    msg = "[ERROR] Gens #{resp_code} when POST new recruit via API"
+    msg = "[ERROR] #{resp_code} when POST new recruit via API - #{resp_body}"
     raise msg unless resp_code.eql? 200
 
+    pp "Athete created in this script: #{body[:recruit][:athlete_email]}"
     [resp_body, body]
   end
 end

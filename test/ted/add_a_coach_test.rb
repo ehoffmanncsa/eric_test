@@ -25,29 +25,29 @@ class TEDAddACoachTest < Minitest::Test
   def add_a_coach
     position = MakeRandom.name
     coach_email = MakeRandom.email
-    UIActions.ted_coach_login; sleep 5
+    UIActions.ted_coach_login
 
     # go to administration -> staff
-    @browser.find_element(:css, 'a.icon.administration').click
-    @browser.find_element(:id, 'react-tabs-4').click; sleep 1
+    @browser.element(:css, 'a.icon.administration').click
+    @browser.element(:id, 'react-tabs-4').click
 
     # find add staff button and click
-    @browser.find_elements(:tag_name, 'button').each do |e|
-      e.text == 'Add Staff' ? (e.click; sleep 1) : next
+    @browser.elements(:tag_name, 'button').each do |e|
+      e.text == 'Add Staff' ? e.click : next
     end
 
     # fill out staff info
-    UIActions.wait(30) { @browser.find_elements(:tag_name, 'input')[4].displayed? }
-    @browser.find_elements(:tag_name, 'input')[0].send_keys MakeRandom.name         # first name
-    @browser.find_elements(:tag_name, 'input')[1].send_keys MakeRandom.name         # last name
-    @browser.find_elements(:tag_name, 'input')[2].send_keys coach_email             # email
-    @browser.find_elements(:tag_name, 'input')[3].send_keys MakeRandom.number(10)   # phone
-    @browser.find_elements(:tag_name, 'input')[4].send_keys position                # position
+    inputs = @browser.elements(:tag_name, 'input').to_a
+    inputs[0].send_keys MakeRandom.name         # first name
+    inputs[1].send_keys MakeRandom.name         # last name
+    inputs[2].send_keys coach_email             # email
+    inputs[3].send_keys MakeRandom.number(10)   # phone
+    inputs[4].send_keys position                # position
 
     # find add coach button and click
     # not sure why but without recognizing the text, the button won't click
-    @browser.find_elements(:tag_name, 'button').each do |e|
-      e.text == 'Add Coach' ? (e.click; sleep 1) : next
+    @browser.elements(:tag_name, 'button').each do |e|
+      e.text == 'Add Coach' ? e.click : next
     end
 
     # use keyword password to look for password in email
@@ -55,33 +55,34 @@ class TEDAddACoachTest < Minitest::Test
     coach_password = msg[1].split(':').last.split()[0]
 
     # signout
-    sidebar = @browser.find_element(:class, 'sidebar')
-    sidebar.find_element(:class, 'signout').click
+    sidebar = @browser.element(:class, 'sidebar')
+    sidebar.element(:class, 'signout').click
 
     [coach_email, coach_password, position]
   end
 
   def test_new_added_coach
-    username, password, position = add_a_coach; sleep 2
-    UIActions.ted_coach_login(username, password); sleep 5
+    username, password, position = add_a_coach
+    UIActions.ted_coach_login(username, password)
 
-    modal = @browser.find_element(:class, 'modal-content')
-    modal.find_elements(:tag_name, 'input')[0].send_keys 'ncsa'
-    modal.find_elements(:tag_name, 'input')[1].send_keys 'ncsa'
-    modal.find_element(:tag_name, 'button').click; sleep 1
+    modal = @browser.element(:class, 'modal-content')
+    inputs = modal.elements(:tag_name, 'input').to_a
+    inputs[0].send_keys 'ncsa'
+    inputs[1].send_keys 'ncsa'
+    modal.element(:tag_name, 'button').click
 
     # go to administration -> staff
     # since first name, last name and position are the same text
     # find newly added coach by position
-    @browser.find_element(:css, 'a.icon.administration').click
-    @browser.find_element(:id, 'react-tabs-4').click; sleep 1
+    @browser.element(:css, 'a.icon.administration').click
+    @browser.element(:id, 'react-tabs-4').click
     assert (@browser.page_source.include? position), 'Did not find new coach based on his position'
 
     # Right now commenting this out, unable to click on cog to delete coach
-    # table = @browser.find_element(:css, 'table.table')
-    # row = table.find_elements(:tag_name, 'tr').last
+    # table = @browser.element(:css, 'table.table')
+    # row = table.elements(:tag_name, 'tr').last
 
-    # cog = row.find_elements(:tag_name, 'td').last.find_element(:class, 'fa-cog')
+    # cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     # pp cog.displayed?; sleep 2
     # pp cog.inspect
     # cog.click; sleep 10

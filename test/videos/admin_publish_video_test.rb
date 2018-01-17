@@ -8,10 +8,10 @@ class AdminPublishVideoTest < Minitest::Test
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
 
-    @ui = LocalUI.new(true)
+    @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
-    C3PO.setup(@ui)
-    POSSetup.setup(@ui)
+    C3PO.setup(@browser)
+    POSSetup.setup(@browser)
     UIActions.setup(@browser)
 
     POSSetup.buy_package(@recruit_email, 'elite')
@@ -24,16 +24,16 @@ class AdminPublishVideoTest < Minitest::Test
   end
 
   def teardown
-    @browser.quit
+    @browser.close
   end
 
   def check_uploaded_video_table
     failure = []
-    table = @browser.find_element(:css, 'table.m-tbl.uploaded-videos')
-    row1 = table.find_elements(:tag_name, 'tr')[0]
-    row2 = table.find_elements(:tag_name, 'tr')[1]
-    columns = row2.find_elements(:tag_name, 'td')
-    headers = row1.find_elements(:tag_name, 'th')
+    table = @browser.element(:css, 'table.m-tbl.uploaded-videos')
+    row1 = table.elements(:tag_name, 'tr')[0]
+    row2 = table.elements(:tag_name, 'tr')[1]
+    columns = row2.elements(:tag_name, 'td').to_a
+    headers = row1.elements(:tag_name, 'th').to_a
 
     i = 0
     columns.pop
@@ -48,11 +48,11 @@ class AdminPublishVideoTest < Minitest::Test
 
   def check_publish_video_table
     failure = []
-    table = @browser.find_element(:id, 'cvt-videos')
-    row1 = table.find_elements(:tag_name, 'tr').first
-    failure << 'Upload button not enabled' unless row1.find_element(:class, 'fa-upload').enabled?
-    failure << 'Edit button not enabled' unless row1.find_element(:class, 'fa-edit').enabled?
-    failure << 'Delete button not enabled' unless row1.find_element(:class, 'fa-times-circle').enabled?
+    table = @browser.element(:id, 'cvt-videos')
+    row1 = table.elements(:tag_name, 'tr').first
+    failure << 'Upload button not enabled' unless row1.element(:class, 'fa-upload').enabled?
+    failure << 'Edit button not enabled' unless row1.element(:class, 'fa-edit').enabled?
+    failure << 'Delete button not enabled' unless row1.element(:class, 'fa-times-circle').enabled?
 
     assert_empty failure
   end
@@ -70,7 +70,9 @@ class AdminPublishVideoTest < Minitest::Test
     
     # now check if the published video shows up in the athlete's profile
     # giving 180 seconds grace period in helper method
-    C3PO.wait_for_video_thumbnail
-    assert @thumbnail.enabled?, 'Video thumbnail not clickable'
+    thumbnail = C3PO.wait_for_video_thumbnail
+    assert thumbnail.enabled?, 'Video thumbnail not clickable'
+
+    thumbnail.click; sleep 5
   end
 end

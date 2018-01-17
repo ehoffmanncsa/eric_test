@@ -46,13 +46,14 @@ module UIActions
 
     username = username.nil? ? @creds['ted_coach']['username'] : username
     password = password.nil? ? @creds['ted_coach']['password'] : password
-    @browser.text_field(:tag_name, 'input')[0].set username
-    @browser.text_field(:tag_name, 'input')[1].set password
+    text_fields = @browser.elements(:tag_name, 'input').to_a
+    text_fields[0].set username
+    text_fields[1].set password
     @browser.button(:tag_name, 'button').click
   end
 
   def self.get_subfooter
-    @browser.div(:class, 'subfooter')
+    @browser.find_element(:class, 'subfooter')
   end
 
   def self.check_subfooter_msg(subfooter, viewport_size)
