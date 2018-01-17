@@ -67,8 +67,8 @@ module UIActions
         cls = 'tablet-show'
     end
 
-    subfooter_msg = subfooter.span(:class, cls)
-    raise "#{viewport_size} - subfooter message not found" unless subfooter_msg.visible?
+    subfooter_msg = subfooter.element(:class, cls)
+    raise "#{viewport_size} - subfooter message not found" unless subfooter_msg.displayed?
     raise "#{viewport_size} - wrong subfooter phone number" unless subfooter_msg.text.include? phone_number
   end
 
