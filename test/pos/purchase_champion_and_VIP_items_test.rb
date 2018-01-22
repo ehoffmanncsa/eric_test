@@ -12,6 +12,9 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
     # add a new recruit, get back his email address
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
+
+    POSSetup.setup(@browser)
+    POSSetup.buy_combo(@recruit_email, 'champion')
   end
 
   def teardown
@@ -19,9 +22,6 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
   end
 
   def test_purchase_champion_and_VIP_items
-    POSSetup.setup(@browser)
-    POSSetup.buy_combo(@recruit_email, 'champion')
-    
     UIActions.user_login(@recruit_email)
     @browser.element(:class, 'fa-angle-down').click
     @browser.element(:id, 'secondary-nav-menu').link(:text, 'Membership Info').click
@@ -35,7 +35,7 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
 
     box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')     
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
-    
+
     assert_empty failure
   end
 end

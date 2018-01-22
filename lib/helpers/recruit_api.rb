@@ -4,13 +4,16 @@ require_relative '../../test/test_helper'
 class RecruitAPI
   def initialize(enroll_yr = nil)
     @api = Api.new
-    @username = "ncsa.automation+#{SecureRandom.hex(2)}"
+    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
 
-    @enroll_yr = enroll_yr
+    # if nothing is passed in, assumed freshman
+    @enroll_yr = enroll_yr.nil? ? 'freshman' : enroll_yr
     @url = 'https://qa.ncsasports.org/api/submit/v1/new_recruit'
-    @sport_ids = [17633, 17634, 17635, 17638, 17639, 17644, 17645, 17652, 17653, 17659, 17660, 
-                  17665, 17666, 17683, 17684, 17687, 17688, 17689, 17690, 17691, 17692, 17695, 
-                  17696, 17701, 17702, 17706, 17707, 17708, 17711]
+    @sport_ids = [17633, 17634, 17635, 17638, 17639, 17644, 17645, 
+                  17652, 17653, 17659, 17660, 17665, 17666, 17683, 
+                  17684, 17687, 17688, 17689, 17690, 17691, 17692, 
+                  17695, 17696, 17701, 17702, 17706, 17707, 17708, 
+                  17711]
   end
 
   def year
@@ -25,8 +28,6 @@ class RecruitAPI
         month > 6 ? grad_yr += 2 : grad_yr += 1
       when 'senior'
         month > 6 ? grad_yr += 1 : grad_yr
-      else
-        grad_yr = MakeRandom.grad_yr
     end
 
     grad_yr
@@ -35,7 +36,7 @@ class RecruitAPI
   def ppost
     grad_yr = year
     body = { recruit: {
-               athlete_email: "#{@username}@gmail.com",
+               athlete_email: @email,
                athlete_first_name: MakeRandom.name,
                athlete_last_name: MakeRandom.name,
                athlete_phone: MakeRandom.number(10),

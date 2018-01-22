@@ -69,7 +69,7 @@ class AddAdditionalSportsTest < Minitest::Test
   end
 
   def select_item(name, value)
-    dropdown = form.select_list(:name, name)#; dropdown.click
+    dropdown = form.select_list(:name, name)
     dropdown.select(value)
   end
 

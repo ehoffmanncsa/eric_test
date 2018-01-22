@@ -95,7 +95,8 @@ module POSSetup
   end
 
   def self.choose_payment_plan(size = 'medium')
-    check_discount_calculate
+    #check_discount_calculate
+    @full_price = @browser.elements(:class, 'payment-block')[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
 
     # choose 6 months payment plan by default for testing purpose
     blocks = @browser.elements(:class, 'payment-block').to_a
@@ -104,17 +105,20 @@ module POSSetup
       else; blocks[1].click
     end
 
-    # click next button
+    # click next button, return full price
     @browser.element(:class, 'summary-js').click
+    @full_price
   end
 
-  def self.check_discount_calculate
+  def self.check_discount_calculate(enroll_yr = nil)
+    # if nothing is passed in, assumed freshman
+    enroll_yr ||= 'freshman'
+
     # activate discount feature
     @browser.span(:class, 'discount-js').click
 
     failure = []
     @full_price = @browser.elements(:class, 'payment-block')[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
-
     # Apply both discount code, one at a time
     # Collect all the prices and do calculation on the side
     # Compare the 2 numbers to make sure the displayed prices are calculated accurately
@@ -129,11 +133,16 @@ module POSSetup
       end
 
       cal_prices = []
-      [1, 6, 12].each do |months|
+      months = [1, 6, 12]
+      months.pop if enroll_yr == 'senior'
+      months.each do |months|
         cal_prices << calculate(@full_price, months,  code)
       end
 
-      cal_prices.zip(dsc_pmts).map { |c, d| failure << "Code #{code} - Actual: #{d} vs Expected: #{c}" unless c.eql? d }
+      cal_prices.zip(dsc_pmts).map do |c, d| 
+        msg = "Code #{code} - Actual: #{d} vs Expected: #{c}"
+        failure << msg unless c.eql? d
+      end
 
       @browser.element(:class, 'remove-discount-js').click
       cal_prices.clear; dsc_pmts.clear
@@ -156,13 +165,13 @@ module POSSetup
     msg = "[ERROR] Cart count #{get_cart_count} after selecting #{cart_count} VIP items"
     if all
       @browser.elements(:class, 'alacarte-block').each do |block|
-        block.element(:class, 'button--medium').click; sleep 1
+        block.element(:class, 'button--medium').click; sleep 2
         cart_count += 1
         raise msg unless cart_count.eql? get_cart_count
       end
     else
       block = @browser.elements(:class, 'alacarte-block').to_a.sample
-      block.element(:class, 'button--medium').click
+      block.element(:class, 'button--medium').click; sleep 2
       cart_count += 1
       raise msg unless cart_count.eql? get_cart_count
     end
@@ -263,7 +272,7 @@ module POSSetup
     # open shopping cart
     @browser.element(:id, 'shopping-cart').click
     cart = @browser.element(:class, 'shopping-cart-open')
-    
+
     total_price = cart.element(:class, 'total-pricing').text.gsub!(/[^0-9|\.]/, '').to_i
   end
 
@@ -271,24 +280,17 @@ module POSSetup
   def self.buy_package(email, package)
     set_password(email)
     make_commitment
-
     choose_a_package(package)
     choose_payment_plan
     setup_billing
 
     UIActions.clear_cookies
-
-    membership = calculate(@full_price, 6)
-    first_pymt = (membership / 6)
-    
-    [membership, first_pymt]
   end
 
   # to purchase only alacarte items
   def self.buy_alacarte(email, all = true)
     set_password(email)
     make_commitment
-
     pick_VIP_items(all)
     setup_billing
 
@@ -299,7 +301,6 @@ module POSSetup
   def self.buy_combo(email, package)
     set_password(email)
     make_commitment
-
     choose_a_package(package)
     choose_payment_plan('small')
     pick_VIP_items
@@ -312,16 +313,10 @@ module POSSetup
   def self.buy_with_ACH_payment(email, package)
     set_password(email)
     make_commitment
-
     choose_a_package(package)
     choose_payment_plan
     setup_billing(true)
 
     UIActions.clear_cookies
-
-    membership = calculate(@full_price, 6)
-    first_pymt = (membership / 6)
-    
-    [membership, first_pymt]
   end
 end

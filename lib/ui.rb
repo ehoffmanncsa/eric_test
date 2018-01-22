@@ -11,31 +11,27 @@ class UI
 
     self.browser = browser.nil? ? 'firefox' : browser
     case hub
-      when 'docker' then selenium_grid
+      when 'docker' then docker
       when 'browserstack' then browserstack
       when 'local' then local
     end
   end
 
-  def selenium_grid
-    case browser
-      when 'firefox'
-        caps = Selenium::WebDriver::Remote::Capabilities.firefox(
-          platform: 'LINUX',
-          video: 'True'
-        )
-      when 'chrome'
-        caps = Selenium::WebDriver::Remote::Capabilities.chrome(
-          platform: 'LINUX',
-          video: 'True'
-        )
-    end
-
-    self.driver = Selenium::WebDriver.for(
-      :remote,
-      url: "http://localhost:4444/wd/hub", # on mac use localhost:4444 ... on Jenkins use <inet_ip>:4444
-      desired_capabilities: caps
-    )
+  def docker
+    # case browser
+    #   when 'firefox'
+    #     caps = Selenium::WebDriver::Remote::Capabilities.firefox(
+    #       platform: 'LINUX',
+    #       video: 'True'
+    #     )
+    #   when 'chrome'
+    #     caps = Selenium::WebDriver::Remote::Capabilities.chrome(
+    #       platform: 'LINUX',
+    #       video: 'True'
+    #     )
+    # end
+    opts = { timeout: 120, url: 'http://localhost:4444/wd/hub' }
+    self.driver = Watir::Browser.new :"#{browser}", opts
   end
 
   def browserstack
@@ -68,6 +64,6 @@ class UI
 
   def local
     #self.driver = Selenium::WebDriver.for :"#{browser}"
-    self.driver = Watir::Browser.new :"#{browser}"
+    self.driver = Watir::Browser.new :"#{browser}", {timeout: 120}
   end
 end
