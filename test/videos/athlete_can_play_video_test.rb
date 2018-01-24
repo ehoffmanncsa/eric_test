@@ -7,15 +7,22 @@ class AthletePlayPublishedVideoTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
-    
-    @ui = UI.new 'local', 'firefox'
+    add_premium
+
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
     C3PO.setup(@browser)
 
-    POSSetup.buy_package(@recruit_email, 'elite')
     @file_name = 'sample.mp4'
+  end
+
+  def add_premium
+    ui = UI.new 'local', 'firefox'
+    browser = ui.driver
+    POSSetup.setup(browser)
+    POSSetup.buy_package(@recruit_email, 'elite')
+    browser.close
   end
 
   def teardown
@@ -41,7 +48,7 @@ class AthletePlayPublishedVideoTest < Minitest::Test
     data_transcodings = video.attribute('data-transcodings')
     refute_empty data_transcodings, "Video's data-transcodings attribute is nil"
 
-    assert (data_transcodings.include? @file_name), "Video's data-transcodings not including uploaded file"
+    assert (data_transcodings.to_s.include? @file_name), "Video's data-transcodings not including uploaded file"
 
     # check video thumbnail when clicked:
     # play console is displayed

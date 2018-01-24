@@ -20,7 +20,7 @@ class GmailCalls
   def parse_body(keyword = nil, filter = nil)
     mails = []
     begin
-      Timeout::timeout(15) {
+      Timeout::timeout(45) {
         loop do
           mails = @conn.mailbox(mail_box).emails(filter)
           break unless mails.empty?

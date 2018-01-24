@@ -7,13 +7,19 @@ class UploadSingleVideoTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
+    add_premium
 
-    @ui = UI.new 'docker', 'firefox'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
-
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
+  end
+
+  def add_premium
+    ui = UI.new 'local', 'firefox'
+    browser = ui.driver
+    POSSetup.setup(browser)
     POSSetup.buy_package(@recruit_email, 'elite')
+    browser.close
   end
 
   def teardown
@@ -40,11 +46,6 @@ class UploadSingleVideoTest < Minitest::Test
     @browser.element(:id, 'uploaded_video_jersey_color').send_keys SecureRandom.hex(4)
 
     path = File.absolute_path('test/videos/sample.mp4')
-    @browser.wd.file_detector = lambda do |args|
-      # args => ["/path/to/file"]
-      str = args.first.to_s
-      str if File.exist?(str)
-    end
     @browser.element(:id, 'profile-video-upload-file-input').send_keys path
     @browser.element(:class, 'action-buttons').element(:class, 'button--primary').click; sleep 2
 

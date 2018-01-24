@@ -7,20 +7,22 @@ class AdminPublishVideoTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
+    add_premium
 
-    @ui = UI.new 'local', 'firefox'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
-    C3PO.setup(@browser)
-    POSSetup.setup(@browser)
     UIActions.setup(@browser)
-
-    POSSetup.buy_package(@recruit_email, 'elite')
-    UIActions.user_login(@recruit_email)
+    C3PO.setup(@browser)
 
     @file_name = 'sample.mov'
-    C3PO.goto_video
-    C3PO.upload_video(@file_name)
-    C3PO.send_to_video_team
+  end
+
+  def add_premium
+    ui = UI.new 'local', 'firefox'
+    browser = ui.driver
+    POSSetup.setup(browser)
+    POSSetup.buy_package(@recruit_email, 'elite')
+    browser.close
   end
 
   def teardown
@@ -58,6 +60,12 @@ class AdminPublishVideoTest < Minitest::Test
   end
 
   def test_admin_publish_video
+    # upload video as user
+    UIActions.user_login(@recruit_email)
+    C3PO.goto_video
+    C3PO.upload_video(@file_name)
+    C3PO.send_to_video_team
+
     # now check the video publish page as admin
     C3PO.impersonate(@recruit_email)
     C3PO.goto_publish
@@ -70,9 +78,7 @@ class AdminPublishVideoTest < Minitest::Test
     
     # now check if the published video shows up in the athlete's profile
     # giving 180 seconds grace period in helper method
-    thumbnail = C3PO.wait_for_video_thumbnail
+    thumbnail = C3PO.wait_for_video_thumbnail; sleep 1
     assert thumbnail.enabled?, 'Video thumbnail not clickable'
-
-    thumbnail.click; sleep 5
   end
 end

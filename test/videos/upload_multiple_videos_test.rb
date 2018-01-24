@@ -7,13 +7,19 @@ class UploadMultipleVideosTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
+    add_premium
 
-    @ui = UI.new 'local', 'firefox'
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
+  end
 
+  def add_premium
+    ui = UI.new 'local', 'firefox'
+    browser = ui.driver
+    POSSetup.setup(browser)
     POSSetup.buy_package(@recruit_email, 'champion')
+    browser.close
   end
 
   def teardown

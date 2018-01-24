@@ -18,20 +18,15 @@ class UI
   end
 
   def docker
-    # case browser
-    #   when 'firefox'
-    #     caps = Selenium::WebDriver::Remote::Capabilities.firefox(
-    #       platform: 'LINUX',
-    #       video: 'True'
-    #     )
-    #   when 'chrome'
-    #     caps = Selenium::WebDriver::Remote::Capabilities.chrome(
-    #       platform: 'LINUX',
-    #       video: 'True'
-    #     )
-    # end
     opts = { timeout: 120, url: 'http://localhost:4444/wd/hub' }
     self.driver = Watir::Browser.new :"#{browser}", opts
+    self.driver.driver.file_detector = lambda do |args|
+      # args => ["/path/to/file"]
+      str = args.first.to_s
+      str if File.exist?(str)
+    end
+
+    self.driver
   end
 
   def browserstack
@@ -63,7 +58,6 @@ class UI
   end
 
   def local
-    #self.driver = Selenium::WebDriver.for :"#{browser}"
     self.driver = Watir::Browser.new :"#{browser}", {timeout: 120}
   end
 end

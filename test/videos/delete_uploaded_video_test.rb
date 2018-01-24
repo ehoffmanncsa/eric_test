@@ -8,15 +8,20 @@ class DeleteUploadedVideoTest < Minitest::Test
   def setup
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
-    
-    @ui = UI.new 'local', 'firefox'
+    add_premium
+
+    @ui = UI.new 'local', 'chrome'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
     C3PO.setup(@browser)
+  end
 
+  def add_premium
+    ui = UI.new 'local', 'firefox'
+    browser = ui.driver
+    POSSetup.setup(browser)
     POSSetup.buy_package(@recruit_email, 'elite')
-    UIActions.user_login(@recruit_email)
+    browser.close
   end
 
   def teardown
@@ -25,6 +30,8 @@ class DeleteUploadedVideoTest < Minitest::Test
 
 
   def test_delete_a_video
+    UIActions.user_login(@recruit_email)
+
     file_name = 'sample.mp4'
     C3PO.goto_video
     C3PO.upload_video(file_name)
@@ -37,7 +44,7 @@ class DeleteUploadedVideoTest < Minitest::Test
     assert modal.element(:class, 'button--red').enabled?
     assert modal.element(:class, 'button--cancel').enabled?
 
-    modal.element(:class, 'button--red').click; sleep 1
+    modal.element(:class, 'button--red').click; sleep 2
     assert (@browser.html.include? 'File deleted from your videos.'), 'Video deleted message not found'
 
     msg = "Cannot find message - You don't have any videos on your profile"

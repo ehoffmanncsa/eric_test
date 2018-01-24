@@ -49,7 +49,7 @@ module UIActions
     text_fields = @browser.elements(:tag_name, 'input').to_a
     text_fields[0].set username
     text_fields[1].set password
-    @browser.button(:tag_name, 'button').click
+    @browser.button(:text, 'Sign In').click
   end
 
   def self.get_subfooter
