@@ -25,16 +25,18 @@ class TEDAddACoachTest < Minitest::Test
   def add_a_coach
     position = MakeRandom.name
     coach_email = MakeRandom.email
-    UIActions.ted_coach_login
+    UIActions.ted_coach_login; sleep 3
 
     # go to administration -> staff
-    @browser.element(:css, 'a.icon.administration').click
-    @browser.element(:id, 'react-tabs-4').click
+    Watir::Wait.until { @browser.element(:class, 'logo').visible? }
+    @browser.element(:css, 'a.icon.administration').click; sleep 0.5
+    @browser.element(:id, 'react-tabs-4').click; sleep 2
 
     # find add staff button and click
     @browser.elements(:tag_name, 'button').each do |e|
-      e.text == 'Add Staff' ? e.click : next
+      e.text == 'Add Staff' ? (e.click; sleep 1) : next
     end
+    Watir::Wait.until { @browser.element(:class, 'modal-content').visible? }
 
     # fill out staff info
     inputs = @browser.elements(:tag_name, 'input').to_a
@@ -63,7 +65,7 @@ class TEDAddACoachTest < Minitest::Test
 
   def test_new_added_coach
     username, password, position = add_a_coach
-    UIActions.ted_coach_login(username, password)
+    UIActions.ted_coach_login(username, password); sleep 3
 
     modal = @browser.element(:class, 'modal-content')
     inputs = modal.elements(:tag_name, 'input').to_a
@@ -74,9 +76,9 @@ class TEDAddACoachTest < Minitest::Test
     # go to administration -> staff
     # since first name, last name and position are the same text
     # find newly added coach by position
-    @browser.element(:css, 'a.icon.administration').click
-    @browser.element(:id, 'react-tabs-4').click
-    assert (@browser.page_source.include? position), 'Did not find new coach based on his position'
+    @browser.element(:css, 'a.icon.administration').click; sleep 0.5
+    @browser.element(:id, 'react-tabs-4').click; sleep 2
+    assert (@browser.html.include? position), 'Did not find new coach based on his position'
 
     # Right now commenting this out, unable to click on cog to delete coach
     # table = @browser.element(:css, 'table.table')
