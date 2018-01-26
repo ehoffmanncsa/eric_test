@@ -42,7 +42,7 @@ class YourPersonalStatementDrillTest < Minitest::Test
     @browser.element(:class, 'button--wide').click; sleep 1
     timeline_history = @browser.element(:class, 'timeline-history')
     
-    drill_point = timeline_history.element(:class, %w(drill point complete))
+    drill_point = timeline_history.element(:class, 'drill')
     title = drill_point.span(:class, 'drill-title').text
     assert_equal 'Your Personal Statement', title, "#{title} - Expected: Your Personal Statement"
   end
