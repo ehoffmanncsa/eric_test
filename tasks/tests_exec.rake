@@ -5,7 +5,8 @@ Minitest::Ci.new.start
 
 exceptions = ['test/pos/enroll_mvp_user_freshman_test.rb',
               'test/pos/enroll_mvp_user_junior_test.rb',
-              'test/daily_monitor/sport_engine_webform_page_test.rb']
+              'test/daily_monitor/sport_engine_webform_page_test.rb',
+              'test/pos/enroll_use_ACH_payment_test.rb']
 
 namespace :first_run do 
   desc 'execute all tests....'
