@@ -19,7 +19,7 @@ module POSSetup
     begin
       Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
       popup = @browser.element(:class, 'mfp-content')
-      popup.button(:class, 'button--secondary').click
+      popup.element(:class, 'button--secondary').click
     rescue; end
 
     Watir::Wait.until { @browser.button(:name, 'commit').visible? }

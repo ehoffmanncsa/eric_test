@@ -30,57 +30,52 @@ class TEDAddPreviousAthlete < Minitest::Test
   end
 
   def go_to_athlete_tab
-    @browser.element(:css, 'a.icon.administration').click
-    @browser.element(:id, 'react-tabs-2').click; sleep 3
+    # go to administration -> athlete
+    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
+    @browser.link(:text, 'Administration').click
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    @browser.element(:id, 'react-tabs-2').click
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
   end
 
   def get_rows
     tab = @browser.element(:class, 'ReactTabs__TabPanel--selected')
     table = tab.element(:class, 'table')
-    
+
     table.element(:tag_name, 'tbody').elements(:tag_name, 'tr')
   end
 
   def add_athlete
-    # go to administration -> athlete
-    UIActions.ted_coach_login; sleep 5
+    UIActions.ted_coach_login
     go_to_athlete_tab
 
     # find add athlete button and click
-    @browser.elements(:tag_name, 'button').each do |e|
-      e.text == 'Add Athlete' ? (e.click; sleep 1; break) : next
-    end
+    @browser.button(:text, 'Add Athlete').click
 
     # fill out athlete form
     modal = @browser.element(:class, 'modal-content')
-    modal.elements(:tag_name, 'input')[0].send_keys @first_name        # first name
-    modal.elements(:tag_name, 'input')[1].send_keys @last_name         # last name
-    modal.elements(:tag_name, 'input')[2].send_keys @grad_yr           # graduation year
+    modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
+    modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
+    modal.elements(:tag_name, 'input')[2].send_keys @grad_yr                 # graduation year
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
-    modal.elements(:tag_name, 'input')[4].send_keys @email             # email
+    modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    
-    # find add athlete button and click
-    # not sure why but without recognizing the text, the button won't click
-    @browser.elements(:tag_name, 'button').each do |e|
-      e.text == 'Add Athlete' ? (e.click; sleep 3) : next
-    end
+    modal.button(:text, 'Add Athlete').click; sleep 2
   end
 
   def send_invite_email
+    # make sure athlete name shows up after added
     row = get_rows.last
     athlete_name = row.elements(:tag_name, 'td')[0].text
-    # make sure athlete name shows up after added
     assert (athlete_name.eql? "#{@first_name} #{@last_name}"), 'Cannot find newly added Athlete'
 
     # find and click the not sent button for the newly added athlete
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     # make sure Edit Athlete modal shows up before proceeding
+    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
 
-    @browser.elements(:tag_name, 'button').each do |e|
-      e.text == 'Save & Invite' ? (e.click; sleep 5; break) : next
-    end
+    modal = @browser.element(:class, 'modal-content')
+    modal.button(:text, 'Save & Invite').click; sleep 5
 
     # make sure athlete status is now pending after email sent
     status = row.elements(:tag_name, 'td')[4].text
@@ -96,24 +91,32 @@ class TEDAddPreviousAthlete < Minitest::Test
   end
 
   def check_athlete_profile
-    UIActions.user_login(@email)
-
+    UIActions.user_login(@email); sleep 2
+    Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
-    popup.element(:class, 'button--secondary').click; sleep 1
+    popup.element(:class, 'button--secondary').click
 
+    # Giving staging grace period before checking premium status
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.element(:link_text, 'Membership Info').click
-
-    container = @browser.element(:class, 'purchase-summary-js')
-    title = container.element(:class, 'title-js').text
-
+    navbar.link(:text, 'Membership Info').click
     expect_str = 'MVP/TEAM EDITION MEMBERSHIP FEATURES'
-    assert_equal expect_str, title, "#{title} not match expected #{expect_str}"
+    begin
+      Timeout::timeout(30) {
+        loop do
+          container = @browser.element(:class, 'purchase-summary-js')
+          @title = container.element(:class, 'title-js').text
+          break unless @title.include? 'CHAMPION'
+          @browser.refresh
+        end
+      }
+    rescue; end
+
+    assert_equal expect_str, @title, "#{@title} not match expected #{expect_str}"
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_coach_login; sleep 5
+    UIActions.ted_coach_login
     go_to_athlete_tab; sleep 1
     get_rows.each do |row|
       athlete_name = row.elements(:tag_name, 'td')[0].text
