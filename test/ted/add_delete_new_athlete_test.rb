@@ -1,9 +1,10 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-229: TED Regression
-# UI Test:  Add/Invite New Athlete
-class TEDAddNewAthleteTest < Minitest::Test
+# UI TED Regression
+# TS-229: Add/Invite New Athlete
+# TS-259: Remove Athlete From Organization
+class TEDAddDeleteNewAthleteTest < Minitest::Test
   def setup    
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
@@ -18,6 +19,7 @@ class TEDAddNewAthleteTest < Minitest::Test
     @email = MakeRandom.email
     @first_name = MakeRandom.name
     @last_name = MakeRandom.name
+    @athlete_name = "#{@first_name} #{@last_name}"
   end
 
   def teardown
@@ -28,16 +30,14 @@ class TEDAddNewAthleteTest < Minitest::Test
     # go to administration -> athlete
     Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
     @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
     @browser.element(:id, 'react-tabs-2').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
   end
 
-  def get_rows
-    tab = @browser.element(:class, 'ReactTabs__TabPanel--selected')
-    table = tab.element(:class, 'table')
-    
-    table.element(:tag_name, 'tbody').elements(:tag_name, 'tr')
+  def get_row
+    table = @browser.table(:class, 'table--administration')
+    row = table.elements(:tag_name, 'tr').last
   end
 
   def add_athlete
@@ -56,17 +56,16 @@ class TEDAddNewAthleteTest < Minitest::Test
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
     modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click
+    modal.button(:text, 'Add Athlete').click; sleep 1
+
+     # make sure athlete name shows up after added
+    assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
   end
 
   def send_invite_email
-    # make sure athlete name shows up after added
-    row = get_rows.last
-    athlete_name = row.elements(:tag_name, 'td')[0].text
-    assert (athlete_name.eql? "#{@first_name} #{@last_name}"), 'Cannot find newly added Athlete'
-
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
+    row = get_row
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
 
@@ -99,24 +98,30 @@ class TEDAddNewAthleteTest < Minitest::Test
 
   def check_athlete_accepted_status
     UIActions.ted_coach_login
-    go_to_athlete_tab; sleep 1
-    get_rows.each do |row|
-      athlete_name = row.elements(:tag_name, 'td')[0].text
-      if athlete_name == "#{@first_name} #{@last_name}"
-        status = row.elements(:tag_name, 'td')[4].text
-        assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
-        break
-      else
-        next
-      end
-    end
+    go_to_athlete_tab; sleep 3
+    row = get_row
+    status = row.elements(:tag_name, 'td')[4].text
+    assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
-  def test_add_new_athlete
+  def delete_athlete
+    row = get_row
+    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
+    cog.click; sleep 1
+    modal = @browser.div(:class, 'modal-content')
+    modal.button(:text, 'Delete').click
+    small_modal = modal.div(:class, 'modal-content')
+    small_modal.button(:text, 'Delete').click; sleep 1
+
+    refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
+  end
+
+  def test_add_delete_new_athlete
     add_athlete
     send_invite_email
     check_email
     check_athlete_profile
     check_athlete_accepted_status
+    delete_athlete
   end
 end
