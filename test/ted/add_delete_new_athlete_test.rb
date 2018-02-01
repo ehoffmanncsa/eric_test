@@ -35,9 +35,10 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
   end
 
-  def get_row
+  def get_row_by_name
     table = @browser.table(:class, 'table--administration')
-    row = table.elements(:tag_name, 'tr').last
+    rows = table.elements(:tag_name, 'tr').to_a; rows.shift
+    rows.detect { |r| r.elements(:tag_name, 'td')[0].text.eql? @athlete_name }
   end
 
   def add_athlete
@@ -65,7 +66,8 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = get_row
+    table = @browser.table(:class, 'table--administration')
+    row = table.elements(:tag_name, 'tr').last
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
 
@@ -99,13 +101,13 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
   def check_athlete_accepted_status
     UIActions.ted_coach_login
     go_to_athlete_tab; sleep 3
-    row = get_row
+    row = get_row_by_name
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
-    row = get_row
+    row = get_row_by_name
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
     modal = @browser.div(:class, 'modal-content')
@@ -116,6 +118,12 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
+  def check_team_directory
+    @browser.goto 'https://team-staging.ncsasports.org/team_directory'
+    msg = "Found deleted athlete #{@athlete_name} in team directory"
+    refute (@browser.html.include? @athlete_name), msg
+  end
+
   def test_add_delete_new_athlete
     add_athlete
     send_invite_email
@@ -123,5 +131,6 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     check_athlete_profile
     check_athlete_accepted_status
     delete_athlete
+    check_team_directory
   end
 end
