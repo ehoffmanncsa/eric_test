@@ -15,10 +15,14 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     @gmail.mail_box = 'TED_Welcome'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    @email = MakeRandom.email
+    @athlete_email = MakeRandom.email
     @first_name = MakeRandom.name
     @last_name = MakeRandom.name
     @athlete_name = "#{@first_name} #{@last_name}"
+
+    creds = YAML.load_file('config/.creds.yml')
+    @coach_username = creds['ted_coach']['free_username']
+    @coach_password = creds['ted_coach']['password']
   end
 
   def teardown
@@ -35,7 +39,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   end
 
   def add_athlete
-    UIActions.ted_free_coach_login
+    UIActions.ted_coach_login(@coach_username, @coach_password)
     go_to_athlete_tab
 
     # find add athlete button and click
@@ -48,7 +52,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
     modal.elements(:tag_name, 'input')[2].send_keys MakeRandom.grad_yr       # graduation year
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
-    modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
+    modal.elements(:tag_name, 'input')[4].send_keys @athlete_email           # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
     modal.button(:text, 'Add Athlete').click; sleep 1
 
@@ -81,7 +85,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   end
 
   def check_athlete_profile
-    POSSetup.set_password(@email)
+    POSSetup.set_password(@athlete_email)
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
     refute (navbar.html.include? 'Membership Info'), 'Found membership option in menu'
@@ -94,7 +98,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_free_coach_login
+    UIActions.ted_coach_login(@coach_username, @coach_password)
     go_to_athlete_tab; sleep 3
     row = get_row_by_name
     status = row.elements(:tag_name, 'td')[4].text

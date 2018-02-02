@@ -14,39 +14,39 @@ class Api
     end
   end
 
-  def get(url)
-    RestClient.get url
+  def get(url, header = nil)
+    RestClient.get url, header
   end
 
-  def pget(url)
-    response = get(url)
+  def pget(url, header = nil)
+    response = get(url, header)
     [response.code, parse(response)]
   end
 
-  def put(url, body)
-    RestClient.put url, body
+  def put(url, body, header = nil)
+    RestClient.put url, body, header
   end
 
-  def pput(url, body)
-    response = put(url, body)
+  def pput(url, body, header = nil)
+    response = put(url, body, header)
     [response.code, parse(response)]
   end
 
-  def post(url, body)
-    RestClient.post url, body
+  def post(url, body, header = nil)
+    RestClient.post url, body, header
   end
 
-  def ppost(url, body)
-    response = post(url, body)
+  def ppost(url, body, header = nil)
+    response = post(url, body, header)
     [response.code, parse(response)]
   end
 
-  def delete(url)
-    RestClient.delete url
+  def delete(url, header = nil)
+    RestClient.delete url, header
   end
 
-  def pdelete(url)
-    response = delete(url)
+  def pdelete(url, header = nil)
+    response = delete(url, header)
     [response.code, parse(response)]
   end
 end

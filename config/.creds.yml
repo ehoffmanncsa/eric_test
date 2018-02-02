@@ -3,10 +3,15 @@ fasttrack_admin:
   username: 'automation'
   password: 'Secure.123'
 
-# TED coach login
+# TED coach/admin login
 ted_coach:
   username: 'cdickson197@gmail.com'
+  free_username: 'noel.ronnie1@yopmail.com'
   password: 'ncsa'
+
+ted_admin:
+  username: 'ncsa.automation@gmail.com'
+  password: 'mixed_martial_arts_678594'
 
 # sample video user login
 video_user:
