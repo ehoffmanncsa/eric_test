@@ -21,3 +21,6 @@ first_run_failed_tests
 #######################
 node_modules/*
 package-lock.json
+
+# Athletes CSV file
+athletes.csv
