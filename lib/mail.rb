@@ -31,10 +31,10 @@ class GmailCalls
       # get only a part of message that includes desired keyword
       # then delete the email
       mails.each do |email|
-        if keyword
-          @msg = email.message.to_s.split("\n").select { |e| e.include? keyword }
-        else
+        if keyword.nil?
           @msg = email.message.to_s
+        else
+          @msg = email.message.to_s.split("\n").select { |e| e.include? keyword }
         end
         email.delete!
       end
