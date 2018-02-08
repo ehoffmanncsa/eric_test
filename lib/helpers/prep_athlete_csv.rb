@@ -20,7 +20,7 @@ class AtheteCSV
 
   def make_it
   	CSV.open('athletes.csv', 'w', write_headers: true, headers: @headers) do |csv|
-      rand(3 .. 6).times do |i|
+      rand(2 .. 4).times do |i|
       	generate_data
         csv << [@firstname, @lastname, @email, @team, @grad_yr, @zipcode, @phone]
       end
