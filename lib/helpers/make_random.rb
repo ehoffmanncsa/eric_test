@@ -1,7 +1,12 @@
 module MakeRandom
 	def self.number(digits)
-    charset = Array('0'..'9')
-    Array.new(digits) { charset.sample }.join
+    num = nil
+    loop do
+      num = digits.times.map{rand(10)}.join
+      break if num[0] != '0'
+    end
+
+    num
   end
 
   def self.name

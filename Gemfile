@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'csv'
 gem 'eyes_selenium'
 gem 'gmail'
 gem 'mechanize'

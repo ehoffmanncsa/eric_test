@@ -10,6 +10,7 @@ require 'time'
 require 'securerandom'
 require 'watir'
 require 'watir-scroll'
+require 'csv'
 
 Minitest::Ci.clean = false
 
