@@ -8,7 +8,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    UIActions.clear_cookies
+    TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
@@ -23,15 +23,6 @@ class TEDAddDeleteACoachTest < Minitest::Test
     @browser.close
   end
 
-  def go_to_staff_tab
-    # go to administration -> staff
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
-    @browser.element(:id, 'react-tabs-4').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-5').visible? }
-  end
-
   def add_a_coach
     @coach_email = MakeRandom.email
     @phone = MakeRandom.number(10)
@@ -40,7 +31,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
     @position = MakeRandom.name
 
     UIActions.ted_coach_login
-    go_to_staff_tab
+    TED.go_to_staff_tab
 
     # find add staff button and click to open modal
     # fill out staff info in modal
@@ -86,21 +77,16 @@ class TEDAddDeleteACoachTest < Minitest::Test
     coach['id']
   end
 
-  def sign_out
-    sidebar = @browser.element(:class, 'sidebar')
-    sidebar.element(:class, 'signout').click
-  end
-
   def check_new_coach_can_login
-    sign_out
+    TED.sign_out
     UIActions.ted_coach_login(@coach_email, get_coach_password)
     set_new_password
-    sign_out
+    TED.sign_out
   end
 
   def delete_coach
     UIActions.ted_coach_login
-    go_to_staff_tab
+    TED.go_to_staff_tab
     id = get_new_coach_id
 
     tab = @browser.div(:id, 'react-tabs-5')

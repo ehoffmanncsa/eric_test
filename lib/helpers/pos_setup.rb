@@ -29,6 +29,7 @@ module POSSetup
     @browser.text_field(:id, 'user_account_password').set 'ncsa'
     @browser.text_field(:id, 'user_account_password_confirmation').set 'ncsa'
     @browser.button(:name, 'commit').click
+    Watir::Wait.until { @browser.url.include? 'custom_drills/free_onboarding' }
   end
 
   def self.make_commitment

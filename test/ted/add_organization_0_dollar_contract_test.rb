@@ -11,7 +11,6 @@ class AddOrg0DollarContractTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    UIActions.clear_cookies
 
     @gmail = GmailCalls.new
     @gmail.get_connection

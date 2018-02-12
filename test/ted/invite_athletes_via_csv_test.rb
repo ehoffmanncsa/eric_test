@@ -8,6 +8,7 @@ class InviteCSVAthletesTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
+    TED.setup(@browser)
 
     # generate new data to athletes.csv
     AtheteCSV.new.make_it
@@ -26,15 +27,6 @@ class InviteCSVAthletesTest < Minitest::Test
     end
 
     names
-  end
-
-  def go_to_athlete_tab
-    # go to administration -> athlete
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
-    @browser.element(:id, 'react-tabs-2').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
   end
 
   def upload_athletes
@@ -68,13 +60,8 @@ class InviteCSVAthletesTest < Minitest::Test
     @browser.table(:class, 'table--administration')
   end
 
-  def get_row_by_name(name)
-    rows = table.elements(:tag_name, 'tr').to_a; rows.shift
-    rows.detect { |r| r.elements(:tag_name, 'td')[0].text.eql? name }
-  end
-
   def check_not_sent_status(name)
-    row = get_row_by_name(name)
+    row = TED.get_row_by_name(table, name)
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal status, 'Not Sent', "Expected status #{status} to be Not Sent"
 
@@ -92,10 +79,10 @@ class InviteCSVAthletesTest < Minitest::Test
 
   def test_invite_athetes_csv
     UIActions.ted_coach_login
-    go_to_athlete_tab
+    TED.go_to_athlete_tab
 
     upload_athletes
-    go_to_athlete_tab
+    TED.go_to_athlete_tab
 
     # make sure what uploaded are present
     failure = []

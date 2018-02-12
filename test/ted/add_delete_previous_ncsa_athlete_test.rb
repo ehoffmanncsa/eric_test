@@ -9,6 +9,7 @@ class TEDAddPreviousAthlete < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@browser)
+    TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
@@ -27,27 +28,12 @@ class TEDAddPreviousAthlete < Minitest::Test
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
     @grad_yr = post_body[:recruit][:graduation_year]
-  end
-
-  def go_to_athlete_tab
-    # go to administration -> athlete
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
-    @browser.element(:id, 'react-tabs-2').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
-  end
-
-  def get_rows
-    tab = @browser.element(:class, 'ReactTabs__TabPanel--selected')
-    table = tab.element(:class, 'table')
-
-    table.element(:tag_name, 'tbody').elements(:tag_name, 'tr')
+    @athlete_name = "#{@first_name} #{@last_name}"
   end
 
   def add_athlete
     UIActions.ted_coach_login
-    go_to_athlete_tab
+    TED.go_to_athlete_tab
 
     # find add athlete button and click
     @browser.button(:text, 'Add Athlete').click
@@ -60,17 +46,20 @@ class TEDAddPreviousAthlete < Minitest::Test
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
     modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click; sleep 2
+    modal.button(:text, 'Add Athlete').click; sleep 1
+
+    # make sure athlete name shows up after added
+    assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
+  end
+
+  def table
+    @browser.table(:class, 'table--administration')
   end
 
   def send_invite_email
-    # make sure athlete name shows up after added
-    row = get_rows.last
-    athlete_name = row.elements(:tag_name, 'td')[0].text
-    assert (athlete_name.eql? "#{@first_name} #{@last_name}"), 'Cannot find newly added Athlete'
-
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
+    row = table.elements(:tag_name, 'tr').last
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
 
@@ -117,17 +106,19 @@ class TEDAddPreviousAthlete < Minitest::Test
 
   def check_athlete_accepted_status
     UIActions.ted_coach_login
-    go_to_athlete_tab; sleep 1
-    get_rows.each do |row|
-      athlete_name = row.elements(:tag_name, 'td')[0].text
-      if athlete_name == "#{@first_name} #{@last_name}"
-        status = row.elements(:tag_name, 'td')[4].text
-        assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
-        break
-      else
-        next
-      end
-    end
+    status = TED.get_athlete_status(table, @athlete_name)
+    assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
+  end
+
+  def delete_athlete
+    TED.delete_athlete(table, @athlete_name)
+    refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
+  end
+
+  def check_team_directory
+    @browser.goto 'https://team-staging.ncsasports.org/team_directory'
+    msg = "Found deleted athlete #{@athlete_name} in team directory"
+    refute (@browser.html.include? @athlete_name), msg
   end
 
   def test_add_previous_ncsa_athlete
@@ -138,5 +129,7 @@ class TEDAddPreviousAthlete < Minitest::Test
     check_email
     check_athlete_profile
     check_athlete_accepted_status
+    delete_athlete
+    check_team_directory
   end
 end

@@ -10,6 +10,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     POSSetup.setup(@browser)
+    TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
@@ -26,24 +27,13 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     @browser.close
   end
 
-  def go_to_athlete_tab
-    # go to administration -> athlete
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
-    @browser.element(:id, 'react-tabs-2').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
-  end
-
-  def get_row_by_name
-    table = @browser.table(:class, 'table--administration')
-    rows = table.elements(:tag_name, 'tr').to_a; rows.shift
-    rows.detect { |r| r.elements(:tag_name, 'td')[0].text.eql? @athlete_name }
+  def table
+    @browser.table(:class, 'table--administration')
   end
 
   def add_athlete
     UIActions.ted_coach_login
-    go_to_athlete_tab
+    TED.go_to_athlete_tab
 
     # find add athlete button and click
     @browser.button(:text, 'Add Athlete').click
@@ -59,14 +49,13 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
     modal.button(:text, 'Add Athlete').click; sleep 1
 
-     # make sure athlete name shows up after added
+    # make sure athlete name shows up after added
     assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
   end
 
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    table = @browser.table(:class, 'table--administration')
     row = table.elements(:tag_name, 'tr').last
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
@@ -100,21 +89,12 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
 
   def check_athlete_accepted_status
     UIActions.ted_coach_login
-    go_to_athlete_tab; sleep 3
-    row = get_row_by_name
-    status = row.elements(:tag_name, 'td')[4].text
+    status = TED.get_athlete_status(table, @athlete_name)
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
-    row = get_row_by_name
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
-    cog.click; sleep 1
-    modal = @browser.div(:class, 'modal-content')
-    modal.button(:text, 'Delete').click
-    small_modal = modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click; sleep 1
-
+    TED.delete_athlete(table, @athlete_name)
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
