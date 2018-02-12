@@ -64,19 +64,6 @@ class TEDAddDeleteACoachTest < Minitest::Test
     modal.element(:tag_name, 'button').click; sleep 1
   end
 
-  def get_new_coach_id
-    url = 'https://qa.ncsasports.org/api/team_edition/organizations/15/coaches'
-    header = { 'Session-Token' => @token }
-    resp_code, resp = @api.pget(url, header)
-    msg = "[ERROR] #{resp_code} GET api/team_edition/organizations/15/coaches"
-    raise msg unless resp_code.eql? 200
-
-    data = resp['data']
-    coach = data.detect { |d| d['attributes']['email'].eql? @coach_email }
-
-    coach['id']
-  end
-
   def check_new_coach_can_login
     TED.sign_out
     UIActions.ted_coach_login(@coach_email, get_coach_password)
@@ -87,7 +74,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
   def delete_coach
     UIActions.ted_coach_login
     TED.go_to_staff_tab
-    id = get_new_coach_id
+    id = TED.get_coach_id(@coach_email)
 
     tab = @browser.div(:id, 'react-tabs-5')
     table = tab.element(:class, 'table')

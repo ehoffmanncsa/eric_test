@@ -6,6 +6,8 @@ module TED
   def self.setup(ui_object)
     @browser = ui_object
     UIActions.setup(@browser)
+
+    @api = Api.new
   end
 
   def self.go_to_athlete_tab
@@ -51,5 +53,33 @@ module TED
     modal.button(:text, 'Delete').click
     small_modal = modal.div(:class, 'modal-content')
     small_modal.button(:text, 'Delete').click; sleep 1
+  end
+
+  def self.get_org_id(prime_email)
+    # using Otto Mation admin token
+    header = { 'Session-Token' => TEDAuth.new('admin').get_token }
+    url = 'https://qa.ncsasports.org/api/team_edition/partners/1/organizations'
+    resp_code, resp = @api.pget(url, header)
+    msg = "[ERROR] #{resp_code} GET api/team_edition/partners/1/organizations"
+    raise msg unless resp_code.eql? 200
+
+    data = resp['data']
+    org = data.detect { |d| d['attributes']['email'].eql? prime_email }
+
+    org['id']
+  end
+
+  def self.get_coach_id(coach_email)
+    # using awesome volleyball org id 15, coach admin courtney token
+    header = { 'Session-Token' => TEDAuth.new('coach').get_token }
+    url = 'https://qa.ncsasports.org/api/team_edition/organizations/15/coaches'
+    resp_code, resp = @api.pget(url, header)
+    msg = "[ERROR] #{resp_code} GET api/team_edition/organizations/15/coaches"
+    raise msg unless resp_code.eql? 200
+
+    data = resp['data']
+    coach = data.detect { |d| d['attributes']['email'].eql? coach_email }
+
+    coach['id']
   end
 end
