@@ -14,7 +14,6 @@ class TEDAddPreviousAthlete < Minitest::Test
     @gmail = GmailCalls.new
     @gmail.get_connection
     @gmail.mail_box = 'TED_Welcome'
-    @gmail.subject = 'Welcome to NCSA Team Edition'
   end
 
   def teardown
@@ -73,13 +72,15 @@ class TEDAddPreviousAthlete < Minitest::Test
     UIActions.clear_cookies
   end
 
-  def check_email
-    emails = @gmail.get_emails_by_subject
+  def check_welcome_email
+    @gmail.subject = 'Welcome to NCSA Team Edition'
+    emails = @gmail.get_unread_emails
     refute_empty emails, 'No welcome email found after inviting athlete'
+
     @gmail.delete(emails)
   end
 
-  def check_athlete_profile
+  def check_athlete_premium_profile
     UIActions.user_login(@email); sleep 2
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
@@ -121,15 +122,27 @@ class TEDAddPreviousAthlete < Minitest::Test
     refute (@browser.html.include? @athlete_name), msg
   end
 
-  def test_add_previous_ncsa_athlete
+  def check_athlete_free_profile
+    # as athlete is now deleted from TED, he becomes free
+    UIActions.clear_cookies
+    UIActions.user_login(@email)
+
+    # If an athlete is free, there shouldn't be Membership Info in menu
+    @browser.element(:class, 'fa-angle-down').click
+    navbar = @browser.element(:id, 'secondary-nav-menu')
+    refute (navbar.html.include? 'Membership Info'), 'Found membership option in menu'
+  end
+
+  def test_add_delete_premium_ncsa_athlete
     create_athlete
     POSSetup.buy_package(@email, 'champion')
     add_athlete
     send_invite_email
-    check_email
-    check_athlete_profile
+    check_welcome_email
+    check_athlete_premium_profile
     check_athlete_accepted_status
     delete_athlete
     check_team_directory
+    check_athlete_free_profile
   end
 end

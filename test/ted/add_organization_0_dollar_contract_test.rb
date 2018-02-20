@@ -11,14 +11,12 @@ class AddOrg0DollarContractTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
+    TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
     @gmail.mail_box = 'TED_Contract'
     @gmail.sender = 'TeamEdition@ncsasports.org'
-
-    @header = { 'Session-Token' => TEDAuth.new('admin').get_token }
-    @api = Api.new
 
     creds = YAML.load_file('config/.creds.yml')
     @admin_username = creds['ted_admin']['username']
@@ -40,19 +38,7 @@ class AddOrg0DollarContractTest < Minitest::Test
     @browser.div(:class, 'modal-content')
   end
 
-  def get_org_id
-    url = 'https://qa.ncsasports.org/api/team_edition/partners/1/organizations'
-    resp_code, resp = @api.pget(url, @header)
-    msg = "[ERROR] #{resp_code} GET api/team_edition/partners/1/organizations"
-    raise msg unless resp_code.eql? 200
-
-    data = resp['data']
-    org = data.detect { |d| d['attributes']['email'].eql? @email }
-
-    org['id']
-  end
-
-  def add_org
+  def add_organization
     UIActions.ted_coach_login(@admin_username, @admin_password)
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
     Watir::Wait.until { @browser.elements(:class, 'cards')[0].visible? }
@@ -126,22 +112,32 @@ class AddOrg0DollarContractTest < Minitest::Test
     modal.button(:text, 'Submit').click; sleep 4
   end
 
-  def goto_sign_page_via_url_in_email
+  def get_sign_page_url_in_email
     keyword = 'https://team-staging.ncsasports.org/terms_of_service?'
-    msg = @gmail.parse_body(keyword, from: @gmail.sender)
-    @browser.goto msg[1].split("\"")[1]
+    emails = @gmail.get_unread_emails
+    msg = @gmail.parse_body(emails, keyword)
+    url = msg[1].split("\"")[1]
+    @gmail.delete(emails)
+
+    url
+  end
+
+  def goto_sign_page_via_url_in_email
+    url = get_sign_page_url_in_email
+    @browser.goto url
   end
 
   def check_email(subject)
     @gmail.mail_box = 'Inbox'
     @gmail.subject = subject
-    emails = @gmail.get_emails_by_subject
+    emails = @gmail.get_unread_emails
     refute_empty emails, 'No Signed confirm email received'
+
     @gmail.delete(emails)
   end
 
   def test_add_organization_0_dollar_contract
-    add_org
+    add_organization
 
     # find the Verified section
     board = @browser.elements(:class, 'cards')[0]
@@ -150,16 +146,14 @@ class AddOrg0DollarContractTest < Minitest::Test
     assert_equal verified_section.element(:class, 'section-heading').text, 'Verified', msg
 
     # find new added org in Verified section by id and open show page
-    id = get_org_id
+    id = TED.get_org_id(@email)
     verified_section.elements(:tag_name, 'a').each do |e|
       if e.attribute_value('href').eql? "https://team-staging.ncsasports.org/organizations/#{id}"
         @new_org = e; break
-      else
-        next
       end
     end
-
-    @new_org.click; sleep 1
+    refute_nil @new_org, "Cannot find new organization id #{id}"
+    @new_org.click
 
     # make sure show page has right org name
     Watir::Wait.until { @browser.div(:class, 'college-details').present? }
@@ -175,14 +169,13 @@ class AddOrg0DollarContractTest < Minitest::Test
 
     # send invoice email and signout of PA
     contracts[0].element(:class, 'drawer-toggle').click
-    contracts[0].element(:class, 'fa-envelope-o').click; sleep 1
-    sidebar = @browser.element(:class, 'sidebar')
-    sidebar.element(:class, 'signout').click
+    contracts[0].element(:class, 'fa-envelope-o').click
+    TED.sign_out
 
     goto_sign_page_via_url_in_email
     @browser.text_field(:placeholder, 'Signature').set @first_name
-    @browser.button(:text, 'I Accept').click; sleep 1
-    @browser.button(:text, 'Accept').click; sleep 1
+    @browser.button(:text, 'I Accept').click
+    @browser.button(:text, 'Accept').click
 
     # make sure coach is in dashboard page and change password modal prompts
     Watir::Wait.until { @browser.element(:class, 'modal-content').present? }

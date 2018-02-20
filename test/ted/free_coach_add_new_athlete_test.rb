@@ -73,9 +73,10 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     UIActions.clear_cookies
   end
 
-  def check_email
-    emails = @gmail.get_emails_by_subject
+  def check_welcome_email
+    emails = @gmail.get_unread_emails
     refute_empty emails, 'No welcome email found after inviting athlete'
+
     @gmail.delete(emails)
   end
 
@@ -115,7 +116,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   def test_add_delete_new_athlete_as_free_coach
     add_athlete
     send_invite_email
-    check_email
+    check_welcome_email
     check_athlete_profile
     check_athlete_accepted_status
     delete_athlete

@@ -15,7 +15,6 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     @gmail = GmailCalls.new
     @gmail.get_connection
     @gmail.mail_box = 'TED_Welcome'
-    @gmail.subject = 'Welcome to NCSA Team Edition'
 
     @email = MakeRandom.email
     @first_name = MakeRandom.name
@@ -70,9 +69,11 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     UIActions.clear_cookies
   end
 
-  def check_email
-    emails = @gmail.get_emails_by_subject
+  def check_welcome_email
+    @gmail.subject = 'Welcome to NCSA Team Edition'
+    emails = @gmail.get_unread_emails
     refute_empty emails, 'No welcome email found after inviting athlete'
+
     @gmail.delete(emails)
   end
 
@@ -107,7 +108,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
   def test_add_delete_new_athlete
     add_athlete
     send_invite_email
-    check_email
+    check_welcome_email
     check_athlete_profile
     check_athlete_accepted_status
     delete_athlete

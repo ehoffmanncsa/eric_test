@@ -35,7 +35,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
 
     # find add staff button and click to open modal
     # fill out staff info in modal
-    @browser.button(:text, 'Add Staff').click
+    @browser.button(:text, 'Add Staff').click; sleep 1
     Watir::Wait.until { @browser.element(:class, 'modal-content').present? }
     modal = @browser.element(:class, 'modal-content')
     inputs = modal.elements(:tag_name, 'input').to_a
@@ -44,13 +44,17 @@ class TEDAddDeleteACoachTest < Minitest::Test
     inputs[2].send_keys @coach_email
     inputs[3].send_keys @phone
     inputs[4].send_keys @position
-    modal.button(:text, 'Add Coach').click; sleep 1
+    modal.button(:text, 'Add Coach').click; sleep 5
   end
 
   def get_coach_password
     # use keyword 'password' to look for password in gmail
-    msg = @gmail.parse_body('password', from: @gmail.sender)
-    msg[1].split(':').last.split()[0] # this is password
+    emails = @gmail.get_unread_emails
+    msg = @gmail.parse_body(emails, 'password')
+    password = msg[1].split(':').last.split()[0]
+    @gmail.delete(emails)
+
+    password
   end
 
   def set_new_password
