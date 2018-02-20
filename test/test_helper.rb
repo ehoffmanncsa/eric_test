@@ -11,6 +11,8 @@ require 'securerandom'
 require 'watir'
 require 'watir-scroll'
 require 'csv'
+require 'jwt'
+require 'time'
 
 Minitest::Ci.clean = false
 

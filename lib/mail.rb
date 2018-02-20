@@ -15,28 +15,16 @@ class GmailCalls
     @conn = Gmail.connect(creds['gmail']['username'], creds['gmail']['app_pass'])
   end
 
-  # get mails from specific mail box and filter
-  # keep trying for 15 seconds
-  def parse_body(keyword = nil, filter = nil)
-    mails = []
+  def parse_body(emails, keyword = nil)
     begin
-      Timeout::timeout(45) {
-        loop do
-          mails = @conn.mailbox(mail_box).emails(filter)
-          break unless mails.empty?
-        end
-      }
-
-      # loop through any/all emails which matched our filer
-      # get only a part of message that includes desired keyword
-      # then delete the email
-      mails.each do |email|
+      # loop through any/all emails
+      # get only the part of message that includes the desired keyword
+      emails.each do |email|
         if keyword.nil?
           @msg = email.message.to_s
         else
           @msg = email.message.to_s.split("\n").select { |e| e.include? keyword }
         end
-        email.delete!
       end
     rescue => e
       puts e
@@ -45,9 +33,11 @@ class GmailCalls
     @msg
   end
 
-  # check if new email is received in a specific mailbox by subject
-  def get_emails_by_subject
+  def get_unread_emails
     mails = []
+
+    # get unread mails from specific mail box and subject if any
+    # keep trying for 60 seconds
     Timeout::timeout(60) {
       loop do
         mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)

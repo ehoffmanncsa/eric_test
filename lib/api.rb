@@ -49,4 +49,13 @@ class Api
     response = delete(url, header)
     [response.code, parse(response)]
   end
+
+  def patch(url, body, header = nil)
+    RestClient.patch url, body, header
+  end
+
+  def ppatch(url, body, header = nil)
+    response = patch(url, body, header)
+    [response.code, parse(response)]
+  end
 end
