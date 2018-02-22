@@ -12,6 +12,7 @@ module TED
 
   def self.go_to_athlete_tab
     # go to administration -> athlete
+    @browser.refresh; sleep 1
     Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
     @browser.link(:text, 'Administration').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
@@ -21,6 +22,7 @@ module TED
 
   def self.go_to_staff_tab
     # go to administration -> staff
+    @browser.refresh; sleep 1
     Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
     @browser.link(:text, 'Administration').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
@@ -30,6 +32,7 @@ module TED
 
   def self.go_to_details_tab
     # go to administration -> details
+    @browser.refresh; sleep 1
     Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
     @browser.link(:text, 'Administration').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }

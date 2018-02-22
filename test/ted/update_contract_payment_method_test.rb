@@ -2,7 +2,7 @@
 require_relative '../test_helper'
 
 # TS-369: TED Regression
-# UI Test: Allow Org Coach to Assign Payment Method to Contract
+# UI Test: Allow Org Coach and NCSA Admin to Assign Payment Method to Contract
 # Require organization to have more than 1 payment account
 class CoachUpdateContractPaymentMethodTest < Minitest::Test
   def setup
@@ -22,6 +22,10 @@ class CoachUpdateContractPaymentMethodTest < Minitest::Test
     @decoded_data = TEDContractApi.decode(@coach_token)
     @org_name = @decoded_data['organization_name']
     @org_id = @decoded_data['organization_id']
+
+    creds = YAML.load_file('config/.creds.yml')
+    @admin_username = creds['ted_admin']['username']
+    @admin_password = creds['ted_admin']['password']
   end
 
   def teardown
@@ -73,23 +77,45 @@ class CoachUpdateContractPaymentMethodTest < Minitest::Test
     data['attributes']['payment-account-id']
   end
 
-  def update_payment_method
+  def impersion_coach
+    org = find_org_in_ui
+    org.click; sleep 1
+    @browser.link(:text, 'Enter Org as Coach').click; sleep 3
+  end
+
+  def find_org_in_ui
+    # find the Premium Signed section
+    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
+    board = @browser.elements(:class, 'cards')[0]
+    premium_signed = board.elements(:class, 'col-sm-12')[0]
+    header = premium_signed.element(:class, 'section-heading').text
+    msg = 'This is not Premium Signed section'
+    assert_equal header, 'Premium Signed', msg
+
+    # find org and check count
+    org_cards = premium_signed.elements(:class, 'org-card')
+    org = org_cards.detect { |card| card.html.include? @org_name }
+  end
+
+  def get_another_acc_id
     current_acc_id = get_contract_account_id.to_s
     org_acc_ids = get_org_account_ids
     org_acc_ids.delete(current_acc_id)
-    @new_acc_id = org_acc_ids.sample
 
-    UIActions.ted_coach_login
+    org_acc_ids.sample
+  end
+
+  def update_payment_method(new_id)
     TED.go_to_details_tab
 
     # open contract details
-    contract = find_contract
+    contract = find_contract_in_ui
     contract.button(:text, 'Details').click
 
     # in contract details change payment method
     modal.link(:text, 'Change payment method').click
     list = modal.select_list(:class, 'form-control')
-    list.select(@new_acc_id); sleep 1
+    list.select_value(new_id); sleep 1
   end
 
   def modal
@@ -103,12 +129,12 @@ class CoachUpdateContractPaymentMethodTest < Minitest::Test
     assert_equal expected, actual, 'Unexpected message'
   end
 
-  def check_update_successful
+  def check_update_successful(new_acc_id)
     updated_acc_id = get_contract_account_id.to_s
-    assert_equal @new_acc_id, updated_acc_id, 'Account ID not updated'
+    assert_equal new_acc_id, updated_acc_id, 'Account ID not updated'
   end
 
-  def find_contract
+  def find_contract_in_ui
     column = @browser.divs(:class, 'col-lg-6').last
     Watir::Wait.until { column.element(:class, 'table').present? }
     table = column.element(:class, 'table')
@@ -118,9 +144,26 @@ class CoachUpdateContractPaymentMethodTest < Minitest::Test
 
   def test_coach_update_contract_payment_method
     setup_contract
-    update_payment_method
+
+    new_id = get_another_acc_id
+    UIActions.ted_coach_login
+
+    update_payment_method(new_id)
     check_success_message
-    check_update_successful
+    check_update_successful(new_id)
+    cancel_contract
+  end
+
+  def test_PA_update_contract_payment_method
+    setup_contract
+
+    new_id = get_another_acc_id
+    UIActions.ted_coach_login(@admin_username, @admin_password)
+    impersion_coach
+
+    update_payment_method(new_id)
+    check_success_message
+    check_update_successful(new_id)
     cancel_contract
   end
 end

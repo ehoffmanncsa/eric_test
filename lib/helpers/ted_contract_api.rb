@@ -159,6 +159,6 @@ module TEDContractApi
 
   def self.cancel_signed_contract(contract_id)
     endpoint = "organization_contracts/#{contract_id}/cancel"
-    @admin_api.patch(endpoint, nil)
+    @admin_api.patch(endpoint, nil); sleep 1
   end
 end
