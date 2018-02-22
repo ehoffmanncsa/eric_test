@@ -4,7 +4,7 @@ require_relative '../test_helper'
 # TS-369: TED Regression
 # UI Test: Allow Org Coach and NCSA Admin to Assign Payment Method to Contract
 # Require organization to have more than 1 payment account
-class CoachUpdateContractPaymentMethodTest < Minitest::Test
+class UpdateContractPaymentMethodTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
