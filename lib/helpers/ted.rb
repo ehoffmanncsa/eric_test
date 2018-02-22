@@ -28,6 +28,15 @@ module TED
     Watir::Wait.until { @browser.element(:id, 'react-tabs-5').visible? }
   end
 
+  def self.go_to_details_tab
+    # go to administration -> details
+    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
+    @browser.link(:text, 'Administration').click
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    @browser.element(:id, 'react-tabs-6').click; sleep 3
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-7').visible? }
+  end
+
   def self.sign_out
     sidebar = @browser.element(:class, 'sidebar')
     sidebar.element(:class, 'signout').click; sleep 1

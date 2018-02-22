@@ -5,9 +5,10 @@ fasttrack_admin:
 
 # TED coach/admin login
 ted_coach:
-  username: 'cdickson197@gmail.com'
+  username: 'sniper@ncsasports.org'
+  password: 'password'
   free_username: 'noel.ronnie1@yopmail.com'
-  password: 'ncsa'
+  free_password: 'ncsa'
 
 ted_admin:
   username: 'ncsa.automation@gmail.com'

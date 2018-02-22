@@ -3,6 +3,9 @@ require_relative '../../test/test_helper'
 
 # This helper is to help in performing TED related actions via API
 class TEDApi
+  attr_reader :header
+  attr_accessor :token
+
   def initialize(role = nil, token = nil)
     @role = role
     token = token.nil? ? get_token : token
