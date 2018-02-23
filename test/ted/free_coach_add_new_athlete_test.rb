@@ -23,7 +23,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
 
     creds = YAML.load_file('config/.creds.yml')
     @coach_username = creds['ted_coach']['free_username']
-    @coach_password = creds['ted_coach']['password']
+    @coach_password = creds['ted_coach']['free_password']
   end
 
   def teardown
