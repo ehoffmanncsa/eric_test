@@ -77,7 +77,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     data['attributes']['payment-account-id']
   end
 
-  def impersion_coach
+  def imperson_coach
     org = find_org_in_ui
     org.click; sleep 1
     @browser.link(:text, 'Enter Org as Coach').click; sleep 3
