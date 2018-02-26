@@ -40,6 +40,16 @@ module TED
     Watir::Wait.until { @browser.element(:id, 'react-tabs-7').visible? }
   end
 
+  def self.go_to_payment_method_tab
+    # go to administration -> payment methods
+    @browser.refresh; sleep 1
+    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
+    @browser.link(:text, 'Administration').click
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    @browser.element(:id, 'react-tabs-8').click; sleep 3
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-9').visible? }
+  end
+
   def self.sign_out
     sidebar = @browser.element(:class, 'sidebar')
     sidebar.element(:class, 'signout').click; sleep 1
