@@ -17,7 +17,7 @@ module TED
     @browser.link(:text, 'Administration').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
     @browser.element(:id, 'react-tabs-2').click; sleep 3
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }
+    Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }; sleep 1
   end
 
   def self.go_to_staff_tab
@@ -57,7 +57,8 @@ module TED
 
   def self.get_row_by_name(table, name)
     rows = table.elements(:tag_name, 'tr').to_a; rows.shift
-    rows.detect { |r| r.elements(:tag_name, 'td')[0].text.eql? name }
+    row = rows.detect { |r| r.elements(:tag_name, 'td')[0].text.downcase.eql? name }
+    row
   end
 
   def self.get_athlete_status(table, name = nil)
@@ -103,5 +104,26 @@ module TED
     coach = data.detect { |d| d['attributes']['email'].eql? coach_email }
 
     coach['id']
+  end
+
+  def self.impersonate_org(org_name)
+    creds = YAML.load_file('config/.creds.yml')
+    admin_username = creds['ted_admin']['username']
+    admin_password = creds['ted_admin']['password']
+    UIActions.ted_login(admin_username, admin_password)
+
+    org = find_org_in_ui(org_name)
+    org.click; sleep 1
+    @browser.link(:text, 'Enter Org as Coach').click; sleep 3
+  end
+
+  def self.find_org_in_ui(org_name)
+    # find the Premium Signed section
+    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
+    board = @browser.elements(:class, 'cards')[0]
+
+    # find org
+    org_cards = board.elements(:class, 'org-card')
+    org_cards.detect { |card| card.html.include? org_name }
   end
 end

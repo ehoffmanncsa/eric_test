@@ -30,15 +30,18 @@ class TEDAddPreviousAthlete < Minitest::Test
     @athlete_name = "#{@first_name} #{@last_name}"
   end
 
+  def modal
+    @browser.element(:class, 'modal-content')
+  end
+
   def add_athlete
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_athlete_tab
 
     # find add athlete button and click
     @browser.button(:text, 'Add Athlete').click
 
     # fill out athlete form
-    modal = @browser.element(:class, 'modal-content')
     modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
     modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
     modal.elements(:tag_name, 'input')[2].send_keys @grad_yr                 # graduation year
@@ -60,16 +63,15 @@ class TEDAddPreviousAthlete < Minitest::Test
     # make sure Edit Athlete modal shows up before proceeding
     row = table.elements(:tag_name, 'tr').last
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
-    assert @browser.element(:class, 'modal-content').visible?
+    assert modal.visible?
 
-    modal = @browser.element(:class, 'modal-content')
     modal.button(:text, 'Save & Invite').click; sleep 5
 
     # make sure athlete status is now pending after email sent
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
-    UIActions.clear_cookies
+    TED.sign_out
   end
 
   def check_welcome_email
@@ -80,13 +82,32 @@ class TEDAddPreviousAthlete < Minitest::Test
     @gmail.delete(emails)
   end
 
-  def check_athlete_premium_profile
+  def athlete_accept_invitation
     UIActions.user_login(@email); sleep 2
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
 
+    athlete_sign_out
+  end
+
+  def upgrade_athlete
+    TED.impersonate_org('Awesome Volleyball')
+    TED.go_to_athlete_tab
+    row = TED.get_row_by_name(table, @athlete_name)
+    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
+    cog.click; sleep 1
+    modal.button(:text, 'Upgrade').click
+    Watir::Wait.until { modal.div(:class, 'alert-success').present? }
+
+    # close modal and signout
+    modal.element(:class, 'fa-times').click
+    TED.sign_out
+  end
+
+  def check_athlete_premium_profile
     # Giving staging grace period before checking premium status
+    UIActions.user_login(@email); sleep 2
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
     navbar.link(:text, 'Membership Info').click
@@ -103,10 +124,18 @@ class TEDAddPreviousAthlete < Minitest::Test
     rescue; end
 
     assert_equal expect_str, @title, "#{@title} not match expected #{expect_str}"
+
+    athlete_sign_out
+  end
+
+  def athlete_sign_out
+    @browser.element(:class, 'fa-angle-down').click
+    navbar = @browser.element(:id, 'secondary-nav-menu')
+    navbar.link(:text, 'Logout').click
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_coach_login
+    UIActions.ted_login
     status = TED.get_athlete_status(table, @athlete_name)
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
@@ -139,6 +168,9 @@ class TEDAddPreviousAthlete < Minitest::Test
     add_athlete
     send_invite_email
     check_welcome_email
+    athlete_accept_invitation
+
+    upgrade_athlete
     check_athlete_premium_profile
     check_athlete_accepted_status
     delete_athlete

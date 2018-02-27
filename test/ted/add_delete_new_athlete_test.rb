@@ -31,7 +31,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
   end
 
   def add_athlete
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_athlete_tab
 
     # find add athlete button and click
@@ -60,9 +60,11 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     assert @browser.element(:class, 'modal-content').visible?
 
     modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click; sleep 5
+    modal.button(:text, 'Save & Invite').click; sleep 1
 
+    # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent
+    TED.go_to_athlete_tab
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
@@ -89,7 +91,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_coach_login
+    UIActions.ted_login
     status = TED.get_athlete_status(table, @athlete_name)
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end

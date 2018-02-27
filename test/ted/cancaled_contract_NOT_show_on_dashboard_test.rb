@@ -252,7 +252,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
   end
 
   def test_canceled_contract_not_show_on_dashboard
-    UIActions.ted_coach_login(@admin_username, @admin_password)
+    UIActions.ted_login(@admin_username, @admin_password)
     original_contract_count = get_contract_count
 
     setup_contract

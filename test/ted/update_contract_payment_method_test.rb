@@ -146,7 +146,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     setup_contract
 
     new_id = get_another_acc_id
-    UIActions.ted_coach_login
+    UIActions.ted_login
 
     update_payment_method(new_id)
     check_success_message
@@ -158,7 +158,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     setup_contract
 
     new_id = get_another_acc_id
-    UIActions.ted_coach_login(@admin_username, @admin_password)
+    UIActions.ted_login(@admin_username, @admin_password)
     imperson_coach
 
     update_payment_method(new_id)

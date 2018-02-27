@@ -31,7 +31,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   end
 
   def add_athlete
-    UIActions.ted_coach_login(@coach_username, @coach_password)
+    UIActions.ted_login(@coach_username, @coach_password)
     TED.go_to_athlete_tab
 
     # find add athlete button and click
@@ -88,7 +88,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_coach_login(@coach_username, @coach_password)
+    UIActions.ted_login(@coach_username, @coach_password)
     TED.go_to_athlete_tab
     row = TED.get_row_by_name(table, @athlete_name)
     status = row.elements(:tag_name, 'td')[4].text

@@ -3,6 +3,10 @@ require_relative '../test_helper'
 
 # TS-352: TED Regression
 # UI Test: Allow Org Coach and NCSA Admin to Add Payment Method
+# This test is unreliable right now because new payment require
+# different expire year. There is only a limit number of years
+# in UI dropdown and there is yet a way to delete old record
+# except for doing it manually in the DB.
 class AddPaymentMethodTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'
@@ -90,7 +94,7 @@ class AddPaymentMethodTest < Minitest::Test
   end
 
   def test_coach_add_payment_method
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_payment_method_tab
 
     add_payment
@@ -99,7 +103,7 @@ class AddPaymentMethodTest < Minitest::Test
   end
 
   def test_PA_add_payment_method
-    UIActions.ted_coach_login(@admin_username, @admin_password)
+    UIActions.ted_login(@admin_username, @admin_password)
     imperson_coach
     TED.go_to_payment_method_tab
 

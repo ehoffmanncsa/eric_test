@@ -39,7 +39,7 @@ class AddOrg0DollarContractTest < Minitest::Test
   end
 
   def add_organization
-    UIActions.ted_coach_login(@admin_username, @admin_password)
+    UIActions.ted_login(@admin_username, @admin_password)
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
     Watir::Wait.until { @browser.elements(:class, 'cards')[0].visible? }
 

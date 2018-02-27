@@ -78,7 +78,7 @@ class InviteCSVAthletesTest < Minitest::Test
   end
 
   def test_invite_athetes_csv
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_athlete_tab
 
     upload_athletes

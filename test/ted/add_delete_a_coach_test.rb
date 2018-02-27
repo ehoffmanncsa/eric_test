@@ -30,7 +30,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
     @lastname = MakeRandom.name
     @position = MakeRandom.name
 
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_staff_tab
 
     # find add staff button and click to open modal
@@ -70,13 +70,13 @@ class TEDAddDeleteACoachTest < Minitest::Test
 
   def check_new_coach_can_login
     TED.sign_out
-    UIActions.ted_coach_login(@coach_email, get_coach_password)
+    UIActions.ted_login(@coach_email, get_coach_password)
     set_new_password
     TED.sign_out
   end
 
   def delete_coach
-    UIActions.ted_coach_login
+    UIActions.ted_login
     TED.go_to_staff_tab
     id = TED.get_coach_id(@coach_email)
 

@@ -41,7 +41,7 @@ module UIActions
     end
   end
 
-  def self.ted_coach_login(username = nil, password = nil)
+  def self.ted_login(username = nil, password = nil)
     @browser.goto @config['TED_coach_app']['login_staging']
 
     username = username.nil? ? @creds['ted_coach']['username'] : username

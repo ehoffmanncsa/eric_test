@@ -15,7 +15,7 @@ class TEDUpdateCoachDetailsTest < Minitest::Test
   end
 
   def test_update_coach_details
-    UIActions.ted_coach_login
+    UIActions.ted_login
     Watir::Wait.until { @browser.element(:class, 'graphs').present? }
 
     @browser.link(:text, 'Account Settings').click
