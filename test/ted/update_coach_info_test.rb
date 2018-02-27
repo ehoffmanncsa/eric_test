@@ -32,11 +32,11 @@ class TEDUpdateCoachDetailsTest < Minitest::Test
 
     failure = []
     msg = "Incorrect first name #{firstname}"
-    failure << msg unless firstname.eql? 'Courtney'
+    failure << msg unless firstname.eql? 'Joshua'
     msg = "Incorrect last name #{lastname}"
-    failure << msg unless lastname.eql? 'Dickson'
+    failure << msg unless lastname.eql? 'Lockhart'
     msg = "Incorrect email #{email}"
-    failure << msg unless email.eql? 'cdickson197@gmail.com'
+    failure << msg unless email.eql? 'sniper@ncsasports.org'
     assert_empty failure
 
     # now make change, refresh page and check change
