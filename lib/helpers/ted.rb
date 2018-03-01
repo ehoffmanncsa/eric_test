@@ -18,6 +18,7 @@ module TED
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
     @browser.element(:id, 'react-tabs-2').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }; sleep 1
+    Watir::Wait.until { @browser.table(:class, 'table--administration').present? }
   end
 
   def self.go_to_staff_tab

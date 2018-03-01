@@ -48,7 +48,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
 
     # find add staff button and click to open modal
     # fill out staff info in modal
-    @browser.button(:text, 'Add Staff').click; sleep 1
+    @browser.button(:text, 'Add Staff').click; sleep 2
     Watir::Wait.until { @browser.element(:class, 'modal-content').present? }
     modal = @browser.element(:class, 'modal-content')
     inputs = modal.elements(:tag_name, 'input').to_a

@@ -37,6 +37,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     @first_name = MakeRandom.name
     @last_name = MakeRandom.name
     @athlete_name = "#{@first_name} #{@last_name}"
+    puts "Adding athlete name: #{@athlete_name}"
   end
 
   def teardown
@@ -82,7 +83,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent
     status = TED.get_athlete_status(table, @athlete_name)
-    assert_equal 'Pending', status, "Expected status #{status} to be Pending"
+    assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
     TED.sign_out
   end

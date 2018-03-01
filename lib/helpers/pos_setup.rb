@@ -14,15 +14,15 @@ module POSSetup
   end
 
   def self.set_password(email)
-    UIActions.user_login(email)
+    UIActions.user_login(email); sleep 1
 
     begin
       Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
-      popup = @browser.element(:class, 'mfp-content'); sleep 1
+      popup = @browser.element(:class, 'mfp-content')
       popup.element(:class, 'button--secondary').click
     rescue; end
 
-    Watir::Wait.until { @browser.button(:name, 'commit').visible? }
+    Watir::Wait.until { @browser.text_field(:id, 'user_account_username').visible? }
 
     username = email.split('@')[0].delete('.').delete('+')
     @browser.text_field(:id, 'user_account_username').value = username

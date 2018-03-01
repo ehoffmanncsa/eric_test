@@ -11,7 +11,9 @@ require_relative '../test_helper'
   Then create a new contract for this org with 100% discount
   This results in $0 value contract
   Coach admin sign TOS and authorize Credit Card
-  Make sure all the associated emails are received
+  Make sure there is popup to change password for coach
+  UI will stall here while test goes and 
+  make sure all the associated emails are received then delete them
 =end
 
 class AddOrg0DollarContractTest < Minitest::Test
