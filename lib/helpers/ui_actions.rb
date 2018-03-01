@@ -31,7 +31,7 @@ module UIActions
 
     @browser.text_field(:id, 'user_account_login').set email_addr
     @browser.text_field(:id, 'user_account_password').set password
-    @browser.button(:name, 'commit').click
+    @browser.button(:name, 'commit').click; sleep 1
 
     #waiting for the right title
     begin
@@ -46,9 +46,8 @@ module UIActions
 
     username = username.nil? ? @creds['ted_coach']['username'] : username
     password = password.nil? ? @creds['ted_coach']['password'] : password
-    text_fields = @browser.elements(:tag_name, 'input').to_a
-    text_fields[0].set username
-    text_fields[1].set password
+    @browser.text_field(:id, 'email').set username
+    @browser.text_field(:id, 'password').set password
     @browser.button(:text, 'Sign In').click; sleep 3
   end
 

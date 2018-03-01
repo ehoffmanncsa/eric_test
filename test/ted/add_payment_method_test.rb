@@ -3,6 +3,17 @@ require_relative '../test_helper'
 
 # TS-352: TED Regression
 # UI Test: Allow Org Coach and NCSA Admin to Add Payment Method
+
+=begin
+  PA Otto Mation
+  Gmail ncsa.automation@gmail.com, mailbox TED_Contract
+  PA add new organization via UI, this org is Verified
+  Then create a new contract for this org with 100% discount
+  This results in $0 value contract
+  Coach admin sign TOS and authorize Credit Card
+  Make sure all the associated emails are received
+=end
+
 # This test is unreliable right now because new payment require
 # different expire year. There is only a limit number of years
 # in UI dropdown and there is yet a way to delete old record

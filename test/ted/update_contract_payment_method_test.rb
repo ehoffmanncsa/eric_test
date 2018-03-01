@@ -3,7 +3,28 @@ require_relative '../test_helper'
 
 # TS-369: TED Regression
 # UI Test: Allow Org Coach and NCSA Admin to Assign Payment Method to Contract
-# Require organization to have more than 1 payment account
+
+=begin
+  Require organization to have more than 1 payment account
+  Org Awesome Volleyball, Coach Joshua
+  Create a new contract, sign and authorize via API
+  Collect all the existing payment account ids of the org
+  Exclude the id that the contract is currently using
+  In the UI, as a coach go to Administration/Payment method
+  Find the contract, view Details and change payment method
+  Make sure there is success message
+  Check API endpoint contract to make sure account id is updated
+  Delete contract
+  Create a new contract, sign and authorize via API
+  Collect all the existing payment account ids of the org
+  Exclude the id that the contract is currently using
+  In the UI, as a PA, impersonate org, go to Administration/Payment method
+  Find the contract, view Details and change payment method
+  Make sure there is success message
+  Check API endpoint contract to make sure account id is updated
+  Delete contract
+=end
+
 class UpdateContractPaymentMethodTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'

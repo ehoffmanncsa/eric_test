@@ -3,6 +3,25 @@ require_relative '../test_helper'
 
 # TS-239: TED Regression
 # UI Test: Add/Invite Previous NCSA Athlete
+
+=begin
+  This test use coach admin Joshua of Awesome Volleyball organization
+  An existing NCSA premium athlete also needed,
+  so we create one and buy champion package for him
+  Coach admin add new athlete in UI via Administration page, Athlete tab
+  Make sure his name is found in Athlete table after added
+  Click on Not Sent button of this athlete and send invitation
+  In gmail account find Invitation email in TED_Welcome mailbox
+  Make sure the athlete get an invite email then delete email
+  Login to clientrms as the athlete
+  He should see TOS prompt and accept it
+  Because Awesome Volleyball org has all sports, contract and team for each sport
+  This athlete now has TED MVP membership
+  Athlete status in TED is now Accepted
+  Delete this athlete
+  Make sure his name is removed from Athlete table and Team Directory
+=end
+
 class TEDAddPreviousAthlete < Minitest::Test
   def setup    
     @ui = UI.new 'local', 'firefox'
@@ -91,20 +110,6 @@ class TEDAddPreviousAthlete < Minitest::Test
     athlete_sign_out
   end
 
-  def upgrade_athlete
-    TED.impersonate_org('Awesome Volleyball')
-    TED.go_to_athlete_tab
-    row = TED.get_row_by_name(table, @athlete_name)
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
-    cog.click; sleep 1
-    modal.button(:text, 'Upgrade').click
-    Watir::Wait.until { modal.div(:class, 'alert-success').present? }
-
-    # close modal and signout
-    modal.element(:class, 'fa-times').click
-    TED.sign_out
-  end
-
   def check_athlete_premium_profile
     # Giving staging grace period before checking premium status
     UIActions.user_login(@email); sleep 2
@@ -151,17 +156,6 @@ class TEDAddPreviousAthlete < Minitest::Test
     refute (@browser.html.include? @athlete_name), msg
   end
 
-  def check_athlete_free_profile
-    # as athlete is now deleted from TED, he becomes free
-    UIActions.clear_cookies
-    UIActions.user_login(@email)
-
-    # If an athlete is free, there shouldn't be Membership Info in menu
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    refute (navbar.html.include? 'Membership Info'), 'Found membership option in menu'
-  end
-
   def test_add_delete_premium_ncsa_athlete
     create_athlete
     POSSetup.buy_package(@email, 'champion')
@@ -169,12 +163,9 @@ class TEDAddPreviousAthlete < Minitest::Test
     send_invite_email
     check_welcome_email
     athlete_accept_invitation
-
-    upgrade_athlete
     check_athlete_premium_profile
     check_athlete_accepted_status
     delete_athlete
     check_team_directory
-    check_athlete_free_profile
   end
 end

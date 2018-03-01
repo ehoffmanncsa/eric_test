@@ -3,6 +3,19 @@ require_relative '../test_helper'
 
 # TS-356: TED Regression
 # UI Test: Do not include Contracts that are canceled on Dashboard
+
+=begin
+  PA Otto Mation, Org Awesome Volleyball, Coach Joshua
+  You won't see much activities in the UI because 
+  the majority are done via API requests
+  Login to TED as PA, get org AV's contract count on dashboard
+  Create contract, sign and authorize it
+  Refresh the UI make sure contract count has increased
+  Cancel the contract via API
+  Refresh the UI and make sure contract count back to original
+  All emails related to this process are checked and deleted afterward
+=end
+
 class DashboardNotShowCanceledContractTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'
@@ -228,6 +241,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     emails = @gmail.get_unread_emails
     refute_empty emails, 'No Signed confirm email received'
 
+    # delete email after done checking
     @gmail.delete(emails)
   end
 
@@ -256,8 +270,12 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     original_contract_count = get_contract_count
 
     setup_contract
-    canceled_contract = cancel_contract
+    # check count increase after added contract
+    @browser.refresh
+    new_count = get_contract_count
+    assert (original_contract_count < new_count), 'Wrong count after add contract'
 
+    canceled_contract = cancel_contract
     # check dashboard make sure contract count is correct
     @browser.refresh
     new_count = get_contract_count

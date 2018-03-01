@@ -4,6 +4,23 @@ require_relative '../test_helper'
 # UI TED Regression
 # TS-229: Add/Invite New Athlete
 # TS-259: Remove Athlete From Organization
+
+=begin
+  This test use coach admin Joshua of Awesome Volleyball organization
+  Coach admin add new athlete in UI via Administration page Athlete tab
+  This athlete has yet to exist in C3PO database
+  Make sure his name is found in Athlete table after added
+  Click on Not Sent button of this athlete and send invitation
+  In gmail account find Invitation email in TED_Welcome mailbox
+  Make sure the athlete get an invite email then delete email
+  Login to clientrms as the new athlete
+  He should see TOS prompt and accept it before able to set new password
+  After setting new password, make sure he has TED champion membership
+  Athlete status in TED is now Accepted
+  Delete this athlete
+  Make sure his name is removed from Athlete table and Team Directory
+=end
+
 class TEDAddDeleteNewAthleteTest < Minitest::Test
   def setup    
     @ui = UI.new 'local', 'firefox'
@@ -46,7 +63,7 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
     modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click; sleep 1
+    modal.button(:text, 'Add Athlete').click; sleep 2
 
     # make sure athlete name shows up after added
     assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
@@ -56,19 +73,18 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = table.elements(:tag_name, 'tr').last
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
+    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
     assert @browser.element(:class, 'modal-content').visible?
 
     modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click; sleep 1
+    modal.button(:text, 'Save & Invite').click; sleep 3
 
     # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent
-    TED.go_to_athlete_tab
-    status = row.elements(:tag_name, 'td')[4].text
-    assert_equal status, 'Pending', "Expected status #{status} to be Pending"
+    status = TED.get_athlete_status(table, @athlete_name)
+    assert_equal 'Pending', status, "Expected status #{status} to be Pending"
 
-    UIActions.clear_cookies
+    TED.sign_out
   end
 
   def check_welcome_email

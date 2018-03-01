@@ -3,9 +3,17 @@ require_relative '../test_helper'
 
 # TS-351: TED Regression
 # UI Test: Adding an Organization With a $0 Contract
-# Creating a new organization as a partner admin
-# This organization and its primary contact (1st coach)
-# are Verified by default
+
+=begin
+  PA Otto Mation
+  Gmail ncsa.automation@gmail.com, mailbox TED_Contract
+  PA add new organization via UI, this org is Verified
+  Then create a new contract for this org with 100% discount
+  This results in $0 value contract
+  Coach admin sign TOS and authorize Credit Card
+  Make sure all the associated emails are received
+=end
+
 class AddOrg0DollarContractTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'

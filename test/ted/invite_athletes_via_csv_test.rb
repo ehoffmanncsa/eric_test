@@ -3,6 +3,17 @@ require_relative '../test_helper'
 
 # TS-257: TED Regression
 # UI Test: Invite Athlete via CSV
+
+=begin
+  Create a new csv file with new athlete records each time
+  The number of records vary between 2 to 4 records
+  Login as coach Joshua, upload the csv file by clicking Add Multiple Athletes
+  Do a hard refresh then make sure all athlete's names are found in the table
+  All athletes status remain Not Sent
+  Delete athlete after done checking
+  Make sure these names are not shown in UI anymore
+=end
+
 class InviteCSVAthletesTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'

@@ -3,6 +3,16 @@ require_relative '../test_helper'
 
 # TS-256: TED Regression
 # UI Test: Update Coach User Details
+
+=begin
+  Update coach Joshua Account Settings
+  First make sure setting loads with correct info
+  First name, last name, email are correct
+  Send in new position and new phone number
+  Make sure there is success message
+  Make sure new position and phone number show after update
+=end
+
 class TEDUpdateCoachDetailsTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'

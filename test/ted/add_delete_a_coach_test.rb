@@ -3,6 +3,19 @@ require_relative '../test_helper'
 
 # TS-189: TED Regression
 # UI Test: Add/Delete a Coach
+
+=begin
+  This test use coach admin Joshua of Awesome Volleyball organization
+  Coach admin add new coach in UI via Administration page Staff tab
+  Make sure his name is found in Staff table after added
+  Class GmailCalls helps connect to ncsa.automation@gmail.com account
+  In this gmail account we find Invitation email in TED_Welcome mailbox
+  Get the tempt password for new coach in this email and delete email
+  Login as new coach to make sure he was successfully created
+  Make sure there is prompt to reset password
+  Delete the new coach afterward and make sure his name is no longer in UI 
+=end
+
 class TEDAddDeleteACoachTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'

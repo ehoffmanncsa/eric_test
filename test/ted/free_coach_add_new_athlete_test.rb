@@ -3,6 +3,23 @@ require_relative '../test_helper'
 
 # UI TED Regression
 # TS-260: Add/Invite New Athlete as Free Coach
+
+=begin
+  This test use coach admin Noel Ronnie of organization id 50 (free org)
+  Coach admin add new athlete in UI via Administration page Athlete tab
+  This athlete has yet to exist in C3PO database
+  Make sure his name is found in Athlete table after added
+  Click on Not Sent button of this athlete and send invitation
+  In gmail account find Invitation email in TED_Welcome mailbox
+  Make sure the athlete get an invite email then delete email
+  Login to clientrms as the new athlete
+  He should see TOS prompt and accept it before able to set new password
+  After setting new password, make sure he remains a free user
+  Athlete status in TED is now Accepted
+  Delete this athlete
+  Make sure his name is removed from Athlete table and Team Directory
+=end
+
 class FreeCoachAddNewAthleteTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'
@@ -80,7 +97,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     @gmail.delete(emails)
   end
 
-  def check_athlete_profile
+  def check_athlete_free_profile
     POSSetup.set_password(@athlete_email)
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
@@ -117,7 +134,7 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     add_athlete
     send_invite_email
     check_welcome_email
-    check_athlete_profile
+    check_athlete_free_profile
     check_athlete_accepted_status
     delete_athlete
     check_team_directory
