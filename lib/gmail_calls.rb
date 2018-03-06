@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'gmail'
-require 'pp'
+require 'mail'
 
 class GmailCalls
   attr_accessor :mail_box
@@ -15,14 +15,16 @@ class GmailCalls
     @conn = Gmail.connect(creds['gmail']['username'], creds['gmail']['app_pass'])
   end
 
-  def parse_body(emails, keyword = nil)
+  def parse_body(emails = nil, keyword = nil)
     begin
       # loop through any/all emails
       # get only the part of message that includes the desired keyword
+      emails = get_unread_emails if emails.nil?
       emails.each do |email|
         if keyword.nil?
           @msg = email.message.to_s
         else
+
           @msg = email.message.to_s.split("\n").select { |e| e.include? keyword }
         end
       end

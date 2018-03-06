@@ -89,8 +89,8 @@ class AddOrg0DollarContractTest < Minitest::Test
     pay_counts.shift; pay_counts.sample.select
 
     team_counts = modal.text_field(:name, 'numberOfTeams')
-    start_date = modal.text_field(:name, 'startDate')
-    first_pay = modal.text_field(:name, 'firstPaymentDate')
+    start_date = modal.element(:name, 'startDate')
+    first_pay = modal.element(:name, 'firstPaymentDate')
     discount = modal.text_field(:name, 'discount')
     discount_note = modal.text_field(:name, 'discountNote')
     team_counts.set rand(1 .. 99)
@@ -99,8 +99,8 @@ class AddOrg0DollarContractTest < Minitest::Test
     text = "arguments[0].type='text'"
     modal.execute_script(text, start_date)
     modal.execute_script(text, first_pay)
-    start_date.set date
-    first_pay.set date
+    start_date.send_keys date
+    first_pay.send_keys date
 
     discount.set 100
     discount_note.set '0 Dollar Contract'
@@ -149,21 +149,8 @@ class AddOrg0DollarContractTest < Minitest::Test
   def test_add_organization_0_dollar_contract
     add_organization
 
-    # find the Verified section
-    board = @browser.elements(:class, 'cards')[0]
-    verified_section = board.elements(:class, 'col-sm-12')[5]
-    msg = 'This is not Verified section'
-    assert_equal verified_section.element(:class, 'section-heading').text, 'Verified', msg
-
-    # find new added org in Verified section by id and open show page
-    id = TED.get_org_id(@email)
-    verified_section.elements(:tag_name, 'a').each do |e|
-      if e.attribute_value('href').eql? "https://team-staging.ncsasports.org/organizations/#{id}"
-        @new_org = e; break
-      end
-    end
-    refute_nil @new_org, "Cannot find new organization id #{id}"
-    @new_org.click
+    org = TED.find_org_in_ui(@org_name)
+    org.click
 
     # make sure show page has right org name
     Watir::Wait.until { @browser.div(:class, 'college-details').present? }
@@ -183,7 +170,7 @@ class AddOrg0DollarContractTest < Minitest::Test
     TED.sign_out
 
     goto_sign_page_via_url_in_email
-    @browser.text_field(:placeholder, 'Signature').set @first_name
+    @browser.text_field(:placeholder, 'Signature').set @org_name
     @browser.button(:text, 'I Accept').click
     @browser.button(:text, 'Accept').click
 
