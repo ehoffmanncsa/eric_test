@@ -201,25 +201,13 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     @browser.div(:class, 'modal-content')['data']
   end
 
-  def find_org_in_ui
-    # find the Premium Signed section
-    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
-    board = @browser.elements(:class, 'cards')[0]
-    premium_signed = board.elements(:class, 'col-sm-12')[0]
-    header = premium_signed.element(:class, 'section-heading').text
-    msg = 'This is not Premium Signed section'
-    assert_equal header, 'Premium Signed', msg
-
-    # find org and check count
-    org_cards = premium_signed.elements(:class, 'org-card')
-    org = org_cards.detect { |card| card.html.include? @org_name }
-  end
-
   def get_contract_count
-    org = find_org_in_ui
+    org = @browser.element(:text, @org_name).parent
     text = org.element(:class, 'subtitle').text
+    arr = text.split(' ')
+    arr.pop
 
-    text.scan(/\d/).last.to_i # this is count of signed contract on dashboard
+    arr.last.to_i # this is count of signed contract on dashboard
   end
 
   def cancel_contract
@@ -271,7 +259,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
 
     setup_contract
     # check count increase after added contract
-    @browser.refresh
+    @browser.refresh; sleep 2
     new_count = get_contract_count
     assert (original_contract_count < new_count), 'Wrong count after add contract'
 

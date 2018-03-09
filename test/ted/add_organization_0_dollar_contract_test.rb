@@ -149,7 +149,7 @@ class AddOrg0DollarContractTest < Minitest::Test
   def test_add_organization_0_dollar_contract
     add_organization
 
-    org = TED.find_org_in_ui(@org_name)
+    org = @browser.element(:text, @org_name).parent
     org.click
 
     # make sure show page has right org name
