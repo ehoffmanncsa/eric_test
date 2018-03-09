@@ -75,3 +75,9 @@ pages:
 TED_coach_app:
   login_staging: 'https://team-staging.ncsasports.org/sign_in'
   login_prod: 'https://team.ncsasports.org/sign_in'
+
+sport_ids: [17633, 17634, 17635, 17638, 17639, 17644, 17645, 
+            17652, 17653, 17659, 17660, 17665, 17666, 17683, 
+            17684, 17687, 17688, 17689, 17690, 17691, 17692, 
+            17695, 17696, 17701, 17702, 17706, 17707, 17708, 
+            17711, 17730, 17731]

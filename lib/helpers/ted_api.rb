@@ -49,7 +49,7 @@ class TEDApi
   def delete(endpoint)
     resp_code, resp = @api.pdelete url(endpoint), @header
     msg = "[ERROR] #{resp_code} POST to #{endpoint}"
-    raise msg unless resp_code.eql? 201 # maybe not this code, double check when possible
+    raise msg unless resp_code.eql? 200
 
     resp
   end

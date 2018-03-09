@@ -5,13 +5,14 @@ module TEDContractApi
   class << self
     attr_accessor :org_id
     attr_accessor :org_name
+    attr_accessor :admin_api
+    attr_accessor :coach_api
   end
 
-  def self.setup(admin_api = nil, coach_api = nil)
-    @admin_api = admin_api
-    @coach_api = coach_api
-
-    # default to Awesome Volleyball org
+  def self.setup
+    # default to Awesome Volleyball org and Otto Mation PA
+    @admin_api ||= TEDApi.new('admin')
+    @coach_api ||= TEDApi.new('coach')
     @org_id ||= '15'
     @org_name ||= 'Awesome Volleyball'
   end
@@ -99,7 +100,7 @@ module TEDContractApi
       data: {
         type: 'organization_contracts',
         attributes: {
-          accepted_by: MakeRandom.name,
+          accepted_by: @org_name,
           phrase: phrase
         },
         relationships: {
@@ -159,6 +160,28 @@ module TEDContractApi
 
   def self.cancel_signed_contract(contract_id)
     endpoint = "organization_contracts/#{contract_id}/cancel"
-    @admin_api.patch(endpoint, nil); sleep 1
+    @admin_api.patch(endpoint, nil)
+  end
+
+  def self.get_all_contracts
+    endpoint = "organizations/#{@org_id}/organization_contracts"
+    @admin_api.read(endpoint)['data']
+  end
+
+  def self.delete_contract(contract_id)
+    endpoint = "organization_contracts/#{contract_id}"
+    @admin_api.delete(endpoint)['data']
+  end
+
+  def self.delete_all_contracts
+    signed_contracts = get_signed_contracts
+    non_signed = get_all_contracts - signed_contracts
+    signed_contracts.each { |c| cancel_signed_contract(c['id']) }
+    non_signed.each { |c| delete_contract(c['id']) }
+  end
+
+  def self.get_signed_contracts
+    contracts = get_all_contracts
+    contracts.reject { |c| c['attributes']['accepted-at'].nil? }
   end
 end

@@ -42,6 +42,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
     @firstname = MakeRandom.name
     @lastname = MakeRandom.name
     @position = MakeRandom.name
+    pp "Adding coach name: #{@firstname} #{@lastname}"
 
     UIActions.ted_login
     TED.go_to_staff_tab

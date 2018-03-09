@@ -107,14 +107,14 @@ module TED
     coach['id']
   end
 
-  def self.impersonate_org(org_name)
+  def self.impersonate_org(org_id = nil)
     creds = YAML.load_file('config/.creds.yml')
     admin_username = creds['ted_admin']['username']
     admin_password = creds['ted_admin']['password']
     UIActions.ted_login(admin_username, admin_password)
 
-    org = find_org_in_ui(org_name)
-    org.click; sleep 1
+    url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
+    @browser.goto url; sleep 1
     @browser.link(:text, 'Enter Org as Coach').click; sleep 3
   end
 
