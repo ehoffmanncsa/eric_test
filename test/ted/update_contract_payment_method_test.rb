@@ -31,14 +31,14 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     TED.setup(@browser)
+    TEDContractApi.setup
 
     @gmail = GmailCalls.new
     @gmail.get_connection
 
-    @coach_api = TEDApi.new('coach')
-    @admin_api = TEDApi.new('admin')
+    @coach_api = TEDContractApi.coach_api
+    @admin_api = TEDContractApi.admin_api
 
-    TEDContractApi.setup(@admin_api, @coach_api)
     @coach_token = @coach_api.header['Session-Token']
     @decoded_data = TEDContractApi.decode(@coach_token)
     @org_name = @decoded_data['organization_name']
@@ -98,26 +98,6 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     data['attributes']['payment-account-id']
   end
 
-  def imperson_coach
-    org = find_org_in_ui
-    org.click; sleep 1
-    @browser.link(:text, 'Enter Org as Coach').click; sleep 3
-  end
-
-  def find_org_in_ui
-    # find the Premium Signed section
-    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
-    board = @browser.elements(:class, 'cards')[0]
-    premium_signed = board.elements(:class, 'col-sm-12')[0]
-    header = premium_signed.element(:class, 'section-heading').text
-    msg = 'This is not Premium Signed section'
-    assert_equal header, 'Premium Signed', msg
-
-    # find org and check count
-    org_cards = premium_signed.elements(:class, 'org-card')
-    org = org_cards.detect { |card| card.html.include? @org_name }
-  end
-
   def get_another_acc_id
     current_acc_id = get_contract_account_id.to_s
     org_acc_ids = get_org_account_ids
@@ -160,31 +140,30 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     Watir::Wait.until { column.element(:class, 'table').present? }
     table = column.element(:class, 'table')
 
-    table.elements(:tag_name, 'tr').last
+    table.element(:text, @org_name).parent
   end
 
   def test_coach_update_contract_payment_method
     setup_contract
 
-    new_id = get_another_acc_id
+    new_acc_id = get_another_acc_id
     UIActions.ted_login
 
-    update_payment_method(new_id)
+    update_payment_method(new_acc_id)
     check_success_message
-    check_update_successful(new_id)
+    check_update_successful(new_acc_id)
     cancel_contract
   end
 
   def test_PA_update_contract_payment_method
     setup_contract
 
-    new_id = get_another_acc_id
-    UIActions.ted_login(@admin_username, @admin_password)
-    imperson_coach
+    new_acc_id = get_another_acc_id
+    TED.impersonate_org(@org_id)
 
-    update_payment_method(new_id)
+    update_payment_method(new_acc_id)
     check_success_message
-    check_update_successful(new_id)
+    check_update_successful(new_acc_id)
     cancel_contract
   end
 end
