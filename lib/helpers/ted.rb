@@ -57,15 +57,18 @@ module TED
   end
 
   def self.get_row_by_name(table, name)
-    rows = table.elements(:tag_name, 'tr').to_a; rows.shift
-    row = rows.detect { |r| r.elements(:tag_name, 'td')[0].text.downcase.eql? name }
-    row
+    if !(@browser.html.include? name)
+      temp = name.split(' ')
+      temp.each { |word| word.capitalize! }
+      name = temp.join(' ')
+    end
+
+    table.element(:text, name).parent
   end
 
   def self.get_athlete_status(table, name = nil)
     go_to_athlete_tab
     row = get_row_by_name(table, name)
-
     row.elements(:tag_name, 'td')[4].text # this is status
   end
 
@@ -116,15 +119,5 @@ module TED
     url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
     @browser.goto url; sleep 1
     @browser.link(:text, 'Enter Org as Coach').click; sleep 3
-  end
-
-  def self.find_org_in_ui(org_name)
-    # find the Premium Signed section
-    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
-    board = @browser.elements(:class, 'cards')[0]
-
-    # find org
-    org_cards = board.elements(:class, 'org-card')
-    org_cards.detect { |card| card.html.include? org_name }
   end
 end

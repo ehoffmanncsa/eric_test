@@ -7,6 +7,7 @@ module TEDAthleteApi
     attr_accessor :org_name
     attr_accessor :admin_api
     attr_accessor :coach_api
+    attr_accessor :athlete_id
   end
 
   def self.setup
@@ -17,26 +18,44 @@ module TEDAthleteApi
     @org_name ||= 'Awesome Volleyball'
   end
 
-  def self.add_athlete(body)
-    endpoint = "organizations/#{@org_id}/athletes"
-    body = {
-      data: {
-        attributes: {
-          email: MakeRandom.email,
-          first_name: MakeRandom.name,
-          graduation_year: MakeRandom.year,
-          last_name: MakeRandom.name,
-          phone: MakeRandom.number(10),
-          zip_code: MakeRandom.number(5)
-        },
-        relationships: {
-          team: { data: { type: 'teams', id: id } } 
-        },
-        type: 'athletes'
-      }
-    }
+  def self.get_team_id
+    TEDTeamApi.setup
+    TEDTeamApi.org_id = @org_id
+    random_team = TEDTeamApi.get_all_teams.sample
 
+    random_team['id']
+  end
+
+  def self.add_athlete(body = nil, coach = false)
+    endpoint = "organizations/#{@org_id}/athletes"
+    if body.nil?
+      body = {
+        data: {
+          attributes: {
+            email: MakeRandom.email,
+            first_name: MakeRandom.name,
+            graduation_year: MakeRandom.year,
+            last_name: MakeRandom.name,
+            phone: MakeRandom.number(10),
+            zip_code: MakeRandom.number(5)
+          },
+          relationships: {
+            team: { data: { type: 'teams', id: get_team_id } } 
+          },
+          type: 'athletes'
+        }
+      }.to_json
+    end
+
+    api = coach ? @coach_api : @admin_api
     api.create(endpoint, body)['data']
+  end
+
+  def self.get_athlete(athlete_id, coach = false)
+    endpoint = "athletes/#{athlete_id}"
+    api = coach ? @coach_api : @admin_api
+
+    pp api.read(endpoint)['data']
   end
 
   def self.get_all_athletes
