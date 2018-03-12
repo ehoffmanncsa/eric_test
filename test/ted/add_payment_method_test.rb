@@ -7,17 +7,12 @@ require_relative '../test_helper'
 =begin
   PA Otto Mation
   Gmail ncsa.automation@gmail.com, mailbox TED_Contract
-  PA add new organization via UI, this org is Verified
-  Then create a new contract for this org with 100% discount
-  This results in $0 value contract
-  Coach admin sign TOS and authorize Credit Card
-  Make sure all the associated emails are received
+  PA add new organization via api
+  Get coach admin info then login and add payment
+  Login as PA, imperson org and add payment
+  Delete org afterward
 =end
 
-# This test is unreliable right now because new payment require
-# different expire year. There is only a limit number of years
-# in UI dropdown and there is yet a way to delete old record
-# except for doing it manually in the DB.
 class AddPaymentMethodTest < Minitest::Test
   def setup
     @ui = UI.new 'local', 'firefox'
@@ -28,14 +23,10 @@ class AddPaymentMethodTest < Minitest::Test
     @gmail = GmailCalls.new
     @gmail.get_connection
 
-    @coach_api = TEDApi.new('coach')
-    @admin_api = TEDApi.new('admin')
-
-    TEDContractApi.setup(@admin_api, @coach_api)
-    @coach_token = @coach_api.header['Session-Token']
-    @decoded_data = TEDContractApi.decode(@coach_token)
-    @org_name = @decoded_data['organization_name']
-    @org_id = @decoded_data['organization_id']
+    coach_token = TEDApi.new('coach').header['Session-Token']
+    decoded_data = TEDContractApi.decode(coach_token)
+    @org_name = decoded_data['organization_name']
+    @org_id = decoded_data['organization_id']
 
     creds = YAML.load_file('config/.creds.yml')
     @admin_username = creds['ted_admin']['username']
@@ -44,26 +35,6 @@ class AddPaymentMethodTest < Minitest::Test
 
   def teardown
     @browser.close
-  end
-
-  def imperson_coach
-    org = find_org_in_ui
-    org.click; sleep 1
-    @browser.link(:text, 'Enter Org as Coach').click; sleep 3
-  end
-
-  def find_org_in_ui
-    # find the Premium Signed section
-    Watir::Wait.until(timeout: 45) { @browser.elements(:class, 'cards')[0].present? }
-    board = @browser.elements(:class, 'cards')[0]
-    premium_signed = board.elements(:class, 'col-sm-12')[0]
-    header = premium_signed.element(:class, 'section-heading').text
-    msg = 'This is not Premium Signed section'
-    assert_equal header, 'Premium Signed', msg
-
-    # find org and check count
-    org_cards = premium_signed.elements(:class, 'org-card')
-    org = org_cards.detect { |card| card.html.include? @org_name }
   end
 
   def modal
@@ -115,7 +86,7 @@ class AddPaymentMethodTest < Minitest::Test
 
   def test_PA_add_payment_method
     UIActions.ted_login(@admin_username, @admin_password)
-    imperson_coach
+    TED.impersonate_org(@org_id)
     TED.go_to_payment_method_tab
 
     add_payment
