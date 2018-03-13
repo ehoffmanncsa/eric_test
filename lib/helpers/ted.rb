@@ -10,50 +10,50 @@ module TED
     @api = Api.new
   end
 
-  def self.go_to_athlete_tab
-    # go to administration -> athlete
-    @browser.refresh; sleep 1
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
+  def self.sidebar
+    @browser.element(:class, 'sidebar')
+  end
+
+  def self.goto_organization
+    sidebar.link(:text, 'Organization').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
+  end
+
+  def self.go_to_athlete_tab
+    # go to Organization -> athlete
+    @browser.refresh; sleep 1
+    goto_organization
     @browser.element(:id, 'react-tabs-2').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }; sleep 1
     Watir::Wait.until { @browser.table(:class, 'table--administration').present? }
   end
 
   def self.go_to_staff_tab
-    # go to administration -> staff
+    # go to Organization -> staff
     @browser.refresh; sleep 1
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    goto_organization
     @browser.element(:id, 'react-tabs-4').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-5').visible? }
   end
 
   def self.go_to_details_tab
-    # go to administration -> details
+    # go to Organization -> details
     @browser.refresh; sleep 1
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    goto_organization
     @browser.element(:id, 'react-tabs-6').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-7').visible? }
   end
 
   def self.go_to_payment_method_tab
-    # go to administration -> payment methods
+    # go to Organization -> payment methods
     @browser.refresh; sleep 1
-    Watir::Wait.until { @browser.element(:class, 'sidebar').visible? }
-    @browser.link(:text, 'Administration').click
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
+    goto_organization
     @browser.element(:id, 'react-tabs-8').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-9').visible? }
   end
 
   def self.sign_out
-    sidebar = @browser.element(:class, 'sidebar')
-    sidebar.element(:class, 'signout').click; sleep 1
+    sidebar.link(:text, 'Sign Out').click; sleep 1
   end
 
   def self.get_row_by_name(table, name)
