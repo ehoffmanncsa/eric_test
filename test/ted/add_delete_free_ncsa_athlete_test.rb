@@ -89,17 +89,11 @@ class PremCoachAddFreeAthlete < Minitest::Test
   end
 
   def send_invite_email
-    # find and click the not sent button for the newly added athlete
-    # make sure Edit Athlete modal shows up before proceeding
-    row = table.element(:text, @athlete_name).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 2
-    assert @browser.element(:class, 'modal-content').visible?
+    TEDAthleteApi.send_invite_email
+  end
 
-    modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click; sleep 3
-
-    # refresh the page and go back to athlete tab
-    # make sure athlete status is now pending after email sent
+  def check_pending_status
+    TED.go_to_athlete_tab
     status = TED.get_athlete_status(table, @athlete_name)
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
@@ -166,6 +160,7 @@ class PremCoachAddFreeAthlete < Minitest::Test
     check_athlete_added
 
     send_invite_email
+    check_pending_status
     check_welcome_email
     check_athlete_membership
 

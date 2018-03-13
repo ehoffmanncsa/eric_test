@@ -54,8 +54,7 @@ module TEDAthleteApi
   def self.get_athlete(athlete_id, coach = false)
     endpoint = "athletes/#{athlete_id}"
     api = coach ? @coach_api : @admin_api
-
-    pp api.read(endpoint)['data']
+    api.read(endpoint)['data']
   end
 
   def self.get_all_athletes
@@ -71,5 +70,11 @@ module TEDAthleteApi
   def self.delete_all_athletes
     athletes = get_all_athletes
     athletes.each { |athlete| delete_athlete(athlete['id']) }
+  end
+
+  def self.send_invite_email(id = nil)
+    id = @athlete_id if id.nil?
+    endpoint = "athletes/#{id}/invite_single_athlete"
+    @admin_api.patch(endpoint, nil)
   end
 end
