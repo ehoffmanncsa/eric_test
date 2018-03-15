@@ -56,6 +56,10 @@ module TED
     sidebar.link(:text, 'Sign Out').click; sleep 1
   end
 
+  def self.end_imperson
+    sidebar.link(:text, 'End Impersonation').click; sleep 1
+  end
+
   def self.get_row_by_name(table, name)
     if !(@browser.html.include? name)
       temp = name.split(' ')
