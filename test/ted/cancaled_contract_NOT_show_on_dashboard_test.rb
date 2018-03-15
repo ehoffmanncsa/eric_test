@@ -115,7 +115,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
   def get_sign_page_url_in_email
     keyword = 'https://team-staging.ncsasports.org/terms_of_service?'
     emails = @gmail.get_unread_emails
-    msg = @gmail.parse_body(emails, keyword)
+    msg = @gmail.parse_body(emails.last, keyword)
     url = msg[1].split("\"")[1]
     @gmail.delete(emails)
 

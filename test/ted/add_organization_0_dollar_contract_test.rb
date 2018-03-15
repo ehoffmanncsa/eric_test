@@ -84,9 +84,9 @@ class AddOrg0DollarContractTest < Minitest::Test
 
     # fill out form
     sports = modal.select_list(:name, 'sportType').options.to_a
-    pay_counts = modal.select_list(:name, 'numberOfPayments').options.to_a
+    pay_counts = modal.select_list(:name, 'numberOfPayments')
     sports.shift; sports.sample.select
-    pay_counts.shift; pay_counts.sample.select
+    pay_counts.select '2'
 
     team_counts = modal.text_field(:name, 'numberOfTeams')
     start_date = modal.element(:name, 'startDate')
@@ -95,7 +95,7 @@ class AddOrg0DollarContractTest < Minitest::Test
     discount_note = modal.text_field(:name, 'discountNote')
     team_counts.set rand(1 .. 99)
 
-    date = Time.now.strftime("%m/%d/%Y")
+    date = Time.now.strftime("%Y-%m-%d")
     text = "arguments[0].type='text'"
     modal.execute_script(text, start_date)
     modal.execute_script(text, first_pay)
@@ -119,13 +119,13 @@ class AddOrg0DollarContractTest < Minitest::Test
     end
     assert_empty failure
 
-    modal.button(:text, 'Submit').click; sleep 4
+    modal.button(:text, 'Submit').click; sleep 0.5
   end
 
   def get_sign_page_url_in_email
     keyword = 'https://team-staging.ncsasports.org/terms_of_service?'
     emails = @gmail.get_unread_emails
-    msg = @gmail.parse_body(emails, keyword)
+    msg = @gmail.parse_body(emails.last, keyword)
     url = msg[1].split("\"")[1]
     @gmail.delete(emails)
 
@@ -158,6 +158,7 @@ class AddOrg0DollarContractTest < Minitest::Test
     assert (details.html.include? @org_name), 'Show page doesnt have right org name'
 
     add_contract
+    @browser.refresh
 
     # make sure contract shows up after added
     exist_contracts = @browser.div(:class, 'existing-contract')

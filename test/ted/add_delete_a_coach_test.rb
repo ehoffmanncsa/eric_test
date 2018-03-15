@@ -64,7 +64,7 @@ class TEDAddDeleteACoachTest < Minitest::Test
   def get_coach_password
     # use keyword 'password' to look for password in gmail
     emails = @gmail.get_unread_emails
-    msg = @gmail.parse_body(emails, 'password')
+    msg = @gmail.parse_body(emails.last, 'password')
     password = msg[1].split(':').last.split()[0]
     @gmail.delete(emails)
 
