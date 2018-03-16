@@ -91,6 +91,21 @@ module TEDContractApi
     @admin_api.create(endpoint, body)
   end
 
+  def self.send_free_invoice(org_id = nil)
+    @org_id ||= org_id
+    endpoint = "organizations/#{@org_id}/organization_invoices"
+    body = {
+      data: {
+        type: 'organization_invoices',
+        relationships: {
+          organization: { data: { type: 'organizations', id: @org_id } }
+        }
+      }
+    }.to_json
+
+    @admin_api.create(endpoint, body)
+  end
+
   def self.accept_terms_of_service(contract_id, decoded_data)
     coach_id = decoded_data['id']
     phrase = decoded_data['phrase']
