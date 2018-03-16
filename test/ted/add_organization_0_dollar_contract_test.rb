@@ -84,9 +84,9 @@ class AddOrg0DollarContractTest < Minitest::Test
 
     # fill out form
     sports = modal.select_list(:name, 'sportType').options.to_a
-    pay_counts = modal.select_list(:name, 'numberOfPayments')
+    pay_counts = modal.select_list(:name, 'numberOfPayments').options.to_a
     sports.shift; sports.sample.select
-    pay_counts.select '2'
+    pay_counts.shift; pay_counts.sample.select
 
     team_counts = modal.text_field(:name, 'numberOfTeams')
     start_date = modal.element(:name, 'startDate')
