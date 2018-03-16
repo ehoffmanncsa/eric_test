@@ -194,7 +194,8 @@ class TEDPageMonitorTest < Minitest::Test
 
       assert @browser.title.match(/Recruiting Management System/), @browser.title
 
-      @eyes.screenshot "Coach login page #{size.keys} view"
+      video_baner = @browser.find_element(:class, 'video-banner')
+      @eyes.check_ignore "Coach login page #{size.keys} view", [video_baner]
       result = @eyes.action.close(false)
       failure << "Coach login page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
