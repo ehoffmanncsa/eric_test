@@ -12,32 +12,34 @@ module TEDOrgApi
     @admin_api ||= TEDApi.new('admin')
   end
 
-  def self.create_org
+  def self.create_org(body = nil)
     endpoint = 'partners/1/organizations'
     sport_id = YAML.load_file('config/config.yml')['sport_ids'].sample.to_s
 
-    body = {
-      data: {
-        attributes: {
-          address: '1234 El Taco',
-          city: 'Chicago',
-          email: MakeRandom.email,
-          first_name: MakeRandom.name,
-          last_name: MakeRandom.name,
-          name: MakeRandom.name,
-          phone: MakeRandom.number(10),
-          state: 'IL',
-          type: 'Organization',
-          website: '',
-          zip_code: MakeRandom.number(5)
-        },
-        relationships: {
-          partner: { data: { type: 'partners' } },
-          sport: { data: { type: 'sports', id: sport_id } }
-        },
-        type: 'organizations'
-      }
-    }.to_json
+    if body.nil?
+      body = {
+        data: {
+          attributes: {
+            address: '1234 El Taco',
+            city: 'Chicago',
+            email: MakeRandom.email,
+            first_name: MakeRandom.name,
+            last_name: MakeRandom.name,
+            name: MakeRandom.name,
+            phone: MakeRandom.number(10),
+            state: 'IL',
+            type: 'Organization',
+            website: '',
+            zip_code: MakeRandom.number(5)
+          },
+          relationships: {
+            partner: { data: { type: 'partners' } },
+            sport: { data: { type: 'sports', id: sport_id } }
+          },
+          type: 'organizations'
+        }
+      }.to_json
+    end
 
     @admin_api.create(endpoint, body)['data']
   end

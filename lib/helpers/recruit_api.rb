@@ -38,6 +38,7 @@ class RecruitAPI
                athlete_phone: MakeRandom.number(10),
                graduation_year: grad_yr,
                state_code: 'IL',
+               zip: MakeRandom.number(5),
                sport_id: @sport_id.to_s,
                event_id: '3285'
               }
