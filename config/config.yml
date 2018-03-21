@@ -16,7 +16,7 @@ credit_billing:
   order_card_holder_first_name: 'q'
   order_card_holder_mi_name: 'a'
   order_card_holder_last_name: 'automation'
-  order_card_number: '4242424242424242'
+  order_card_number: '4111111111111111'
   order_cvv_code: '123'
   order_account_holder_phone: '4445556666'
   order_account_holder_email: 'automation@ncsasports.org'

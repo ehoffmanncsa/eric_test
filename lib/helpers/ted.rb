@@ -14,40 +14,40 @@ module TED
     @browser.element(:class, 'sidebar')
   end
 
-  def self.goto_organization
-    sidebar.link(:text, 'Organization').click
+  def self.goto_administration
+    sidebar.link(:text, 'Administration').click
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').present? }
   end
 
   def self.go_to_athlete_tab
-    # go to Organization -> athlete
+    # go to Administration -> athlete
     @browser.refresh; sleep 1
-    goto_organization
+    goto_administration
     @browser.element(:id, 'react-tabs-2').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-3').visible? }; sleep 1
     Watir::Wait.until { @browser.table(:class, 'table--administration').present? }
   end
 
   def self.go_to_staff_tab
-    # go to Organization -> staff
+    # go to Administration -> staff
     @browser.refresh; sleep 1
-    goto_organization
+    goto_administration
     @browser.element(:id, 'react-tabs-4').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-5').visible? }
   end
 
   def self.go_to_details_tab
-    # go to Organization -> details
+    # go to Administration -> details
     @browser.refresh; sleep 1
-    goto_organization
+    goto_administration
     @browser.element(:id, 'react-tabs-6').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-7').visible? }
   end
 
   def self.go_to_payment_method_tab
-    # go to Organization -> payment methods
+    # go to Administration -> payment methods
     @browser.refresh; sleep 1
-    goto_organization
+    goto_administration
     @browser.element(:id, 'react-tabs-8').click; sleep 3
     Watir::Wait.until { @browser.element(:id, 'react-tabs-9').visible? }
   end

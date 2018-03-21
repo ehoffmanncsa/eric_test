@@ -29,8 +29,8 @@ class GmailCalls
     mails = []
 
     # get unread mails from specific mail box and subject if any
-    # keep trying for 60 seconds
-    Timeout::timeout(120) {
+    # keep trying for 180 seconds
+    Timeout::timeout(180) {
       loop do
         mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)
         break unless mails.empty?

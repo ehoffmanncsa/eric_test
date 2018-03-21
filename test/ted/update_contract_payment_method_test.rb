@@ -6,23 +6,21 @@ require_relative '../test_helper'
 
 =begin
   Require organization to have more than 1 payment account
-  Org Awesome Volleyball, Coach Joshua
-  Create a new contract, sign and authorize via API
+  Use Org Awesome Volleyball, Coach Joshua, PA Otto, contract id 409
   Collect all the existing payment account ids of the org
   Exclude the id that the contract is currently using
+
+  For Coach:
   In the UI, as a coach go to Administration/Payment method
   Find the contract, view Details and change payment method
   Make sure there is success message
   Check API endpoint contract to make sure account id is updated
-  Delete contract
-  Create a new contract, sign and authorize via API
-  Collect all the existing payment account ids of the org
-  Exclude the id that the contract is currently using
+
+  For PA:
   In the UI, as a PA, impersonate org, go to Administration/Payment method
   Find the contract, view Details and change payment method
   Make sure there is success message
   Check API endpoint contract to make sure account id is updated
-  Delete contract
 =end
 
 class UpdateContractPaymentMethodTest < Minitest::Test
@@ -31,55 +29,16 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
     TED.setup(@browser)
+
     TEDContractApi.setup
-
-    @gmail = GmailCalls.new
-    @gmail.get_connection
-
-    @coach_api = TEDContractApi.coach_api
     @admin_api = TEDContractApi.admin_api
-
-    @coach_token = @coach_api.header['Session-Token']
-    @decoded_data = TEDContractApi.decode(@coach_token)
-    @org_name = @decoded_data['organization_name']
-    @org_id = @decoded_data['organization_id']
-
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
+    @org_name = TEDContractApi.org_name
+    @org_id = TEDContractApi.org_id
+    @contract_id = '409' # Use this contract for this scenario
   end
 
   def teardown
     @browser.close
-  end
-
-  def setup_contract
-    # add new contract, accept TOS and submit CC
-    new_contract = TEDContractApi.add_contract
-    @contract_id = new_contract['id']
-    TEDContractApi.accept_terms_of_service(@contract_id, @decoded_data)
-    TEDContractApi.submit_credit_card_info(@contract_id, @decoded_data)
-
-    # there will be emails so clean them up
-    subject = "#{@org_name} has signed Terms of Service and authorized credit card"
-    cleanup_emails(subject)
-  end
-
-  def cancel_contract
-    TEDContractApi.cancel_signed_contract(@contract_id)
-
-    # there will be emails so clean them up
-    subject = "CANCEL NOTICE: #{@org_name}"
-    cleanup_emails(subject)
-  end
-
-  def cleanup_emails(subject)
-    @gmail.mail_box = 'Inbox'
-    @gmail.subject = subject
-    emails = @gmail.get_unread_emails
-    refute_empty emails, "#{subject} emails not found"
-
-    @gmail.delete(emails)
   end
 
   def get_org_account_ids
@@ -116,7 +75,15 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     # in contract details change payment method
     modal.link(:text, 'Change payment method').click
     list = modal.select_list(:class, 'form-control')
-    list.select_value(new_id); sleep 1
+    list.select_value(new_id)
+  end
+
+  def find_contract_in_ui
+    column = @browser.divs(:class, 'col-lg-6').last
+    Watir::Wait.until { column.element(:class, 'table').present? }
+    table = column.element(:class, 'table')
+
+    table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Volleyball'
   end
 
   def modal
@@ -135,35 +102,19 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     assert_equal new_acc_id, updated_acc_id, 'Account ID not updated'
   end
 
-  def find_contract_in_ui
-    column = @browser.divs(:class, 'col-lg-6').last
-    Watir::Wait.until { column.element(:class, 'table').present? }
-    table = column.element(:class, 'table')
-
-    table.element(:text, @org_name).parent
-  end
-
   def test_coach_update_contract_payment_method
-    setup_contract
-
-    new_acc_id = get_another_acc_id
     UIActions.ted_login
-
+    new_acc_id = get_another_acc_id
     update_payment_method(new_acc_id)
     check_success_message
     check_update_successful(new_acc_id)
-    cancel_contract
   end
 
   def test_PA_update_contract_payment_method
-    setup_contract
-
-    new_acc_id = get_another_acc_id
     TED.impersonate_org(@org_id)
-
+    new_acc_id = get_another_acc_id
     update_payment_method(new_acc_id)
     check_success_message
     check_update_successful(new_acc_id)
-    cancel_contract
   end
 end
