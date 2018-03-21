@@ -211,6 +211,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
   end
 
   def cancel_contract
+    pp "[INFO] Canceling contract..."
     endpoint = "organization_contracts/#{@contract_id}/cancel"
     cancel = @admin_api.patch(endpoint, nil)
 
@@ -235,6 +236,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
 
   def setup_contract
     # add new contract and send invoice
+    pp "[INFO] Adding new contract..."
     new_contract = add_contract
     send_invoice(new_contract['id'])
 

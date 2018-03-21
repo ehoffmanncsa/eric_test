@@ -28,7 +28,7 @@ class TEDUpdateCoachDetailsTest < Minitest::Test
     UIActions.ted_login
     Watir::Wait.until { @browser.element(:class, 'graphs').present? }
 
-    @browser.link(:text, 'Account Settings').click
+    @browser.link(:text, 'Account Settings').click; sleep 1
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
 
     # check info loading correctly
