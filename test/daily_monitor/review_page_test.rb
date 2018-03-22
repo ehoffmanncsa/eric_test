@@ -124,7 +124,7 @@ class ReviewPageMonitorTest < Minitest::Test
 
       @eyes.open @browser, 'TS-120 Test Hamburger Menu Options and Redirs', width, height
 
-      ['Athlete Log In', 'Coach Log In', 'H.S. Coach',
+      ['Athlete Log In', 'Coach Log In', 'HS/Club Coach',
        'Parents Start Here', 'Athletes Start Here'].each do |link_text|
         @browser.get @review_page
         @browser.find_element(:class, 'fa-bars').click
@@ -144,13 +144,12 @@ class ReviewPageMonitorTest < Minitest::Test
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
 
             @eyes.screenshot "#{size.keys} view - redir to #{link_text} from hamburger menu"
-          when 'H.S. Coach'
+          when 'HS/Club Coach'
             button.click
-            assert @browser.title.match(/High School Coach Login/), @browser.title
             assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
             assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Start button not found'
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'banner_bg')]
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'video-banner')]
           when 'Parents Start Here'
             msg = 'Parent Start Here button not found in hamburger'
             assert @browser.find_element(:class, 'm-nav-start-link--parent').enabled?, msg
@@ -174,7 +173,7 @@ class ReviewPageMonitorTest < Minitest::Test
     assert login_button.enabled?, 'Login button not found'
 
     @browser.action.move_to(login_button).perform
-    ['Athlete Profile Login', 'College Coach Login', 'HS Coach Login'].each do |button|
+    ['Athlete Profile Login', 'College Coach Login', 'HS/Club Coach Login'].each do |button|
       assert @browser.find_element(link_text: button).enabled?, "#{button} option not found"
     end
 

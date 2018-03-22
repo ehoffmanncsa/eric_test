@@ -113,7 +113,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
       # Take snapshot events page with applitool eyes
-      @eyes.check_ignore "Partners page #{size.keys} view", [@browser.find_element(:class, 'field-name-field-dices')]
+      @eyes.check_ignore "Partners page #{size.keys} view", [@browser.find_element(:class, 'field-name-field-node-bucket')]
       result = @eyes.action.close(false)
       failure << "Partners page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
@@ -236,7 +236,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       subfooter = UIActions.get_subfooter
       UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
-      @eyes.check_ignore "#{size.keys} view with hamburger menu open", [@browser.find_element(:class, 'field-name-field-dices')]
+      @eyes.check_ignore "#{size.keys} view with hamburger menu open", [@browser.find_element(:class, 'field-name-field-node-bucket')]
       result = @eyes.action.close(false)
       failure << "Partners page #{size.keys} with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
