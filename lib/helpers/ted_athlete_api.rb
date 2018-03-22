@@ -14,8 +14,8 @@ module TEDAthleteApi
     # default to Awesome Volleyball org and Otto Mation PA
     @admin_api ||= TEDApi.new('admin')
     @coach_api ||= TEDApi.new('coach')
-    @org_id ||= '15'
-    @org_name ||= 'Awesome Volleyball'
+    @org_id ||= '440'
+    @org_name ||= 'Awesome Sauce'
   end
 
   def self.get_team_id
@@ -51,25 +51,32 @@ module TEDAthleteApi
     api.create(endpoint, body)['data']
   end
 
-  def self.get_athlete(athlete_id, coach = false)
+  def self.get_athlete_by_id(athlete_id, coach = false)
     endpoint = "athletes/#{athlete_id}"
     api = coach ? @coach_api : @admin_api
     api.read(endpoint)['data']
   end
 
-  def self.get_all_athletes
+  def self.get_athlete_by_email(email, coach = false)
+    all_athletes = get_all_athletes(coach)
+    all_athletes.detect { |athlete| athlete['attributes']['profile']['email'].eql? email }
+  end
+
+  def self.get_all_athletes(coach = false)
     endpoint = "organizations/#{@org_id}/athletes"
-    @admin_api.read(endpoint)['data']
+    api = coach ? @coach_api : @admin_api
+    api.read(endpoint)['data']
   end
 
-  def self.delete_athlete(id)
+  def self.delete_athlete(id, coach = false)
     endpoint = "athletes/#{id}"
-    @admin_api.delete(endpoint)['data']
+    api = coach ? @coach_api : @admin_api
+    api.delete(endpoint)['data']
   end
 
-  def self.delete_all_athletes
+  def self.delete_all_athletes(coach = false)
     athletes = get_all_athletes
-    athletes.each { |athlete| delete_athlete(athlete['id']) }
+    athletes.each { |athlete| delete_athlete(athlete['id'], coach) }
   end
 
   def self.send_invite_email(id = nil)

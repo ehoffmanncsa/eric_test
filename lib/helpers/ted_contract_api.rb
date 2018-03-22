@@ -13,8 +13,8 @@ module TEDContractApi
     # default to Awesome Volleyball org and Otto Mation PA
     @admin_api ||= TEDApi.new('admin')
     @coach_api ||= TEDApi.new('coach')
-    @org_id ||= '15'
-    @org_name ||= 'Awesome Volleyball'
+    @org_id ||= '440'
+    @org_name ||= 'Awesome Sauce'
   end
 
   def self.decode(token)

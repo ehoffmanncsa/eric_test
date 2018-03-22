@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Update Coach User Details
 
 =begin
-  Update coach Joshua Account Settings
+  Update coach Tiffany Account Settings
   First make sure setting loads with correct info
   First name, last name, email are correct
   Send in new position and new phone number
@@ -26,7 +26,7 @@ class TEDUpdateCoachDetailsTest < Minitest::Test
 
   def test_update_coach_details
     UIActions.ted_login
-    Watir::Wait.until { @browser.element(:class, 'graphs').present? }
+    Watir::Wait.until { @browser.element(:class, 'navigation').present? }
 
     @browser.link(:text, 'Account Settings').click; sleep 1
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
@@ -42,11 +42,11 @@ class TEDUpdateCoachDetailsTest < Minitest::Test
 
     failure = []
     msg = "Incorrect first name #{firstname}"
-    failure << msg unless firstname.eql? 'Joshua'
+    failure << msg unless firstname.eql? 'Tiffany'
     msg = "Incorrect last name #{lastname}"
-    failure << msg unless lastname.eql? 'Lockhart'
+    failure << msg unless lastname.eql? 'Rea'
     msg = "Incorrect email #{email}"
-    failure << msg unless email.eql? 'sniper@ncsasports.org'
+    failure << msg unless email.eql? 'ncsa.automation+ted@gmail.com'
     assert_empty failure
 
     # now make change, refresh page and check change

@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Add/Invite Previous NCSA Athlete
 
 =begin
-  This test use coach admin Joshua of Awesome Volleyball organization
+  This test use coach admin Tiffany of Awesome Sauce organization
   An existing NCSA premium athlete also needed,
   so we create one and buy champion package for him
   Coach admin add new athlete in UI via Administration page, Athlete tab
@@ -15,7 +15,7 @@ require_relative '../test_helper'
   Make sure the athlete get an invite email then delete email
   Login to clientrms as the athlete
   He should see TOS prompt and accept it
-  Because Awesome Volleyball org has all sports, contract and team for each sport
+  Because Awesome Sauce org has all sports, contract and team for each sport
   This athlete now has TED MVP membership
   Athlete status in TED is now Accepted
   Delete this athlete

@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Add/Invite Previous FREE NCSA Athlete as Premium Coach
 
 =begin
-  This test use coach admin Joshua of Awesome Volleyball organization
+  This test use coach admin Tiffany of Awesome Sauce organization
   Since there is test cases to perform these actions in UI
   We do most actions via the api here and check for athlete profile in UI
   An existing NCSA FREE athlete is needed, create one via api
@@ -16,7 +16,7 @@ require_relative '../test_helper'
   Make sure the athlete get an invite email then delete it
   Login to clientrms as the athlete
   He should see TOS prompt and accept it
-  Because Awesome Volleyball org has all sports, contract and team for each sport
+  Because Awesome Sauce org has all sports, contract and team for each sport
   This athlete now has TED champion membership (CLUB ATHLETE MEMBERSHIP FEATURES)
   Athlete status in TED is now Accepted
   Delete this athlete via api

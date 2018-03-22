@@ -5,7 +5,7 @@ fasttrack_admin:
 
 # TED coach/admin login
 ted_coach:
-  username: 'sniper@ncsasports.org'
+  username: 'ncsa.automation+ted@gmail.com'
   password: 'password'
   free_username: 'noel.ronnie1@yopmail.com'
   free_password: 'ncsa'

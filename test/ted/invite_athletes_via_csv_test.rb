@@ -23,21 +23,22 @@ class InviteCSVAthletesTest < Minitest::Test
 
     # generate new data to athletes.csv
     AtheteCSV.new.make_it
-    @names = get_athlete_names
+    @names, @emails = get_athlete_info
   end
 
   def teardown
     @browser.close
   end
 
-  def get_athlete_names
-    names = []
+  def get_athlete_info
+    names = []; emails = []
     file = CSV.read('athletes.csv'); file.shift
     file.each do |row|
       names << "#{row[0]} #{row[1]}"
+      emails << row[2]
     end
 
-    names
+    [names, emails]
   end
 
   def upload_athletes
@@ -59,7 +60,7 @@ class InviteCSVAthletesTest < Minitest::Test
 
     # make sure all uploads are successful
     messages.each do |msg|
-      failure << "#{msg}" unless msg.text.include? 'Success'
+      failure << "#{msg}" unless msg.text.match? 'Success'
     end
     assert_empty failure
 
@@ -75,17 +76,14 @@ class InviteCSVAthletesTest < Minitest::Test
     row = TED.get_row_by_name(table, name)
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal status, 'Not Sent', "Expected status #{status} to be Not Sent"
-
-    delete(row)
   end
 
-  def delete(row)
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
-    cog.click; sleep 1
-    modal = @browser.div(:class, 'modal-content')
-    modal.button(:text, 'Delete').click
-    small_modal = modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click; sleep 1
+  def delete_athletes
+    TEDAthleteApi.setup
+    @emails.each do |email|
+      athlete = TEDAthleteApi.get_athlete_by_email(email)
+      TEDAthleteApi.delete_athlete(athlete['id'])
+    end
   end
 
   def test_invite_athetes_csv
@@ -103,11 +101,11 @@ class InviteCSVAthletesTest < Minitest::Test
     assert_empty failure
 
     # make sure all new added athlete has not sent status
-    # also delete that athlete to keep table clean
-    # delete is done within check so we dont have to find row again
     @names.each do |name| 
       check_not_sent_status(name)
-      refute (@browser.html.include? name), "Found deleted athlete #{name}"
     end
+
+    # delete athletes afterward to keep table clean
+    delete_athletes
   end
 end

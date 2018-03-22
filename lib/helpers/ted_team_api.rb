@@ -10,7 +10,7 @@ module TEDTeamApi
   def self.setup
     # default to Awesome Volleyball org and Otto Mation PA
     @admin_api ||= TEDApi.new('admin')
-    @org_id ||= '15'
+    @org_id ||= '440'
   end
 
   def self.get_all_teams

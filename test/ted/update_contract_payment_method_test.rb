@@ -6,7 +6,7 @@ require_relative '../test_helper'
 
 =begin
   Require organization to have more than 1 payment account
-  Use Org Awesome Volleyball, Coach Joshua, PA Otto, contract id 409
+  Use Org Awesome Sauce, Coach Tiffany, PA Otto, contract id 409
   Collect all the existing payment account ids of the org
   Exclude the id that the contract is currently using
 
@@ -34,7 +34,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     @admin_api = TEDContractApi.admin_api
     @org_name = TEDContractApi.org_name
     @org_id = TEDContractApi.org_id
-    @contract_id = '409' # Use this contract for this scenario
+    @contract_id = '422' # Use this contract for this scenario
   end
 
   def teardown
@@ -83,7 +83,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     Watir::Wait.until { column.element(:class, 'table').present? }
     table = column.element(:class, 'table')
 
-    table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Volleyball'
+    table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Sauce'
   end
 
   def modal

@@ -6,7 +6,7 @@ require_relative '../test_helper'
 # TS-259: Remove Athlete From Organization
 
 =begin
-  This test use coach admin Joshua of Awesome Volleyball organization
+  This test use coach admin Tiffany of Awesome Sauce organization
   Coach admin add new athlete in UI via Administration page Athlete tab
   This athlete has yet to exist in C3PO database
   Make sure his name is found in Athlete table after added

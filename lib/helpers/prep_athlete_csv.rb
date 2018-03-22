@@ -6,7 +6,11 @@ class AtheteCSV
   def initialize
   	@headers = ['First Name', 'Last Name', 'Email', 'Primary Team',
   				'Graduation Year', 'Zip Code', 'Phone']
-  	@team = '18 Elite'
+  end
+
+  def get_team_name
+    TEDTeamApi.setup
+    all_teams = TEDTeamApi.get_all_teams.sample['attributes']['name']
   end
 
   def generate_data
@@ -16,6 +20,7 @@ class AtheteCSV
   	@grad_yr = MakeRandom.grad_yr
   	@zipcode = MakeRandom.number(5)
   	@phone = MakeRandom.number(10)
+    @team = get_team_name
   end
 
   def make_it

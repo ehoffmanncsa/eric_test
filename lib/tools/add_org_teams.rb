@@ -7,19 +7,19 @@ class AddTeams
   end
 
   def get_org_sports
-    endpoint = 'organizations/15/organization_sports'
+    endpoint = 'organizations/440/organization_sports'
     @api.read(endpoint)['data']
   end
 
   def create_teams
-    endpoint = 'organizations/15/teams'
+    endpoint = 'organizations/440/teams'
     sports = get_org_sports
     sports.each do |sport|
       body = {
         data: {
           attributes: { name: sport['attributes']['sport-name'] },
           relationships: {
-            organization: { data: { type: 'organizations', id: '15' } },
+            organization: { data: { type: 'organizations', id: '440' } },
             organization_sport: { 
               data: { type: 'organization_sports', id: sport['id'] }
             }

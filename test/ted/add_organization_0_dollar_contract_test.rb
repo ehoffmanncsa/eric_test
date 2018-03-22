@@ -158,7 +158,7 @@ class AddOrg0DollarContractTest < Minitest::Test
     assert (details.html.include? @org_name), 'Show page doesnt have right org name'
 
     add_contract
-    @browser.refresh
+    @browser.refresh; sleep 1
 
     # make sure contract shows up after added
     exist_contracts = @browser.div(:class, 'existing-contract')

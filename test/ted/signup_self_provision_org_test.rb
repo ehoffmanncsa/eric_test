@@ -28,8 +28,6 @@ class SignupSelfProvisionOrgTest < Minitest::Test
     @gmail = GmailCalls.new
     @gmail.get_connection
 
-    @org_name = MakeRandom.name
-
     creds = YAML.load_file('config/.creds.yml')
     @admin_username = creds['ted_admin']['username']
     @admin_password = creds['ted_admin']['password']
@@ -55,7 +53,8 @@ class SignupSelfProvisionOrgTest < Minitest::Test
     # Make sure name is unique
     # Retry if name found
     loop do
-      modal.text_field(:class, 'resizable-input').set MakeRandom.name; sleep 0.5
+      @org_name = MakeRandom.name
+      modal.text_field(:class, 'resizable-input').set @org_name; sleep 0.5
       break if (modal.div(:class, 'alert').present? && 
         modal.div(:class, 'alert').text == 'No Clubs Found with that name.')
     end

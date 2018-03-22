@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Do not include Contracts that are canceled on Dashboard
 
 =begin
-  PA Otto Mation, Org Awesome Volleyball, Coach Joshua
+  PA Otto Mation, Org Awesome Sauce, Coach Tiffany
   You won't see much activities in the UI because 
   the majority are done via API requests
   Login to TED as PA, get org AV's contract count on dashboard
@@ -34,8 +34,8 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     @admin_username = creds['ted_admin']['username']
     @admin_password = creds['ted_admin']['password']
 
-    @org_id = '15' # Using static org for this scenario
-    @org_name = 'Awesome Volleyball'
+    @org_id = '440' # Using static org for this scenario
+    @org_name = 'Awesome Sauce'
   end
 
   def teardown

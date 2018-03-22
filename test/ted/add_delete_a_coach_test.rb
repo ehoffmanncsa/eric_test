@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Add/Delete a Coach
 
 =begin
-  This test use coach admin Joshua of Awesome Volleyball organization
+  This test use coach admin Tiffany of Awesome Sauce organization
   Coach admin add new coach in UI via Administration page Staff tab
   Make sure his name is found in Staff table after added
   Class GmailCalls helps connect to ncsa.automation@gmail.com account
@@ -92,11 +92,11 @@ class TEDAddDeleteACoachTest < Minitest::Test
   def delete_coach
     UIActions.ted_login
     TED.go_to_staff_tab
-    id = TED.get_coach_id(@coach_email)
 
-    tab = @browser.div(:id, 'react-tabs-5')
-    table = tab.element(:class, 'table')
-    row = table.element(:id, "coach#{id}")
+    TEDCoachApi.setup
+    id = TEDCoachApi.get_coach_by_email(@coach_email)['id']
+
+    row = @browser.element(:id, "coach#{id}")
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
     modal = @browser.div(:class, 'modal-content')
