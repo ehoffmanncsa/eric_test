@@ -1,3 +1,6 @@
+# Browserstack key
+browserstack_key: 'sdUUPjomNV13XYurTgXg'
+
 # Fasttrack Admin login
 fasttrack_admin:
   username: 'automation'

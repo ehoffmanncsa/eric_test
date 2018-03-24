@@ -8,6 +8,7 @@ class UI
 
   def initialize hub, browser = nil
     @config = YAML.load_file('config/config.yml')
+    @creds = YAML.load_file('config/.creds.yml')
 
     self.browser = browser.nil? ? 'firefox' : browser
     case hub
@@ -52,7 +53,7 @@ class UI
 
     self.driver = Selenium::WebDriver.for(
       :remote,
-      url: 'http://tiffanyrea1:H6g4QMJ4wQwoWRwEuesF@hub-cloud.browserstack.com/wd/hub',
+      url: "http://tiffanyrea1:#{@creds['browserstack_key']}@hub-cloud.browserstack.com/wd/hub",
       desired_capabilities: caps
     )
   end
