@@ -10,11 +10,8 @@ require_relative '../test_helper'
   A new coach should be added to Awesome Sauce org, Unverified
   Coach admin Tiffany should also receive an email, verify then delete it
   Coach admin Tiffany verify new coach, get coach password from email then delete it
-  Log in as new coach, verify there is change password modal
-    check_new_coach_unverified
-    verify_coach
-    check_new_coach_can_login
-    delete_coach
+  Log in as new coach, verify there is change password modal, set password ncsa
+  Delete this new coach afterward
 =end
 
 class SignupExistingOrgTest < Minitest::Test
