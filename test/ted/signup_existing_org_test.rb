@@ -7,10 +7,13 @@ require_relative '../test_helper'
 =begin
   Signup for club from login page
   Use club name Awesome Sauce, verify alert for existing org shows up
+  Coach admin Tiffany should receive Public Coach 
+    Verification Request email, verify then delete it
   A new coach should be added to Awesome Sauce org, Unverified
-  Coach admin Tiffany should also receive an email, verify then delete it
-  Coach admin Tiffany verify new coach, get coach password from email then delete it
-  Log in as new coach, verify there is change password modal, set password ncsa
+  Coach admin Tiffany verify new coach, get coach password
+    from email then delete it
+  Log in as new coach, verify there is change password modal,
+    set password ncsa
   Delete this new coach afterward
 =end
 
@@ -84,6 +87,7 @@ class SignupExistingOrgTest < Minitest::Test
 
   def get_coach_password
     @gmail.mail_box = 'TED_Welcome'
+    @gmail.subject = 'Welcome to NCSA Team Edition'
     emails = @gmail.get_unread_emails
     msg = @gmail.parse_body(emails.last, 'password')
     password = msg[1].split(':').last.split()[0]
@@ -153,7 +157,9 @@ class SignupExistingOrgTest < Minitest::Test
     fill_out_form
 
     verify_org_exist_alert
+    check_verification_request_email
     check_new_coach_unverified
+
     verify_coach
     check_new_coach_can_login
     delete_coach
