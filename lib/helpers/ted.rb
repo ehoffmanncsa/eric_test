@@ -6,7 +6,6 @@ module TED
   def self.setup(ui_object)
     @browser = ui_object
     UIActions.setup(@browser)
-
     @api = Api.new
   end
 
@@ -14,26 +13,22 @@ module TED
     @browser.element(:class, 'sidebar')
   end
 
-  def self.wait_for_spinner
-    Watir::Wait.while { @browser.element(:class, 'fa-spinner').present? }
-  end
-
   def self.goto_roster
     # this shows all the teams
     sidebar.link(:text, 'Roster Management').click
-    wait_for_spinner
+    UIActions.wait_for_spinner
   end
 
   def self.goto_organization
     # only coach admin and PA see this
     sidebar.link(:text, 'Organization').click
-    wait_for_spinner
+    UIActions.wait_for_spinner
   end
 
   def self.goto_colleges
     # where user perform colleges search
     sidebar.link(:text, 'Colleges').click
-    wait_for_spinner
+    UIActions.wait_for_spinner
   end
 
   def self.go_to_athlete_tab
@@ -46,7 +41,7 @@ module TED
   def self.go_to_staff_tab
     # go to Roster Management -> staff
     @browser.refresh
-    wait_for_spinner
+    UIActions.wait_for_spinner
     goto_roster
     @browser.link(:text, 'Staff').click
   end
@@ -55,14 +50,14 @@ module TED
     # go to Organization -> details
     @browser.refresh; sleep 1
     goto_organization
-    wait_for_spinner
+    UIActions.wait_for_spinner
   end
 
   def self.go_to_payment_method_tab
     # go to Organization -> payment methods
     @browser.refresh; sleep 1
     goto_organization
-    wait_for_spinner
+    UIActions.wait_for_spinner
   end
 
   def self.sign_out

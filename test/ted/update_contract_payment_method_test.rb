@@ -75,7 +75,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     # in contract details change payment method
     modal.link(:text, 'Change payment method').click
     list = modal.select_list(:class, 'form-control')
-    list.select_value(new_id)
+    list.select new_id
   end
 
   def find_contract_in_ui

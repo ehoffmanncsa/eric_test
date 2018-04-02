@@ -8,6 +8,10 @@ module UIActions
     @creds = YAML.load_file('config/.creds.yml')
   end
 
+  def self.wait_for_spinner
+    Watir::Wait.while { @browser.element(:class, 'fa-spinner').present? }
+  end
+
   def self.fasttrack_login
     @browser.goto @config['pages']['fasttrack_login']
 
@@ -49,7 +53,7 @@ module UIActions
     @browser.text_field(:id, 'email').set username
     @browser.text_field(:id, 'password').set password
     @browser.button(:text, 'Sign In').click; sleep 0.5
-    Watir::Wait.while { @browser.element(:class, 'fa-spinner').present? }
+    wait_for_spinner
   end
 
   def self.get_subfooter
