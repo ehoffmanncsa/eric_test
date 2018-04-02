@@ -48,7 +48,8 @@ module UIActions
     password = password.nil? ? @creds['ted_coach']['password'] : password
     @browser.text_field(:id, 'email').set username
     @browser.text_field(:id, 'password').set password
-    @browser.button(:text, 'Sign In').click; sleep 3
+    @browser.button(:text, 'Sign In').click; sleep 0.5
+    Watir::Wait.while { @browser.element(:class, 'fa-spinner').present? }
   end
 
   def self.get_subfooter
