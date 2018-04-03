@@ -9,7 +9,7 @@ module UIActions
   end
 
   def self.wait_for_spinner
-    Watir::Wait.while { @browser.element(:class, 'fa-spinner').present? }
+    Watir::Wait.while(timeout: 120) { @browser.element(:class, 'fa-spinner').present? }
   end
 
   def self.fasttrack_login
