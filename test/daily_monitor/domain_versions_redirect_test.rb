@@ -14,7 +14,7 @@ class DomainVersionsRedirectTest < Minitest::Test
       'http://ec2-52-23-177-122.compute-1.amazonaws.com/#!/',
       'http://reigningchamps.com/',
       'http://www.athleticscholarships.com',
-      'http://www.athleteswanted.com',
+      'http://www.athleteswanted.org/',
       'https://getrecruited.ncsasports.org',
       'http://verifiedid.ncsasports.org',
       'http://allinaward.com/'
