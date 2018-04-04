@@ -3,7 +3,6 @@ require 'watir'
 
 class UI
   attr_accessor :driver
-  attr_accessor :wait
   attr_accessor :browser
 
   def initialize hub, browser = nil
