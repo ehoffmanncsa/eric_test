@@ -114,6 +114,8 @@ module TED
     admin_password = creds['ted_admin']['password']
     UIActions.ted_login(admin_username, admin_password)
 
+    # default to Awesome Sauce
+    org_id = '440' if org_id.nil?
     url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
     @browser.goto url; sleep 1
     @browser.link(:text, 'Enter Org as Coach').click; sleep 3
