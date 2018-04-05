@@ -19,9 +19,9 @@ module TED
     UIActions.wait_for_spinner
   end
 
-  def self.goto_organization
+  def self.goto_account_settings
     # only coach admin and PA see this
-    sidebar.link(:text, 'Organization').click
+    sidebar.link(:text, 'Account Settings').click
     UIActions.wait_for_spinner
   end
 
@@ -47,24 +47,23 @@ module TED
 
   def self.go_to_staff_tab
     # go to Roster Management -> staff
-    @browser.refresh
-    UIActions.wait_for_spinner
+    @browser.refresh; sleep 1
     goto_roster
     @browser.link(:text, 'Staff').click
   end
 
-  def self.go_to_details_tab
-    # go to Organization -> details
+  def self.go_to_payment_method_tab
+    # go to Account Settings -> payment methods
     @browser.refresh; sleep 1
-    goto_organization
-    UIActions.wait_for_spinner
+    goto_account_settings
+    @browser.link(:text, 'Payment Methods').click
   end
 
-  def self.go_to_payment_method_tab
-    # go to Organization -> payment methods
+  def self.go_to_organization_tab
+    # go to Account Settings -> Organization
     @browser.refresh; sleep 1
-    goto_organization
-    UIActions.wait_for_spinner
+    goto_account_settings
+    @browser.link(:text, 'Organization').click
   end
 
   def self.sign_out

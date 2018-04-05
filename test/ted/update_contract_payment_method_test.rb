@@ -66,7 +66,7 @@ class UpdateContractPaymentMethodTest < Minitest::Test
   end
 
   def update_payment_method(new_id)
-    TED.go_to_details_tab
+    TED.go_to_organization_tab
 
     # open contract details
     contract = find_contract_in_ui

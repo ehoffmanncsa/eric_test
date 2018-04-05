@@ -31,12 +31,12 @@ class FindCollegesButtonGroupTest < Minitest::Test
   end
 
   def open_filter
-    @browser.button(:text, 'Filter Results').click
+    @browser.button(:text, 'Define Search').click
     sleep 0.5
   end
 
   def apply_filters
-    @browser.button(:text, 'Apply Filters').click
+    @browser.button(:text, 'Search').click
     UIActions.wait_for_spinner
   end
 
