@@ -38,6 +38,13 @@ module TED
     @browser.link(:text, 'Athletes').click
   end
 
+  def self.go_to_team_tab
+    # go to Roster Management -> athlete
+    @browser.refresh; sleep 1
+    goto_roster
+    @browser.link(:text, 'Teams').click
+  end
+
   def self.go_to_staff_tab
     # go to Roster Management -> staff
     @browser.refresh
