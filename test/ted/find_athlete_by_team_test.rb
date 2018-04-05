@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TED Regression
+# TS-408: TED Regression
 # UI Test: Find Athlete by Team
 
 =begin
