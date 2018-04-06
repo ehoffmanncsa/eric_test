@@ -11,18 +11,12 @@ require_relative '../test_helper'
       enrollment size, tuition, region, selectivity, major
 =end
 
-class FindCollegesButtonGroupTest < Minitest::Test
+class FindCollegesButtonGroupTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     goto_find_colleges
-  end
-
-  def teardown
-    @browser.close
   end
 
   def goto_find_colleges

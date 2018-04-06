@@ -23,20 +23,14 @@ require_relative '../test_helper'
   Make sure his name is removed from Athlete table and Team Directory
 =end
 
-class PremCoachAddFreeAthlete < Minitest::Test
-  def setup    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+class PremCoachAddFreeAthlete < Common
+  def setup
+    super
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
-  end
-
-  def teardown
-    @browser.close
   end
 
   def create_athlete
@@ -67,7 +61,7 @@ class PremCoachAddFreeAthlete < Minitest::Test
           zip_code: MakeRandom.number(5)
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDAthleteApi.get_team_id } } 
+          team: { data: { type: 'teams', id: TEDAthleteApi.get_team_id } }
         },
         type: 'athletes'
       }

@@ -14,20 +14,13 @@ require_relative '../test_helper'
   Make sure these names are not shown in UI anymore
 =end
 
-class InviteCSVAthletesTest < Minitest::Test
+class InviteCSVAthletesTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
-
     # generate new data to athletes.csv
     AtheteCSV.new.make_it
     @names, @emails = get_athlete_info
-  end
-
-  def teardown
-    @browser.close
   end
 
   def get_athlete_info
@@ -101,7 +94,7 @@ class InviteCSVAthletesTest < Minitest::Test
     assert_empty failure
 
     # make sure all new added athlete has not sent status
-    @names.each do |name| 
+    @names.each do |name|
       check_not_sent_status(name)
     end
 

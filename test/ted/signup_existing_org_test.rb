@@ -7,7 +7,7 @@ require_relative '../test_helper'
 =begin
   Signup for club from login page
   Use club name Awesome Sauce, verify alert for existing org shows up
-  Coach admin Tiffany should receive Public Coach 
+  Coach admin Tiffany should receive Public Coach
     Verification Request email, verify then delete it
   A new coach should be added to Awesome Sauce org, Unverified
   Coach admin Tiffany verify new coach, get coach password
@@ -17,11 +17,9 @@ require_relative '../test_helper'
   Delete this new coach afterward
 =end
 
-class SignupExistingOrgTest < Minitest::Test
+class SignupExistingOrgTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -36,10 +34,6 @@ class SignupExistingOrgTest < Minitest::Test
     creds = YAML.load_file('config/.creds.yml')
     @admin_username = creds['ted_admin']['username']
     @admin_password = creds['ted_admin']['password']
-  end
-
-  def teardown
-    @browser.close
   end
 
   def modal

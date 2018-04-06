@@ -23,11 +23,9 @@ require_relative '../test_helper'
   Check API endpoint contract to make sure account id is updated
 =end
 
-class UpdateContractPaymentMethodTest < Minitest::Test
+class UpdateContractPaymentMethodTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     TEDContractApi.setup
@@ -35,10 +33,6 @@ class UpdateContractPaymentMethodTest < Minitest::Test
     @org_name = TEDContractApi.org_name
     @org_id = TEDContractApi.org_id
     @contract_id = '422' # Use this contract for this scenario
-  end
-
-  def teardown
-    @browser.close
   end
 
   def get_org_account_ids

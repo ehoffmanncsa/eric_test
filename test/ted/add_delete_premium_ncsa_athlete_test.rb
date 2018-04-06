@@ -22,20 +22,14 @@ require_relative '../test_helper'
   Make sure his name is removed from Athlete table and Team Directory
 =end
 
-class TEDAddPreviousAthlete < Minitest::Test
-  def setup    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+class TEDAddPreviousAthlete < Common
+  def setup
+    super
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
     @gmail.get_connection
-  end
-
-  def teardown
-    @browser.close
   end
 
   def create_athlete

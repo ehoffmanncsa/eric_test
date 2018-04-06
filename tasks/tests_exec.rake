@@ -9,20 +9,23 @@ exceptions = ['test/pos/enroll_mvp_user_freshman_test.rb',
               'test/pos/enroll_use_ACH_payment_test.rb',
               'test/ted/add_payment_method_test.rb']
 
-namespace :first_run do 
+namespace :first_run do
   desc 'execute all tests....'
-  task :exec, [:dir] do |t, args|
-    puts "[INFO] First run attempt, going to execute these tests:"
-
+  task :exec do |t, args|
+    # Read the test_dir from the command line. EX: `rake first_run:exec ted`
+    test_dir = ARGV[1]
     args.with_defaults(dir: '**')
-    if exceptions.empty?
-      test_files = FileList["test/#{args.dir}/*_test.rb"]
-    else
-      test_files = FileList["test/#{args.dir}/*_test.rb"] - exceptions
+    test_files = FileList["test/#{args.dir}/*_test.rb"]
+    if test_dir
+      test_files = FileList["test/#{test_dir}/*_test.rb"]
     end
+
+    # remove the exceptions tests from the test run
+    test_files -= exceptions
+    puts '[INFO] First run attempt, going to execute these tests:'
     puts test_files
 
-    test_files.reject! { |e| e.empty? }
+    test_files.reject! { |file| file.empty? }
     test_files.each do |file|
       puts "\n[INFO] Executing ..... #{file}"
       begin
@@ -41,7 +44,7 @@ namespace :first_run do
 
   desc 'display test run results....'
   task :result do
-    begin 
+    begin
       ruby 'calc.rb'
     rescue StandardError => e
       pp "[ERROR] Running calc.rb - #{e}"

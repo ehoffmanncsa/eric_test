@@ -3,16 +3,7 @@ require_relative '../test_helper'
 
 # TS-276: Coach Regression
 # UI Test: Coach RMS Logout Test
-class CoachRMSLogoutTest < Minitest::Test
-  def setup    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-  end
-
-  def teardown
-    @browser.close
-  end
+class CoachRMSLogoutTest < Common
 
   def test_coach_rms_logout
   	UIActions.coach_rms_login

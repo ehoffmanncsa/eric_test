@@ -13,11 +13,9 @@ require_relative '../test_helper'
   Delete org afterward
 =end
 
-class AddPaymentMethodTest < Minitest::Test
+class AddPaymentMethodTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new

@@ -50,7 +50,7 @@ b. To cleanup intall, run:
     $ brew doctor
 
  _See also [https://rvm.io/rvm/autolibs](https://rvm.io/rvm/autolibs) for brew questions etc (optional)._
- 
+
 c. Install geckodriver (for firefox, so you will need to have firefox installed in your machine as well)
 
     $ brew install geckodriver
@@ -59,62 +59,62 @@ d. Install chromedriver
 
     $ brew install chromedriver
 
-  
+
 ### Install RVM and Ruby
 a. Install RVM:
 
     $ curl -sSL https://get.rvm.io | bash
-  
+
 b. Exit terminal and restart.
 c. Install version of Ruby we use:
 
     $ rvm install <version> (Right now I'm using 2.4.0)
-    
-Eric was running into an error while installing ruby, installing openssl seems to help with the problem. To install openssl, do:
-    
-    $ brew install openssl
-  
-d. Last step:
-  
-    $ rvm get stable --auto-dotfiles 
 
-**Note:** Follow the steps in the warning it generates - add the following line to '~/.bash_profile': source ~/.profile, you can do this with this command: 
+Eric was running into an error while installing ruby, installing openssl seems to help with the problem. To install openssl, do:
+
+    $ brew install openssl
+
+d. Last step:
+
+    $ rvm get stable --auto-dotfiles
+
+**Note:** Follow the steps in the warning it generates - add the following line to '~/.bash_profile': source ~/.profile, you can do this with this command:
 
     $ echo source ~/.profile >> ~/.bash_profile
 
 e. If you have multiple ruby binaries, you can use this command to set the default to the version installed in step 3b:
-  
+
     $ rvm --default ruby-<version> (Right now I'm using 2.4.0)
 
 f. You can verify it now works correctly with the command in a new terminal:
-  
+
     $ which ruby
 
 ### Install Git
 **Note:** If you have Xcode 4, you already have Git, or skip this step if you have already installed Git in some other occasions
-  
+
 a. Install Git:
-  
+
     $ brew install git
 
 b. Run:
-  
+
     $ brew doctor
 
 c. Confirm path with:
-  
+
     $ which git
-    (should be /usr/local/bin/git) 
+    (should be /usr/local/bin/git)
 
     If not, use below command
     $ echo 'export PATH="/usr/local/bin:/usr/local/sbin:~/bin:$PATH"' >> ~/.bash_profile
 
 d. Setup configs:
-  
+
     $ git config --global user.name "Mona Lisa"
     $ git config user.name
     > Mona Lisa
-    
+
     $ git config --global user.email "email@example.com"
     $ git config --global user.email
     > email@example.com
@@ -128,37 +128,37 @@ f. To learn how to generate SSH key and add the key to your github, click [here]
 Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
 
     $ git clone https://github.com/NCSAAthleticRecruiting/qa_regression.git
-    
+
 There is a Gemfile with a collection of gems I have added on the go (of course we can always add more gems as we need in here for future use)
 
     $ cd qa_regression
     $ rvm gemset create qa (or whichever name you like it to be)
-    $ rvm --default use ruby-2.4.0@qa 
+    $ rvm --default use ruby-2.4.0@qa
     $ gem install bundler
     $ bundle install
-    
+
 There is a simple Rake task to run all test scripts that ends with "_test.rb" in this repo, all you have to do is run
 
     $ rake test
 
-`rake test` is the default rake task. You can run this task by running: 
+`rake test` is the default rake task. You can run this task by running:
 
     $ rake default
     $ rake test
     OR
-    $ rake test['<tests directory>'] ... e.g. rake test['daily_monitor']
-    
+    $ rake test <tests directory>  ... e.g. rake test daily_monitor
+
 Running rake test only will execute tests in all directories within the test/ directory. Providing a directory name will only execute tests within that directory. The work flow is: execute tests once, produce result, run all failed test one more time and give final result.
 
 If you wanna know what rake tasks are available in this repo, run:
 
     $ rake -T
-    
+
 If you only want to run a single test, go into the directory of this repo on your local machine
 
     $ cd qa_regression
     $ ruby test/<dir_name>/<test_name_test.rb>
-    
+
 If you wanna run only 1 test method of a test script, do this
 
     $ ruby test/<dir_name>/<test_name_test.rb> -n test_method_name

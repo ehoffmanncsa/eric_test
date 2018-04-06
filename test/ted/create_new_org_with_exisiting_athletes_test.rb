@@ -12,11 +12,9 @@ require_relative '../test_helper'
     shows up on coach dashboard (pre-populated)
 =end
 
-class AddOrg0DollarContractTest < Minitest::Test
+class AddOrg0DollarContractTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     C3PO.setup(@browser)
     POSSetup.setup(@browser)
     TED.setup(@browser)
@@ -30,10 +28,6 @@ class AddOrg0DollarContractTest < Minitest::Test
     @phone_2 = MakeRandom.number(3).to_s
     @phone_3 = MakeRandom.number(4).to_s
     @phone_number = @phone_1 + @phone_2 + @phone_3
-  end
-
-  def teardown
-    @browser.close
   end
 
   def create_athlete

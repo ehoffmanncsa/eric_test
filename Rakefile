@@ -12,4 +12,4 @@ Dir.glob(File.expand_path(tasks, __FILE__)) { |f| import f }
 # the work flow is: execute tests once, produce results,
 # run all failed test one more time and give final result
 task default: :test
-task :test, [:dir] => ['first_run:exec', 'first_run:result', 'second_run:exec', 'second_run:result'] do |t, arg|; end
+task :test => ['first_run:exec', 'first_run:result', 'second_run:exec', 'second_run:result'] do |t, arg|; end

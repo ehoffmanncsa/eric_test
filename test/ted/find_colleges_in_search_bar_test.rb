@@ -10,18 +10,12 @@ require_relative '../test_helper'
     - In search bar: by school name, by state
 =end
 
-class FindCollegesSearchBarTest < Minitest::Test
+class FindCollegesSearchBarTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     goto_find_colleges
-  end
-
-  def teardown
-    @browser.close
   end
 
   def goto_find_colleges

@@ -12,15 +12,13 @@ require_relative '../test_helper'
   This results in $0 value contract
   Coach admin sign TOS and authorize Credit Card
   Make sure there is popup to change password for coach
-  UI will stall here while test goes and 
+  UI will stall here while test goes and
   make sure all the associated emails are received then delete them
 =end
 
-class AddOrg0DollarContractTest < Minitest::Test
+class AddOrg0DollarContractTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -38,10 +36,6 @@ class AddOrg0DollarContractTest < Minitest::Test
     @last_name = MakeRandom.name
     @email = MakeRandom.email
     @phone = MakeRandom.number(10)
-  end
-
-  def teardown
-    @browser.close
   end
 
   def modal
