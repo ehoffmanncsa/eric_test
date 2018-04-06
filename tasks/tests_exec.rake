@@ -11,11 +11,9 @@ exceptions = ['test/pos/enroll_mvp_user_freshman_test.rb',
 
 namespace :first_run do
   desc 'execute all tests....'
-  task :exec, [:dir] do |t, args|
+  task :exec do |t, args|
     # Read the test_dir from the command line. EX: `rake first_run:exec ted`
     test_dir = ARGV[1]
-    puts "[INFO] First run attempt, going to execute these tests: #{test_dir}"
-
     args.with_defaults(dir: '**')
     test_files = FileList["test/#{args.dir}/*_test.rb"]
     if test_dir
@@ -24,8 +22,10 @@ namespace :first_run do
 
     # remove the exceptions tests from the test run
     test_files -= exceptions
+    puts '[INFO] First run attempt, going to execute these tests:'
+    puts test_files
 
-    test_files.reject! { |e| e.empty? }
+    test_files.reject! { |file| file.empty? }
     test_files.each do |file|
       puts "\n[INFO] Executing ..... #{file}"
       begin
