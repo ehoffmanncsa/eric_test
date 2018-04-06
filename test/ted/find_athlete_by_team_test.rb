@@ -15,16 +15,10 @@ require_relative '../test_helper'
     all returned athletes are in correct team
 =end
 
-class FindAthleteByTeamTest < Minitest::Test
+class FindAthleteByTeamTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
-  end
-
-  def teardown
-    @browser.close
   end
 
   def select_team

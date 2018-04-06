@@ -13,14 +13,12 @@ require_relative '../test_helper'
   Get the tempt password for new coach in this email and delete email
   Login as new coach to make sure he was successfully created
   Make sure there is prompt to reset password
-  Delete the new coach afterward and make sure his name is no longer in UI 
+  Delete the new coach afterward and make sure his name is no longer in UI
 =end
 
-class TEDAddDeleteACoachTest < Minitest::Test
+class TEDAddDeleteACoachTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -30,10 +28,6 @@ class TEDAddDeleteACoachTest < Minitest::Test
 
     @token = TEDAuth.new('coach').get_token
     @api = Api.new
-  end
-
-  def teardown
-    @browser.close
   end
 
   def add_a_coach

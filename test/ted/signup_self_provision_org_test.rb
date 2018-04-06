@@ -18,11 +18,9 @@ require_relative '../test_helper'
   Delete org after all
 =end
 
-class SignupSelfProvisionOrgTest < Minitest::Test
+class SignupSelfProvisionOrgTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -31,10 +29,6 @@ class SignupSelfProvisionOrgTest < Minitest::Test
     creds = YAML.load_file('config/.creds.yml')
     @admin_username = creds['ted_admin']['username']
     @admin_password = creds['ted_admin']['password']
-  end
-
-  def teardown
-    @browser.close
   end
 
   def modal
@@ -55,7 +49,7 @@ class SignupSelfProvisionOrgTest < Minitest::Test
     loop do
       @org_name = MakeRandom.name
       modal.text_field(:class, 'resizable-input').set @org_name; sleep 0.5
-      break if (modal.div(:class, 'alert').present? && 
+      break if (modal.div(:class, 'alert').present? &&
         modal.div(:class, 'alert').text == 'No Clubs Found with that name.')
     end
 

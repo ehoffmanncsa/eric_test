@@ -6,7 +6,7 @@ require_relative '../test_helper'
 
 =begin
   PA Otto Mation, Org Awesome Sauce, Coach Tiffany
-  You won't see much activities in the UI because 
+  You won't see much activities in the UI because
   the majority are done via API requests
   Login to TED as PA, get org AV's contract count on dashboard
   Create contract, sign and authorize it
@@ -16,11 +16,9 @@ require_relative '../test_helper'
   All emails related to this process are checked and deleted afterward
 =end
 
-class DashboardNotShowCanceledContractTest < Minitest::Test
+class DashboardNotShowCanceledContractTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -36,10 +34,6 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
 
     @org_id = '440' # Using static org for this scenario
     @org_name = 'Awesome Sauce'
-  end
-
-  def teardown
-    @browser.close
   end
 
   def get_pricing(sport_id, team_count)
@@ -74,7 +68,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     today = Time.now.strftime("%Y-%m-%d")
 
     endpoint = "organizations/#{@org_id}/organization_contracts"
-    body = { 
+    body = {
       data: {
         type: 'organization_contracts',
         attributes: {
@@ -102,8 +96,8 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
         type: 'organization_invoices',
         relationships: {
           organization: { data: { type: 'organizations', id: @org_id } },
-          organization_contract: { 
-            data: { type: 'organization_contracts', id: contract_id } 
+          organization_contract: {
+            data: { type: 'organization_contracts', id: contract_id }
           }
         }
       }
@@ -131,7 +125,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
     @decoded_data = decode_url_token(get_sign_page_url_in_email)
     @coach_id = @decoded_data['coach_id']
     @phrase = @decoded_data['phrase']
-    @contract_id = @decoded_data['organization_contract_id'] 
+    @contract_id = @decoded_data['organization_contract_id']
 
     endpoint = "organization_contracts/#{@contract_id}/accept_terms_of_service"
     body = {
@@ -142,11 +136,11 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
           phrase: @phrase
         },
         relationships: {
-          organization_contract: { 
-            data: { 
+          organization_contract: {
+            data: {
               id: @contract_id,
               type: 'organization_contracts'
-            } 
+            }
           },
           coach: { data: { id: @coach_id, type: 'coaches' } }
         }
@@ -180,7 +174,7 @@ class DashboardNotShowCanceledContractTest < Minitest::Test
           united_states: true
         },
         relationships: {
-          coach: { data: { id: @coach_id, type: 'coaches'} }, 
+          coach: { data: { id: @coach_id, type: 'coaches'} },
           organization: {
             data: { id: @org_id, type: 'organizations' }
           },

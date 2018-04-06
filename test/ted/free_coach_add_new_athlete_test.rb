@@ -20,11 +20,9 @@ require_relative '../test_helper'
   Make sure his name is removed from Athlete table and Team Directory
 =end
 
-class FreeCoachAddNewAthleteTest < Minitest::Test
+class FreeCoachAddNewAthleteTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
@@ -41,10 +39,6 @@ class FreeCoachAddNewAthleteTest < Minitest::Test
     creds = YAML.load_file('config/.creds.yml')
     @coach_username = creds['ted_coach']['free_username']
     @coach_password = creds['ted_coach']['free_password']
-  end
-
-  def teardown
-    @browser.close
   end
 
   def add_athlete

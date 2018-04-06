@@ -21,11 +21,9 @@ require_relative '../test_helper'
   Make sure his name is removed from Athlete table and Team Directory
 =end
 
-class TEDAddDeleteNewAthleteTest < Minitest::Test
-  def setup    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+class TEDAddDeleteNewAthleteTest < Common
+  def setup
+    super
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
@@ -37,10 +35,6 @@ class TEDAddDeleteNewAthleteTest < Minitest::Test
     @last_name = MakeRandom.name
     @athlete_name = "#{@first_name} #{@last_name}"
     puts "Adding athlete name: #{@athlete_name}"
-  end
-
-  def teardown
-    @browser.close
   end
 
   def table

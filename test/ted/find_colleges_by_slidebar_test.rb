@@ -12,18 +12,12 @@ require_relative '../test_helper'
     - Filter by combining both options
 =end
 
-class FindCollegesBySlideBarTest < Minitest::Test
+class FindCollegesBySlideBarTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
 
     goto_find_colleges
-  end
-
-  def teardown
-    @browser.close
   end
 
   def goto_find_colleges

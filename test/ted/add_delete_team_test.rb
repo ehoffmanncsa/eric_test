@@ -17,16 +17,10 @@ require_relative '../test_helper'
   Delete same team, verify team is deleted and not in UI
 =end
 
-class AddDeleteTeamTest < Minitest::Test
+class AddDeleteTeamTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
     TED.setup(@browser)
-  end
-
-  def teardown
-    @browser.close
   end
 
   def modal

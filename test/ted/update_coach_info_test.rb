@@ -13,15 +13,9 @@ require_relative '../test_helper'
   Make sure new position and phone number show after update
 =end
 
-class TEDUpdateCoachDetailsTest < Minitest::Test
+class TEDUpdateCoachDetailsTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-  end
-
-  def teardown
-    @browser.close
+    super
   end
 
   def test_update_coach_details
