@@ -35,7 +35,7 @@ node {
   }
 
   stage('Test') {
-    sh "docker run --name testbox -d -t --privileged testbox run.sh $APPLICATION"
+    sh "docker run --name testbox -v ${env.WORKSPACE}:/tmp --privileged testbox 'rake test $APPLICATION'"
   }
 
   stage('Clean up') {
