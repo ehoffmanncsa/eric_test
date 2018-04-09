@@ -30,12 +30,12 @@ node {
     sh 'docker run -d -t --name zalenium -p 4444:4444 \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v /tmp/videos:/home/seluser/videos \
-        -v /tmp/qa_regression:/tmp/node/tmp/qa_regression \
+        -v ${env.WORKSPACE}:/tmp/node/tmp/qa_regression \
         --privileged dosel/zalenium start'
   }
 
   stage('Test') {
-    sh "docker run --name testbox -v ${env.WORKSPACE}/'test clone':/tmp/qa_regression --privileged testbox 'rake test $APPLICATION'"
+    sh "docker run --name testbox -v ${env.WORKSPACE}:/tmp/qa_regression testbox 'rake test $APPLICATION'"
   }
 
   stage('Clean up') {
