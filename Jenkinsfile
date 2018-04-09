@@ -1,12 +1,12 @@
 #!groovy
 
-node{
-  sh 'git --no-pager show -s --format="%an -- %ae" | head -1 > committerInfo.txt'
-}
-
 def APPLICATION = params.application_name
 
 node {
+  stage('checkout') {
+    checkout scm
+  }
+
   label('Testing')
   parallel(
     'Pull elgalu/selenium': {
@@ -28,7 +28,6 @@ node {
 
   stage('Launch Zalenium') {
     sh 'docker run --rm -ti --name zalenium -p 4444:4444' \
-       '-v /var/run/docker.sock:/var/run/docker.sock' \
        '-v /tmp/videos:/home/seluser/videos' \
        '-v /tmp/qa_regression:/tmp/node/tmp/qa_regression' \
        '--privileged dosel/zalenium start'
