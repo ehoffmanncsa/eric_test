@@ -43,13 +43,14 @@ class InviteCSVAthletesTest < Common
     path = File.absolute_path('athletes.csv')
     modal = @browser.div(:class, 'modal-content')
     modal.element(:tag_name, 'input').send_keys path
-    modal.button(:text, 'Upload').click
+    modal.button(:text, 'Upload').click; sleep 4
 
     # make sure all records are uploaded
     failure = []
     Watir::Wait.until { modal.element(:class, 'csv-message').present? }
     messages = modal.elements(:class, 'csv-message')
-    assert_equal @names.length, messages.length, 'Not all athletes got uploaded'
+    msg = "Not all athletes got uploaded. Expect #{@names.length}, See #{messages.length}"
+    assert_equal @names.length, messages.length, msg
 
     # make sure all uploads are successful
     messages.each do |msg|

@@ -63,7 +63,7 @@ class TEDAddPreviousAthlete < Common
     modal.button(:text, 'Add Athlete').click; sleep 1
 
     # make sure athlete name shows up after added
-    assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
+    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def table
@@ -73,7 +73,7 @@ class TEDAddPreviousAthlete < Common
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = table.elements(:tag_name, 'tr').last
+    row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert modal.visible?
 
@@ -153,12 +153,6 @@ class TEDAddPreviousAthlete < Common
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
-  def check_team_directory
-    @browser.goto 'https://team-staging.ncsasports.org/team_directory'
-    msg = "Found deleted athlete #{@athlete_name} in team directory"
-    refute (@browser.html.include? @athlete_name), msg
-  end
-
   def test_add_delete_premium_ncsa_athlete
     create_athlete
     POSSetup.buy_package(@email, 'champion')
@@ -170,6 +164,5 @@ class TEDAddPreviousAthlete < Common
     check_athlete_accepted_status
     check_accepted_email
     delete_athlete
-    check_team_directory
   end
 end
