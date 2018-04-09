@@ -27,15 +27,14 @@ node {
   )
 
   stage('Test') {
-    sh 'docker run -d -t --name zalenium -p 4444:4444 \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /tmp/videos:/home/seluser/videos \
-        -v ${env.WORKSPACE}:/tmp/node \
-        --privileged dosel/zalenium start';
+    sh 'docker run -d --name elgalu -p 4444:24444 \
+        -v /dev/shm:/dev/shm \
+        -v /var/lib/jenkins/workspace/regression_tests:/home/seluser \
+        --privileged elgalu/selenium';
     sh "docker run --name testbox --privileged testbox 'rake test $APPLICATION'"
   }
 
   stage('Clean up') {
-    sh 'docker rm -f testbox zalenium';
+    sh 'docker rm -f testbox elgalu';
   }
 }
