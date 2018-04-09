@@ -35,7 +35,7 @@ node {
   }
 
   stage('Test') {
-    sh "docker run --name testbox -v ${env.WORKSPACE}:/tmp --privileged testbox 'rake test $APPLICATION'"
+    sh "docker run --name testbox -v ${env.WORKSPACE}/'test clone':/tmp/qa_regression --privileged testbox 'rake test $APPLICATION'"
   }
 
   stage('Clean up') {
