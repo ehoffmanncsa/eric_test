@@ -28,9 +28,10 @@ node {
 
   stage('Launch Zalenium') {
     sh 'docker run -t --name zalenium -p 4444:4444 \
-       -v /tmp/videos:/home/seluser/videos \
-       -v /tmp/qa_regression:/tmp/node/tmp/qa_regression \
-       --privileged dosel/zalenium start'
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /tmp/videos:/home/seluser/videos \
+        -v /tmp/qa_regression:/tmp/node/tmp/qa_regression \
+        --privileged dosel/zalenium start'
   }
 
   stage('Test') {
