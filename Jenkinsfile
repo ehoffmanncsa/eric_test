@@ -27,14 +27,14 @@ node {
   )
 
   stage('Launch Zalenium') {
-    sh 'docker run --rm -ti --name zalenium -p 4444:4444' \
-       '-v /tmp/videos:/home/seluser/videos' \
-       '-v /tmp/qa_regression:/tmp/node/tmp/qa_regression' \
-       '--privileged dosel/zalenium start'
+    sh 'docker run -ti --name zalenium -p 4444:4444 \
+       -v /tmp/videos:/home/seluser/videos \
+       -v /tmp/qa_regression:/tmp/node/tmp/qa_regression \
+       --privileged dosel/zalenium start'
   }
 
   stage('Test') {
-    sh "docker run --name testbox -d -it --privileged testbox 'rake test ${APPLICATION}'"
+    sh "docker run --name testbox -d -it --privileged testbox run.sh $APPLICATION"
   }
 
   stage('Clean up') {
