@@ -27,7 +27,7 @@ node {
   )
 
   stage('Launch Zalenium') {
-    sh 'docker run -t --name zalenium -p 4444:4444 \
+    sh 'docker run -d -t --name zalenium -p 4444:4444 \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v /tmp/videos:/home/seluser/videos \
         -v /tmp/qa_regression:/tmp/node/tmp/qa_regression \
