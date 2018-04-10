@@ -14,11 +14,6 @@ node {
         sh 'docker pull elgalu/selenium:latest'
       }
     },
-    'Pull dosel/zalenium': {
-      stage('Pull Zalenium') {
-        sh 'docker pull dosel/zalenium:latest'
-      }
-    },
     'Build Testbox': {
       stage('Build Testbox') {
         sh 'docker build -t testbox .'
@@ -27,7 +22,7 @@ node {
   )
 
   stage('Test') {
-    sh 'docker run -d -t --name elgalu -p 4444:24444 \
+    sh 'docker run -d -ti --name elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
         -v /var/lib/jenkins/workspace/regression_tests:/home/seluser \
         --privileged elgalu/selenium';
