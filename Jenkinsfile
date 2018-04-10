@@ -17,14 +17,20 @@ node {
 
   stage('Execute tests') {
     steps {
+
       sh 'docker build -t testbox .';
       sh "docker run --name testbox \
           -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
           --privileged testbox 'rake test $APPLICATION'"
     }
     post {
+    always {
+        step([$class: 'Mailer',
+          notifyEveryUnstableBuild: true,
+          recipients: "trea@ncsasports.org",
+          sendToIndividuals: true])
+      }
       failure {
-        mail to: trea@ncsasports.org, subject: '$APPLICATION regression failed :(';
         currentBuilt.result = 'FAILURE'
       }
     }
