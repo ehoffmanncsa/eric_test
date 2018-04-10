@@ -22,10 +22,10 @@ node {
   )
 
   stage('Test') {
-    sh 'docker run -d -ti --name elgalu -p 4444:24444 \
+    sh 'docker run -d -ti --name=elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
         -v /var/lib/jenkins/workspace/regression_tests:/home/seluser \
-        --privileged elgalu/selenium';
+        elgalu/selenium';
     sh "docker run --name testbox --privileged testbox 'rake test $APPLICATION'"
   }
 
