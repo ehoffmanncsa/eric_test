@@ -22,12 +22,13 @@ node {
   )
 
   stage('Test') {
-    sh 'docker run -d --name=elgalu -p 4444:24444 \
-        -e NOVNC=true  -e VNC_PASSWORD=secure.123 \
-        -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 --shm-size=1g \
-        -v /var/lib/jenkins/workspace/regression_tests:/home/seluser \
-        elgalu/selenium';
-    sh "docker run --name testbox --privileged testbox 'rake test $APPLICATION'"
+    sh 'docker run -d -it --name elgalu -p 4444:24444 \
+        -v /dev/shm:/dev/shm \
+        -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
+        --privileged elgalu/selenium';
+    sh "docker run --name testbox \
+        -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression
+        --privileged testbox 'rake test $APPLICATION'"
   }
 
   stage('Clean up') {
