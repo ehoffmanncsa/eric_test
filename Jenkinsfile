@@ -22,8 +22,9 @@ node {
   )
 
   stage('Test') {
-    sh 'docker run -d -ti --name=elgalu -p 4444:24444 \
-        -v /dev/shm:/dev/shm \
+    sh 'docker run -d --name=elgalu -p 4444:24444 \
+        -e NOVNC=true  -e VNC_PASSWORD=secure.123 \
+        -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 --shm-size=1g \
         -v /var/lib/jenkins/workspace/regression_tests:/home/seluser \
         elgalu/selenium';
     sh "docker run --name testbox --privileged testbox 'rake test $APPLICATION'"
