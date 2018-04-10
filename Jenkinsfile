@@ -27,7 +27,7 @@ node {
         -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
         --privileged elgalu/selenium';
     sh "docker run --name testbox \
-        -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression
+        -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
         --privileged testbox 'rake test $APPLICATION'"
   }
 
