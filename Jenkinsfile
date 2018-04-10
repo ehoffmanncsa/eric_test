@@ -25,6 +25,23 @@ node {
         --privileged testbox 'rake test $APPLICATION'"
   }
 
+  try {
+    stage('Execute tests') {
+      node {
+       def exec = build job:'Execute tests', propagate: false
+       result = exec.result
+       if (result.equals('SUCCESS')) {
+       } else {
+          error 'FAIL';
+          sh "exit 1" // this fails the stage
+       }
+      }
+    }
+  } catch (e) {
+      currentBuild.result = 'FAILURE'
+      result = 'FAIL' // make sure other exceptions are recorded as failure too
+  }
+
   stage('Clean up') {
     sh 'docker rm -f testbox elgalu';
   }
