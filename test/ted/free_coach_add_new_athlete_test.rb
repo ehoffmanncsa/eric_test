@@ -70,7 +70,7 @@ class FreeCoachAddNewAthleteTest < Common
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = table.elements(:tag_name, 'tr').last
+    row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert @browser.element(:class, 'modal-content').visible?
 
