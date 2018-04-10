@@ -15,24 +15,18 @@ node {
     checkout scm
   }
 
-  stage('Execute tests') {
-    steps {
+  stage('Build testbox') {
+    sh 'docker build -t testbox .'
+  }
 
-      sh 'docker build -t testbox .';
+  stage('Execute tests') {
+    try {
       sh "docker run --name testbox \
           -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
           --privileged testbox 'rake test $APPLICATION'"
-    }
-    post {
-    always {
-        step([$class: 'Mailer',
-          notifyEveryUnstableBuild: true,
-          recipients: "trea@ncsasports.org",
-          sendToIndividuals: true])
-      }
-      failure {
-        currentBuilt.result = 'FAILURE'
-      }
+    } catch(error) {
+        println error
+        currentBuild.result = 'FAILURE'
     }
   }
 
