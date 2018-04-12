@@ -25,7 +25,7 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def open_filter
-    @browser.button(:text, 'Define Search').click
+    @browser.button(:text, 'Define Search').click; sleep 1
     sleep 0.5
   end
 
