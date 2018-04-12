@@ -15,10 +15,6 @@ node {
     checkout scm
   }
 
-  stage('Wait until Selenium Grid is ready') {
-    sh './script/grid_check.sh'
-  }
-
   stage('Build testbox') {
     sh 'docker build -t testbox .'
   }
