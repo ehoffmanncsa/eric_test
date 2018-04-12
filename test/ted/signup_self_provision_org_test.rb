@@ -80,7 +80,7 @@ class SignupSelfProvisionOrgTest < Common
       i.send_keys 'ncsa'
     end
 
-    modal.button(:text, 'Change Password').click; sleep 200
+    modal.button(:text, 'Change Password').click; sleep 1
   end
 
   def sign_TOS
@@ -169,16 +169,16 @@ class SignupSelfProvisionOrgTest < Common
     open_club_form
     fill_out_form
     give_password
-    # sign_TOS
-    # verify_coach_unverified
-    # verify_coach_cannot_self_verify
-    #
-    # verify_org_unverfied
-    # verify_org_self_provisoned
-    #
-    # admin_verify_coach
-    # verify_org_free_signed
-    # check_email('Introduction to Team Edition')
-    # delete_org
+    sign_TOS
+    verify_coach_unverified
+    verify_coach_cannot_self_verify
+
+    verify_org_unverfied
+    verify_org_self_provisoned
+
+    admin_verify_coach
+    verify_org_free_signed
+    check_email('Introduction to Team Edition')
+    delete_org
   end
 end

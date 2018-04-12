@@ -57,7 +57,8 @@ class TEDAddDeleteNewAthleteTest < Common
     modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
     modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
     modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click; sleep 2
+    modal.button(:text, 'Add Athlete').click
+    UIActions.wait_for_modal
 
     # make sure athlete name shows up after added
     assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
@@ -72,7 +73,7 @@ class TEDAddDeleteNewAthleteTest < Common
 
     modal = @browser.element(:class, 'modal-content')
     modal.button(:text, 'Save & Invite').click
-    Watir::Wait.while { modal.present? }
+    UIActions.wait_for_modal
 
     # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent
