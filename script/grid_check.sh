@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 # Check and wait for Selenium Grid connection
 # Use http://localhost:4444/wd/hub/status locally
 
-echo 'Checking http://172.17.0.2:24444/wd/hub/status'
+echo 'Checking Selenium Grid ready status'
 condition='false'
 while [ $condition == 'false' ]; do
   curl http://172.17.0.2:24444/wd/hub/status > json

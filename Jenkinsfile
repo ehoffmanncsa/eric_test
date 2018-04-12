@@ -16,7 +16,7 @@ node {
   }
 
   stage('Wait until Selenium Grid is ready') {
-    sh 'grid_check.sh'
+    sh './script/grid_check.sh'
   }
 
   stage('Build testbox') {
