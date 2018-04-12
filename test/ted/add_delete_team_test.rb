@@ -47,8 +47,10 @@ class AddDeleteTeamTest < Common
   def delete_team(team_name)
     team = @browser.element(:text, team_name).parent
     team.element(:class, 'fa-cog').click
-    modal.element(:class, 'btn-warning').click; sleep 1
-    modal.element(:class, 'fa-times').click
+    modal.element(:class, 'btn-warning').click; sleep 2
+    if modal.present?
+      modal.element(:class, 'fa-times').click
+    end
   end
 
   def test_coachadmin_add_delete_team

@@ -97,7 +97,8 @@ module TED
     modal = @browser.div(:class, 'modal-content')
     modal.button(:text, 'Delete').click
     small_modal = modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click; sleep 1
+    small_modal.button(:text, 'Delete').click
+    UIActions.wait_for_modal
   end
 
   def self.get_org_id(prime_email)

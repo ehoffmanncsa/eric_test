@@ -12,6 +12,10 @@ module UIActions
     Watir::Wait.while(timeout: 120) { @browser.element(:class, 'fa-spinner').present? }
   end
 
+  def self.wait_for_modal
+    Watir::Wait.while { @browser.element(:class, 'modal-content').present? }
+  end
+
   def self.fasttrack_login
     @browser.goto @config['pages']['fasttrack_login']
 

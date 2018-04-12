@@ -80,12 +80,14 @@ class SignupSelfProvisionOrgTest < Common
       i.send_keys 'ncsa'
     end
 
-    modal.button(:text, 'Change Password').click; sleep 1
+    modal.button(:text, 'Change Password').click; sleep 200
   end
 
   def sign_TOS
     modal.text_field(:placeholder, 'Signature').set @org_name
-    modal.button(:text, 'I Accept').click; sleep 3
+    modal.button(:text, 'I Accept').click
+    UIActions.wait_for_modal
+    Watir::Wait.until { @browser.element(:class, 'sidebar').present? }
   end
 
   def verify_coach_unverified
@@ -167,16 +169,16 @@ class SignupSelfProvisionOrgTest < Common
     open_club_form
     fill_out_form
     give_password
-    sign_TOS
-    verify_coach_unverified
-    verify_coach_cannot_self_verify
-
-    verify_org_unverfied
-    verify_org_self_provisoned
-
-    admin_verify_coach
-    verify_org_free_signed
-    check_email('Introduction to Team Edition')
-    delete_org
+    # sign_TOS
+    # verify_coach_unverified
+    # verify_coach_cannot_self_verify
+    #
+    # verify_org_unverfied
+    # verify_org_self_provisoned
+    #
+    # admin_verify_coach
+    # verify_org_free_signed
+    # check_email('Introduction to Team Edition')
+    # delete_org
   end
 end

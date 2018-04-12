@@ -71,7 +71,8 @@ class TEDAddDeleteNewAthleteTest < Common
     assert @browser.element(:class, 'modal-content').visible?
 
     modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click; sleep 3
+    modal.button(:text, 'Save & Invite').click
+    Watir::Wait.while { modal.present? }
 
     # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent

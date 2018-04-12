@@ -157,7 +157,7 @@ class PremCoachAddFreeAthlete < Common
     refute (@browser.html.include? @athlete_name), msg
   end
 
-  def test_add_delete_premium_ncsa_athlete
+  def test_add_delete_free_ncsa_athlete
     create_athlete
     add_athlete
     check_athlete_added
