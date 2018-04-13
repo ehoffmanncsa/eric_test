@@ -10,6 +10,7 @@ while [ !${condition} ]; do
   if [ $status == 'true' ]; then
     condition=true
   fi
+  echo $condition
 done
 
 rm json
