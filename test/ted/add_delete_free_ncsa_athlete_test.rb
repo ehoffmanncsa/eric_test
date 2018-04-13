@@ -78,7 +78,7 @@ class PremCoachAddFreeAthlete < Common
   def check_athlete_added
     UIActions.ted_login
     TED.go_to_athlete_tab
-    assert_includes @browser.html, @athlete_name, 'Newly added athlete not found'
+    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def send_invite_email

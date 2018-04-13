@@ -99,8 +99,9 @@ class TEDAddDeleteACoachTest < Common
 
   def test_add_delete_coach
     add_a_coach
-    msg = "Did not find coach #{@firstname} #{@lastname}"
-    assert_includes @browser.html, "#{@firstname} #{@lastname}", msg
+    coach_name = "#{@firstname} #{@lastname}"
+    msg = "Cannot find newly added Coach #{coach_name}"
+    assert (@browser.element(:text, coach_name).present?), msg
 
     check_new_coach_can_login
     delete_coach
