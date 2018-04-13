@@ -36,7 +36,7 @@ module TED
     # go to Roster Management -> athlete
     @browser.refresh; sleep 1
     goto_roster
-    @browser.link(:text, 'Athletes').click
+    @browser.link(:text, 'Athletes').click; sleep 2
   end
 
   def self.go_to_team_tab
