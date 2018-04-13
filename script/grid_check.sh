@@ -10,3 +10,4 @@ while [ !${condition} ]; do
 done
 
 rm json
+exit 0
