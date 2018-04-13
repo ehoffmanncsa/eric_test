@@ -29,6 +29,7 @@ module TED
     # where user perform colleges search
     sidebar.link(:text, 'Colleges').click
     UIActions.wait_for_spinner
+    sleep 1.5
   end
 
   def self.go_to_athlete_tab

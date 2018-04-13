@@ -26,7 +26,7 @@ class FindCollegesBySlideBarTest < Common
   end
 
   def open_filter
-    @browser.button(:text, 'Define Search').click; sleep 1
+    @browser.button(:text, 'Define Search').click
   end
 
   def apply_filters
