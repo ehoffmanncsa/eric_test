@@ -5,6 +5,7 @@ def APPLICATION = params.application_name
 node {
   stage('Launch Selenium Grid') {
     sh 'docker pull elgalu/selenium:latest';
+    sh 'docker rm -f elgalu';
     sh 'docker run -d -it --name elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
         -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
@@ -13,6 +14,10 @@ node {
 
   stage('git checkout') {
     checkout scm
+  }
+
+  stage('Check Selenium health') {
+    sh './script/grid_check.sh'
   }
 
   stage('Build testbox') {
