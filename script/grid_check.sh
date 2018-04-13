@@ -6,8 +6,10 @@ condition=false
 while [ !${condition} ]; do
   curl http://localhost:4444/wd/hub/status > json
   cat json
-  condition=$(jq '.value.ready' json)
+  status=$(jq '.value.ready' json)
+  if [ $status == 'true' ]; then
+    condition=true
+  fi
 done
 
 rm json
-exit 0
