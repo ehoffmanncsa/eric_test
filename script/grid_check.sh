@@ -4,7 +4,7 @@
 
 echo 'Checking Selenium Grid ready status'
 condition='false'
-while [ $condition == 'false' ]; do
+while [ '$condition' -eq 'false' ]; do
   curl http://172.17.0.2:24444/wd/hub/status > json
   cat json
   condition=$(jq '.value.ready' json)
