@@ -4,10 +4,6 @@
 .DS_Store?
 **/.DS_Store
 
-# Gemfile.lock #
-################
-Gemfile.lock
-
 # Recruit emails list #
 #######################
 recruit_emails
