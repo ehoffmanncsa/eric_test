@@ -151,12 +151,6 @@ class PremCoachAddFreeAthlete < Common
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
-  def check_team_directory
-    @browser.goto 'https://team-staging.ncsasports.org/team_directory'
-    msg = "Found deleted athlete #{@athlete_name} in team directory"
-    refute (@browser.html.include? @athlete_name), msg
-  end
-
   def test_add_delete_free_ncsa_athlete
     create_athlete
     add_athlete
@@ -170,6 +164,5 @@ class PremCoachAddFreeAthlete < Common
     check_athlete_accepted_status
     check_accepted_email
     delete_athlete
-    check_team_directory
   end
 end
