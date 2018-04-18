@@ -22,7 +22,7 @@ require_relative '../test_helper'
   Make sure his name is removed from Athlete table and Team Directory
 =end
 
-class TEDAddPreviousAthlete < Common
+class TEDAddDeletePremiumAthlete < Common
   def setup
     super
     POSSetup.setup(@browser)
@@ -39,6 +39,8 @@ class TEDAddPreviousAthlete < Common
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
     @grad_yr = post_body[:recruit][:graduation_year]
+    @phone = post_body[:recruit][:athlete_phone]
+    @zipcode = post_body[:recruit][:zip]
     @athlete_name = "#{@first_name} #{@last_name}"
   end
 
@@ -47,23 +49,26 @@ class TEDAddPreviousAthlete < Common
   end
 
   def add_athlete
-    UIActions.ted_login
-    TED.go_to_athlete_tab
+    TEDAthleteApi.setup
+    body = {
+      data: {
+        attributes: {
+          email: @email,
+          first_name: @first_name,
+          graduation_year: @grad_yr,
+          last_name: @last_name,
+          phone: @phone,
+          zip_code: @zipcode
+        },
+        relationships: {
+          team: { data: { type: 'teams', id: TEDAthleteApi.get_team_id } }
+        },
+        type: 'athletes'
+      }
+    }.to_json
 
-    # find add athlete button and click
-    @browser.button(:text, 'Add Athlete').click
-
-    # fill out athlete form
-    modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
-    modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
-    modal.elements(:tag_name, 'input')[2].send_keys @grad_yr                 # graduation year
-    modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
-    modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
-    modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click; sleep 1
-
-    # make sure athlete name shows up after added
-    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
+    @new_athlete = TEDAthleteApi.add_athlete(body)
+    TEDAthleteApi.athlete_id = @new_athlete['id']
   end
 
   def table
@@ -71,6 +76,9 @@ class TEDAddPreviousAthlete < Common
   end
 
   def send_invite_email
+    UIActions.ted_login
+    TED.go_to_athlete_tab
+
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
@@ -109,13 +117,9 @@ class TEDAddPreviousAthlete < Common
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
-
-    athlete_sign_out
   end
 
   def check_athlete_premium_profile
-    # Giving staging grace period before checking premium status
-    UIActions.user_login(@email); sleep 2
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
     navbar.link(:text, 'Membership Info').click
