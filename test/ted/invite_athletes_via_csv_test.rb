@@ -36,7 +36,7 @@ class InviteCSVAthletesTest < Common
 
   def upload_athletes
     # find add multiple athletes button and click
-    @browser.button(:text, 'Add Multiple Athletes').click
+    @browser.button(:text, 'Upload Roster').click
     Watir::Wait.until { @browser.div(:class, 'modal-content').present? }
 
     # send in csv file path and upload it
