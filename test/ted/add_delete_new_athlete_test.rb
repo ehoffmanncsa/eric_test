@@ -41,16 +41,23 @@ class TEDAddDeleteNewAthleteTest < Common
     @browser.table(:class, 'table--administration')
   end
 
+  def modal
+    @browser.element(:class, 'modal-content')
+  end
+
+  def open_add_athlete_modal
+    @browser.button(:text, 'Invite Athletes').click
+    modal.element(:class, 'fa-caret-square-o-up').click
+    modal.button(:text, 'Add Athlete').click
+  end
+
   def add_athlete
     UIActions.ted_login
     TED.go_to_athlete_tab
-
-    # find add athlete button and click
-    @browser.button(:text, 'Add Athlete').click
+    open_add_athlete_modal
 
     # fill out athlete form
     Watir::Wait.until { @browser.element(:class, 'modal-content').visible? }
-    modal = @browser.element(:class, 'modal-content')
     modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
     modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
     modal.elements(:tag_name, 'input')[2].send_keys MakeRandom.grad_yr       # graduation year
