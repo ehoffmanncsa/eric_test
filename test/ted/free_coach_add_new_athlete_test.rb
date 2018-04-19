@@ -31,36 +31,22 @@ class FreeCoachAddNewAthleteTest < Common
     @gmail.mail_box = 'TED_Welcome'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    @athlete_email = MakeRandom.email
-    @first_name = MakeRandom.name
-    @last_name = MakeRandom.name
-    @athlete_name = "#{@first_name} #{@last_name}"
-
     creds = YAML.load_file('config/.creds.yml')
     @coach_username = creds['ted_coach']['free_username']
     @coach_password = creds['ted_coach']['free_password']
   end
 
   def add_athlete
-    UIActions.ted_login(@coach_username, @coach_password)
-    TED.go_to_athlete_tab
+    TEDAthleteApi.setup
+    TEDAthleteApi.coach_api = TEDApi.new('free_coach')
+    TEDAthleteApi.org_id = '50' # use free org "Test Free Org Sprint 20"
 
-    # find add athlete button and click
-    @browser.button(:text, 'Add Athlete').click
-
-    # fill out athlete form
-    Watir::Wait.until { @browser.element(:class, 'modal-content').visible? }
-    modal = @browser.element(:class, 'modal-content')
-    modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
-    modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
-    modal.elements(:tag_name, 'input')[2].send_keys MakeRandom.grad_yr       # graduation year
-    modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
-    modal.elements(:tag_name, 'input')[4].send_keys @athlete_email           # email
-    modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click; sleep 1
-
-     # make sure athlete name shows up after added
-    assert (@browser.html.include? @athlete_name), 'Cannot find newly added Athlete'
+    new_athlete = TEDAthleteApi.add_athlete(nil, true)
+    first_name = new_athlete['attributes']['profile']['first-name']
+    last_name = new_athlete['attributes']['profile']['last-name']
+    @athlete_name = "#{first_name} #{last_name}"
+    @athlete_email = new_athlete['attributes']['profile']['email']
+    pp "Added new athlete: #{@athlete_name}"
   end
 
   def table
@@ -68,6 +54,9 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def send_invite_email
+    UIActions.ted_login(@coach_username, @coach_password)
+    TED.go_to_athlete_tab
+
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
@@ -118,12 +107,6 @@ class FreeCoachAddNewAthleteTest < Common
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
-  def check_team_directory
-    @browser.goto 'https://team-staging.ncsasports.org/team_directory'
-    msg = "Found deleted athlete #{@athlete_name} in team directory"
-    refute (@browser.html.include? @athlete_name), msg
-  end
-
   def test_add_delete_new_athlete_as_free_coach
     add_athlete
     send_invite_email
@@ -131,6 +114,5 @@ class FreeCoachAddNewAthleteTest < Common
     check_athlete_free_profile
     check_athlete_accepted_status
     delete_athlete
-    check_team_directory
   end
 end

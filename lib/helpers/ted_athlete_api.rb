@@ -34,13 +34,13 @@ module TEDAthleteApi
           attributes: {
             email: MakeRandom.email,
             first_name: MakeRandom.name,
-            graduation_year: MakeRandom.year,
+            graduation_year: MakeRandom.grad_yr,
             last_name: MakeRandom.name,
             phone: MakeRandom.number(10),
             zip_code: MakeRandom.number(5)
           },
           relationships: {
-            team: { data: { type: 'teams', id: get_team_id } } 
+            team: { data: { type: 'teams', id: get_team_id } }
           },
           type: 'athletes'
         }

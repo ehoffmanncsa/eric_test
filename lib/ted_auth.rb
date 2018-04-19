@@ -19,16 +19,16 @@ class TEDAuth
   			@password = creds['ted_coach']['password']
   		when 'free_coach'
   			@username = creds['ted_coach']['free_username']
-  			@password = creds['ted_coach']['password']
+  			@password = creds['ted_coach']['free_password']
       end
 		end
 	end
 
 	def request_session
 		header = { 'Content-Type' => 'application/vnd.api+json' }
-		params = { data: { 
+		params = { data: {
 					 type: 'sessions',
-					 attributes: { email: @username, password: @password } 
+					 attributes: { email: @username, password: @password }
 				   }
 				 }.to_json
 
