@@ -73,8 +73,7 @@ class UpdateContractPaymentMethodTest < Common
   end
 
   def find_contract_in_ui
-    column = @browser.divs(:class, 'col-lg-6').last
-    Watir::Wait.until { column.element(:class, 'table').present? }
+    column = @browser.element(:text, 'Signed Contracts').parent.parent
     table = column.element(:class, 'table')
 
     table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Sauce'
