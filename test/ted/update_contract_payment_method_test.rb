@@ -67,8 +67,8 @@ class UpdateContractPaymentMethodTest < Common
     contract.button(:text, 'Details').click
 
     # in contract details change payment method
-    modal.link(:text, 'Change payment method').click
-    list = modal.select_list(:class, 'form-control')
+    TED.modal.link(:text, 'Change payment method').click
+    list = TED.modal.select_list(:class, 'form-control')
     list.select new_id
   end
 
@@ -79,14 +79,10 @@ class UpdateContractPaymentMethodTest < Common
     table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Sauce'
   end
 
-  def modal
-    @browser.div(:class, 'modal-content')
-  end
-
   def check_success_message
-    Watir::Wait.until { modal.div(:class, 'alert').present? }
+    Watir::Wait.until { TED.modal.div(:class, 'alert').present? }
     expected = 'Payment change was successful.'
-    actual = modal.div(:class, 'alert').text
+    actual = TED.modal.div(:class, 'alert').text
     assert_equal expected, actual, 'Unexpected message'
   end
 

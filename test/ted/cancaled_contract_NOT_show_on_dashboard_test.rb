@@ -191,10 +191,6 @@ class DashboardNotShowCanceledContractTest < Common
     @admin_api.create(endpoint, body)
   end
 
-  def modal
-    @browser.div(:class, 'modal-content')['data']
-  end
-
   def get_contract_count
     org = @browser.element(:text, @org_name).parent
     text = org.element(:class, 'subtitle').text

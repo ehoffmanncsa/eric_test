@@ -41,14 +41,10 @@ class TEDAddDeleteNewAthleteTest < Common
     @browser.table(:class, 'table--administration')
   end
 
-  def modal
-    @browser.element(:class, 'modal-content')
-  end
-
   def open_add_athlete_modal
     @browser.button(:text, 'Invite Athletes').click
-    modal.element(:class, 'fa-caret-square-o-up').click
-    modal.button(:text, 'Add Athlete').click
+    TED.modal.element(:class, 'fa-caret-square-o-up').click
+    TED.modal.button(:text, 'Add Athlete').click
   end
 
   def add_athlete
@@ -57,14 +53,14 @@ class TEDAddDeleteNewAthleteTest < Common
     open_add_athlete_modal
 
     # fill out athlete form
-    Watir::Wait.until { @browser.element(:class, 'modal-content').visible? }
-    modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
-    modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
-    modal.elements(:tag_name, 'input')[2].send_keys MakeRandom.grad_yr       # graduation year
-    modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
-    modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
-    modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
-    modal.button(:text, 'Add Athlete').click
+    Watir::Wait.until { TED.modal.visible? }
+    TED.modal.elements(:tag_name, 'input')[0].send_keys @first_name              # first name
+    TED.modal.elements(:tag_name, 'input')[1].send_keys @last_name               # last name
+    TED.modal.elements(:tag_name, 'input')[2].send_keys MakeRandom.grad_yr       # graduation year
+    TED.modal.elements(:tag_name, 'input')[3].send_keys MakeRandom.number(5)     # zipcode
+    TED.modal.elements(:tag_name, 'input')[4].send_keys @email                   # email
+    TED.modal.elements(:tag_name, 'input')[5].send_keys MakeRandom.number(10)    # phone
+    TED.modal.button(:text, 'Add Athlete').click
     UIActions.wait_for_modal
 
     # make sure athlete name shows up after added
@@ -76,10 +72,9 @@ class TEDAddDeleteNewAthleteTest < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
-    assert @browser.element(:class, 'modal-content').visible?
+    assert TED.modal.visible?
 
-    modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click
+    TED.modal.button(:text, 'Save & Invite').click
     UIActions.wait_for_modal
 
     # refresh the page and go back to athlete tab

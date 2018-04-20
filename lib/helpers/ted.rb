@@ -13,6 +13,10 @@ module TED
     @browser.element(:class, 'sidebar')
   end
 
+  def self.modal
+    @browser.element(:class, 'modal-content')
+  end
+
   def self.goto_roster
     # this shows all the teams
     sidebar.link(:text, 'Roster Management').click
@@ -95,7 +99,7 @@ module TED
     row = TED.get_row_by_name(table, name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
-    modal = @browser.div(:class, 'modal-content')
+
     modal.button(:text, 'Delete').click
     small_modal = modal.div(:class, 'modal-content')
     small_modal.button(:text, 'Delete').click

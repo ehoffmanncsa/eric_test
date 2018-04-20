@@ -44,10 +44,6 @@ class TEDAddDeletePremiumAthlete < Common
     @athlete_name = "#{@first_name} #{@last_name}"
   end
 
-  def modal
-    @browser.element(:class, 'modal-content')
-  end
-
   def add_athlete
     TEDAthleteApi.setup
     body = {
@@ -83,9 +79,9 @@ class TEDAddDeletePremiumAthlete < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
-    assert modal.visible?
+    assert TED.modal.visible?
 
-    modal.button(:text, 'Save & Invite').click; sleep 5
+    TED.modal.button(:text, 'Save & Invite').click; sleep 5
 
     # make sure athlete status is now pending after email sent
     status = row.elements(:tag_name, 'td')[4].text

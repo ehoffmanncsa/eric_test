@@ -38,10 +38,6 @@ class AddOrg0DollarContractTest < Common
     @phone = MakeRandom.number(10)
   end
 
-  def modal
-    @browser.div(:class, 'modal-content')
-  end
-
   def add_organization
     UIActions.ted_login(@admin_username, @admin_password)
     Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
@@ -49,14 +45,14 @@ class AddOrg0DollarContractTest < Common
 
     # open add modal and make sure it shows up
     @browser.button(:text, 'Add Organization').click
-    assert @browser.div(:class, 'modal-content'), 'Add modal not found'
+    assert TED.modal, 'Add modal not found'
 
     # select club
-    list = modal.select_list(:class, 'form-control')
+    list = TED.modal.select_list(:class, 'form-control')
     list.select 'Club'; sleep 1
 
     # fill out club info
-    inputs = modal.elements(:tag_name, 'input').to_a
+    inputs = TED.modal.elements(:tag_name, 'input').to_a
     inputs[0].send_keys @org_name
     inputs[3].send_keys 'IL'
     inputs[4].send_keys @zipcode
@@ -66,10 +62,10 @@ class AddOrg0DollarContractTest < Common
     inputs[8].send_keys @phone
 
     # select info from dropdowns in modal
-    lists = modal.select_lists(:class, 'form-control')
+    lists = TED.modal.select_lists(:class, 'form-control')
     lists[0].select 'US'; sleep 1
     lists[2].options.to_a.sample.select
-    modal.button(:text, 'Add').click; sleep 1
+    TED.modal.button(:text, 'Add').click; sleep 1
   end
 
   def add_contract
@@ -77,22 +73,22 @@ class AddOrg0DollarContractTest < Common
     @browser.button(:text, 'Create New Contract').click
 
     # fill out form
-    sports = modal.select_list(:name, 'sportType').options.to_a
-    pay_counts = modal.select_list(:name, 'numberOfPayments').options.to_a
+    sports = TED.modal.select_list(:name, 'sportType').options.to_a
+    pay_counts = TED.modal.select_list(:name, 'numberOfPayments').options.to_a
     sports.shift; sports.sample.select
     pay_counts.shift; pay_counts.sample.select
 
-    team_counts = modal.text_field(:name, 'numberOfTeams')
-    start_date = modal.element(:name, 'startDate')
-    first_pay = modal.element(:name, 'firstPaymentDate')
-    discount = modal.text_field(:name, 'discount')
-    discount_note = modal.text_field(:name, 'discountNote')
+    team_counts = TED.modal.text_field(:name, 'numberOfTeams')
+    start_date = TED.modal.element(:name, 'startDate')
+    first_pay = TED.modal.element(:name, 'firstPaymentDate')
+    discount = TED.modal.text_field(:name, 'discount')
+    discount_note = TED.modal.text_field(:name, 'discountNote')
     team_counts.set rand(1 .. 99)
 
     date = Time.now.strftime("%Y-%m-%d")
     text = "arguments[0].type='text'"
-    modal.execute_script(text, start_date)
-    modal.execute_script(text, first_pay)
+    TED.modal.execute_script(text, start_date)
+    TED.modal.execute_script(text, first_pay)
     start_date.send_keys date
     first_pay.send_keys date
 
@@ -100,7 +96,7 @@ class AddOrg0DollarContractTest < Common
     discount_note.set '0 Dollar Contract'
 
     # make sure all payments are 0
-    table = modal.table(:class, 'table')
+    table = TED.modal.table(:class, 'table')
     rows = table.rows.to_a; rows.shift
 
     failure = []
@@ -113,7 +109,7 @@ class AddOrg0DollarContractTest < Common
     end
     assert_empty failure
 
-    modal.button(:text, 'Submit').click; sleep 0.5
+    TED.modal.button(:text, 'Submit').click; sleep 0.5
   end
 
   def get_sign_page_url_in_email
@@ -165,14 +161,13 @@ class AddOrg0DollarContractTest < Common
     TED.sign_out
 
     goto_sign_page_via_url_in_email
-    @browser.text_field(:placeholder, 'Signature').set @org_name
+    @browser.text_field(:placeholder, 'Signature').set @org_name; sleep 0.5
     @browser.button(:text, 'I Accept').click
     @browser.button(:text, 'Accept').click
 
     # make sure coach is in dashboard page and change password modal prompts
-    Watir::Wait.until { @browser.element(:class, 'modal-content').present? }
-    modal = @browser.element(:class, 'modal-content')
-    assert modal, 'Set new password modal not found'
+    Watir::Wait.until { TED.modal.present? }
+    assert TED.modal, 'Set new password modal not found'
 
     # check email by subject and delete it afterward
     signed_confirm = "#{@org_name} has signed Terms of Service and authorized credit card"

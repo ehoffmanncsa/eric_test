@@ -46,6 +46,7 @@ class FreeCoachAddNewAthleteTest < Common
     last_name = new_athlete['attributes']['profile']['last-name']
     @athlete_name = "#{first_name} #{last_name}"
     @athlete_email = new_athlete['attributes']['profile']['email']
+
     pp "Added new athlete: #{@athlete_name}"
   end
 
@@ -61,10 +62,9 @@ class FreeCoachAddNewAthleteTest < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
-    assert @browser.element(:class, 'modal-content').visible?
+    assert TED.modal.visible?
 
-    modal = @browser.element(:class, 'modal-content')
-    modal.button(:text, 'Save & Invite').click; sleep 5
+    TED.modal.button(:text, 'Save & Invite').click; sleep 5
 
     # make sure athlete status is now pending after email sent
     status = row.elements(:tag_name, 'td')[4].text
@@ -99,9 +99,9 @@ class FreeCoachAddNewAthleteTest < Common
     row = TED.get_row_by_name(table, @athlete_name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
-    modal = @browser.div(:class, 'modal-content')
-    modal.button(:text, 'Delete').click
-    small_modal = modal.div(:class, 'modal-content')
+
+    TED.modal.button(:text, 'Delete').click
+    small_modal = TED.modal.div(:class, 'modal-content')
     small_modal.button(:text, 'Delete').click; sleep 1
 
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"

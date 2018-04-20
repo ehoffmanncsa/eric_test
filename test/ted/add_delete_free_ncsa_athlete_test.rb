@@ -44,10 +44,6 @@ class PremCoachAddFreeAthlete < Common
     @athlete_name = "#{@first_name} #{@last_name}"
   end
 
-  def modal
-    @browser.element(:class, 'modal-content')
-  end
-
   def add_athlete
     TEDAthleteApi.setup
     body = {

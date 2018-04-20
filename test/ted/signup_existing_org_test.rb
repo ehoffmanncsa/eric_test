@@ -36,43 +36,39 @@ class SignupExistingOrgTest < Common
     @admin_password = creds['ted_admin']['password']
   end
 
-  def modal
-    @browser.div(:class, 'modal-content')
-  end
-
   def open_club_form
     @browser.goto 'https://team-staging.ncsasports.org/sign_in'
     @browser.elements(:text, 'Sign Up')[1].click
-    assert modal, 'Add Organization modal not found'
+    assert TED.modal, 'Add Organization modal not found'
 
     # select club
-    list = modal.select_list(:class, 'form-control')
+    list = TED.modal.select_list(:class, 'form-control')
     list.select 'Club'
 
     # Make sure name is unique
     # Retry if name found
-    modal.text_field(:class, 'resizable-input').set @org_name; sleep 1
-    assert modal.div(:class, 'dropdown-menu').present?, 'No dropdown menu'
+    TED.modal.text_field(:class, 'resizable-input').set @org_name; sleep 1
+    assert TED.modal.div(:class, 'dropdown-menu').present?, 'No dropdown menu'
 
-    modal.div(:class, 'dropdown-menu').click
-    modal.button(:text, 'Select').click
+    TED.modal.div(:class, 'dropdown-menu').click
+    TED.modal.button(:text, 'Select').click
   end
 
   def fill_out_form
     # fill out club info
-    inputs = modal.elements(:tag_name, 'input').to_a
+    inputs = TED.modal.elements(:tag_name, 'input').to_a
     inputs[4].send_keys @coach_firstname
     inputs[5].send_keys @coach_lastname
     inputs[6].send_keys @coach_email
     inputs[7].send_keys MakeRandom.number(10)
 
-    modal.button(:text, 'Add').click; sleep 3
+    TED.modal.button(:text, 'Add').click; sleep 3
   end
 
   def verify_org_exist_alert
-    assert modal.div(:class, 'alert').present?, 'No alert message'
+    assert TED.modal.div(:class, 'alert').present?, 'No alert message'
 
-    alert = modal.div(:class, 'alert')
+    alert = TED.modal.div(:class, 'alert')
     text = "#{@org_name} has already joined Team Edition. " \
     "An email has been sent to the primary contact on the account " \
     "with your request to join. Questions? Call NCSA at 312-999-6176."
@@ -120,9 +116,9 @@ class SignupExistingOrgTest < Common
   def verify_coach
     # verify and give random text position
     coach_row.button(:text, 'Unverified').click
-    modal.text_field(:class, 'form-control').set MakeRandom.name
-    modal.button(:text, 'Verify').click
-    Watir::Wait.while { modal.present? }
+    TED.modal.text_field(:class, 'form-control').set MakeRandom.name
+    TED.modal.button(:text, 'Verify').click
+    Watir::Wait.while { TED.modal.present? }
 
     assert_equal coach_row.element(:class, 'text-center').text, 'Verified', 'Coach not verified'
 
@@ -132,11 +128,11 @@ class SignupExistingOrgTest < Common
 
   def check_new_coach_can_login
     UIActions.ted_login(@coach_email, get_coach_password)
-    assert modal.visible?, 'No change password modal'
+    assert TED.modal.visible?, 'No change password modal'
 
-    inputs = modal.elements(:tag_name, 'input')
+    inputs = TED.modal.elements(:tag_name, 'input')
     inputs.each { |i| i.send_keys 'ncsa' }
-    modal.button(:text, 'Change Password').click
+    TED.modal.button(:text, 'Change Password').click
   end
 
   def delete_coach

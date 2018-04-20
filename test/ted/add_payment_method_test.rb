@@ -68,12 +68,8 @@ class AddPaymentMethodTest < Common
   end
 
   def sign_TOS
-    modal.text_field(:placeholder, 'Signature').set @new_org['attributes']['name']
-    modal.button(:text, 'I Accept').click; sleep 3
-  end
-
-  def modal
-    @browser.div(:class, 'modal-content')
+    TED.modal.text_field(:placeholder, 'Signature').set @new_org['attributes']['name']
+    TED.modal.button(:text, 'I Accept').click; sleep 3
   end
 
   def add_payment
@@ -82,14 +78,14 @@ class AddPaymentMethodTest < Common
 
     fill_out_form
     select_dropdowns
-    modal.button(:text, 'Submit').click; sleep 3
+    TED.modal.button(:text, 'Submit').click; sleep 3
   end
 
   def fill_out_form
     first_name = MakeRandom.name
     last_name = MakeRandom.name
 
-    inputs = modal.elements(:tag_name, 'input')
+    inputs = TED.modal.elements(:tag_name, 'input')
     inputs[0].send_keys first_name
     inputs[1].send_keys last_name
     inputs[2].send_keys '4242424242424242'
@@ -102,7 +98,7 @@ class AddPaymentMethodTest < Common
   end
 
   def select_dropdowns
-    lists = modal.select_lists(:class, 'form-control')
+    lists = TED.modal.select_lists(:class, 'form-control')
     lists.each do |list|
       options = list.options.to_a
       options.shift
