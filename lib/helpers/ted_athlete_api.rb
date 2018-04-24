@@ -18,7 +18,7 @@ module TEDAthleteApi
     @org_name ||= 'Awesome Sauce'
   end
 
-  def self.get_team_id
+  def get_random_team_id
     TEDTeamApi.setup
     TEDTeamApi.org_id = @org_id
     random_team = TEDTeamApi.get_all_teams.sample
@@ -40,7 +40,7 @@ module TEDAthleteApi
             zip_code: MakeRandom.number(5)
           },
           relationships: {
-            team: { data: { type: 'teams', id: get_team_id } }
+            team: { data: { type: 'teams', id: get_random_team_id } }
           },
           type: 'athletes'
         }
@@ -83,5 +83,11 @@ module TEDAthleteApi
     id = @athlete_id if id.nil?
     endpoint = "athletes/#{id}/invite_single_athlete"
     @admin_api.patch(endpoint, nil)
+  end
+
+  def self.find_athletes_by_status(status)
+    endpoint = "organizations/#{@org_id}/athletes"
+    all_athletes = get_all_athletes
+    all_athletes.select { |athlete| athlete['attributes']['invite-status'] == status }
   end
 end
