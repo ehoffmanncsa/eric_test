@@ -45,13 +45,15 @@ class AthleteEvaluationTest < Common
 
   def reset_rating
     rating_area = @browser.element(:class, 'star-rating').element(:class, 'rating')
-    rating_area.element(:for, 'star1').click; sleep 1
+    rating_area.element(:for, 'star1').click
+    Watir::Wait.until { TED.modal.preset? }
     TED.modal.button(:text, 'Confirm').click; sleep 1
   end
 
   def select_2star_rating
     rating_area = @browser.element(:class, 'star-rating').element(:class, 'rating')
-    rating_area.element(:for, 'star2').click; sleep 1
+    rating_area.element(:for, 'star2').click
+    Watir::Wait.until { TED.modal.preset? }
     TED.modal.button(:text, 'Confirm').click; sleep 3
   end
 
