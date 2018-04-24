@@ -19,6 +19,7 @@ module TED
 
   def self.goto_roster
     # this shows all the teams
+    Watir::Wait.until { sidebar.present? }
     sidebar.link(:text, 'Roster Management').click
     UIActions.wait_for_spinner
   end
