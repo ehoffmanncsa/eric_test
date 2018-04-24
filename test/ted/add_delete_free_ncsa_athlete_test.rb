@@ -57,7 +57,7 @@ class PremCoachAddFreeAthlete < Common
           zip_code: MakeRandom.number(5)
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDAthleteApi.get_team_id } }
+          team: { data: { type: 'teams', id: TEDAthleteApi.get_random_team_id } }
         },
         type: 'athletes'
       }

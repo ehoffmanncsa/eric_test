@@ -57,7 +57,7 @@ class TEDAddDeletePremiumAthlete < Common
           zip_code: @zipcode
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDAthleteApi.get_team_id } }
+          team: { data: { type: 'teams', id: TEDAthleteApi.get_random_team_id } }
         },
         type: 'athletes'
       }
