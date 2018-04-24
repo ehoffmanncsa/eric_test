@@ -18,7 +18,7 @@ module TEDAthleteApi
     @org_name ||= 'Awesome Sauce'
   end
 
-  def get_random_team_id
+  def self.get_random_team_id
     TEDTeamApi.setup
     TEDTeamApi.org_id = @org_id
     random_team = TEDTeamApi.get_all_teams.sample
