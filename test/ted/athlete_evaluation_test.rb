@@ -53,7 +53,7 @@ class AthleteEvaluationTest < Common
   def select_2star_rating
     rating_area = @browser.element(:class, 'star-rating').element(:class, 'rating')
     rating_area.element(:for, 'star2').click
-    Watir::Wait.until { TED.modal.preset? }
+    Watir::Wait.until { TED.modal.present? }
     TED.modal.button(:text, 'Confirm').click; sleep 3
   end
 
