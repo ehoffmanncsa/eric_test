@@ -39,9 +39,9 @@ class AddOrg0DollarContractTest < Common
   end
 
   def add_organization
-    UIActions.ted_login(@admin_username, @admin_password)
-    Watir::Wait.until { @browser.element(:id, 'react-tabs-1').visible? }
-    Watir::Wait.until { @browser.elements(:class, 'cards')[0].visible? }
+    UIActions.ted_login(@admin_username, @admin_password); sleep 1
+    Watir::Wait.until { TED.sidebar.visible? }
+    UIActions.wait_for_spinner
 
     # open add modal and make sure it shows up
     @browser.button(:text, 'Add Organization').click
