@@ -54,7 +54,8 @@ class FindCollegesBySlideBarTest < Common
     # pick a random college, go to showpage
     college = colleges.sample
     college_name = college.element(:tag_name, 'h4').text
-    college.click; sleep 1
+    college.click
+    UIActions.wait_for_spinner
 
     college_name
   end
