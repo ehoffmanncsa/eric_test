@@ -32,4 +32,8 @@ module TEDTeamApi
     teams = get_all_teams
     teams.each { |team| delete_team(team['id']) }
   end
+
+  def self.get_random_team_id
+    get_all_teams.sample['id']
+  end
 end

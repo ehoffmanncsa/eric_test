@@ -46,6 +46,7 @@ class TEDAddDeletePremiumAthlete < Common
 
   def add_athlete
     TEDAthleteApi.setup
+    TEDTeamApi.setup
     body = {
       data: {
         attributes: {
@@ -57,7 +58,7 @@ class TEDAddDeletePremiumAthlete < Common
           zip_code: @zipcode
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDAthleteApi.get_random_team_id } }
+          team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }
         },
         type: 'athletes'
       }
@@ -144,12 +145,12 @@ class TEDAddDeletePremiumAthlete < Common
 
   def check_athlete_accepted_status
     UIActions.ted_login
-    status = TED.get_athlete_status(table, @athlete_name)
+    status = TED.get_athlete_status(@athlete_name)
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
-    TED.delete_athlete(table, @athlete_name)
+    TED.delete_athlete(@athlete_name)
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 

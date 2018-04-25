@@ -44,7 +44,7 @@ class TEDAddDeleteNewAthleteTest < Common
   def open_add_athlete_modal
     @browser.button(:text, 'Invite Athletes').click
     TED.modal.button(:text, 'Manually Add Athlete').click
-    TED.modal.button(:text, 'Add Athlete').click
+    TED.modal.button(:text, 'Add Athlete').click; sleep 0.5
   end
 
   def add_athlete
@@ -71,7 +71,7 @@ class TEDAddDeleteNewAthleteTest < Common
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = table.element(:text, @athlete_name).parent
+    row = TED.get_row_by_name(@athlete_name)
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
     assert TED.modal.visible?, 'Edit Athlete modal not found'
 
@@ -80,7 +80,7 @@ class TEDAddDeleteNewAthleteTest < Common
 
     # refresh the page and go back to athlete tab
     # make sure athlete status is now pending after email sent
-    status = TED.get_athlete_status(table, @athlete_name)
+    status = TED.get_athlete_status(@athlete_name)
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
     TED.sign_out
@@ -107,22 +107,24 @@ class TEDAddDeleteNewAthleteTest < Common
   def check_athlete_profile
     POSSetup.set_password(@email)
     @browser.element(:class, 'fa-angle-down').click
+
     navbar = @browser.element(:id, 'secondary-nav-menu')
     navbar.link(:text, 'Membership Info').click
-    container = @browser.element(:class, 'purchase-summary-js')
-    title = container.element(:class, 'title-js').text
+
+    purchase_summary = @browser.element(:class, 'purchase-summary-js')
+    title = purchase_summary.element(:class, 'title-js').text
     expect_str = 'CLUB ATHLETE MEMBERSHIP FEATURES'
     assert_equal expect_str, title, "#{title} not match expected #{expect_str}"
   end
 
   def check_athlete_accepted_status
     UIActions.ted_login
-    status = TED.get_athlete_status(table, @athlete_name)
+    status = TED.get_athlete_status(@athlete_name)
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
-    TED.delete_athlete(table, @athlete_name)
+    TED.delete_athlete(@athlete_name)
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 

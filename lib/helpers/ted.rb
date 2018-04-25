@@ -80,24 +80,24 @@ module TED
     sidebar.link(:text, 'End Impersonation').click; sleep 1
   end
 
-  def self.get_row_by_name(table, name)
+  def self.get_row_by_name(name)
     if !(@browser.html.include? name)
       temp = name.split(' ')
       temp.each { |word| word.capitalize! }
       name = temp.join(' ')
     end
 
-    table.element(:text, name).parent
+    @browser.element(:text, name).parent
   end
 
-  def self.get_athlete_status(table, name = nil)
+  def self.get_athlete_status(name = nil)
     go_to_athlete_tab
-    row = get_row_by_name(table, name)
+    row = get_row_by_name(name)
     row.elements(:tag_name, 'td')[4].text # this is status
   end
 
-  def self.delete_athlete(table, name)
-    row = TED.get_row_by_name(table, name)
+  def self.delete_athlete(name)
+    row = TED.get_row_by_name(name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
 
@@ -105,20 +105,6 @@ module TED
     small_modal = modal.div(:class, 'modal-content')
     small_modal.button(:text, 'Delete').click
     UIActions.wait_for_modal
-  end
-
-  def self.get_org_id(prime_email)
-    # using Otto Mation admin token
-    header = { 'Session-Token' => TEDAuth.new('admin').get_token }
-    url = 'https://qa.ncsasports.org/api/team_edition/partners/1/organizations'
-    resp_code, resp = @api.pget(url, header)
-    msg = "[ERROR] #{resp_code} GET api/team_edition/partners/1/organizations"
-    raise msg unless resp_code.eql? 200
-
-    data = resp['data']
-    org = data.detect { |d| d['attributes']['email'].eql? prime_email }
-
-    org['id']
   end
 
   def self.impersonate_org(org_id = nil)

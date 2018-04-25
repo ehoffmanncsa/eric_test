@@ -10,6 +10,7 @@ module UIActions
 
   def self.wait_for_spinner
     Watir::Wait.while(timeout: 120) { @browser.element(:class, 'fa-spinner').present? }
+    sleep 1
   end
 
   def self.wait_for_modal

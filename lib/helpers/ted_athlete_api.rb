@@ -18,17 +18,11 @@ module TEDAthleteApi
     @org_name ||= 'Awesome Sauce'
   end
 
-  def self.get_random_team_id
-    TEDTeamApi.setup
-    TEDTeamApi.org_id = @org_id
-    random_team = TEDTeamApi.get_all_teams.sample
-
-    random_team['id']
-  end
-
   def self.add_athlete(body = nil, coach = false)
     endpoint = "organizations/#{@org_id}/athletes"
     if body.nil?
+      TEDTeamApi.setup
+      TEDTeamApi.org_id = @org_id
       body = {
         data: {
           attributes: {
@@ -40,7 +34,7 @@ module TEDAthleteApi
             zip_code: MakeRandom.number(5)
           },
           relationships: {
-            team: { data: { type: 'teams', id: get_random_team_id } }
+            team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }
           },
           type: 'athletes'
         }
