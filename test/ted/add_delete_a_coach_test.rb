@@ -31,27 +31,30 @@ class TEDAddDeleteACoachTest < Common
   end
 
   def add_a_coach
+    firstname = MakeRandom.name
+    lastname = MakeRandom.name
+    phone = MakeRandom.number(10)
+    position = MakeRandom.name
+
+    @coach_name = "#{firstname} #{lastname}"
     @coach_email = MakeRandom.email
-    @phone = MakeRandom.number(10)
-    @firstname = MakeRandom.name
-    @lastname = MakeRandom.name
-    @position = MakeRandom.name
-    pp "Adding coach name: #{@firstname} #{@lastname}"
+    pp "Adding coach name: #{@coach_name}"
 
     UIActions.ted_login
     TED.go_to_staff_tab
 
     # find add staff button and click to open modal
     # fill out staff info in modal
-    @browser.button(:text, 'Add Staff').click; sleep 2
-    Watir::Wait.until { TED.modal.present? }
+    @browser.button(:text, 'Add Staff').click
+    Watir::Wait.until { TED.modal.present? }; sleep 0.5
     inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[0].send_keys @firstname
-    inputs[1].send_keys @lastname
+    inputs[0].send_keys firstname
+    inputs[1].send_keys lastname
     inputs[2].send_keys @coach_email
-    inputs[3].send_keys @phone
-    inputs[4].send_keys @position
-    TED.modal.button(:text, 'Add Coach').click; sleep 5
+    inputs[3].send_keys phone
+    inputs[4].send_keys position
+    TED.modal.button(:text, 'Add Coach').click
+    UIActions.wait_for_modal
   end
 
   def get_coach_password
@@ -83,12 +86,9 @@ class TEDAddDeleteACoachTest < Common
 
   def delete_coach
     UIActions.ted_login
-    TED.go_to_staff_tab
+    TED.go_to_staff_tab; sleep 0.5
 
-    TEDCoachApi.setup
-    id = TEDCoachApi.get_coach_by_email(@coach_email)['id']
-
-    row = @browser.element(:id, "coach#{id}")
+    row = TED.get_row_by_name(@coach_name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
     TED.modal.button(:text, 'Delete Staff Member').click; sleep 1
@@ -96,13 +96,12 @@ class TEDAddDeleteACoachTest < Common
 
   def test_add_delete_coach
     add_a_coach
-    coach_name = "#{@firstname} #{@lastname}"
-    msg = "Cannot find newly added Coach #{coach_name}"
-    assert (@browser.element(:text, coach_name).present?), msg
+    msg = "Cannot find newly added Coach #{@coach_name}"
+    assert (@browser.element(:text, @coach_name).present?), msg
 
     check_new_coach_can_login
     delete_coach
     msg = 'Found deleted coach in UI'
-    refute (@browser.html.include? "#{@firstname} #{@lastname}"), msg
+    refute (@browser.html.include? "#{@coach_name}"), msg
   end
 end
