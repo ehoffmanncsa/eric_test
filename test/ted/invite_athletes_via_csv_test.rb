@@ -61,12 +61,8 @@ class InviteCSVAthletesTest < Common
     TED.modal.button(:text, 'Finished').click
   end
 
-  def table
-    @browser.table(:class, 'table--administration')
-  end
-
   def check_not_sent_status(name)
-    row = TED.get_row_by_name(table, name)
+    row = TED.get_row_by_name(name)
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal status, 'Not Sent', "Expected status #{status} to be Not Sent"
   end

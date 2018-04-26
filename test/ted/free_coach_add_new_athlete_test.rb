@@ -90,13 +90,13 @@ class FreeCoachAddNewAthleteTest < Common
   def check_athlete_accepted_status
     UIActions.ted_login(@coach_username, @coach_password)
     TED.go_to_athlete_tab
-    row = TED.get_row_by_name(table, @athlete_name)
+    row = TED.get_row_by_name(@athlete_name)
     status = row.elements(:tag_name, 'td')[4].text
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
-    row = TED.get_row_by_name(table, @athlete_name)
+    row = TED.get_row_by_name(@athlete_name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
     cog.click; sleep 1
 
