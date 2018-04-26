@@ -193,7 +193,7 @@ class DashboardNotShowCanceledContractTest < Common
 
   def filter_premium_signed_orgs
     list = @browser.select_list(:class, 'form-control')
-    list.select "Premium Signed"
+    list.select 'Premium Signed'
   end
 
   def get_contract_count
