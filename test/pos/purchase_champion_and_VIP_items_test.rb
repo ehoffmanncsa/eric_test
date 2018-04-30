@@ -3,11 +3,9 @@ require_relative '../test_helper'
 
 # TS-65: POS Regression
 # UI Test: Purchase Champion + VIP Item (any grad year)
-class PurchaseChampionAndVIPItemsTests < Minitest::Test
+class PurchaseChampionAndVIPItemsTests < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
     # add a new recruit, get back his email address
     _post, post_body = RecruitAPI.new.ppost
@@ -18,7 +16,7 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def test_purchase_champion_and_VIP_items
@@ -33,7 +31,7 @@ class PurchaseChampionAndVIPItemsTests < Minitest::Test
     failure << 'Champion Membership Features not found' unless title.match(/champion membership features/)
     failure << 'Champion Membership Features items not found' if box1.elements(:tag_name, 'li').to_a.empty?
 
-    box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')     
+    box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
 
     assert_empty failure

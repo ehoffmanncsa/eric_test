@@ -4,14 +4,14 @@ require_relative 'make_random'
 
 # TS-38
 # To add new recruit via Fasttrack and return his email and username
-class FasttrackAddNewRecruit
+class FasttrackAddNewRecruit < Common
   def initialize
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-
     @recruit_email = "automation#{SecureRandom.hex(2)}@ncsasports.org"
     @firstName = MakeRandom.name; @lastName = MakeRandom.name
+  end
+
+  def setup
+    super
   end
 
   def goto_recruit_info_form
@@ -35,7 +35,7 @@ class FasttrackAddNewRecruit
     %w[homePhonePh1 homePhonePh2 parent1PhonePh1 parent1PhonePh2].each do |attr_name|
       @browser.text_field(:name, attr_name).set MakeRandom.number(3)
     end
-    
+
     %w[homePhonePh3 parent1PhonePh3].each do |attr_name|
       @browser.text_field(:name, attr_name).set MakeRandom.number(4)
     end
@@ -103,6 +103,7 @@ class FasttrackAddNewRecruit
   end
 
   def main(enroll_yr = nil)
+    setup
     goto_recruit_info_form
     fill_in_configs
     select_attendee

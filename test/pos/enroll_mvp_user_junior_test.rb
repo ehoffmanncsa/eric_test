@@ -3,11 +3,9 @@ require_relative '../test_helper'
 
 # TS-60: POS Regression
 # UI Test: Enroll as a MVP User - Junior
-class EnrollMVPJuniorTest < Minitest::Test
+class EnrollMVPJuniorTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
     # add a new junior recruit, get back his email address
     @enroll_yr = 'junior'; @package = 'mvp'
@@ -20,7 +18,7 @@ class EnrollMVPJuniorTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def add_mvp_junior
@@ -52,7 +50,7 @@ class EnrollMVPJuniorTest < Minitest::Test
     actual_first_pymt = elem[0].text.gsub!(/[^0-9|\.]/, '').to_i
     actual_remain_balance = boxes[2].element(:class, 'primary').text.gsub!(/[^0-9|\.]/, '').to_i
     actual_package = elem[1].text.split(' ')[1].downcase
-    
+
     assert_equal @expect_first_pymt, actual_first_pymt, 'Incorrect first payment shown'
     assert_equal expect_remain_balance, actual_remain_balance, 'Incorrect remaining balance shown'
     assert_equal @package, actual_package, 'Incorrect premium package shown'

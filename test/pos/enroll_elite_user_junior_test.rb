@@ -3,11 +3,9 @@ require_relative '../test_helper'
 
 # TS-56: POS Regression
 # UI Test: Enroll as a Elite User - Junior
-class EnrollEliteJuniorTest < Minitest::Test
+class EnrollEliteJuniorTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
     # add a new junior recruit, get back his email address
     @enroll_yr = 'junior'; @package = 'elite'
@@ -20,7 +18,7 @@ class EnrollEliteJuniorTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def add_elite_junior

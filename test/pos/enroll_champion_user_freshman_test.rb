@@ -3,11 +3,9 @@ require_relative '../test_helper'
 
 # TS-54: POS Regression
 # UI Test: Enroll as a Champion User - Freshman
-class EnrollChampionFreshmanTest < Minitest::Test
+class EnrollChampionFreshmanTest < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
     # add a new freshman recruit, get back his email address
     @enroll_yr = 'freshman'; @package = 'champion'
@@ -20,7 +18,7 @@ class EnrollChampionFreshmanTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def add_champion_freshman

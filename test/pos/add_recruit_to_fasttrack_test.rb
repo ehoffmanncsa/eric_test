@@ -3,18 +3,11 @@ require_relative '../test_helper'
 
 # TS-38: POS Regression
 # UI Test:  How to Add New Recruit to Fasttrack
-class AddRecruitToFasttrackTest < Minitest::Test
+class AddRecruitToFasttrackTest < Common
   def setup
     # add a new recruit and get back his email address and name
     @recruit_email, @firstName, @lastName = FasttrackAddNewRecruit.new.main
-
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-  end
-
-  def teardown
-    @browser.close
+    super
   end
 
   # verify the new recruit we added earlier can be found

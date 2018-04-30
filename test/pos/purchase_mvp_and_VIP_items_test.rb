@@ -3,11 +3,9 @@ require_relative '../test_helper'
 
 # TS-67: POS Regression
 # UI Test: Purchase MVP + VIP Item (any grad year)
-class PurchaseMVPAndVIPItemsTests < Minitest::Test
+class PurchaseMVPAndVIPItemsTests < Common
   def setup
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
     # add a new recruit, get back his email address
     # cannot add lead with random grad year until packages discount calculation is fixed for any year lower than senior
@@ -16,13 +14,13 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def test_purchase_mvp_and_VIP_items
     POSSetup.setup(@browser)
     POSSetup.buy_combo(@recruit_email, 'mvp')
-    
+
     UIActions.user_login(@recruit_email)
     @browser.element(:class, 'fa-angle-down').click
     @browser.element(:id, 'secondary-nav-menu').link(:text, 'Membership Info').click
@@ -33,9 +31,9 @@ class PurchaseMVPAndVIPItemsTests < Minitest::Test
     failure << 'MVP Membership Features not found' unless title.match(/mvp membership features/)
     failure << 'MVP Membership Features items not found' if box1.elements(:tag_name, 'li').to_a.empty?
 
-    box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')     
+    box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
-    
+
     assert_empty failure
   end
 end
