@@ -191,13 +191,13 @@ class DashboardNotShowCanceledContractTest < Common
     @admin_api.create(endpoint, body)
   end
 
-  def filter_premium_signed_orgs
-    list = @browser.select_list(:class, 'form-control')
-    list.select 'Premium Signed'
+  def search_for_org
+    @browser.input(:type, 'search').send_keys @org_name
+    @browser.button(:text, 'Search').click
   end
 
   def get_contract_count
-    filter_premium_signed_orgs
+    search_for_org
     org = @browser.element(:text, @org_name).parent
     text = org.element(:class, 'subtitle').text
     arr = text.split(' ')
