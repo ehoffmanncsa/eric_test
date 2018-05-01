@@ -116,6 +116,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capybara (= 3.0.2)
   csv
   eyes_selenium
   gmail
