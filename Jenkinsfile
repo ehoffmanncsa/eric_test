@@ -14,6 +14,7 @@ node {
     sh 'docker run -d -it --name elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
         -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
+        -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
         --privileged elgalu/selenium'
   }
 
