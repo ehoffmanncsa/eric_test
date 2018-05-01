@@ -9,7 +9,7 @@ class TEDApi
   def initialize(role = nil, token = nil)
     @role = role
     token = token.nil? ? get_token : token
-    @base_url = 'https://qa.ncsasports.org/api/team_edition'
+    @base_url = Default.env_config['ted']['api_base']
     @header = { 'Session-Token' => token, 'Content-Type' => 'application/vnd.api+json' }
     @api = Api.new
   end

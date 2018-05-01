@@ -26,7 +26,7 @@ class TEDAddDeleteACoachTest < Common
     @gmail.mail_box = 'TED_Welcome'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    @token = TEDAuth.new('coach').get_token
+    @token = TEDAuth.new('prem_coach').get_token
     @api = Api.new
   end
 

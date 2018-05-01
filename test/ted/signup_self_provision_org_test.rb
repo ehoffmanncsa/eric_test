@@ -26,9 +26,8 @@ class SignupSelfProvisionOrgTest < Common
     @gmail = GmailCalls.new
     @gmail.get_connection
 
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
+    @partner_username = Default.env_config['ted']['partner_username']
+    @partner_password = Default.env_config['ted']['partner_password']
   end
 
   def teardown
@@ -108,7 +107,7 @@ class SignupSelfProvisionOrgTest < Common
   end
 
   def verify_org_unverfied
-    UIActions.ted_login(@admin_username, @admin_password)
+    UIActions.ted_login(@partner_username, @partner_password)
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
 
     list = @browser.select_list(:class, 'form-control')
@@ -141,7 +140,7 @@ class SignupSelfProvisionOrgTest < Common
   end
 
   def verify_org_free_signed
-    UIActions.ted_login(@admin_username, @admin_password)
+    UIActions.ted_login(@partner_username, @partner_password)
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
 
     list = @browser.select_list(:class, 'form-control')

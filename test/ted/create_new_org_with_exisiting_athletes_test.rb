@@ -77,7 +77,7 @@ class AddOrg0DollarContractTest < Common
   end
 
   def org_body
-    sport_id = YAML.load_file('config/config.yml')['sport_ids'].sample.to_s
+    sport_id = Default.static_info['sport_ids'].sample.to_s
     body = {
       data: {
         attributes: {

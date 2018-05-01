@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Daily Monitor - Cost Page
 class CostPageMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @viewports = [
       { ipad: config['viewport']['ipad'] },
       { iphone: config['viewport']['iphone'] },

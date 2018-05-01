@@ -30,10 +30,6 @@ class SignupExistingOrgTest < Common
     @coach_lastname = MakeRandom.name
     @coach_name = "#{@coach_firstname} #{@coach_lastname}"
     @coach_email = MakeRandom.email
-
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
   end
 
   def teardown
@@ -41,7 +37,7 @@ class SignupExistingOrgTest < Common
   end
 
   def open_club_form
-    @browser.goto 'https://team-staging.ncsasports.org/sign_in'
+    @browser.goto Default.env_config['ted']['login_page']
     @browser.elements(:text, 'Sign Up')[1].click
     assert TED.modal, 'Add Organization modal not found'
 
@@ -141,8 +137,8 @@ class SignupExistingOrgTest < Common
 
   def delete_coach
     TEDCoachApi.setup
-
     coach = TEDCoachApi.get_coach_by_email(@coach_email)
+
     TEDCoachApi.delete_coach(coach['id'])
   end
 

@@ -29,7 +29,7 @@ class UpdateContractPaymentMethodTest < Common
     TED.setup(@browser)
 
     TEDContractApi.setup
-    @admin_api = TEDContractApi.admin_api
+    @partner_api = TEDContractApi.partner_api
     @org_name = TEDContractApi.org_name
     @org_id = TEDContractApi.org_id
     @contract_id = '422' # Use this contract for this scenario
@@ -41,7 +41,7 @@ class UpdateContractPaymentMethodTest < Common
 
   def get_org_account_ids
     endpoint = "organizations/#{@org_id}/organization_accounts"
-    data = @admin_api.read(endpoint)['data']
+    data = @partner_api.read(endpoint)['data']
     ids = []
     data.each { |d| ids << d['id'] }
 
@@ -50,7 +50,7 @@ class UpdateContractPaymentMethodTest < Common
 
   def get_contract_account_id
     endpoint = "organization_contracts/#{@contract_id}"
-    data = @admin_api.read(endpoint)['data']
+    data = @partner_api.read(endpoint)['data']
 
     data['attributes']['payment-account-id']
   end

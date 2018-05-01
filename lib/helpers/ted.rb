@@ -108,15 +108,16 @@ module TED
   end
 
   def self.impersonate_org(org_id = nil)
-    creds = YAML.load_file('config/.creds.yml')
-    admin_username = creds['ted_admin']['username']
-    admin_password = creds['ted_admin']['password']
-    UIActions.ted_login(admin_username, admin_password)
+    partner_username = Default.env_config['ted']['partner_username']
+    partner_password = Default.env_config['ted']['partner_password']
+    UIActions.ted_login(partner_username, partner_password)
 
     # default to Awesome Sauce
     org_id = '440' if org_id.nil?
     url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
-    @browser.goto url; sleep 1
-    @browser.link(:text, 'Enter Org as Coach').click; sleep 3
+    @browser.goto url
+    UIActions.wait_for_spinner
+    @browser.link(:text, 'Enter Org as Coach').click
+    UIActions.wait_for_spinner
   end
 end

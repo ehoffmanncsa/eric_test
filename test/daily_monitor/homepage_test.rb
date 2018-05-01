@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Daily Monitor - Homepage
 class HomePageMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @viewports = [
       { ipad: config['viewport']['ipad'] },
       { iphone: config['viewport']['iphone'] },
@@ -46,11 +46,11 @@ class HomePageMonitorTest < Minitest::Test
       subfooter = UIActions.get_subfooter
       UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
 
-      # Snapshot Homepage with applitool 
+      # Snapshot Homepage with applitool
       @eyes.screenshot "Home page #{size.keys} view"
       # prevent eyes from closing before done looping
       result = @eyes.action.close(false)
-      failure << "Home page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0    
+      failure << "Home page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -99,12 +99,12 @@ class HomePageMonitorTest < Minitest::Test
 
       %w[Parents Athletes].each do |button|
         @browser.get @homepage
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found" 
+        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
 
         @browser.find_element(link_text: "#{button} Start Here").click
         assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
-        @eyes.screenshot "#{button} recruiting form #{size.keys} view"        
+        @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
       result = @eyes.action.close(false)

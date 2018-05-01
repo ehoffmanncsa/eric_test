@@ -1,0 +1,47 @@
+# WWW pages
+pages:
+  contact_us_page: 'http://www.ncsasports.org/contact-us-address'
+  cost_page: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
+  events_page: 'http://www.ncsasports.org/events'
+  free_demo_request: 'http://www.ncsasports.org/team/getting-started-form'
+  home_page: 'http://www.ncsasports.org/'
+  partners_page: 'http://www.ncsasports.org/who-is-ncsa/how-ncsa-works/ncsas-partners'
+  press_media_page: 'http://www.ncsasports.org/about-us/press-media'
+  review_page: 'http://www.ncsasports.org/ncsa-reviews'
+  site_map: 'http://www.ncsasports.org/sitemap.xml'
+  sport_engine_webform: 'http://www.ncsasports.org/lp/sports-engine-team-edition-getting-started-form'
+  ted_www_page: 'http://www.ncsasports.org/team'
+
+# Clientrms:
+clientrms:
+  login_page:
+
+# Fasttrack Admin login
+fasttrack:
+  login_page:
+  admin_username:
+  admin_password:
+
+# TED coach/partner login
+ted:
+  login_page: 'https://team.ncsasports.org/sign_in'
+  prem_username:
+  prem_password:
+  free_username:
+  free_password:
+  no_content_username:
+  no_content_password:
+  partner_username:
+  partner_password:
+  api_base:
+
+# sample video user login
+video_user:
+  username:
+  password:
+
+# Coach RMS
+coach_rms:
+  login_page:
+  username:
+  password:

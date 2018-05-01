@@ -4,8 +4,7 @@ require_relative '../../test/test_helper'
 module UIActions
   def self.setup(browser)
     @browser = browser
-    @config = YAML.load_file('config/config.yml')
-    @creds = YAML.load_file('config/.creds.yml')
+    @config = Default.env_config
   end
 
   def self.wait_for_spinner
@@ -18,13 +17,13 @@ module UIActions
   end
 
   def self.fasttrack_login
-    @browser.goto @config['pages']['fasttrack_login']
+    @browser.goto @config['fasttrack']['login_page']
 
-    @browser.text_field(:id, 'username').set @creds['fasttrack_admin']['username']
-    @browser.text_field(:id, 'password').set @creds['fasttrack_admin']['password']
+    @browser.text_field(:id, 'username').set @config['fasttrack']['admin_username']
+    @browser.text_field(:id, 'password').set @config['fasttrack']['admin_password']
     @browser.button(:name, 'submit').click
 
-    @browser.goto @config['pages']['fasttrack_login']
+    @browser.goto @config['fasttrack']['login_page']
 
     #waiting for the right title
     begin
@@ -36,7 +35,7 @@ module UIActions
 
   def self.user_login(email_addr, pwd = nil)
     password = pwd ? pwd : 'ncsa'
-    @browser.goto @config['pages']['user_login']
+    @browser.goto @config['clientrms']['login_page']
 
     @browser.text_field(:id, 'user_account_login').set email_addr
     @browser.text_field(:id, 'user_account_password').set password
@@ -51,10 +50,10 @@ module UIActions
   end
 
   def self.ted_login(username = nil, password = nil)
-    @browser.goto @config['TED_coach_app']['login_staging']
+    @browser.goto @config['ted']['login_page']
 
-    username = username.nil? ? @creds['ted_coach']['username'] : username
-    password = password.nil? ? @creds['ted_coach']['password'] : password
+    username = username.nil? ? @config['ted']['prem_username'] : username
+    password = password.nil? ? @config['ted']['prem_password'] : password
     @browser.text_field(:id, 'email').set username
     @browser.text_field(:id, 'password').set password
     @browser.button(:text, 'Sign In').click; sleep 0.5
@@ -86,7 +85,7 @@ module UIActions
   end
 
   def self.coach_rms_login(username = nil, password = nil)
-    @browser.goto @config['pages']['coach_rms_login']
+    @browser.goto @config['coach_rms']['login_page']
 
     username = username.nil? ? @creds['coach_rms']['username'] : username
     password = password.nil? ? @creds['coach_rms']['password'] : password

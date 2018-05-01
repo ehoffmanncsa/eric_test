@@ -5,14 +5,14 @@ module TEDContractApi
   class << self
     attr_accessor :org_id
     attr_accessor :org_name
-    attr_accessor :admin_api
+    attr_accessor :partner_api
     attr_accessor :coach_api
   end
 
   def self.setup
     # default to Awesome Volleyball org and Otto Mation PA
-    @admin_api ||= TEDApi.new('admin')
-    @coach_api ||= TEDApi.new('coach')
+    @partner_api ||= TEDApi.new('partner')
+    @coach_api ||= TEDApi.new('prem_coach')
     @org_id ||= '440'
     @org_name ||= 'Awesome Sauce'
   end
@@ -23,7 +23,7 @@ module TEDContractApi
 
   def self.get_pricing(sport_id, team_count)
     endpoint = "sports/#{sport_id}/pricing_tiers"
-    pricing_tiers = @admin_api.read(endpoint)['data']
+    pricing_tiers = @partner_api.read(endpoint)['data']
 
     tier = nil
     if (team_count.to_i.between?(1, 4))
@@ -53,7 +53,7 @@ module TEDContractApi
     today = Time.now.strftime("%Y-%m-%d")
 
     endpoint = "organizations/#{@org_id}/organization_contracts"
-    body = { 
+    body = {
       data: {
         type: 'organization_contracts',
         attributes: {
@@ -71,7 +71,7 @@ module TEDContractApi
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)['data']
+    @partner_api.create(endpoint, body)['data']
   end
 
   def self.send_invoice(contract_id)
@@ -81,14 +81,14 @@ module TEDContractApi
         type: 'organization_invoices',
         relationships: {
           organization: { data: { type: 'organizations', id: @org_id } },
-          organization_contract: { 
-            data: { type: 'organization_contracts', id: contract_id } 
+          organization_contract: {
+            data: { type: 'organization_contracts', id: contract_id }
           }
         }
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)
+    @partner_api.create(endpoint, body)
   end
 
   def self.send_free_invoice(org_id = nil)
@@ -103,7 +103,7 @@ module TEDContractApi
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)
+    @partner_api.create(endpoint, body)
   end
 
   def self.accept_terms_of_service(contract_id, decoded_data)
@@ -119,11 +119,11 @@ module TEDContractApi
           phrase: phrase
         },
         relationships: {
-          organization_contract: { 
-            data: { 
+          organization_contract: {
+            data: {
               id: contract_id,
               type: 'organization_contracts'
-            } 
+            }
           },
           coach: { data: { id: coach_id, type: 'coaches' } }
         }
@@ -136,7 +136,7 @@ module TEDContractApi
   def self.submit_credit_card_info(contract_id, decoded_data, year = nil)
     month = rand(1 .. 12).to_s
     year = year.nil? ? (Date.today.year + 4).to_s : year
-    card = YAML.load_file('config/config.yml')['credit_billing']
+    card = Default.static_info['credit_billing']
     endpoint = "organizations/#{@org_id}/organization_accounts"
 
     body = {
@@ -156,7 +156,7 @@ module TEDContractApi
           united_states: true
         },
         relationships: {
-          coach: { data: { id: decoded_data['id'], type: 'coaches'} }, 
+          coach: { data: { id: decoded_data['id'], type: 'coaches'} },
           organization: {
             data: { id: decoded_data['organization_id'], type: 'organizations' }
           },
@@ -170,22 +170,22 @@ module TEDContractApi
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)['data']
+    @partner_api.create(endpoint, body)['data']
   end
 
   def self.cancel_signed_contract(contract_id)
     endpoint = "organization_contracts/#{contract_id}/cancel"
-    @admin_api.patch(endpoint, nil)
+    @partner_api.patch(endpoint, nil)
   end
 
   def self.get_all_contracts
     endpoint = "organizations/#{@org_id}/organization_contracts"
-    @admin_api.read(endpoint)['data']
+    @partner_api.read(endpoint)['data']
   end
 
   def self.delete_contract(contract_id)
     endpoint = "organization_contracts/#{contract_id}"
-    @admin_api.delete(endpoint)['data']
+    @partner_api.delete(endpoint)['data']
   end
 
   def self.delete_all_contracts

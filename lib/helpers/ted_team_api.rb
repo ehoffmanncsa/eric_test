@@ -4,28 +4,28 @@ require_relative '../../test/test_helper'
 module TEDTeamApi
   class << self
     attr_accessor :org_id
-    attr_accessor :admin_api
+    attr_accessor :partner_api
   end
 
   def self.setup
     # default to Awesome Volleyball org and Otto Mation PA
-    @admin_api ||= TEDApi.new('admin')
+    @partner_api ||= TEDApi.new('partner')
     @org_id ||= '440'
   end
 
   def self.get_all_teams
     endpoint = "organizations/#{@org_id}/teams"
-    @admin_api.read(endpoint)['data']
+    @partner_api.read(endpoint)['data']
   end
 
   def self.get_team_by_id(id)
     endpoint = "teams/#{id}"
-    @admin_api.read(endpoint)['data']
+    @partner_api.read(endpoint)['data']
   end
 
   def self.delete_team(id)
     endpoint = "teams/#{id}/delete_team"
-    @admin_api.delete(endpoint)['data']
+    @partner_api.delete(endpoint)['data']
   end
 
   def self.delete_all_teams

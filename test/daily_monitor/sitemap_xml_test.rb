@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Sitemap.xml - Weekly Task
 class SiteMapXMLTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @site_map = config['pages']['site_map']
 
     @ui = UI.new 'browserstack', 'chrome'
