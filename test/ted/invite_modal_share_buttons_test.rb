@@ -10,6 +10,10 @@ class InviteModalShareButtonsTest < Common
     TED.setup(@browser)
   end
 
+  def teardown
+    super
+  end
+
   def check_if_invite_modal_opens
     @browser.button(:class, 'add-btn').click
     sleep 1
