@@ -36,6 +36,10 @@ class DashboardNotShowCanceledContractTest < Common
     @org_name = 'Awesome Sauce'
   end
 
+  def teardown
+    super
+  end
+
   def get_pricing(sport_id, team_count)
     endpoint = "sports/#{sport_id}/pricing_tiers"
     pricing_tiers = @admin_api.read(endpoint)['data']

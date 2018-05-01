@@ -21,6 +21,10 @@ class FindAthleteByTeamTest < Common
     TED.setup(@browser)
   end
 
+  def teardown
+    super
+  end
+
   def select_team
     dropdown = @browser.select_list(:class, 'form-control')
     options = dropdown.options.to_a

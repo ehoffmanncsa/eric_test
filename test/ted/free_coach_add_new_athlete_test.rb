@@ -36,6 +36,10 @@ class FreeCoachAddNewAthleteTest < Common
     @coach_password = creds['ted_coach']['free_password']
   end
 
+  def teardown
+    super
+  end
+
   def add_athlete
     TEDAthleteApi.setup
     TEDAthleteApi.coach_api = TEDApi.new('free_coach')

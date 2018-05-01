@@ -30,6 +30,10 @@ class AddOrg0DollarContractTest < Common
     @phone_number = @phone_1 + @phone_2 + @phone_3
   end
 
+  def teardown
+    super
+  end
+
   def create_athlete
     # add a new freshman recruit, get back his email address and username
     _post, post_body = RecruitAPI.new.ppost

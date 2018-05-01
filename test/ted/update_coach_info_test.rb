@@ -18,6 +18,10 @@ class TEDUpdateCoachDetailsTest < Common
     super
   end
 
+  def teardown
+    super
+  end
+
   def test_update_coach_details
     UIActions.ted_login
     Watir::Wait.until { @browser.element(:class, 'navigation').present? }

@@ -31,6 +31,10 @@ class SignupSelfProvisionOrgTest < Common
     @admin_password = creds['ted_admin']['password']
   end
 
+  def teardown
+    super
+  end
+
   def open_club_form
     @browser.goto 'https://team-staging.ncsasports.org/sign_in'
     @browser.elements(:text, 'Sign Up')[1].click

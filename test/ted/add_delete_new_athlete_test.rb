@@ -37,6 +37,10 @@ class TEDAddDeleteNewAthleteTest < Common
     puts "Adding athlete name: #{@athlete_name}"
   end
 
+  def teardown
+    super
+  end
+
   def table
     @browser.table(:class, 'table--administration')
   end

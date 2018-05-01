@@ -33,6 +33,10 @@ class PremCoachAddFreeAthlete < Common
     @gmail.get_connection
   end
 
+  def teardown
+    super
+  end
+
   def create_athlete
     # add a new freshman recruit, get back his email address and username
     _post, post_body = RecruitAPI.new.ppost

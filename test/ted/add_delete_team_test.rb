@@ -23,6 +23,10 @@ class AddDeleteTeamTest < Common
     TED.setup(@browser)
   end
 
+  def teardown
+    super
+  end
+
   def add_team
     # open modal
     @browser.button(:text, 'Add Team').click

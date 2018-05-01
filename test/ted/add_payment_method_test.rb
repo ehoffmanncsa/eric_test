@@ -32,7 +32,7 @@ class AddPaymentMethodTest < Common
   def teardown
     TEDOrgApi.org_id = @org_id
     TEDOrgApi.delete_org
-    @browser.close
+    super
   end
 
   def create_org

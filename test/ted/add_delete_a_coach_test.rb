@@ -30,6 +30,10 @@ class TEDAddDeleteACoachTest < Common
     @api = Api.new
   end
 
+  def teardown
+    super
+  end
+
   def add_a_coach
     firstname = MakeRandom.name
     lastname = MakeRandom.name

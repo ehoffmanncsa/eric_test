@@ -23,6 +23,10 @@ class InviteCSVAthletesTest < Common
     @names, @emails = get_athlete_info
   end
 
+  def teardown
+    super
+  end
+
   def get_athlete_info
     names = []; emails = []
     file = CSV.read('athletes.csv'); file.shift

@@ -35,6 +35,10 @@ class UpdateContractPaymentMethodTest < Common
     @contract_id = '422' # Use this contract for this scenario
   end
 
+  def teardown
+    super
+  end
+
   def get_org_account_ids
     endpoint = "organizations/#{@org_id}/organization_accounts"
     data = @admin_api.read(endpoint)['data']

@@ -38,6 +38,10 @@ class AddOrg0DollarContractTest < Common
     @phone = MakeRandom.number(10)
   end
 
+  def teardown
+    super
+  end
+
   def add_organization
     UIActions.ted_login(@admin_username, @admin_password); sleep 1
     Watir::Wait.until { TED.sidebar.visible? }

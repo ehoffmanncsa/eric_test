@@ -18,6 +18,10 @@ class FindCollegesSearchBarTest < Common
     goto_find_colleges
   end
 
+  def teardown
+    super
+  end
+
   def goto_find_colleges
     UIActions.ted_login
     TED.goto_colleges
