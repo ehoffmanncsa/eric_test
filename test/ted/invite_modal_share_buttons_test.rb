@@ -16,9 +16,10 @@ class InviteModalShareButtonsTest < Common
 
   def check_if_invite_modal_opens
     @browser.button(:class, 'add-btn').click
-    UIActions.wait_for_modal
-    modal_title = 'Invite Athletes'
+    UIActions.wait_for_spinner
 
+    assert TED.modal.present?, 'Modal did not open'
+    modal_title = 'Invite Athletes'
     assert_equal modal_title,
       TED.modal.element(:id, 'myModalLabel').text,
       "Expected #{modal_title} modal to open"
@@ -59,6 +60,7 @@ class InviteModalShareButtonsTest < Common
   def check_go_to_button
     go_to_link = @browser.element(:class, 'share-go-link')
     go_to_link.click
+    sleep 1
     @browser.windows.last.use
 
     assert_equal @browser.element(:tag_name, 'h2').text,
