@@ -26,13 +26,7 @@ class FindCollegesButtonGroupTest < Common
   def goto_find_colleges
     UIActions.ted_login
     TED.goto_colleges
-  end
-
-  def open_filter
-    # filter will default as open if org has no college data
-    return unless @browser.element(:class, 'filter-results').element(:class, 'fa-chevron-down').present?
-
-    @browser.button(:text, 'Define Search').click
+    TED.open_college_filters
   end
 
   def apply_filters
@@ -55,7 +49,6 @@ class FindCollegesButtonGroupTest < Common
   def test_filter_result_by_division
     # skipping this test case until TED-1344 is addressed
     skip
-    open_filter
     div_button = select_filter('button-group-division')
     apply_filters
 
@@ -70,7 +63,6 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def test_filter_result_by_public_private
-    open_filter
     option = select_filter('button-group-publicPrivate')
     apply_filters
 
@@ -84,7 +76,6 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def test_filter_result_by_school_type
-    open_filter
     type = select_filter('button-group-collegeType')
     apply_filters
 
@@ -98,7 +89,6 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def test_filter_result_by_selectivity
-    open_filter
     strength = select_filter('button-group-academicStrength').downcase
     apply_filters
 
