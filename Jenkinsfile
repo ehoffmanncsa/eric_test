@@ -1,6 +1,7 @@
 #!groovy
 
 def APPLICATION = params.application_name
+def CONFIG_FILE = env.config_file
 
 node {
   stage('Launch Selenium Grid') {
