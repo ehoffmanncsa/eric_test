@@ -124,7 +124,7 @@ e. For more info on git settings/configs, click [here](https://help.github.com/a
 
 f. To learn how to generate SSH key and add the key to your github, click [here](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
-### Clone & Run
+### Clone
 Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
 
     $ git clone https://github.com/NCSAAthleticRecruiting/qa_regression.git
@@ -137,6 +137,31 @@ There is a Gemfile with a collection of gems I have added on the go (of course w
     $ gem install bundler
     $ bundle install
 
+### Set Environment
+There are yml files designed to hold environment specific information (e.g.: staging.yml, dev.yml). Add these lines to your bash_profile
+
+    # Environment configs
+    alias dev="export CONFIG_FILE='~/qa_regression/config/dev.yml'"
+    alias staging="export CONFIG_FILE='~/qa_regression/config/staging.yml'"
+    alias prod="export CONFIG_FILE='~/qa_regression/config/prod.yml'"
+
+    if ["$CONFIG_FILE" == ""]
+      then
+        CONFIG_FILE='~/qa_regression/config/staging.yml'
+        export CONFIG_FILE
+        source ~/.bash_profile
+    else
+      export CONFIG_FILE
+    fi
+
+That means tests are default to use staging configs, if you wish to run tests against a different environment, simply call for that environment alias.
+
+### Choose where to launch browser
+In ui.rb, I have specified 3 different platform where you can choose to launch your browser in: local (your machine), docker, or browserstack. It is default to 'docker' for most tests so that Jenkins can run tests in a docker container. Simply switch out 'docker' to 'local' in commmon.rb in order for tests to launch browser in your machine. If you choose to launch browser in docker container. Use this command to launch the container.
+
+    docker run -d -it --name elgalu -p 4444:24444 -v /dev/shm:/dev/shm -v ~/qa_regression:/home/seluser --privileged elgalu/selenium
+
+### To run tests
 There is a simple Rake task to run all test scripts that ends with "_test.rb" in this repo, all you have to do is run
 
     $ rake test

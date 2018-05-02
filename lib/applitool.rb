@@ -2,14 +2,11 @@
 require 'eyes_selenium'
 
 class Applitool
-
   attr_accessor :eyes
 
   def initialize match_level
-    config = YAML.load_file('config/config.yml')
-
     self.eyes = Applitools::Selenium::Eyes.new
-    eyes.api_key = config['applitool']['apikey']
+    eyes.api_key = Default.static_info['applitool']['apikey']
     eyes.force_full_page_screenshot = true
     eyes.hide_scrollbars = true
     eyes.match_level = match_level

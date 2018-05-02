@@ -1,5 +1,5 @@
+# encoding: utf-8
 class Common < Minitest::Test
-
  def setup
    @ui = UI.new 'docker', 'firefox'
    @browser = @ui.driver
@@ -9,5 +9,4 @@ class Common < Minitest::Test
  def teardown
    @browser.close
  end
-
 end

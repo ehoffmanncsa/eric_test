@@ -19,3 +19,16 @@ Minitest::Ci.clean = false
 
 Dir.glob(File.expand_path('../../lib/*.rb', __FILE__)) { |f| require_relative f }
 Dir.glob(File.expand_path('../../lib/helpers/*.rb', __FILE__)) { |f| require_relative f }
+
+module Default
+  def self.env_config
+    env = ENV['CONFIG_FILE'].split('/').last
+    env_path = File.expand_path("../../config/#{env}", __FILE__)
+    YAML.load(File.open(env_path))
+  end
+
+  def self.static_info
+    static_path = File.expand_path('../../config/static_info.yml', __FILE__)
+    YAML.load(File.open(static_path))
+  end
+end

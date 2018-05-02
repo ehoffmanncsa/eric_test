@@ -26,9 +26,8 @@ class AddOrg0DollarContractTest < Common
     @gmail.mail_box = 'TED_Contract'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
+    @partner_username = Default.env_config['ted']['partner_username']
+    @partner_password = Default.env_config['ted']['partner_password']
 
     @org_name = MakeRandom.name
     @zipcode = MakeRandom.number(5)
@@ -43,7 +42,7 @@ class AddOrg0DollarContractTest < Common
   end
 
   def add_organization
-    UIActions.ted_login(@admin_username, @admin_password); sleep 1
+    UIActions.ted_login(@partner_username, @partner_password)
     Watir::Wait.until { TED.sidebar.visible? }
     UIActions.wait_for_spinner
 

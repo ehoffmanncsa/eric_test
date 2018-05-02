@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Daily Monitor - Review Page
 class ReviewPageMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @review_page = config['pages']['review_page']
     @viewports = [
       { ipad: config['viewport']['ipad'] },
@@ -129,7 +129,7 @@ class ReviewPageMonitorTest < Minitest::Test
         @browser.get @review_page
         @browser.find_element(:class, 'fa-bars').click
         button = @browser.find_element(link_text: link_text)
-        
+
         case link_text
           when 'Athlete Log In'
             button.click

@@ -1,6 +1,5 @@
 # encoding: utf-8
-require_relative '../../test/test_helper'
-require_relative 'make_random'
+
 # This class is to create CSV for multiple athletes
 class AtheteCSV
   def initialize

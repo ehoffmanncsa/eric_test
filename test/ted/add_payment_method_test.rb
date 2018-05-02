@@ -21,10 +21,6 @@ class AddPaymentMethodTest < Common
     @gmail = GmailCalls.new
     @gmail.get_connection
 
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
-
     @new_org = create_org
     @org_id = @new_org['id']
   end
@@ -37,12 +33,12 @@ class AddPaymentMethodTest < Common
 
   def create_org
     TEDOrgApi.setup
-    @admin_api = TEDOrgApi.admin_api
+    @partner_api = TEDOrgApi.partner_api
     TEDOrgApi.create_org
   end
 
   def send_free_invite_email
-    TEDContractApi.admin_api = @admin_api
+    TEDContractApi.partner_api = @partner_api
     TEDContractApi.send_free_invoice(@org_id)
   end
 

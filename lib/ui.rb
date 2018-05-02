@@ -1,13 +1,11 @@
 # encoding: utf-8
-require 'watir'
 
 class UI
   attr_accessor :driver
   attr_accessor :browser
 
   def initialize hub, browser = nil
-    @config = YAML.load_file('config/config.yml')
-    @creds = YAML.load_file('config/.creds.yml')
+    @static = Default.static_info
 
     self.browser = browser.nil? ? 'firefox' : browser
     case hub
@@ -18,6 +16,7 @@ class UI
   end
 
   def docker
+    # default to jenkins server hostname
     # use 'http://localhost:4444/wd/hub' when run in docker locally
     # or when run docker on your machine (E.g: Mac)
     opts = { timeout: 120, url: 'http://kb-jenkins01:4444/wd/hub' }
@@ -54,7 +53,7 @@ class UI
 
     self.driver = Selenium::WebDriver.for(
       :remote,
-      url: "http://tiffanyrea1:#{@creds['browserstack_key']}@hub-cloud.browserstack.com/wd/hub",
+      url: "http://tiffanyrea1:#{@static['browserstack_key']}@hub-cloud.browserstack.com/wd/hub",
       desired_capabilities: caps
     )
   end

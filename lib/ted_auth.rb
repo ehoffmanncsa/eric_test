@@ -4,22 +4,22 @@ require_relative 'api'
 class TEDAuth
 	def initialize(role = nil, username = nil, password = nil)
 		@api = Api.new
-		creds = YAML.load_file('config/.creds.yml')
+		creds = Default.env_config
 
     if role.nil?
       @username = username
       @password = password
     else
   		case role
-  		when 'admin'
-  			@username = creds['ted_admin']['username']
-  			@password = creds['ted_admin']['password']
-  		when 'coach'
-  			@username = creds['ted_coach']['username']
-  			@password = creds['ted_coach']['password']
+  		when 'partner'
+  			@username = creds['ted']['partner_username']
+  			@password = creds['ted']['partner_password']
+  		when 'prem_coach'
+  			@username = creds['ted']['prem_username']
+  			@password = creds['ted']['prem_password']
   		when 'free_coach'
-  			@username = creds['ted_coach']['free_username']
-  			@password = creds['ted_coach']['free_password']
+  			@username = creds['ted']['free_username']
+  			@password = creds['ted']['free_password']
       end
 		end
 	end

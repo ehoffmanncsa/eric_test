@@ -1,5 +1,4 @@
 # encoding: utf-8
-require_relative '../../test/test_helper'
 
 class RecruitAPI
   def initialize(enroll_yr = nil)
@@ -9,7 +8,7 @@ class RecruitAPI
     # if nothing is passed in, assumed freshman
     @enroll_yr = enroll_yr.nil? ? 'freshman' : enroll_yr
     @url = 'https://qa.ncsasports.org/api/submit/v1/new_recruit'
-    @sport_id = YAML.load_file('config/config.yml')['sport_ids'].sample
+    @sport_id = Default.static_info['sport_ids'].sample
   end
 
   def year
@@ -42,7 +41,7 @@ class RecruitAPI
                sport_id: @sport_id.to_s,
                event_id: '3285'
               }
-            } 
+            }
 
     begin
       retries ||= 0

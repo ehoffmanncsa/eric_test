@@ -17,7 +17,7 @@ def goto_feature_page(size, feature)
 end
 
 def page_spot_check(size)
-  # Find the free demo button 
+  # Find the free demo button
   assert @browser.find_element(:link_text, 'Request a Free Demo').enabled?, 'Demo button not found'
 
   # check top-nav, sub menu and coach login button

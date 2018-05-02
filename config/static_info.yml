@@ -1,0 +1,73 @@
+# New recruit creds
+recruit:
+  firstName: 'qa'
+  lastName: 'automation'
+  homePhonePh1: '888'
+  homePhonePh2: '222'
+  homePhonePh3: '3333'
+  parent1FirstName: 'mom'
+  parent1LastName: 'mom'
+  parent1PhonePh1: '408'
+  parent1PhonePh2: '333'
+  parent1PhonePh3: '2222'
+
+# Fake credit billing info
+credit_billing:
+  order_card_holder_first_name: 'q'
+  order_card_holder_mi_name: 'a'
+  order_card_holder_last_name: 'automation'
+  order_card_number: '4111111111111111'
+  order_cvv_code: '123'
+  order_account_holder_phone: '4445556666'
+  order_account_holder_email: 'automation@ncsasports.org'
+  order_billing_address: '1333 N Kingsbury'
+  order_billing_city: 'Chicago'
+  order_billing_zip: '60642'
+
+# Fake checking info
+checking_billing:
+  order_card_holder_first_name: 'q'
+  order_card_holder_mi_name: 'a'
+  order_card_holder_last_name: 'automation'
+  order_bank_name: 'NCSA'
+  order_routing_number: '123456789'
+  order_account_number: '1234567890'
+  order_account_holder_phone: '4445556666'
+  order_account_holder_email: 'automation@ncsasports.org'
+  order_billing_address: '1333 N Kingsbury'
+  order_billing_city: 'Chicago'
+  order_billing_zip: '60642'
+
+# automation gmail
+gmail:
+  username: 'ncsa.automation@gmail.com'
+  app_pass: 'axkhemudrqgwaldq'
+  password: 'oz4efpwaYpJivWZDbAGrJMJf'
+  google_voice: '802-676-0642'
+
+# Browser viewport sizes
+viewport:
+  desktop:
+    width: 1270
+    height: 650
+  ipad:
+    width: 768
+    height: 650
+  iphone:
+    width: 400
+    height: 650
+
+# Applitool keys
+applitool:
+  apikey: 'GFQTsnb1ZrKslZ1T217BddUZ2tp0UaB9geadrZ8uGYg110'
+  viewkey: 'P9zuZaromHL6j9e8lpKsn1v6V107glO5IhPLIY1rDT51E110'
+
+# Browserstack key
+browserstack_key: 'sdUUPjomNV13XYurTgXg'
+
+# Existing sports
+sport_ids: [17633, 17634, 17635, 17638, 17639, 17644, 17645,
+            17652, 17653, 17659, 17660, 17665, 17666, 17683,
+            17684, 17687, 17688, 17689, 17690, 17691, 17692,
+            17695, 17696, 17701, 17702, 17706, 17707, 17708,
+            17711, 17730, 17731]

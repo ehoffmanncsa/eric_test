@@ -31,9 +31,8 @@ class FreeCoachAddNewAthleteTest < Common
     @gmail.mail_box = 'TED_Welcome'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    creds = YAML.load_file('config/.creds.yml')
-    @coach_username = creds['ted_coach']['free_username']
-    @coach_password = creds['ted_coach']['free_password']
+    @free_username = Default.env_config['ted']['free_username']
+    @free_password = Default.env_config['ted']['free_password']
   end
 
   def teardown
@@ -59,7 +58,7 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def send_invite_email
-    UIActions.ted_login(@coach_username, @coach_password)
+    UIActions.ted_login(@free_username, @free_password)
     TED.go_to_athlete_tab
 
     # find and click the not sent button for the newly added athlete
@@ -92,7 +91,7 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def check_athlete_accepted_status
-    UIActions.ted_login(@coach_username, @coach_password)
+    UIActions.ted_login(@free_username, @free_password)
     TED.go_to_athlete_tab
     row = TED.get_row_by_name(@athlete_name)
     status = row.elements(:tag_name, 'td')[4].text

@@ -11,8 +11,9 @@ class GmailCalls
 
   def get_connection
     # login to gmail using email address and app password (not regular password)
-    creds = YAML.load_file('config/.creds.yml')
-    @conn = Gmail.connect(creds['gmail']['username'], creds['gmail']['app_pass'])
+    username = Default.static_info['gmail']['username']
+    password = Default.static_info['gmail']['app_pass']
+    @conn = Gmail.connect(username, password)
   end
 
   def parse_body(email, keyword = nil)

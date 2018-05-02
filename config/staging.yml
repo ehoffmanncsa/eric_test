@@ -1,0 +1,47 @@
+# WWW pages
+pages:
+  contact_us_page:
+  cost_page:
+  events_page:
+  free_demo_request:
+  home_page:
+  partners_page:
+  press_media_page:
+  review_page:
+  site_map:
+  sport_engine_webform:
+  ted_www_page:
+
+# Clientrms:
+clientrms:
+  login_page: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
+
+# Fasttrack Admin login
+fasttrack:
+  login_page: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
+  admin_username: 'automation'
+  admin_password: 'Secure.123'
+
+# TED coach/partner login
+ted:
+  login_page: 'https://team-staging.ncsasports.org/sign_in'
+  prem_username: 'ncsa.automation+ted@gmail.com'
+  prem_password: 'password'
+  free_username: 'noel.ronnie1@yopmail.com'
+  free_password: 'ncsa'
+  no_content_username:
+  no_content_password:
+  partner_username: 'ncsa.automation@gmail.com'
+  partner_password: 'mixed_martial_arts_678594'
+  api_base: 'https://qa.ncsasports.org/api/team_edition'
+
+# sample video user login
+video_user:
+  username: 'elite2'
+  password: 'ncsa'
+
+# Coach RMS
+coach_rms:
+  login_page: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
+  username: 'lajball@yopmail.com'
+  password: 'ncsa123'

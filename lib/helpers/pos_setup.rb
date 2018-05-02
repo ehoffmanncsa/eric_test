@@ -1,9 +1,7 @@
 # encoding: utf-8
-require_relative '../../test/test_helper'
-require 'watir-scroll'
 
 # Set up a new lead for POS base 2 conditions: grad year and package type
-# choosing and returning 6 payments financing option as default 
+# choosing and returning 6 payments financing option as default
 # that way we can test for remaining balance and first payment made
 module POSSetup
   def self.setup(ui_object)
@@ -41,7 +39,7 @@ module POSSetup
     swoosh = dropdown.element(:class, 'fa-swoosh')
     raise '[ERROR] Cannot find swoosh' unless swoosh.enabled?
 
-    swoosh.click; 
+    swoosh.click;
     raise "[ERROR] Swoosh redir to #{@browser.title}" unless @browser.title.match(/Client Recruiting Management System/)
 
     # select all checkboxes
@@ -140,7 +138,7 @@ module POSSetup
         cal_prices << calculate(@full_price, months,  code)
       end
 
-      cal_prices.zip(dsc_pmts).map do |c, d| 
+      cal_prices.zip(dsc_pmts).map do |c, d|
         msg = "Code #{code} - Actual: #{d} vs Expected: #{c}"
         failure << msg unless c.eql? d
       end
@@ -182,16 +180,14 @@ module POSSetup
   end
 
   def self.fill_out_credit
-    config = YAML.load_file('config/config.yml')
-    config['credit_billing'].each do |id, value|
+    Default.static_info['credit_billing'].each do |id, value|
       @browser.text_field(:id, id).set value
     end
   end
 
   def self.fill_out_ACH
     @browser.element(:class, 'checking-js').click
-    config = YAML.load_file('config/config.yml')
-    config['checking_billing'].each do |id, value|
+    Default.static_info['checking_billing'].each do |id, value|
       @browser.text_field(:id, id).set value
     end
   end

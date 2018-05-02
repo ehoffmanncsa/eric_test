@@ -5,15 +5,15 @@ module TEDAthleteApi
   class << self
     attr_accessor :org_id
     attr_accessor :org_name
-    attr_accessor :admin_api
+    attr_accessor :partner_api
     attr_accessor :coach_api
     attr_accessor :athlete_id
   end
 
   def self.setup
     # default to Awesome Volleyball org and Otto Mation PA
-    @admin_api ||= TEDApi.new('admin')
-    @coach_api ||= TEDApi.new('coach')
+    @partner_api ||= TEDApi.new('partner')
+    @coach_api ||= TEDApi.new('prem_coach')
     @org_id ||= '440'
     @org_name ||= 'Awesome Sauce'
   end
@@ -41,13 +41,13 @@ module TEDAthleteApi
       }.to_json
     end
 
-    api = coach ? @coach_api : @admin_api
+    api = coach ? @coach_api : @partner_api
     api.create(endpoint, body)['data']
   end
 
   def self.get_athlete_by_id(athlete_id, coach = false)
     endpoint = "athletes/#{athlete_id}"
-    api = coach ? @coach_api : @admin_api
+    api = coach ? @coach_api : @partner_api
     api.read(endpoint)['data']
   end
 
@@ -58,13 +58,13 @@ module TEDAthleteApi
 
   def self.get_all_athletes(coach = false)
     endpoint = "organizations/#{@org_id}/athletes"
-    api = coach ? @coach_api : @admin_api
+    api = coach ? @coach_api : @partner_api
     api.read(endpoint)['data']
   end
 
   def self.delete_athlete(id, coach = false)
     endpoint = "athletes/#{id}"
-    api = coach ? @coach_api : @admin_api
+    api = coach ? @coach_api : @partner_api
     api.delete(endpoint)['data']
   end
 
@@ -76,7 +76,7 @@ module TEDAthleteApi
   def self.send_invite_email(id = nil)
     id = @athlete_id if id.nil?
     endpoint = "athletes/#{id}/invite_single_athlete"
-    @admin_api.patch(endpoint, nil)
+    @partner_api.patch(endpoint, nil)
   end
 
   def self.find_athletes_by_status(status)

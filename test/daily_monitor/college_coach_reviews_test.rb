@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Reviews Page - College Coach Reviews
 class CollegeCoachReviewsTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @review_page = config['pages']['review_page']
     @viewports = [
       { ipad: config['viewport']['ipad'] },

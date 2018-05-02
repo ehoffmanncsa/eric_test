@@ -26,11 +26,10 @@ class DashboardNotShowCanceledContractTest < Common
     @gmail.mail_box = 'TED_Contract'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
-    @admin_api = TEDApi.new('admin')
+    @partner_api = TEDApi.new('partner')
 
-    creds = YAML.load_file('config/.creds.yml')
-    @admin_username = creds['ted_admin']['username']
-    @admin_password = creds['ted_admin']['password']
+    @partner_username = Default.env_config['ted']['partner_username']
+    @partner_password = Default.env_config['ted']['partner_password']
 
     @org_id = '440' # Using static org for this scenario
     @org_name = 'Awesome Sauce'
@@ -42,7 +41,7 @@ class DashboardNotShowCanceledContractTest < Common
 
   def get_pricing(sport_id, team_count)
     endpoint = "sports/#{sport_id}/pricing_tiers"
-    pricing_tiers = @admin_api.read(endpoint)['data']
+    pricing_tiers = @partner_api.read(endpoint)['data']
 
     tier = nil
     if (team_count.to_i.between?(1, 4))
@@ -90,7 +89,7 @@ class DashboardNotShowCanceledContractTest < Common
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)['data']
+    @partner_api.create(endpoint, body)['data']
   end
 
   def send_invoice(contract_id)
@@ -107,7 +106,7 @@ class DashboardNotShowCanceledContractTest < Common
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)
+    @partner_api.create(endpoint, body)
   end
 
   def get_sign_page_url_in_email
@@ -158,7 +157,7 @@ class DashboardNotShowCanceledContractTest < Common
   def submit_credit_card_info
     month = rand(1 .. 12).to_s
     year = (Date.today.year + 4).to_s
-    card = YAML.load_file('config/config.yml')['credit_billing']
+    card = Default.static_info['credit_billing']
     endpoint = "organizations/#{@org_id}/organization_accounts"
 
     body = {
@@ -192,7 +191,7 @@ class DashboardNotShowCanceledContractTest < Common
       }
     }.to_json
 
-    @admin_api.create(endpoint, body)
+    @partner_api.create(endpoint, body)
   end
 
   def search_for_org
@@ -213,7 +212,7 @@ class DashboardNotShowCanceledContractTest < Common
   def cancel_contract
     pp "[INFO] Canceling contract..."
     endpoint = "organization_contracts/#{@contract_id}/cancel"
-    cancel = @admin_api.patch(endpoint, nil)
+    cancel = @partner_api.patch(endpoint, nil)
 
     delete_date = cancel['data']['attributes']['deleted-at']
     today = Date.today.to_s
@@ -256,7 +255,7 @@ class DashboardNotShowCanceledContractTest < Common
   end
 
   def test_canceled_contract_not_show_on_dashboard
-    UIActions.ted_login(@admin_username, @admin_password)
+    UIActions.ted_login(@partner_username, @partner_password)
     original_contract_count = get_contract_count
 
     setup_contract

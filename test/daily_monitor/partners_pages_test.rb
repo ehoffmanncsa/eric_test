@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # UI Test: Daily Monitor - Partners Pages
 class PartnersPagesMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @partners_page = config['pages']['partners_page']
     @viewports = [
       { ipad: config['viewport']['ipad'] },
@@ -72,8 +72,8 @@ class PartnersPagesMonitorTest < Minitest::Test
     logos = @browser.find_elements(:class, 'field-name-field-image')
 
     # check url response
-    # 200 is good so do nothing and go to next url, 
-    # 300 .. 399 and any error should be reported, 
+    # 200 is good so do nothing and go to next url,
+    # 300 .. 399 and any error should be reported,
     # 400+ should fail the test
     status_report = []; hrefs = []; failure = []
     logos.each { |logo| hrefs << logo.find_element(:tag_name, 'a').attribute('href') }
@@ -224,7 +224,7 @@ class PartnersPagesMonitorTest < Minitest::Test
       height = size.values[0]['height']
 
       @eyes.open @browser, 'TS-169 Test Partners Page with Hamburger Menu Open', width, height
-      @browser.get @partners_page 
+      @browser.get @partners_page
 
       # Verify iphone and hamburger exists
       assert @browser.find_element(:id, 'block-block-62').enabled?

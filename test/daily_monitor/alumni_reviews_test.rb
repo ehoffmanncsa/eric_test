@@ -6,7 +6,7 @@ require 'net/http'
 # UI Test: Reviews Page - Alumni Reviews
 class AlumniReviewsTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @review_page = config['pages']['review_page']
     @viewports = [
       { ipad: config['viewport']['ipad'] },
@@ -83,7 +83,7 @@ class AlumniReviewsTest < Minitest::Test
     videos.each do |vid|
       url = vid.find_element(:tag_name, 'a').attribute('href')
       url_id = url.split('=')[1]
-    
+
       uri = URI(url)
       res = Net::HTTP.get_response(uri)
       code = res.code.to_i
@@ -105,7 +105,7 @@ class AlumniReviewsTest < Minitest::Test
     end
 
     failure = (bad_response + bad_popup + bad_id).flatten
-    assert_empty failure 
+    assert_empty failure
   end
 
   def test_testimonials_page

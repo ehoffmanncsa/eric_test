@@ -6,7 +6,7 @@ require_relative '../test_helper'
 # Verify That All Left Nav Links are Present and Working
 class ContactUsPagesMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @contact_us = config['pages']['contact_us_page']
     @viewports = [
       { ipad: config['viewport']['ipad'] },
@@ -48,7 +48,7 @@ class ContactUsPagesMonitorTest < Minitest::Test
 
       # verify about us nav bar and its buttons
       assert @browser.find_element(:id, 'block-menu-block-19--2').displayed?, 'Side nav-bar not found'
- 
+
       failure = []
       @pages.each do |link_text, _title|
         failure << "#{button} button not found" unless @browser.find_element(:link_text, link_text).enabled?
