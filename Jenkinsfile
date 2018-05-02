@@ -32,10 +32,11 @@ node {
   }
 
   stage('Execute tests') {
+  print $CONFIG_FILE
     try {
       sh "docker run --name testbox \
           -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
-          -e CONFIG_FILE="${CONFIG_FILE}" \
+          -e CONFIG_FILE=${CONFIG_FILE} \
           --privileged testbox 'rake test $APPLICATION'"
     } catch(error) {
         println error
