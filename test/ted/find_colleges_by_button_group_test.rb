@@ -29,6 +29,9 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def open_filter
+    # filter will default as open if org has no college data
+    return unless @browser.element(:class, 'filter-results').element(:class, 'fa-chevron-down').present?
+
     @browser.button(:text, 'Define Search').click
   end
 
