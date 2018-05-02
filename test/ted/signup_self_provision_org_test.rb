@@ -112,6 +112,8 @@ class SignupSelfProvisionOrgTest < Common
 
     list = @browser.select_list(:class, 'form-control')
     list.select 'Unverified'
+    @browser.button(:text, 'Search').click
+    UIActions.wait_for_spinner
 
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Unverified'
@@ -145,6 +147,8 @@ class SignupSelfProvisionOrgTest < Common
 
     list = @browser.select_list(:class, 'form-control')
     list.select 'Accepted' # this is value for Free Signed option
+    @browser.button(:text, 'Search').click
+    UIActions.wait_for_spinner
 
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Free Signed'
