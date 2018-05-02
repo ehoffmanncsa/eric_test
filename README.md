@@ -146,12 +146,10 @@ There are yml files designed to hold environment specific information (e.g.: sta
     alias prod="export CONFIG_FILE='~/qa_regression/config/prod.yml'"
 
     if ["$CONFIG_FILE" == ""]
-      then
-        CONFIG_FILE='~/qa_regression/config/staging.yml'
-        export CONFIG_FILE
-        source ~/.bash_profile
+	then
+		export CONFIG_FILE='~/qa_regression/config/staging.yml'
     else
-      export CONFIG_FILE
+	    export CONFIG_FILE
     fi
 
 That means tests are default to use staging configs, if you wish to run tests against a different environment, simply call for that environment alias.
