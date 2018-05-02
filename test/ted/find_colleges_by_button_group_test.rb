@@ -34,6 +34,11 @@ class FindCollegesButtonGroupTest < Common
     UIActions.wait_for_spinner
   end
 
+  def clear_filters
+    @browser.button(:text, 'Clear').click
+    UIActions.wait_for_spinner
+  end
+
   def colleges
     @browser.elements(:class, 'card-college').to_a
   end
@@ -105,5 +110,22 @@ class FindCollegesButtonGroupTest < Common
     selectivity = table.trs[2].td(:index, 0).text.downcase
     msg = "#{college_name} selectivity is #{selectivity}, expected #{strength}"
     assert_equal strength, selectivity, msg
+  end
+
+  def test_clear_btn_does_not_disable_search
+    chosen_btn_text = select_filter('button-group-collegeType')
+    apply_filters
+
+    assert colleges.any?, 'Colleges failed to appear in first search'
+
+    clear_filters
+    assert @browser.element(:text, 'There are no colleges matching your search.').present?,
+      'Clear button failed to clear colleges'
+
+    chosen_btn = @browser.element(:text, chosen_btn_text)
+    chosen_btn.click
+    apply_filters
+
+    assert colleges.any?, 'Colleges failed to appear in search after cleared filters'
   end
 end
