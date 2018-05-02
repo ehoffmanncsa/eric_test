@@ -116,15 +116,16 @@ class FindCollegesButtonGroupTest < Common
     chosen_btn_text = select_filter('button-group-collegeType')
     apply_filters
 
-    assert colleges.any?
+    assert colleges.any?, 'Colleges failed to appear in first search'
 
     clear_filters
-    assert @browser.element(:text, 'There are no colleges matching your search.').present?
+    assert @browser.element(:text, 'There are no colleges matching your search.').present?,
+      'Clear button failed to clear colleges'
 
     chosen_btn = @browser.element(:text, chosen_btn_text)
     chosen_btn.click
     apply_filters
 
-    assert colleges.any?
+    assert colleges.any?, 'Colleges failed to appear in search after cleared filters'
   end
 end
