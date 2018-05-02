@@ -37,6 +37,13 @@ module TED
     sleep 1.5
   end
 
+  def self.open_college_filters
+    # filter will default as open if org has no college data
+    return unless @browser.element(:class, 'filter-results').element(:class, 'fa-chevron-down').present?
+
+    @browser.button(:text, 'Define Search').click
+  end
+
   def self.go_to_athlete_tab
     # go to Roster Management -> athlete
     @browser.refresh; sleep 1

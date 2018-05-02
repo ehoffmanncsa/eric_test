@@ -27,10 +27,7 @@ class FindCollegesBySlideBarTest < Common
   def goto_find_colleges
     UIActions.ted_login
     TED.goto_colleges
-  end
-
-  def open_filter
-    @browser.button(:text, 'Define Search').click
+    TED.open_college_filters
   end
 
   def apply_filters
@@ -86,21 +83,18 @@ class FindCollegesBySlideBarTest < Common
   end
 
   def test_filter_by_enrollment_size
-    open_filter
     select_filter('ranger-slider-enrollmentRange')
     apply_filters
     check_enrollment_size
   end
 
   def test_filter_by_tuition
-    open_filter
     select_filter('ranger-slider-tuitionRange')
     apply_filters
     check_in_state_tuition(random_college)
   end
 
   def test_filter_by_enrollment_tuition
-    open_filter
     select_filter('ranger-slider-enrollmentRange')
     select_filter('ranger-slider-tuitionRange')
     apply_filters
