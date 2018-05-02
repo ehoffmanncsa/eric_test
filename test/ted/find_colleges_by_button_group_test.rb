@@ -113,16 +113,18 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def test_clear_btn_does_not_disable_search
-    select_filter('button-group-collegeType')
+    chosen_btn_text = select_filter('button-group-collegeType')
     apply_filters
 
     assert colleges.any?
 
     clear_filters
-    assert_empty colleges
+    assert @browser.element(:text, 'There are no colleges matching your search.').present?
 
-    select_filter('button-group-collegeType')
+    chosen_btn = @browser.element(:text, chosen_btn_text)
+    chosen_btn.click
     apply_filters
+
     assert colleges.any?
   end
 end
