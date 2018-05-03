@@ -4,23 +4,14 @@ require 'net/http'
 
 # Daily Mornitor: TS-262
 # UI Test: Reviews Page - Alumni Reviews
-class AlumniReviewsTest < Minitest::Test
+class AlumniReviewsTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @review_page = config['pages']['review_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
+    @review_page = Default.static_info['pages']['review_page']
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   def goto_alumni_reviews

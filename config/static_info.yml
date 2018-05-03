@@ -1,3 +1,19 @@
+# WWW pages
+# If WWW project needs to be env specific
+# Remove this from here and add it in env specific yml instead
+pages:
+  contact_us_page: 'http://www.ncsasports.org/contact-us-address'
+  cost_page: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
+  events_page: 'http://www.ncsasports.org/events'
+  free_demo_request: 'http://www.ncsasports.org/team/getting-started-form'
+  home_page: 'http://www.ncsasports.org/'
+  partners_page: 'http://www.ncsasports.org/who-is-ncsa/how-ncsa-works/ncsas-partners'
+  press_media_page: 'http://www.ncsasports.org/about-us/press-media'
+  review_page: 'http://www.ncsasports.org/ncsa-reviews'
+  site_map: 'http://www.ncsasports.org/sitemap.xml'
+  sport_engine_webform: 'http://www.ncsasports.org/lp/sports-engine-team-edition-getting-started-form'
+  ted_www_page: 'http://www.ncsasports.org/team'
+
 # New recruit creds
 recruit:
   firstName: 'qa'
