@@ -71,7 +71,7 @@ end
 # UI Test: Daily Monitor - TED Page
 class TEDPageMonitorTest < Minitest::Test
   def setup
-    config = YAML.load_file('config/config.yml')
+    config = YAML.load_file('old_config/config.yml')
     @ted_page = config['pages']['ted_page']
     @demo_req_page = config['pages']['free_demo_request']
     @viewports = [
