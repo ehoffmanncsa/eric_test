@@ -25,7 +25,7 @@ module Default
     ENV['CONFIG_FILE'] ||= 'staging.yml'
     env = ENV['CONFIG_FILE'].split('/').last
     env_path = File.expand_path("../../config/#{env}", __FILE__)
-    pp YAML.load(File.open(env_path))
+    YAML.load(File.open(env_path))
   end
 
   def self.static_info
