@@ -14,6 +14,7 @@ require 'csv'
 require 'jwt'
 require 'time'
 require_relative 'common'
+require_relative 'visual_common'
 
 Minitest::Ci.clean = false
 
