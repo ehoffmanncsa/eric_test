@@ -26,7 +26,7 @@ class EnrollMVPFreshmanTest < Common
     POSSetup.set_password(@recruit_email)
     POSSetup.make_commitment
     POSSetup.choose_a_package(@package)
-    POSSetup.check_discount_calculate(@enroll_yr)
+    POSSetup.check_enrollment_discount_calculate(@enroll_yr)
 
     # choose 6 months payment plan as default
     # get back full price for membership calculation
