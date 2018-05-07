@@ -34,6 +34,7 @@ class AlumniReviewsTest < VisualCommon
       goto_alumni_reviews
 
       # check footer
+      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
       # Take snapshot review page with applitool eyes
@@ -96,8 +97,8 @@ class AlumniReviewsTest < VisualCommon
       @browser.link(:text, 'testimonials page').click
 
       # check footer
+      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
-      DailyMonitor.subfooter.scroll_into_view; sleep 0.5
 
       # Take snapshot review page with applitool eyes
       @eyes.screenshot "Testimonials #{size.keys} view"
