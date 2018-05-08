@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'csv'
-gem 'capybara', '3.0.2'
+gem 'csv', '~> 1.0.1'
+gem 'capybara', '~> 3.0.2'
 gem 'eyes_selenium'
 gem 'gmail'
 gem 'jwt'
