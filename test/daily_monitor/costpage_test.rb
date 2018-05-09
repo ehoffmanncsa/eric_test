@@ -62,24 +62,26 @@ class CostPageMonitorTest < VisualCommon
       width = size.values[0]['width']
       height = size.values[0]['height']
 
-      @eyes.open @browser, 'TS-119 Test Cost Page with Hamburger Menu Open', width, height
-      @browser.get @costpage
+      @eyes.open @browser.driver, 'TS-119 Test Cost Page with Hamburger Menu Open', width, height
+
+      @browser.goto @costpage
+
       # Verify iphone and hamburger exists
-      assert @browser.element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
+      assert @browser.element(:id, 'block-block-62').present?, 'Tablet and Hamburger not found'
 
       # Click on hamburger menu to open it
       @browser.element(:class, 'fa-bars').click
 
-      #scroll to bottom for bottom icons to load
-      @browser.elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
-
       check_and_remove_chatra
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+
+      # check footer
+      DailyMonitor.subfooter.scroll.to; sleep 0.5
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
       @eyes.screenshot "#{size.keys} view with hamburger menu open"
       result = @eyes.action.close(false)
-      failure << "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -92,22 +94,26 @@ class CostPageMonitorTest < VisualCommon
       width = size.values[0]['width']
       height = size.values[0]['height']
 
-      @eyes.open @browser, 'TS-119 Test Parents and Athletes Start Here Buttons', width, height
+      @eyes.open @browser.driver, 'TS-119 Test Parents and Athletes Start Here Buttons', width, height
 
       %w[Parents Athletes].each do |button|
-        @browser.get @costpage
-        assert @browser.element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here button not found"
+        @browser.goto @costpage
 
-        @browser.element(link_text: "#{button} Start Here").click
+        block = @browser.div(:id, 'block-menu-menu-mobile-cta-buttons')
+        assert block.link(text: "#{button} Start Here").enabled?, "#{button} Start Here button not found"
+
+        block.link(text: "#{button} Start Here").click
         assert @browser.title.match(/Athletic Recruiting/), @browser.title
 
-        subfooter = UIActions.get_subfooter
-        UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+        # check footer
+        DailyMonitor.subfooter.scroll.to; sleep 0.5
+        DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
         @eyes.screenshot "#{button} recruiting form #{size.keys} view"
       end
 
       result = @eyes.action.close(false)
-      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -120,34 +126,43 @@ class CostPageMonitorTest < VisualCommon
       width = size.values[0]['width']
       height = size.values[0]['height']
 
-      @eyes.open @browser, 'TS-119 Test Hamburger Menu and Redirs', width, height
+      @eyes.open @browser.driver, 'TS-119 Test Hamburger Menu and Redirs', width, height
 
       ['Athlete Log In', 'Coach Log In', 'HS/Club Coach',
        'Parents Start Here', 'Athletes Start Here'].each do |link_text|
-        @browser.get @costpage
+        @browser.goto @costpage
+
         @browser.element(:class, 'fa-bars').click
-        button = @browser.element(link_text: link_text)
+        button = @browser.link(text: link_text)
 
         case link_text
           when 'Athlete Log In'
             button.click
-            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
-            username_input = @browser.element(:id, 'user_account_login')
-            assert username_input.displayed?, 'Username textbox not found'
+            expect = 'Student-Athlete Sign In | NCSA Client Recruiting Management System'
+            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
+            assert_equal expect, @browser.title, msg
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
+            @eyes.screenshot "#{link_text} login #{size.keys} view"
           when 'Coach Log In'
             button.click
-            assert @browser.title.match(/College Coach Login/), @browser.title
-            assert @browser.element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
+            expect = 'College Coach Login | NCSA Coach Recruiting Management System'
+            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
+            assert_equal expect, @browser.title, msg
+
+            assert @browser.link(text: 'Get Started Now').present?, 'Get Started button not found'
 
             @eyes.screenshot "Hamburger menu redir to #{link_text} #{size.keys} view"
           when 'HS/Club Coach'
             button.click
-            assert @browser.element(link_text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
+            expect = 'Team Edition | Recruiting Management System'
+            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
+            assert_equal expect, @browser.title, msg
 
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.element(:class, 'video-banner')]
+            assert @browser.link(text: 'Learn More').enabled?, 'Learn More button not found'
+            assert @browser.link(text: 'Get Started Now').enabled?, 'Get Started button not found'
+
+            video_banner = @browser.wd.find_element(:class, 'video-banner')
+            @eyes.check_ignore "#{link_text} login #{size.keys} view", [video_banner]
           when 'Parents Start Here'
             msg = 'Parent Start Here button not found in hamburger'
             assert @browser.element(:class, 'm-nav-start-link--parent').enabled?, msg
@@ -159,23 +174,26 @@ class CostPageMonitorTest < VisualCommon
       end
 
       result = @eyes.action.close(false)
-      failure << "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
   end
 
   def test_www_athlete_login_redir
-    @browser.get @costpage
+    @browser.goto @costpage
     login_button = @browser.element(class: 'menu-item-has-children')
     assert login_button.enabled?, 'Athlete Login button not found'
 
-    @browser.action.move_to(login_button).perform
+    login_button.hover
     ['Athlete Profile Login', 'College Coach Login', 'HS/Club Coach Login'].each do |button|
-      assert @browser.element(link_text: button).enabled?, "#{button} option not found"
+      assert @browser.link(text: button).enabled?, "#{button} option not found"
     end
 
-    @browser.element(link_text: 'Athlete Profile Login').click
-    assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
+    @browser.link(text: 'Athlete Profile Login').click
+    expect = 'Student-Athlete Sign In | NCSA Client Recruiting Management System'
+    msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
+    assert_equal expect, @browser.title, msg
   end
 end
