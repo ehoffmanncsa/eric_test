@@ -1,7 +1,10 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-
+# POS Regression
+# This script is to apply all 24 exisiting discount discount codes
+# in offerings page using the below static athlete
+#
 # {:recruit=>
 #   {:athlete_email=>"ncsa.automation+POS@gmail.com",
 #    :athlete_first_name=>"amwjricvzc",
@@ -13,8 +16,6 @@ require_relative '../test_helper'
 #    :sport_id=>"17665",
 #    :event_id=>"3285"}}
 
-# TS-54: POS Regression
-# UI Test: Enroll as a Champion User - Freshman
 class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
