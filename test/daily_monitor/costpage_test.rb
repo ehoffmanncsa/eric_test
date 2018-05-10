@@ -161,7 +161,7 @@ class CostPageMonitorTest < VisualCommon
             assert @browser.link(text: 'Learn More').enabled?, 'Learn More button not found'
             assert @browser.link(text: 'Get Started Now').enabled?, 'Get Started button not found'
 
-            video_banner = @browser.wd.find_element(:class, 'video-banner')
+            video_banner = @browser.wd.find_element(:class, 'video-banner__container')
             @eyes.check_ignore "#{link_text} login #{size.keys} view", [video_banner]
           when 'Parents Start Here'
             msg = 'Parent Start Here button not found in hamburger'
