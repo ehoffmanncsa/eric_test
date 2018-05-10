@@ -7,6 +7,11 @@ class RestoredAthleteRequestTest < Common
   def setup
     super
     TED.setup(@browser)
+
+    TEDAthleteApi.setup
+
+    @gmail = GmailCalls.new
+    @gmail.get_connection
   end
 
   def teardown
@@ -14,7 +19,6 @@ class RestoredAthleteRequestTest < Common
   end
 
   def store_accepted_athlete_info
-    TEDAthleteApi.setup
     accepted_athletes = TEDAthleteApi.find_athletes_by_status('accepted')
     @athlete = accepted_athletes.sample
     refute @athlete['id'].nil?, 'No accepted athletes found'
@@ -26,51 +30,45 @@ class RestoredAthleteRequestTest < Common
   end
 
   def add_athlete
-    UIActions.ted_login
-    TED.go_to_athlete_tab
-    open_add_athlete_modal
-
-    # fill out athlete form
-    Watir::Wait.until { TED.modal.visible? }; sleep 1
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[0].send_keys @athlete['attributes']['profile']['first-name']
-    inputs[1].send_keys @athlete['attributes']['profile']['last-name']
-    inputs[2].send_keys @athlete['attributes']['profile']['grad-year']
-    inputs[3].send_keys @athlete['attributes']['zip-code']
-    inputs[4].send_keys athlete_email
-    inputs[5].send_keys @athlete['attributes']['phone']
-    TED.modal.button(:text, 'Add Athlete').click
-    UIActions.wait_for_modal
-
-    # make sure athlete name shows up after added
-    assert (@browser.element(:text, athlete_email).present?), "Cannot find newly added Athlete #{athlete_email}"
+    resp = TEDAthleteApi.add_athlete(create_athlete_request_body)
+    @athlete = resp
+    puts resp
+    sleep 3
+    assert resp['id'].present?, 'Adding athlete failed'
+    assert resp['id'].present?, 'Adding athlete failed'
   end
 
-  def open_add_athlete_modal
-    @browser.button(:text, 'Invite Athletes').click
-    TED.modal.button(:text, 'Manually Add Athlete').click
-    TED.modal.button(:text, 'Add Athlete').click; sleep 1
+  def create_athlete_request_body
+    {
+      data: {
+        attributes: {
+          email: athlete_email,
+          first_name: @athlete['attributes']['profile']['first-name'],
+          graduation_year: @athlete['attributes']['profile']['grad-year'],
+          last_name: @athlete['attributes']['profile']['last-name'],
+          phone: @athlete['attributes']['phone'],
+          zip_code: @athlete['attributes']['zip-code'],
+        },
+        relationships: {
+          team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }
+        },
+        type: 'athletes'
+      }
+    }.to_json
   end
 
   def athlete_email
     @athlete['attributes']['profile']['email']
   end
 
+  def athlete_name
+    profile = @athlete['attributes']['profile']
+
+    "#{profile['first-name']} #{profile['last-name']}"
+  end
+
   def send_invite_email
-    # find and click the not sent button for the newly added athlete
-    # make sure Edit Athlete modal shows up before proceeding
-    row = @browser.element(:text, athlete_email).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
-    assert TED.modal.visible?, 'Edit Athlete modal not found'
-
-    TED.modal.button(:text, 'Save & Invite').click
-    UIActions.wait_for_modal
-
-    # refresh the page and go back to athlete tab
-    # make sure athlete status is now pending after email sent
-    status = row.elements(:tag_name, 'td')[4].text
-    assert_equal status, 'Pending', "Expected status #{status} to be Pending"
-    TED.sign_out
+    TEDAthleteApi.send_invite_email(@athlete['id'])
   end
 
   def check_for_athlete_pop_up
@@ -83,20 +81,34 @@ class RestoredAthleteRequestTest < Common
     @browser.element(:id, 'club-yes').click
   end
 
-  def check_athlete_is_accepted
-    accepted_athletes = TEDAthleteApi.find_athletes_by_status('accepted')
-    accepted_athlete_ids = accepted_athletes.map { |ath| ath['attributes']['profile']['email'] }
-    assert_includes accepted_athlete_ids, athlete_email, "#{athlete_email} not found in list of accepted athletes"
+  def check_athlete_has_status(status)
+    UIActions.ted_login
+    TED.go_to_athlete_tab
+
+    athlete_row = @browser.element(:id, "athlete#{@athlete['id']}")
+    assert (athlete_row.element(:text, athlete_email).present?), "Cannot find athlete: #{athlete_email}."
+    assert (athlete_row.element(:text, status).present?), "Athlete #{athlete_email} is not listed as #{status}."
+  end
+
+  def check_and_clean_accepted_email
+    @gmail.mail_box = 'Inbox'
+    @gmail.subject = "#{athlete_name} has accepted your Team Edition request"
+    emails = @gmail.get_unread_emails
+
+    refute_empty emails, 'No accepted email found after athlete accepted invitation'
+
+    @gmail.delete(emails)
   end
 
   def test_restore_athlete_with_request
     store_accepted_athlete_info
     delete_athlete
-
     add_athlete
+    check_athlete_has_status('Pending')
     send_invite_email
     check_for_athlete_pop_up
     grant_access
-    check_athlete_is_accepted
+    check_athlete_has_status('Accepted')
+    check_and_clean_accepted_email
   end
 end
