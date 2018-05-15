@@ -42,7 +42,7 @@ checking_billing:
 gmail:
   username: 'ncsa.automation@gmail.com'
   app_pass: 'axkhemudrqgwaldq'
-  password: 'oz4efpwaYpJivWZDbAGrJMJf'
+  # For human access to this inbox see OnePassword shared vault Automation Gmail
   google_voice: '802-676-0642'
 
 # Browser viewport sizes

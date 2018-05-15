@@ -13,6 +13,7 @@ require 'watir-scroll'
 require 'csv'
 require 'jwt'
 require 'time'
+require 'ffaker'
 require_relative 'common'
 
 Minitest::Ci.clean = false
