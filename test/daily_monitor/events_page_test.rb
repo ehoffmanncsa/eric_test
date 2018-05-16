@@ -3,191 +3,95 @@ require_relative '../test_helper'
 
 # Daily Mornitor: TS-121
 # UI Test: Daily Monitor - Events Page
-class EventsPageMonitorTest < Minitest::Test
+class EventsPageMonitorTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @events_page = config['pages']['events_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
-  # Start a applitool eye test session
-  # Within the session loop through different viewport size
-  # and navigate to events page, verify page title
-  def test_events_page_views
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+  def check_option_response(option)
+    failure = nil
 
-      @eyes.open @browser, 'TS-121 Test Events Page', width, height
-      @browser.get @events_page
+    url = option.attribute_value('href')
+    resp = DailyMonitor.get_url_response(url)
+
+    if resp.is_a? Integer
+      failure = "#{url} gives #{resp}" unless resp.eql? 200
+    else
+      failure = resp
+    end
+
+    failure
+  end
+
+  def test_right_sidebar_options
+    DailyMonitor.goto_page('events_page')
+
+    sidebar = @browser.div(:class, 'right-sidebar')
+    block = sidebar.div(:class, 'holder').div(:id, 'block-menu-block-31--2')
+
+    menu = block.element(:class, 'menu')
+
+    failure = []
+
+    menu.elements(:tag_name, 'a').each do |option|
+      unless option.enabled?
+        failure << "#{option.text} not clickable"
+        next
+      end
+
+      response = check_option_response(option)
+      failure << response unless response.nil?
+    end
+
+    assert_empty failure
+  end
+
+  def test_events_page_visual
+    DailyMonitor.goto_page('events_page')
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
+    failure = []
+
+    @viewports.each do |size|
+      open_eyes("TS-121 Test Events Page - #{size.keys[0]}", size)
+
       text = 'The Ins and Outs of Camps, Combines and Showcases'
       assert_equal text, @browser.title, 'Unexpected title'
 
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot events page with applitool eyes
-      @eyes.screenshot "Events page #{size.keys} view"
+      @eyes.screenshot "Events page #{size.keys[0]} view"
 
-      result = @eyes.action.close(false)
-      failure << "Events page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  # Verify hamburger menu and phone icon enable for iphone and ipad view
-  def test_views_with_hamburger_menu_open
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-121 Test Events Page with Hamburger Menu Open', width, height
-      @browser.get @events_page
-      # Verify iphone and hamburger exists
-      assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
-
-      # Click on hamburger menu to open it
-      @browser.find_element(:class, 'fa-bars').click
-
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
-
-      @eyes.screenshot "#{size.keys} view with hamburger menu open"
-
-      result = @eyes.action.close(false)
-      failure << "Event page #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_parents_athletes_start_here
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-121 Test Parents/Athletes Start Here Buttons', width, height
-
-      %w[Parents Athletes].each do |button|
-        @browser.get @events_page
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here not found"
-
-        @browser.find_element(link_text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/), @browser.title
-
-        viewport = size.keys[0].to_s
-        if viewport != 'desktop'
-          subfooter = UIActions.get_subfooter
-          UIActions.check_subfooter_msg(subfooter, viewport)
-          @eyes.check_ignore "#{button} recruiting form #{size.keys} view", [subfooter]
-        else
-          @eyes.screenshot "#{button} recruiting form #{size.keys} view"
-        end
+      unless size.keys.to_s =~ /desktop/
+        DailyMonitor.hamburger_menu.click
+        @eyes.screenshot "#{size.keys} view with hamburger menu open"
+        DailyMonitor.hamburger_menu.click
       end
 
       result = @eyes.action.close(false)
-      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Events page #{size.keys[0]} view - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
-  end
-
-  def test_hamburger_menu_options_and_redirs
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-121 Test Hamburger Menu Options and Redirs', width, height
-
-      ['Athlete Log In', 'Coach Log In', 'HS/Club Coach',
-       'Parents Start Here', 'Athletes Start Here'].each do |link_text|
-        @browser.get @events_page
-        @browser.find_element(:class, 'fa-bars').click
-        button = @browser.find_element(link_text: link_text)
-
-        case link_text
-          when 'Athlete Log In'
-            button.click
-            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
-            username_input = @browser.find_element(:id, 'user_account_login')
-            assert username_input.displayed?, 'Username textbox not found'
-
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
-          when 'Coach Log In'
-            button.click
-            assert @browser.title.match(/College Coach Login/), @browser.title
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
-
-            @eyes.screenshot "#{size.keys} view - redir to #{link_text} from hamburger menu"
-          when 'HS/Club Coach'
-            button.click
-            assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
-
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'video-banner')]
-          when 'Parents Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--parent').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
-
-          when 'Athletes Start Here'
-            @browser.find_element(:class, 'm-nav-start-link--athlete').click
-            assert @browser.title.match(/NCSA Athletic Recruiting/), @browser.title
-        end
-      end
-
-      result = @eyes.action.close(false)
-      failure << "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_athlete_login_redir
-    @browser.get @events_page
-    login_button = @browser.find_element(class: 'menu-item-has-children')
-    assert login_button.enabled?, 'Login button not found'
-
-    @browser.action.move_to(login_button).perform
-    ['Athlete Profile Login', 'College Coach Login', 'HS/Club Coach Login'].each do |button|
-      assert @browser.find_element(link_text: button).enabled?, "#{button} option not found"
-    end
-
-    @browser.find_element(link_text: 'Athlete Profile Login').click
-    assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
   end
 
   def test_pick_your_sport_redir
-    @browser.get @events_page
+    DailyMonitor.goto_page('events_page')
 
-    dropdown = @browser.find_element(name: 'jump')
-    options = dropdown.find_elements(tag_name: 'option')
-    options.each { |option| (option.click; break) if option.text.strip =~ /Football/ }
-    assert @browser.page_source.match(/Football/), @browser.title
+    # Use football for this test case
+    dropdown = @browser.select_list(name: 'jump')
+    dropdown.select 'Football'
+    assert_equal 'Football Camps', @browser.element(:tag_name, 'h1').text, 'Incorrect page header'
 
-    subfooter = UIActions.get_subfooter
-    UIActions.check_subfooter_msg(subfooter, 'desktop')
+    # check footer
+    DailyMonitor.check_subfooter_msg('desktop')
 
-    elem = @browser.find_element(:class, 'group-slices').find_element(:class, 'holder')
-    rows = elem.find_element(:class, 'view-content').find_elements(:class, 'img_left_half_teaser')
-    refute_empty rows, 'No events found on Football Events page'
+    events = @browser.elements(:class, 'img_left_half_teaser')
+    refute_empty events, 'No events found on Football Events page'
   end
 end

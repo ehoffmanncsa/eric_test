@@ -3,51 +3,43 @@ require_relative '../test_helper'
 
 # Daily Mornitor: TS-325
 # UI Test: Daily Monitor - Coaches Start Here
-class CoachesStartHereTest < Minitest::Test
+class CoachesStartHereTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @homepage = config['pages']['home_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   def goto_coach_start_here
-    @browser.get @homepage
-    @browser.find_element(:class, 'button--coach').click
+    DailyMonitor.goto_page('home_page')
+    @browser.element(:class, 'button--coach').click
   end
 
   def test_coaches_start_here_page
+    goto_coach_start_here
+
+    title = 'NCSA Login for College, Club and HS Coaches'
+    assert_equal title, @browser.title, 'Incorrect page title'
+
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
+
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-325 Coaches Start Here Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser, 'TS-325 Coaches Start Here Page', width, height
-      goto_coach_start_here
-      str = 'NCSA Login for College, Club and HS Coaches'
-      title = @browser.title
-      assert_equal str, title, "Browser title: #{title} - Not as expected: #{str}"
+      title = 'NCSA Login for College, Club and HS Coaches'
+      assert_equal title, @browser.title, 'Incorrect page title'
 
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
-
-      # Take snapshot review page with applitool eyes
       @eyes.screenshot "Coaches Start Here #{size.keys} view"
+
       result = @eyes.action.close(false)
-      failure << "Coaches Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Coaches Start Here #{size.keys[0]} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -55,27 +47,31 @@ class CoachesStartHereTest < Minitest::Test
 
   def test_college_coach_sign_in_button
     goto_coach_start_here
-    button = @browser.find_element(:class, 'button--athlete')
+
+    button = @browser.element(:class, 'button--athlete')
+
     expected_url = 'http://coach.ncsasports.org/coach/coachrms/login'
     url = button.attribute('href')
     assert_equal expected_url, url, 'Login url for Coach RMS is incorrect'
 
     button.click
-    expected_title = "College Coach Login | NCSA Coach Recruiting Management System"
-    title = @browser.title
-    assert_equal expected_title, title, 'Incorrect page title for Coach RMS Login'
+
+    title = 'College Coach Login | NCSA Coach Recruiting Management System'
+    assert_equal title, @browser.title, 'Incorrect page title for Coach RMS Login'
   end
 
   def test_hs_coach_sign_in_button
     goto_coach_start_here
-    button = @browser.find_element(:class, 'button--primary')
-    expected_url = 'https://team.ncsasports.org/sign_in'
+
+    button = @browser.element(:class, 'button--primary')
+
+    expected_url = 'https://team.ncsasports.org'
     url = button.attribute('href')
     assert_equal expected_url, url, 'Login url for HS Coach is incorrect'
 
     button.click
-    expected_title = "Team Edition | Recruiting Management System"
-    title = @browser.title
-    assert_equal expected_title, title, 'Incorrect page title for HS Coach Login'
+
+    title = 'Team Edition | Recruiting Management System'
+    assert_equal title, @browser.title, 'Incorrect page title for TED Login'
   end
 end

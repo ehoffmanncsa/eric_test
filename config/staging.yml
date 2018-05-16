@@ -1,17 +1,3 @@
-# WWW pages
-pages:
-  contact_us_page:
-  cost_page:
-  events_page:
-  free_demo_request:
-  home_page:
-  partners_page:
-  press_media_page:
-  review_page:
-  site_map:
-  sport_engine_webform:
-  ted_www_page:
-
 # Clientrms:
 clientrms:
   login_page: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
