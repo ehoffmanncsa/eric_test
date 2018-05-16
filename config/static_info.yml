@@ -104,8 +104,25 @@ gmail:
   google_voice: '802-676-0642'
 
 # Existing sports
-sport_ids: [17633, 17634, 17635, 17638, 17639, 17644, 17645,
+sport_ids: [17633', 17634, 17635, 17638, 17639, 17644, 17645,
             17652, 17653, 17659, 17660, 17665, 17666, 17683,
             17684, 17687, 17688, 17689, 17690, 17691, 17692,
             17695, 17696, 17701, 17702, 17706, 17707, 17708,
             17711, 17730, 17731]
+
+# NCSA premium discount codes
+ncsa_discount_code:
+  wce: '0.2'
+  family: '0.1'
+  ncsa: '0.1'
+  earlystart: '0.1'
+  military: '0.1'
+  nslp: '0.5'
+  mail_in_check: '1'
+  usatf: '0.05'
+  holiday: '0.1'
+  all_in: '1'
+  i_will: '1'
+  family_transfer: '1'
+  corporate_sponsorship: '1'
+  senior: '0.15'

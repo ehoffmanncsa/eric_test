@@ -23,6 +23,7 @@ Dir.glob(File.expand_path('../../lib/helpers/*.rb', __FILE__)) { |f| require_rel
 
 module Default
   def self.env_config
+    ENV['CONFIG_FILE'] ||= 'staging.yml'
     env = ENV['CONFIG_FILE'].split('/').last
     env_path = File.expand_path("../../config/#{env}", __FILE__)
     YAML.load(File.open(env_path))
