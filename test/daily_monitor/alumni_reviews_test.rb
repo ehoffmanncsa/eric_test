@@ -6,8 +6,6 @@ require_relative '../test_helper'
 class AlumniReviewsTest < VisualCommon
   def setup
     super
-    @review_page = Default.static_info['pages']['review_page']
-    DailyMonitor.setup(@browser)
   end
 
   def teardown
@@ -15,32 +13,30 @@ class AlumniReviewsTest < VisualCommon
   end
 
   def goto_alumni_reviews
-    @browser.goto @review_page
+    DailyMonitor.goto_page('review_page')
+
     nav_bar = @browser.element(:id, 'block-menu-block-25--2')
     nav_bar.link(:text, 'Our Recruiting Coaches').click
 
-    str = "Meet NCSA’s team of 600+ former college and pro athletes"
-    msg = "Browser title: #{@browser.title} is not as expected: #{str}"
-    assert_equal str, @browser.title, msg
+    title = 'Meet NCSA’s team of 600+ former college and pro athletes'
+    assert_equal title, @browser.title, 'Incorrect page title'
   end
 
   def test_alumni_reviews_page
+    goto_alumni_reviews
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
+
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-262 Test Alumni Reviews Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser.driver, 'TS-262 Test Alumni Reviews Page', width, height
-      goto_alumni_reviews
-
-      # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot review page with applitool eyes
-      @eyes.screenshot "Alumni Reviews #{size.keys} view"
+      @eyes.screenshot "Alumni Reviews #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "Alumni Reviews #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "Alumni Reviews #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 
@@ -57,53 +53,57 @@ class AlumniReviewsTest < VisualCommon
     # go though each video, check if the url gives 200
     # if 200 click on it, make sure there is popup and popup url has matching video id
     # if not dont bother
-    bad_response = [], bad_popup = [], bad_id = []
+    failure = []
+
     videos.each do |vid|
       url = vid.element(:tag_name, 'a').attribute('href')
       url_id = url.split('=')[1]
 
-      uri = URI(url)
-      res = Net::HTTP.get_response(uri)
-      code = res.code.to_i
-      bad_response << "Video id #{url_id} gives #{res.code}" unless code.eql? 200
+      resp = DailyMonitor.get_url_response(url)
 
-      if code.eql? 200
-        vid.click
-        popup = @browser.element(:class, 'mfp-content')
-        iframe = popup.element(:class, 'mfp-iframe')
-        bad_popup << "Video id #{url_id} no popup" unless iframe.present?
-
-        if iframe.present?
-          src = iframe.attribute('src')
-          src_id = src.split('/').last.split('?')[0]
-          bad_id << "youtube id #{url_id} not match #{src_id}" unless url_id == src_id
-          popup.element(:class, 'mfp-close').click
-        end
+      unless resp.eql? 200
+        failure << "Video id #{url_id} gives #{resp}"
+        next
       end
+
+      vid.click
+      popup = @browser.element(:class, 'mfp-content')
+      iframe = popup.element(:class, 'mfp-iframe')
+
+      unless iframe.present?
+        failure << "Video id #{url_id} no popup"
+        next
+      end
+
+      src = iframe.attribute('src')
+      src_id = src.split('/').last.split('?')[0]
+      failure << "youtube id #{url_id} not match #{src_id}" unless url_id == src_id
+      popup.element(:class, 'mfp-close').click
     end
 
-    failure = (bad_response + bad_popup + bad_id).flatten
     assert_empty failure
   end
 
   def test_testimonials_page
+    goto_alumni_reviews
+    @browser.link(:text, 'testimonials page').click
+
+    title = 'How do families use NCSA? | 400+ NCSA reviews'
+    assert_equal title, @browser.title, 'Incorrect page title'
+
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
+
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-262 Test Testimonials Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser.driver, 'TS-262 Test Testimonials Page', width, height
-      goto_alumni_reviews
-      @browser.link(:text, 'testimonials page').click
-
-      # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot review page with applitool eyes
-      @eyes.screenshot "Testimonials #{size.keys} view"
+      @eyes.screenshot "Testimonials page #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "Testimonials page #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "Testimonials page #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 
@@ -117,12 +117,10 @@ class AlumniReviewsTest < VisualCommon
     button = section.element(:class, 'button--new-orange')
     url = button.attribute('href')
 
-    uri = URI(url)
-    res = Net::HTTP.get_response(uri)
-    code = res.code.to_i
+    resp = DailyMonitor.get_url_response(url)
 
     failure = []
-    failure << "Playlist url gives #{code}" unless code.eql? 200
+    failure << "Playlist url gives #{resp}" unless resp.eql? 200
     failure << "Not a playlist redir url #{url}" unless url.include? 'playlist?list'
     assert_empty failure
   end

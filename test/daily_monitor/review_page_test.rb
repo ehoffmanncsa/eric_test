@@ -3,181 +3,46 @@ require_relative '../test_helper'
 
 # Daily Mornitor: TS-120
 # UI Test: Daily Monitor - Review Page
-class ReviewPageMonitorTest < Minitest::Test
+class ReviewPageMonitorTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @review_page = config['pages']['review_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   # Start a applitool eye test session
   # Within the session loop through different viewport size
   # and navigate to review page, verify page title
   def test_review_page_views
+    DailyMonitor.goto_page('review_page')
+
+    title = '400+ NCSA Reviews from Parents, Athletes and College Coaches'
+    assert_equal title, @browser.title, 'Incorrect page title'
+
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
+
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-120 Test Review Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser, 'TS-120 Test Review Page', width, height
-      @browser.get @review_page
-      str = 'Reviews from Parents, Athletes and College Coaches'
-      assert (@browser.title.include? str), @browser.title
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      #scroll down to trigger teaser image loading first
-      @browser.find_elements(:class, 'teaser-image').each do |element|
-        element.location_once_scrolled_into_view; sleep 0.5
-      end
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+      @eyes.screenshot "Review page #{size.keys[0]} view"
 
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
-
-      # Take snapshot review page with applitool eyes
-      @eyes.screenshot "Review page #{size.keys} view"
-      result = @eyes.action.close(false)
-      failure << "Review page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  # Verify hamburger menu and phone icon enable for iphone and ipad view
-  def test_views_with_hamburger_menu_open
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-120 Test Review Page with Hamburger Menu Open', width, height
-      @browser.get @review_page
-      # Verify iphone and hamburger exists
-      assert @browser.find_element(:id, 'block-block-62').enabled?, 'Tablet and Hamburger not found'
-
-      # Click on hamburger menu to open it
-      @browser.find_element(:class, 'fa-bars').click
-      #scroll down to trigger teaser image loading first
-      @browser.find_elements(:class, 'teaser-image').each do |element|
-        element.location_once_scrolled_into_view; sleep 0.5
-      end
-
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
-
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
-
-      @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      result = @eyes.action.close(false)
-      failure << "Review #{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_parents_athletes_start_here
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-120 Test Parents and Athletes Start Here Buttons', width, height
-
-      %w[Parents Athletes].each do |button|
-        @browser.get @review_page
-        assert @browser.find_element(link_text: "#{button} Start Here").enabled?, "#{button} Start Here button not found"
-
-        @browser.find_element(link_text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/), @browser.title
-
-        subfooter = UIActions.get_subfooter
-        UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
-
-        @eyes.screenshot "#{button} recruiting form #{size.keys} view"
+      unless size.keys.to_s =~ /desktop/
+        DailyMonitor.hamburger_menu.click # open
+        @eyes.screenshot "#{size.keys[0]} view with hamburger menu open"
+        DailyMonitor.hamburger_menu.click # close
       end
 
       result = @eyes.action.close(false)
-      failure << "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Review page #{size.keys[0]} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
-  end
-
-  def test_hamburger_menu_options_and_redirs
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-120 Test Hamburger Menu Options and Redirs', width, height
-
-      ['Athlete Log In', 'Coach Log In', 'HS/Club Coach',
-       'Parents Start Here', 'Athletes Start Here'].each do |link_text|
-        @browser.get @review_page
-        @browser.find_element(:class, 'fa-bars').click
-        button = @browser.find_element(link_text: link_text)
-
-        case link_text
-          when 'Athlete Log In'
-            button.click
-            assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
-            username_input = @browser.find_element(:id, 'user_account_login')
-            assert username_input.displayed?, 'Username textbox not found'
-
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [username_input]
-          when 'Coach Log In'
-            button.click
-            assert @browser.title.match(/College Coach Login/), @browser.title
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Started button not found'
-
-            @eyes.screenshot "#{size.keys} view - redir to #{link_text} from hamburger menu"
-          when 'HS/Club Coach'
-            button.click
-            assert @browser.find_element(link_text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.find_element(link_text: 'Get Started Now').enabled?, 'Get Start button not found'
-
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [@browser.find_element(:class, 'video-banner')]
-          when 'Parents Start Here'
-            msg = 'Parent Start Here button not found in hamburger'
-            assert @browser.find_element(:class, 'm-nav-start-link--parent').enabled?, msg
-
-          when 'Athletes Start Here'
-            msg = 'Athlete Start Here not found in hamburger'
-            assert @browser.find_element(:class, 'm-nav-start-link--athlete').enabled?, msg
-        end
-      end
-
-      result = @eyes.action.close(false)
-      failure << "Buger redir pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_www_athlete_login_redir
-    @browser.get @review_page
-    login_button = @browser.find_element(class: 'menu-item-has-children')
-    assert login_button.enabled?, 'Login button not found'
-
-    @browser.action.move_to(login_button).perform
-    ['Athlete Profile Login', 'College Coach Login', 'HS/Club Coach Login'].each do |button|
-      assert @browser.find_element(link_text: button).enabled?, "#{button} option not found"
-    end
-
-    @browser.find_element(link_text: 'Athlete Profile Login').click
-    assert @browser.title.match(/Student-Athlete Sign In/), @browser.title
   end
 end

@@ -6,8 +6,6 @@ require_relative '../test_helper'
 class CollegeCoachReviewsTest < VisualCommon
   def setup
     super
-    @review_page = Default.static_info['pages']['review_page']
-    DailyMonitor.setup(@browser)
   end
 
   def teardown
@@ -15,33 +13,31 @@ class CollegeCoachReviewsTest < VisualCommon
   end
 
   def goto_coach_reviews
-    @browser.goto @review_page
+    DailyMonitor.goto_page('review_page')
+
     nav_bar = @browser.element(:id, 'block-menu-block-25--2')
     menu = nav_bar.element(:class, 'menu')
     menu.element(:class, 'menu-mlid-6233').click
 
-    str = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
-    msg = "Browser title: #{@browser.title} is not as expected: #{str}"
-    assert_equal str, @browser.title, msg
+    title = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
+    assert_equal title, @browser.title, 'Incorrect page title'
   end
 
   def test_college_coach_reviews_page
+    goto_coach_reviews
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser.driver, 'TS-263 Test College Coach Reviews Page', width, height
-      goto_coach_reviews
+      open_eyes( "TS-263 Test College Coach Reviews Page - #{size.keys[0]}", size)
 
       # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot review page with applitool eyes
-      @eyes.screenshot "College Coach Reviews #{size.keys} view"
+      @eyes.screenshot "College Coach Reviews #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "College Coach Reviews #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "College Coach Reviews #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 
@@ -49,27 +45,23 @@ class CollegeCoachReviewsTest < VisualCommon
   end
 
   def test_testimonials_page
+    goto_coach_reviews
+
+    @browser.link(:text, 'testimonials page').click
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser.driver, 'TS-263 Test Testimonials Page', width, height
-      goto_coach_reviews
-
-      section = @browser.element(:class, 'node-title-reviews--do-coaches-use-ncsa-copy-block---blockquotes')
-      field = section.element(:class, 'row').element(:class, 'field-name-body')
-      field.elements(:tag_name, 'blockquote').last.scroll.to; sleep 0.5
-      @browser.link(:text, 'testimonials page').click
+      open_eyes("TS-263 Test Testimonials Page - #{size.keys[0]}", size)
 
       # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
       # Take snapshot review page with applitool eyes
-      @eyes.screenshot "Testimonials #{size.keys} view"
+      @eyes.screenshot "Testimonials #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "Testimonials page #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "Testimonials page #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 

@@ -1,17 +1,24 @@
 # encoding: utf-8
 class VisualCommon < Common
- def setup
-   config = Default.static_info
-   @viewports = [
-     { ipad: config['viewport']['ipad'] },
-     { iphone: config['viewport']['iphone'] },
-     { desktop: config['viewport']['desktop'] }
-   ]
-   @eyes = Applitool.new 'Content'
-   super
- end
+  def setup
+    super
 
- def teardown
+    @viewports = [
+     { ipad: Default.static_info['viewport']['ipad'] },
+     { iphone: Default.static_info['viewport']['iphone'] },
+     { desktop: Default.static_info['viewport']['desktop'] }
+    ]
+
+    DailyMonitor.setup(@browser)
+    @eyes = Applitool.new 'Content'
+    @driver = @browser.driver
+  end
+
+  def open_eyes(test_name, size)
+    @eyes.open @driver, test_name, DailyMonitor.width(size), DailyMonitor.height(size)
+  end
+
+  def teardown
    super
- end
+  end
 end

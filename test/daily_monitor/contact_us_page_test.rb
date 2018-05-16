@@ -7,10 +7,8 @@ require_relative '../test_helper'
 class ContactUsPagesMonitorTest < VisualCommon
   def setup
     super
-    @contact_us = Default.static_info['pages']['contact_us_page']
-    DailyMonitor.setup(@browser)
 
-    @pages = {
+    @related_pages = {
       'About Us' => 'About NCSA Next College Student Athlete',
       'What We Do' => 'What We Do | The NCSA Experience',
       'How We Do It' => 'What to Expect with NCSA',
@@ -31,34 +29,33 @@ class ContactUsPagesMonitorTest < VisualCommon
   end
 
   def test_contact_us_page
+    DailyMonitor.goto_page('contact_us_page')
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
+
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-170 Test Contact Us Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser.driver, 'TS-170 Test Contact Us Page', width, height
-
-      @browser.goto @contact_us
-      msg = "Browser title: #{@browser.title} is not as expected: #{@pages['Contact Us']}"
-      assert_equal @pages['Contact Us'], @browser.title, msg
+      title = @related_pages['Contact Us']
+      assert_equal title, @browser.title, 'Incorrect page title'
 
       # verify about us nav bar and its buttons
       assert @browser.element(:id, 'block-menu-block-19--2').present?, 'Side nav-bar not found'
 
-      failure = []
-      @pages.each do |link_text, _title|
-        failure << "#{button} button not found" unless @browser.link(:text, link_text).enabled?
+      button_not_found = []
+      @related_pages.each do |link_text, _title|
+        button_not_found << "#{button}" unless @browser.link(:text, link_text).enabled?
       end
-      assert_empty failure
 
-      # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
+      assert_empty button_not_found
+
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot events page with applitool eyes
-      @eyes.screenshot "Contact Us page #{size.keys} view"
+      @eyes.screenshot "Contact Us page #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "Contact Us page #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "Contact Us page #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 
@@ -67,15 +64,18 @@ class ContactUsPagesMonitorTest < VisualCommon
 
   def test_nav_bar_buttons_redir
     failure = []
-    @pages.each do |link_text, expect_title|
-      @browser.goto @contact_us
+
+    @related_pages.each do |link_text, expect_title|
+      DailyMonitor.goto_page('contact_us_page')
 
       menu_block = @browser.div(:id, 'block-menu-block-19--2')
-      menu_block.link(:text, link_text).click; sleep 1
-      real_title = @browser.title
-      msg = "#{link_text} page title: #{real_title} V.S. #{expect_title}"
-      failure << msg unless real_title.eql? expect_title
+      menu_block.link(:text, link_text).click
+
+      page_title = @browser.title
+      msg = "#{link_text} page title: #{page_title} V.S. #{expect_title}"
+      failure << msg unless page_title.eql? expect_title
     end
+
     assert_empty failure
   end
 end

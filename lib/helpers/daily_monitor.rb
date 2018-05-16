@@ -4,7 +4,19 @@ require_relative '../../test/test_helper'
 module DailyMonitor
   def self.setup(browser)
     @browser = browser
-    @config = Default.env_config
+    @pages = Default.static_info['pages']
+  end
+
+  def self.width(size)
+    size.values[0]['width']
+  end
+
+  def self.height(size)
+    size.values[0]['height']
+  end
+
+  def self.goto_page(page)
+    @browser.goto @pages[page]['url']
   end
 
   def self.subfooter
@@ -13,6 +25,7 @@ module DailyMonitor
 
   def self.check_subfooter_msg(viewport_size)
     cls = ''; phone_number = ''; failure = []
+
     case viewport_size
       when 'iphone'
         phone_number = '855-410-6272'
@@ -27,12 +40,22 @@ module DailyMonitor
     raise "#{viewport_size} - wrong subfooter phone number" unless subfooter_msg.text.include? phone_number
   end
 
-  def self.load_partner_list_block
-    view = @browser.div(:id, 'block-views-partner-list-block')
-    view.scroll_into_view
-    #UIActions.wait_for_spinner
-    # view.elements(:class, 'views-field').each |logo|
-    #   Watir::Wait.until { logo.present? }
-    # end
+  def self.hamburger_menu
+    # check iphone and hamburger exists
+    unless @browser.element(:id, 'block-block-62').present? || @browser.element(:id, 'block-block-63').present?
+      raise '[ERROR] Tablet and Hamburger not found'
+    end
+
+    @browser.element(:class, 'fa-bars')
+  end
+
+  def self.get_url_response(url)
+    begin
+      resp = RestClient::Request.execute(method: :get, url: url)
+    rescue => e
+      return "[ERROR] #{url} - #{e}"
+    end
+
+    resp.code
   end
 end

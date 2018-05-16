@@ -6,8 +6,6 @@ require_relative '../test_helper'
 class CostPageMonitorTest < VisualCommon
   def setup
     super
-    @costpage = Default.static_info['pages']['cost_page']
-    DailyMonitor.setup(@browser)
   end
 
   def teardown
@@ -24,176 +22,123 @@ class CostPageMonitorTest < VisualCommon
     end
   end
 
-  # Start a applitool eye test session
-  # Within the session loop through different viewport size
-  # and navigate to cost page, verify page title
-  def test_costpage_views
+  def check_prices_buttons
+    table = @browser.table(:id, 'pricing-table')
+    row = table.row(:class, 'prices')
+    buttons = row.elements(:class, 'button')
+
     failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser.driver, 'TS-119 Test Cost Page', width, height
-
-      @browser.goto @costpage
-      expect = 'How much does NCSA Cost | NCSA Membership Levels'
-      msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
-      assert_equal expect, @browser.title, msg
-
-      # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
-      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
-
-      # Take snapshot cost page with applitool eyes
-      @eyes.screenshot "Cost page #{size.keys} view"
-      result = @eyes.action.close(false)
-      msg = "Cost page #{size.keys} - #{result.mismatches} mismatches found"
-      failure << msg unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  # Verify hamburger menu and phone icon enable for iphone and ipad view
-  def test_views_with_hamburger_menu_open
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser.driver, 'TS-119 Test Cost Page with Hamburger Menu Open', width, height
-
-      @browser.goto @costpage
-
-      # Verify iphone and hamburger exists
-      assert @browser.element(:id, 'block-block-62').present?, 'Tablet and Hamburger not found'
-
-      # Click on hamburger menu to open it
-      @browser.element(:class, 'fa-bars').click
-
-      check_and_remove_chatra
-
-      # check footer
-      DailyMonitor.subfooter.scroll.to; sleep 0.5
-      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
-
-      @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      result = @eyes.action.close(false)
-      msg = "Cost page #{size.keys} view with burger - #{result.mismatches} mismatches found"
-      failure << msg unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_parents_athletes_start_here
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser.driver, 'TS-119 Test Parents and Athletes Start Here Buttons', width, height
-
-      %w[Parents Athletes].each do |button|
-        @browser.goto @costpage
-
-        block = @browser.div(:id, 'block-menu-menu-mobile-cta-buttons')
-        assert block.link(text: "#{button} Start Here").enabled?, "#{button} Start Here button not found"
-
-        block.link(text: "#{button} Start Here").click
-        assert @browser.title.match(/Athletic Recruiting/), @browser.title
-
-        # check footer
-        DailyMonitor.subfooter.scroll.to; sleep 0.5
-        DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
-        @eyes.screenshot "#{button} recruiting form #{size.keys} view"
+    buttons.each do |button|
+      unless button.enabled?
+        failure << "#{button.attribute_value('class')} not clickable"
+        next
       end
 
-      result = @eyes.action.close(false)
-      msg = "Athlete/Parent Start Here #{size.keys} - #{result.mismatches} mismatches found"
-      failure << msg unless result.mismatches.eql? 0
+      url = button.attribute_value('href')
+      expected = 'http://www.ncsasports.org/Schedule-Your-NCSA-Recruiting-Evaluation'
+
+      unless url == expected
+        failure "#{button.attribute_value('class')} has incorrect url"
+        next
+      end
+
+      resp = DailyMonitor.get_url_response(url)
+
+      if resp.is_a? Integer
+        failure << "#{url} gives #{resp}" unless resp.eql? 200
+      else
+        failure << resp
+      end
     end
 
     assert_empty failure
   end
 
-  def test_hamburger_menu_options_and_redirs
+  def check_option_response(option)
+    failure = nil
+
+    url = option.attribute_value('href')
+    resp = DailyMonitor.get_url_response(url)
+
+    if resp.is_a? Integer
+      failure = "#{url} gives #{resp}" unless resp.eql? 200
+    else
+      failure = resp
+    end
+
+    failure
+  end
+
+  def check_main_nav
+    main_nav = @browser.element(:id, 'main-nav')
+
     failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
 
-      @eyes.open @browser.driver, 'TS-119 Test Hamburger Menu and Redirs', width, height
+    [
+      'Recruiting Guides',
+      'Pick Your Sport',
+      'Our Results',
+      'Blog',
+      'About NCSA',
+      'Join'
+    ].each do |link_text|
+      main_option = main_nav.link(:text, link_text)
 
-      ['Athlete Log In', 'Coach Log In', 'HS/Club Coach',
-       'Parents Start Here', 'Athletes Start Here'].each do |link_text|
-        @browser.goto @costpage
+      response = check_option_response(main_option)
+      failure << response unless response.nil?
 
-        @browser.element(:class, 'fa-bars').click
-        button = @browser.link(text: link_text)
+      unless link_text == 'Blog'
+        main_option.hover
 
-        case link_text
-          when 'Athlete Log In'
-            button.click
-            expect = 'Student-Athlete Sign In | NCSA Client Recruiting Management System'
-            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
-            assert_equal expect, @browser.title, msg
+        sub_menu = main_option.parent.element(:class, 'menu')
+        sub_list = sub_menu.elements(:tag_name, 'a')
 
-            @eyes.screenshot "#{link_text} login #{size.keys} view"
-          when 'Coach Log In'
-            button.click
-            expect = 'College Coach Login | NCSA Coach Recruiting Management System'
-            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
-            assert_equal expect, @browser.title, msg
-
-            assert @browser.link(text: 'Get Started Now').present?, 'Get Started button not found'
-
-            @eyes.screenshot "Hamburger menu redir to #{link_text} #{size.keys} view"
-          when 'HS/Club Coach'
-            button.click
-            expect = 'Team Edition | Recruiting Management System'
-            msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
-            assert_equal expect, @browser.title, msg
-
-            assert @browser.link(text: 'Learn More').enabled?, 'Learn More button not found'
-            assert @browser.link(text: 'Get Started Now').enabled?, 'Get Started button not found'
-
-            video_banner = @browser.wd.find_element(:class, 'video-banner__container')
-            @eyes.check_ignore "#{link_text} login #{size.keys} view", [video_banner]
-          when 'Parents Start Here'
-            msg = 'Parent Start Here button not found in hamburger'
-            assert @browser.element(:class, 'm-nav-start-link--parent').enabled?, msg
-
-          when 'Athletes Start Here'
-            msg = 'Athlete Start Here not found in hamburger'
-            assert @browser.element(:class, 'm-nav-start-link--athlete').enabled?, msg
+        sub_list.each do |option|
+          response = check_option_response(option)
+          failure << response unless response.nil?
         end
       end
-
-      result = @eyes.action.close(false)
-      msg = "Burger redir pages #{size.keys} - #{result.mismatches} mismatches found"
-      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
   end
 
-  def test_www_athlete_login_redir
-    @browser.goto @costpage
-    login_button = @browser.element(class: 'menu-item-has-children')
-    assert login_button.enabled?, 'Athlete Login button not found'
+  def test_cost_page
+    DailyMonitor.goto_page('cost_page')
 
-    login_button.hover
-    ['Athlete Profile Login', 'College Coach Login', 'HS/Club Coach Login'].each do |button|
-      assert @browser.link(text: button).enabled?, "#{button} option not found"
+    title = 'How much does NCSA Cost | NCSA Membership Levels'
+    assert_equal title, @browser.title, 'Incorrect page title'
+
+    check_main_nav
+    check_prices_buttons
+  end
+
+  def test_costpage_visual
+    DailyMonitor.goto_page('cost_page')
+
+    check_and_remove_chatra
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
+    failure = []
+
+    @viewports.each do |size|
+      open_eyes("TS-119 Test Cost Page - #{size.keys[0]}", size)
+
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
+
+      @eyes.screenshot "Cost page #{size.keys[0]} view"
+
+      unless size.keys.to_s =~ /desktop/
+        DailyMonitor.hamburger_menu.click
+        @eyes.screenshot "#{size.keys} view with hamburger menu open"
+        DailyMonitor.hamburger_menu.click
+      end
+
+      result = @eyes.action.close(false)
+      msg = "Cost page #{size.keys[0]} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
-    @browser.link(text: 'Athlete Profile Login').click
-    expect = 'Student-Athlete Sign In | NCSA Client Recruiting Management System'
-    msg = "Browser title: #{@browser.title} is not as expected: #{expect}"
-    assert_equal expect, @browser.title, msg
+    assert_empty failure
   end
 end

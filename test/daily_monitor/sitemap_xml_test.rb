@@ -3,22 +3,18 @@ require_relative '../test_helper'
 
 # TS-124
 # UI Test: Sitemap.xml - Weekly Task
-class SiteMapXMLTest < Minitest::Test
+class SiteMapXMLTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @site_map = config['pages']['site_map']
-
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   def test_sitemap_xml
-    @browser.get @site_map
-    refute_empty @browser.page_source, 'Sitemap page source is empty'
+    DailyMonitor.goto_page('site_map')
+    refute_empty @browser.html, 'Sitemap page source is empty'
 
     # list = @browser.find_elements(:tag_name, 'a'); list.pop
     # links = []
