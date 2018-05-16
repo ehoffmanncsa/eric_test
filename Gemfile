@@ -20,4 +20,4 @@ gem 'watir'
 gem 'watir-scroll'
 gem 'watir-webdriver'
 gem 'xml-simple'
-gem "ffaker"
+gem 'ffaker'
