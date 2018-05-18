@@ -27,7 +27,7 @@ GEM
       eyes_core (= 3.14.3)
       selenium-webdriver
       watir
-    faraday (0.15.1)
+    faraday (0.15.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
     gmail (0.6.0)
@@ -119,6 +119,7 @@ DEPENDENCIES
   capybara (~> 3.0.2)
   csv (~> 1.0.1)
   eyes_selenium
+  faraday (= 0.15.0)
   gmail
   jwt
   mechanize
