@@ -33,7 +33,7 @@ node {
 
   stage('Execute tests') {
     try {
-      sh "docker run --name testbox \
+      sh "docker run -it --name testbox \
           -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
           --privileged testbox 'rake test $APPLICATION'"

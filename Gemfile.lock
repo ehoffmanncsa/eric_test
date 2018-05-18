@@ -27,7 +27,7 @@ GEM
       eyes_core (= 3.14.3)
       selenium-webdriver
       watir
-    faraday (0.15.1)
+    faraday (0.15.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
     gmail (0.6.0)
@@ -139,4 +139,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
