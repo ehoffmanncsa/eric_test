@@ -29,6 +29,7 @@ GEM
       watir
     faraday (0.15.0)
       multipart-post (>= 1.2, < 3)
+    ffaker (2.9.0)
     ffi (1.9.23)
     gmail (0.6.0)
       gmail_xoauth (>= 0.3.0)
@@ -118,6 +119,7 @@ DEPENDENCIES
   csv (= 1.0.1)
   eyes_selenium (= 3.14.3)
   faraday (= 0.15.0)
+  ffaker
   gmail (= 0.6.0)
   jwt (= 2.1.0)
   mechanize (= 2.7.5)
