@@ -66,16 +66,24 @@ class RestoredAthleteRequestTest < Common
   end
 
   def send_invite_email
-    TEDAthleteApi.send_invite_email(@athlete['id'])
+    resp = TEDAthleteApi.send_invite_email(@athlete['id'])
+    assert resp['data']['id'], 'Inviting athlete failed'
   end
 
   def check_for_athlete_pop_up
-    UIActions.user_login(athlete_email)
+    UIActions.user_login(athlete_email); sleep 1
     assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
   end
 
   def grant_access
     @browser.element(:id, 'club-yes').click
+    athlete_sign_out
+  end
+
+  def athlete_sign_out
+    @browser.element(:class, 'fa-angle-down').click
+    navbar = @browser.element(:id, 'secondary-nav-menu')
+    navbar.link(:text, 'Logout').click
   end
 
   def check_athlete_has_status(status)
@@ -85,6 +93,7 @@ class RestoredAthleteRequestTest < Common
     athlete_row = @browser.element(:id, "athlete#{@athlete['id']}")
     assert (athlete_row.element(:text, athlete_email).present?), "Cannot find athlete: #{athlete_email}."
     assert (athlete_row.element(:text, status).present?), "Athlete #{athlete_email} is not listed as #{status}."
+    TED.sign_out
   end
 
   def check_and_clean_accepted_email
