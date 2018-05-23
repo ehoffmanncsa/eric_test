@@ -9,6 +9,7 @@ class RestoredAthleteRequestTest < Common
     TED.setup(@browser)
 
     TEDAthleteApi.setup
+    TEDTeamApi.setup
 
     @gmail = GmailCalls.new
     @gmail.get_connection
@@ -32,10 +33,7 @@ class RestoredAthleteRequestTest < Common
   def add_athlete
     resp = TEDAthleteApi.add_athlete(create_athlete_request_body)
     @athlete = resp
-    puts resp
-    sleep 3
-    assert resp['id'].present?, 'Adding athlete failed'
-    assert resp['id'].present?, 'Adding athlete failed'
+    assert resp['id'], 'Adding athlete failed'
   end
 
   def create_athlete_request_body
@@ -73,7 +71,6 @@ class RestoredAthleteRequestTest < Common
 
   def check_for_athlete_pop_up
     UIActions.user_login(athlete_email)
-
     assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
   end
 
@@ -104,8 +101,8 @@ class RestoredAthleteRequestTest < Common
     store_accepted_athlete_info
     delete_athlete
     add_athlete
-    check_athlete_has_status('Pending')
     send_invite_email
+    check_athlete_has_status('Pending')
     check_for_athlete_pop_up
     grant_access
     check_athlete_has_status('Accepted')

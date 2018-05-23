@@ -3,12 +3,9 @@ require 'minitest-ci'
 
 Minitest::Ci.new.start
 
-exceptions = %w[
-  test/pos/enroll_mvp_user_freshman_test.rb
-  test/pos/enroll_mvp_user_junior_test.rb
-  test/pos/enroll_use_ACH_payment_test.rb
-  test/ted/restored_athlete_request_test.rb
-]
+exceptions = ['test/pos/enroll_mvp_user_freshman_test.rb',
+              'test/pos/enroll_mvp_user_junior_test.rb',
+              'test/pos/enroll_use_ACH_payment_test.rb']
 
 namespace :first_run do
   desc 'execute all tests....'
