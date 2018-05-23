@@ -36,10 +36,17 @@ class DomainVersionsRedirectTest < Minitest::Test
   def test_domain_redirect
     no_redir = []; bad_resp = []
     @expect_301.each do |url|
-      resp = RestClient::Request.execute(method: :get, url: url)
+      begin
+        resp = RestClient::Request.execute(method: :get, url: url)
+      rescue => e
+        pp "[ERROR] #{url} - #{e}"
+        next
+      end
+
       bad_resp << "#{resp.code} - #{url}" unless resp.code.eql? 200
       no_redir << "#{url}" unless resp.history.last.code.eql? 301
     end
+
     assert_empty no_redir
     assert_empty bad_resp
   end
@@ -47,10 +54,17 @@ class DomainVersionsRedirectTest < Minitest::Test
   def test_domain_no_redirect
     bad_resp = []; redir = []
     @expect_200.each do |url|
-      resp = RestClient::Request.execute(method: :get, url: url)
+      begin
+        resp = RestClient::Request.execute(method: :get, url: url)
+      rescue => e
+        pp "[ERROR] #{url} - #{e}"
+        next
+      end
+
       bad_resp << "#{resp.code} - #{url}" unless resp.code.eql? 200
       redir << "#{url} - #{resp.history}" unless resp.history.empty?
     end
+
     assert_empty bad_resp
     assert_empty redir
   end

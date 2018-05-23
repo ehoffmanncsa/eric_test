@@ -33,15 +33,15 @@ module UIActions
     end
   end
 
-  def self.user_login(email_addr, pwd = nil)
-    password = pwd ? pwd : 'ncsa'
-    @browser.goto @config['clientrms']['login_page']
+  def self.user_login(email_addr, password = nil)
+    password ||= 'ncsa'
 
+    @browser.goto @config['clientrms']['login_page']
     @browser.text_field(:id, 'user_account_login').set email_addr
     @browser.text_field(:id, 'user_account_password').set password
     @browser.button(:name, 'commit').click; sleep 1
 
-    #waiting for the right title
+    # waiting for the right page title
     begin
       Watir::Wait.until { !@browser.title.match(/Student-Athlete Sign In/) }
     rescue => e
@@ -50,10 +50,10 @@ module UIActions
   end
 
   def self.ted_login(username = nil, password = nil)
-    @browser.goto @config['ted']['login_page']
-
     username = username.nil? ? @config['ted']['prem_username'] : username
     password = password.nil? ? @config['ted']['prem_password'] : password
+
+    @browser.goto @config['ted']['login_page']
     @browser.text_field(:id, 'email').set username
     @browser.text_field(:id, 'password').set password
     @browser.button(:text, 'Sign In').click; sleep 0.5

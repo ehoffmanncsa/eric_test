@@ -1,283 +1,204 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-def goto_feature_page(size, feature)
-  @browser.get @ted_page
-
-  if size == 'desktop'
-    @browser.action.move_to(@browser.find_element(:link_text, 'TEAM EDITION')).perform
-    @browser.find_element(:link_text, feature).click
-  else
-    @browser.find_element(:class, 'fa-bars').click; sleep 0.3
-    @browser.find_element(:link_text, 'TEAM EDITION').click; sleep 0.3
-    @browser.find_element(:link_text, feature).click
-  end
-
-  @browser
-end
-
-def page_spot_check(size)
-  # Find the free demo button
-  assert @browser.find_element(:link_text, 'Request a Free Demo').enabled?, 'Demo button not found'
-
-  # check top-nav, sub menu and coach login button
-  if size == 'desktop'
-    check_top_nav_and_sub_menu
-    assert @browser.find_element(:link_text, 'Coach Login').enabled?
-  else
-    check_hamburger_and_sub_menu
-  end
-
-  # Verify breadcrum is visible on this page
-  assert @browser.find_element(:class, 'breadcrumb').displayed?
-end
-
-def check_top_nav_and_sub_menu
-  # Make sure top nav bar exist
-  assert @browser.find_element(:id, 'block-menu-menu-team-edition-top-nav').displayed?, 'Top nav bar not found'
-
-  # Make sure header options enable
-  ['TEAM EDITION', 'WHY NCSA?', 'RESOURCE CENTER', 'GET STARTED'].each do |header|
-    assert @browser.find_element(:link_text, header).enabled?, "Menu header option #{header} not found"
-  end
-
-  # Check sub menu
-  @browser.action.move_to(@browser.find_element(:link_text, 'TEAM EDITION')).perform
-  ['Team Edition', 'Coach Features', 'Player Features', 'Pricing', "Who's Using It"].each do |option|
-    assert @browser.find_element(:link_text, option).enabled?, "#{option} feature not found"
-  end
-end
-
-def check_hamburger_and_sub_menu
-  # Make sure block contains tablet and burger exists
-  assert @browser.find_element(:id, 'block-block-63').enabled?, 'Tablet and Hamburger not found'
-
-  # Check options under burger
-  @browser.find_element(:class, 'fa-bars').click; sleep 0.3
-  ['Coach Login', 'TEAM EDITION', 'WHY NCSA?', 'RESOURCE CENTER', 'GET STARTED'].each do |option|
-    assert @browser.find_element(:link_text, option).enabled?, "Team option #{option} not found"
-  end
-
-  # Check burger sub-menu
-  @browser.find_element(:link_text, 'TEAM EDITION').click
-  ['Team Edition', 'Coach Features', 'Player Features', 'Pricing', "Who's Using It"].each do |option|
-    assert @browser.find_element(:link_text, option).enabled?, "#{option} feature not found"
-  end
-
-  @browser.find_element(:class, 'fa-bars').click # close it after use
-end
-
 # Daily Mornitor: TS-122
 # UI Test: Daily Monitor - TED Page
-class TEDPageMonitorTest < Minitest::Test
+class TEDPageMonitorTest < VisualCommon
   def setup
-    config = YAML.load_file('config/config.yml')
-    @ted_page = config['pages']['ted_page']
-    @demo_req_page = config['pages']['free_demo_request']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
-  # Start a applitool eye test session
-  # Within the session loop through different viewport size
-  # and navigate to TED page, verify page title and take page snapshot for comparison
-  def test_ted_page_views
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+  def goto_feature_page(size, feature)
+    DailyMonitor.goto_page('ted_www_page')
 
-      @eyes.open @browser, 'TS-122 Test TED Page', width, height
-      @browser.get @ted_page
-      assert @browser.title.match(/Club Coach College Recruiting Software/), @browser.title
+    if size == 'desktop'
+      @browser.link(:text, 'Team Edition').hover
+      @browser.link(:text, feature).click
+    else
+      @browser.element(:class, 'fa-bars').click
+      @browser.link(:text, 'Team Edition').click
+      @browser.link(:text, feature).click
+    end
+  end
 
-      view = size.keys[0].to_s
-      case view
-        when 'desktop'
-          # check coach login button, top-nav, menu headers
-          assert @browser.find_element(:link_text, 'Coach Login').enabled?, 'Coach Login not found'
-          assert @browser.find_element(:id, 'block-menu-menu-team-edition-top-nav').displayed?, 'Top nav bar not found'
-          ['TEAM EDITION', 'WHY NCSA?', 'RESOURCE CENTER', 'GET STARTED'].each do |header|
-            assert @browser.find_element(:link_text, header).enabled?, "Menu header option #{header} not found"
-          end
+  def page_spot_check(size)
+    # check top-nav, sub menu and coach login button
+    if size == 'desktop'
+      check_top_nav_and_sub_menu
+      assert @browser.link(:text, 'Coach Login').enabled?
+    else
+      check_hamburger_and_sub_menu
+    end
 
-        when 'iphone' then assert @browser.find_element(:id, 'block-block-63').enabled?, 'Tablet and Hamburger not found'
-        when 'ipad' then assert @browser.find_element(:id, 'block-block-63').enabled?, 'Tablet and Hamburger not found'
+    # Verify breadcrum is visible on this page
+    assert @browser.element(:class, 'breadcrumb').displayed?
+  end
+
+  def check_team_edition_sub_menu
+    result = []
+
+    @browser.link(:text, 'Team Edition').hover
+
+    ['Team Edition', 'Coach Features', 'Player Features', 'Pricing', "Who's Using It"].each do |option|
+      element = @browser.link(:text, option)
+
+      unless element.enabled?
+        result << "#{option} feature not found"
+        next
       end
 
-      # Take snapshot TED page with applitool eyes
-      @eyes.screenshot "TED page #{size.keys} view"
-      result = @eyes.action.close(false)
-      failure << "TED page #{size.keys} view - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      resp = DailyMonitor.get_url_response(element.attribute_value('href'))
+
+      if resp.is_a? Integer
+        result << "#{option} gives #{resp}" unless resp.eql? 200
+      else
+        result << resp
+      end
     end
 
-    assert_empty failure
+    result
   end
 
-  def test_TED_menu_headers
-    @browser.get @ted_page
-    check_top_nav_and_sub_menu
-  end
+  def check_top_nav_and_sub_menu
+    # Make sure top nav bar exist
+    assert @browser.element(:id, 'block-menu-menu-team-edition-top-nav').displayed?, 'Top nav bar not found'
 
-  # Verify Free Demo button, redir and page spotcheck
-  def test_request_demo_button_redir
+    # Make sure header options enable
     failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
 
-      @eyes.open @browser, 'TS-122 Test TED Request Demo Redir', width, height
-      @browser.get @ted_page
-      assert @browser.find_element(:partial_link_text, 'Request a Demo').enabled?, 'Demo button not found'
+    ['Team Edition', 'Why NCSA?', 'Resource Center', 'Get Started'].each do |header|
+      element = @browser.link(:text, header)
 
-      @browser.find_element(:partial_link_text, 'Request a Demo').click
-      assert @browser.title.match(/Signup for NCSA Team Edition/), @browser.title
-
-      @eyes.screenshot "Get Started form #{size.keys} view"
-      result = @eyes.action.close(false)
-      failure << "Get Started form #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  # Verify hamburger menu and phone icon enable for iphone and ipad view
-  def test_views_with_hamburger_menu_open
-    failure = []
-    @viewports.each do |size|
-      next if size.keys.to_s =~ /desktop/
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-122 Test TED Page with Hamburger Menu Open', width, height
-      @browser.get @ted_page
-
-      # Click on hamburger menu to open it
-      @browser.find_element(:class, 'fa-bars').click; sleep 0.3
-      @browser.find_element(:link_text, 'TEAM EDITION').click
-
-      @eyes.screenshot "#{size.keys} view with hamburger menu open"
-      result = @eyes.action.close(false)
-      failure << "#{size.keys} view with burger - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  # Verify coach login page redir and page spotcheck
-  def test_coach_login_page
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-122 Test TED Coach Login Page', width, height
-      @browser.get @ted_page
-
-      view = size.keys[0].to_s
-      case view
-        when 'desktop' then @browser.find_element(:link_text, 'Coach Login').click
-        else
-          @browser.find_element(:class, 'fa-bars').click
-          @browser.find_element(:link_text, 'Coach Login').click
+      unless element.enabled?
+        failure << "Menu header option #{header} not found"
+        next
       end
 
-      assert @browser.title.match(/Recruiting Management System/), @browser.title
+      resp = DailyMonitor.get_url_response(element.attribute_value('href'))
 
-      video_baner = @browser.find_element(:class, 'video-banner')
-      @eyes.check_ignore "Coach login page #{size.keys} view", [video_baner]
-      result = @eyes.action.close(false)
-      failure << "Coach login page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      if resp.is_a? Integer
+        failure << "#{header} gives #{resp}" unless resp.eql? 200
+      else
+        failure << resp
+      end
+    end
+
+    # Check Team Edition sub menu
+    unless @browser.link(:text, 'Team Edition').enabled?
+      result = check_team_edition_sub_menu
+      failure << result unless result.empty?
     end
 
     assert_empty failure
   end
 
-  # Verify feature pages redir and content spotcheck
-  def test_feature_pages
+  def check_hamburger_and_sub_menu
+    DailyMonitor.hamburger_menu.click
+
     failure = []
-    pages = { 'Coach Features': 'Team Edition Features for Club Coaches',
-              'Player Features': 'Team Edition Features for Athletes',
-              'Pricing': 'Team Edition Pricing',
-              "Who's Using It": 'Team Edition Reviews' }
+
+    ['Coach Login', 'Team Edition', 'Why NCSA?', 'Resource Center', 'Get Started'].each do |option|
+      element = @browser.link(:text, option)
+
+      unless element.enabled?
+        failure << "Hamburger menu option #{option} not found"
+        next
+      end
+
+      resp = DailyMonitor.get_url_response(element.attribute_value('href'))
+
+      if resp.is_a? Integer
+        failure << "#{resp} - #{leaf.text}" unless resp.eql? 200
+      else
+        failure << resp
+      end
+    end
+
+    # Check Team Edition sub menu
+    unless @browser.link(:text, 'Team Edition').enabled?
+      result = check_team_edition_sub_menu
+      failure << result unless result.empty?
+    end
+
+    assert_empty failure
+
+    DailyMonitor.hamburger_menu.click
+  end
+
+  def test_ted_page_visual
+    DailyMonitor.goto_page('ted_www_page')
+
+    title = 'NCSA Team Edition | Club Coach College Recruiting Software'
+    assert_equal title, @browser.title, 'Incorrect page title'
+
+    failure = []
 
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+      open_eyes("TS-122 Test TED Page - #{size.keys[0]}", size)
 
-      @eyes.open @browser, 'TS-122 Test TED Feature Pages', width, height
-      fails = []
+      @eyes.screenshot "TED page #{size.keys[0]} view"
+
+      result = @eyes.action.close(false)
+      msg = "TED page #{size.keys[0]} view - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
+    end
+
+    assert_empty failure
+  end
+
+  # Verify related pages redir and content spotcheck
+  def test_related_pages_visual
+    failure = []
+
+    pages = {
+      'Coach Features' => 'NCSA Team Edition Features for Club Coaches',
+      'Player Features' => 'NCSA Team Edition Features for Athletes',
+      'Pricing' => 'NCSA Team Edition Pricing | Cost of Team Edition',
+      "Who's Using It" => 'NCSA Team Edition Partners | Team Edition Reviews',
+      'Why NCSA?' => 'About NCSA Team Edition',
+      'Resource Center' => 'Recruiting Resources for Club & High School Coaches',
+      'Get Started' => 'Signup for NCSA Team Edition'
+    }
+
+    @viewports.each do |size|
+      open_eyes("TS-122 Test TED Related Pages - #{size.keys[0]}", size)
+
       pages.each do |page, expect_title|
         goto_feature_page(size.keys[0].to_s, page)
-        real_title = @browser.title
 
-        # Make sure we are on the right page
-        fails << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
-        fails << "#{size.keys} - Side-nav bar not found" unless @browser.page_source.include? 'block-menu-block-8--2'
+        unless @browser.title == expect_title
+          failure << "#{page} - Incorrect page title"
+          next
+        end
 
-        @eyes.screenshot "#{page} page #{size.keys} view"
+        unless @browser.div(:id, 'block-menu-block-8--2')
+          failure << "#{page} #{size.keys[0]} view - Side-nav bar not found"
+          next
+        end
+
+        @eyes.screenshot "#{page} page #{size.keys[0]} view"
+
         page_spot_check(size.keys[0].to_s)
       end
-      assert_empty fails
 
       result = @eyes.action.close(false)
-      failure << "Feature pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "#{page} #{size.keys[0]} view - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
   end
 
-  # Verify pages from headers redir and content spotcheck
-  def test_header_pages
-    failure = []
-    pages = { 'WHY NCSA?': 'About NCSA Team Edition',
-              'RESOURCE CENTER': 'Recruiting Resources for Club & High School Coaches' }
+  def test_request_demo_button
+    DailyMonitor.goto_page('ted_www_page')
 
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+    @browser.element(:visible_text, 'Request a Demo Here »').click
 
-      fails = []
-      @eyes.open @browser, 'TS-122 Test TED Pages from Header Menu', width, height
-      pages.each do |page, expect_title|
-        goto_feature_page(size.keys[0].to_s, page)
-        real_title = @browser.title
-
-        # Make sure we are on the right page and spot check
-        fails << "#{size.keys} - #{real_title} v.s. #{expect_title}" unless real_title.match expect_title
-        fails << "#{size.keys} - Side-nav bar found where it should not"  if @browser.page_source.include? 'block-menu-block-8--2'
-
-        @eyes.screenshot "#{page} page #{size.keys} view"
-        page_spot_check(size.keys[0].to_s)
-      end
-      assert_empty fails
-
-      result = @eyes.action.close(false)
-      failure << "#Header pages #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
-    end
-
-    assert_empty failure
-  end
-
-  def test_get_started_page
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      # Make sure we are on the right page
-      @browser.manage.window.resize_to(width, height)
-      goto_feature_page(size.keys[0].to_s, 'GET STARTED')
-      assert @browser.title.match(/Signup for NCSA Team Edition/)
-    end
+    title = 'Signup for NCSA Team Edition'
+    assert_equal title, @browser.title, 'Incorrect page title'
   end
 end

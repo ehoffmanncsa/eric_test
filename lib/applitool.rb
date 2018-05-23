@@ -8,7 +8,6 @@ class Applitool
     self.eyes = Applitools::Selenium::Eyes.new
     eyes.api_key = Default.static_info['applitool']['apikey']
     eyes.force_full_page_screenshot = true
-    eyes.hide_scrollbars = true
     eyes.match_level = match_level
     eyes.stitch_mode = :css
   end

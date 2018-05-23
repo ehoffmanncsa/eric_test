@@ -1,3 +1,61 @@
+# WWW pages
+# If WWW project needs to be env specific
+# Remove this from here and add it in env specific yml instead
+pages:
+  contact_us_page:
+    url: 'http://www.ncsasports.org/contact-us-address'
+    title: 'Contact Us | NCSA Address, Phone Number and Email'
+  cost_page:
+    url: 'http://www.ncsasports.org/who-is-ncsa/what-does-ncsa-do/what-does-ncsa-cost-how-much'
+    title: 'How much does NCSA Cost | NCSA Membership Levels'
+  events_page:
+    url: 'http://www.ncsasports.org/events'
+    title: 'The Ins and Outs of Camps, Combines and Showcases'
+  free_demo_request:
+    url: 'http://www.ncsasports.org/team/getting-started-form'
+    title: 'Signup for NCSA Team Edition'
+  home_page:
+    url: 'http://www.ncsasports.org/'
+    title: 'NCSA – Get Recruited. Play Sports in College | NCSASports.org'
+  partners_page:
+    url: 'http://www.ncsasports.org/who-is-ncsa/how-ncsa-works/ncsas-partners'
+    title: '120+ companies partner with NCSA | NCSA Partners'
+  press_media_page:
+    url: 'http://www.ncsasports.org/about-us/press-media'
+    title: 'Press and Media'
+  review_page:
+    url: 'http://www.ncsasports.org/ncsa-reviews'
+    title: '400+ NCSA Reviews from Parents, Athletes and College Coaches'
+  site_map:
+    url: 'http://www.ncsasports.org/sitemap.xml'
+    title:
+  sport_engine_webform:
+    url: 'http://www.ncsasports.org/lp/sports-engine-team-edition-getting-started-form'
+    title: 'Signup for NCSA Team Edition'
+  ted_www_page:
+    url: 'http://www.ncsasports.org/team'
+    title: 'NCSA Team Edition | Club Coach College Recruiting Software'
+
+# Browser viewport sizes
+viewport:
+  desktop:
+    width: 1270
+    height: 650
+  ipad:
+    width: 768
+    height: 650
+  iphone:
+    width: 400
+    height: 650
+
+# Applitool keys
+applitool:
+  apikey: 'GFQTsnb1ZrKslZ1T217BddUZ2tp0UaB9geadrZ8uGYg110'
+  viewkey: 'P9zuZaromHL6j9e8lpKsn1v6V107glO5IhPLIY1rDT51E110'
+
+# Browserstack key
+browserstack_key: 'sdUUPjomNV13XYurTgXg'
+
 # New recruit creds
 recruit:
   firstName: 'qa'
@@ -45,29 +103,26 @@ gmail:
   password: 'oz4efpwaYpJivWZDbAGrJMJf'
   google_voice: '802-676-0642'
 
-# Browser viewport sizes
-viewport:
-  desktop:
-    width: 1270
-    height: 650
-  ipad:
-    width: 768
-    height: 650
-  iphone:
-    width: 400
-    height: 650
-
-# Applitool keys
-applitool:
-  apikey: 'GFQTsnb1ZrKslZ1T217BddUZ2tp0UaB9geadrZ8uGYg110'
-  viewkey: 'P9zuZaromHL6j9e8lpKsn1v6V107glO5IhPLIY1rDT51E110'
-
-# Browserstack key
-browserstack_key: 'sdUUPjomNV13XYurTgXg'
-
 # Existing sports
-sport_ids: [17633, 17634, 17635, 17638, 17639, 17644, 17645,
+sport_ids: [17633', 17634, 17635, 17638, 17639, 17644, 17645,
             17652, 17653, 17659, 17660, 17665, 17666, 17683,
             17684, 17687, 17688, 17689, 17690, 17691, 17692,
             17695, 17696, 17701, 17702, 17706, 17707, 17708,
             17711, 17730, 17731]
+
+# NCSA premium discount codes
+ncsa_discount_code:
+  wce: '0.2'
+  family: '0.1'
+  ncsa: '0.1'
+  earlystart: '0.1'
+  military: '0.1'
+  nslp: '0.5'
+  mail_in_check: '1'
+  usatf: '0.05'
+  holiday: '0.1'
+  all_in: '1'
+  i_will: '1'
+  family_transfer: '1'
+  corporate_sponsorship: '1'
+  senior: '0.15'

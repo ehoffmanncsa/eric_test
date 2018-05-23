@@ -7,14 +7,13 @@ module POSSetup
   def self.setup(ui_object)
     @browser = ui_object
     UIActions.setup(@browser)
-
-    @offerings = 'https://qa.ncsasports.org/clientrms/membership/offerings'
   end
 
   def self.set_password(email)
     UIActions.user_login(email); sleep 1
 
     begin
+      # in some cases there will be a popup modal for athlete to accept
       Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
       popup = @browser.element(:class, 'mfp-content')
       popup.element(:class, 'button--secondary').click
@@ -43,8 +42,10 @@ module POSSetup
     raise "[ERROR] Swoosh redir to #{@browser.title}" unless @browser.title.match(/Client Recruiting Management System/)
 
     # select all checkboxes
+    # I can't seem to find any better option then xpath for the checkbox yet
     ['profile', 'website', 'communication', 'supporting', 'process'].each do |commit|
-      div = @browser.div(:id, commit); div.click
+      div = @browser.div(:id, commit)
+      div.click
       div.element(:xpath, "//*[@id=\"#{commit}\"]/div[2]/div/div[2]/div/i").click
     end
 
@@ -55,20 +56,28 @@ module POSSetup
     get_activate.click
   end
 
+  def self.goto_offerings
+    @browser.goto 'https://qa.ncsasports.org/clientrms/membership/offerings'
+  end
+
   def self.get_cart_count
     cart = @browser.element(:id, 'shopping-cart')
     count = cart.element(:class, 'js-cart-count').text
     return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
   end
 
+  def self.open_payment_plan
+    @browser.link(:text, 'Choose Payment Plan').click; sleep 0.5
+  end
+
   def self.choose_a_package(package)
-    @browser.goto @offerings
+    goto_offerings
 
     # get initial cart count
     cart_count = get_cart_count.nil? ? 0 : get_cart_count
 
     # open up payment plan grid
-    @browser.link(:text, 'Choose Payment Plan').click
+    open_payment_plan
 
     # get the cells from the last row for highest price options
     block = @browser.div(:class, 'payment-plans-js')
@@ -79,7 +88,7 @@ module POSSetup
     # select package as assigned, increment cart count by 1
     # return price of the selection
     case package
-      when 'champion' then cells[2].click; cart_count += 1
+    when 'champion' then cells[2].click; cart_count += 1
       when  'elite' then cells[3].click; cart_count += 1
       when 'mvp' then cells[4].click; cart_count += 1
     end; sleep 2
@@ -93,38 +102,80 @@ module POSSetup
     @browser.element(:class, 'button--next').click
   end
 
-  def self.choose_payment_plan(size = 'medium')
-    #check_discount_calculate
-    @full_price = @browser.elements(:class, 'payment-block')[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
-
+  def self.choose_payment_plan(size = nil)
     # choose 6 months payment plan by default for testing purpose
     blocks = @browser.elements(:class, 'payment-block').to_a
+    full_price = blocks[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
+
+    size ||= 'medium'
     case size
       when 'small' then blocks[2].click
       else; blocks[1].click
     end
 
-    # click next button, return full price
+    # click next button
     @browser.element(:class, 'summary-js').click
-    @full_price
+
+    # return full_price
+    full_price
   end
 
-  def self.check_discount_calculate(enroll_yr = nil)
-    # if nothing is passed in, assumed freshman
+  def self.apply_discount_enrollment(code)
+    @browser.text_field(:placeholder, 'Discount Code').value = code
+    @browser.element(:class, 'apply').click; sleep 0.5
+    Watir::Wait.until { discount_message.present? }
+
+    check_discount_message(code)
+  end
+
+  def self.apply_discount_offerings(code)
+    @browser.element(:placeholder, 'Enter Discount Code').send_keys code
+    @browser.element(:class, 'apply').click; sleep 0.5
+    Watir::Wait.until { discount_message.present? }
+
+    check_discount_message(code)
+  end
+
+  def self.discount_message
+    @browser.element(:class, 'discount-message')
+  end
+
+  def self.check_discount_message(code)
+    expect_msg = "Discount code #{code.upcase} successfully applied"
+    actual_msg = discount_message.text.split('!').first
+    raise "[Incorrect Message] Expect: #{expect_msg} - Actual: #{actual_msg}" unless actual_msg.eql? expect_msg
+  end
+
+  def self.remove_discount
+    @browser.link(:text, 'Remove').click
+    Watir::Wait.while { discount_message.present? }
+  end
+
+  def self.calculate(full_price, months, discount_code = nil)
+    interest_rate = 1
+    case months
+    when 6 then interest_rate = 1.11
+    when 12 then interest_rate = 1.19
+    when 18 then interest_rate = 1.194
+    end
+
+    pay_rate = (discount_code.nil?) ? 1 : (1 - Default.static_info['ncsa_discount_code'][discount_code].to_f)
+
+    (((full_price * interest_rate) / months) * pay_rate).round * months
+  end
+
+  def self.check_enrollment_discount_calculate(enroll_yr = nil)
+    # if nothing is passed in, assume freshman
     enroll_yr ||= 'freshman'
+
+    failure = []
+    full_price = @browser.elements(:class, 'payment-block')[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
 
     # activate discount feature
     @browser.span(:class, 'discount-js').click
 
-    failure = []
-    @full_price = @browser.elements(:class, 'payment-block')[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
-    # Apply both discount code, one at a time
-    # Collect all the prices and do calculation on the side
-    # Compare the 2 numbers to make sure the displayed prices are calculated accurately
-    ['NSLP', 'Military'].each do |code|
-      @browser.text_field(:placeholder, 'Discount Code').value = code
-      @browser.element(:class, 'apply').click; sleep 1
-      Watir::Wait.until { @browser.element(:class, 'remove-discount-js').present? }
+    ['nslp', 'military'].each do |code|
+      apply_discount_enrollment(code)
 
       dsc_pmts = []
       @browser.elements(:class, 'payment-block').each do |block|
@@ -132,10 +183,10 @@ module POSSetup
       end
 
       cal_prices = []
-      months = [1, 6, 12]
+      months = [1, 6, 12] # add 18 here when that feature available and pop last 2 if senior
       months.pop if enroll_yr == 'senior'
       months.each do |months|
-        cal_prices << calculate(@full_price, months,  code)
+        cal_prices << calculate(full_price, months, code)
       end
 
       cal_prices.zip(dsc_pmts).map do |c, d|
@@ -143,7 +194,7 @@ module POSSetup
         failure << msg unless c.eql? d
       end
 
-      @browser.element(:class, 'remove-discount-js').click
+      remove_discount
       cal_prices.clear; dsc_pmts.clear
     end
 
@@ -151,7 +202,7 @@ module POSSetup
   end
 
   def self.pick_VIP_items(all = false)
-    @browser.goto @offerings
+    goto_offerings
 
     # get initial cart count
     cart_count = get_cart_count.nil? ? 0 : get_cart_count
@@ -245,24 +296,6 @@ module POSSetup
     select_billing_state
 
     sign_and_auth
-  end
-
-  def self.calculate(full_price, months, discount_code = nil)
-    interest_rate = 1
-    pay_rate = 1
-
-    case months
-      when 6 then interest_rate = 1.11
-      when 12 then interest_rate = 1.19
-      when 18 then interest_rate = 1.194
-    end
-
-    case discount_code
-      when 'NSLP' then pay_rate = 0.5
-      when 'Military' then pay_rate = 0.9
-    end
-
-    (((full_price * interest_rate) / months) * pay_rate).round * months
   end
 
   def self.get_cart_total

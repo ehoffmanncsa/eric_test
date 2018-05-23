@@ -20,7 +20,11 @@ node {
   }
 
   stage('git checkout') {
-    checkout scm
+    checkout([
+      $class: 'GitSCM',
+      branches: scm.branches,
+      extensions: [[$class: 'CleanBeforeCheckout']]
+    ])
   }
 
   stage('Check Selenium health') {
@@ -36,7 +40,7 @@ node {
       sh "docker run --name testbox \
           -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
-          --privileged testbox 'rake test $APPLICATION'"
+          --privileged testbox 'bundle exec rake test $APPLICATION'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
