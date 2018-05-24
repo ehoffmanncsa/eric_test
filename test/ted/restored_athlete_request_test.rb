@@ -28,6 +28,8 @@ class RestoredAthleteRequestTest < Common
   def delete_athlete
     deleted_athlete = TEDAthleteApi.delete_athlete(@athlete['id'])
     assert deleted_athlete['attributes']['deleted'], 'Athlete not deleted successfully'
+
+    sleep 20 # Has to wait for APS delete job to actually finish
   end
 
   def add_athlete
@@ -70,8 +72,17 @@ class RestoredAthleteRequestTest < Common
     assert resp['data']['id'], 'Inviting athlete failed'
   end
 
+  def check_and_clean_invite_email
+    @gmail.mail_box = 'TED_Welcome'
+    emails = @gmail.get_unread_emails
+
+    refute_empty emails, 'No invitation email'
+
+    @gmail.delete(emails)
+  end
+
   def check_for_athlete_pop_up
-    UIActions.user_login(athlete_email); sleep 1
+    UIActions.user_login(athlete_email); sleep 2
     assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
   end
 
@@ -111,6 +122,7 @@ class RestoredAthleteRequestTest < Common
     delete_athlete
     add_athlete
     send_invite_email
+    check_and_clean_invite_email
     check_athlete_has_status('Pending')
     check_for_athlete_pop_up
     grant_access
