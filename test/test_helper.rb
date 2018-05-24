@@ -15,6 +15,7 @@ require 'jwt'
 require 'time'
 require 'ffaker'
 require_relative 'common'
+require_relative 'visual_common'
 
 Minitest::Ci.clean = false
 

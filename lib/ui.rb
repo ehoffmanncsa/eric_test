@@ -19,6 +19,7 @@ class UI
     # default to jenkins server hostname
     # use 'http://localhost:4444/wd/hub' when run in docker locally
     # or when run docker on your machine (E.g: Mac)
+    #'http://kb-jenkins01:4444/wd/hub' - jenkins server
     opts = { timeout: 120, url: 'http://kb-jenkins01:4444/wd/hub' }
     self.driver = Watir::Browser.new :"#{browser}", opts
     self.driver.driver.file_detector = lambda do |args|

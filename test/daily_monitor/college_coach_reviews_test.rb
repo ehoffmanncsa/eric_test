@@ -3,57 +3,41 @@ require_relative '../test_helper'
 
 # Daily Mornitor: TS-263
 # UI Test: Reviews Page - College Coach Reviews
-class CollegeCoachReviewsTest < Minitest::Test
+class CollegeCoachReviewsTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @review_page = config['pages']['review_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   def goto_coach_reviews
-    @browser.get @review_page
-    nav_bar = @browser.find_element(:id, 'block-menu-block-25--2')
-    menu = nav_bar.find_element(:class, 'menu')
-    menu.find_element(:class, 'menu-mlid-6233').click
+    DailyMonitor.goto_page('review_page')
 
-    str = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
-    msg = "Browser title: #{@browser.title} is not as expected: #{str}"
-    assert_equal str, @browser.title, msg
+    nav_bar = @browser.element(:id, 'block-menu-block-25--2')
+    menu = nav_bar.element(:class, 'menu')
+    menu.element(:class, 'menu-mlid-6233').click
 
-    # scroll down to trigger image loading first
-    @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view
-    sleep 0.5
+    title = "Do College Coaches Use NCSA 99% of Colleges Used NCSA in 2016"
+    assert_equal title, @browser.title, 'Incorrect page title'
   end
 
   def test_college_coach_reviews_page
+    goto_coach_reviews
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-263 Test College Coach Reviews Page', width, height
-      goto_coach_reviews
+      open_eyes( "TS-263 Test College Coach Reviews Page - #{size.keys[0]}", size)
 
       # check footer
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot review page with applitool eyes
-      @eyes.screenshot "College Coach Reviews #{size.keys} view"
+      @eyes.screenshot "College Coach Reviews #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "College Coach Reviews #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "College Coach Reviews #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 
@@ -61,31 +45,23 @@ class CollegeCoachReviewsTest < Minitest::Test
   end
 
   def test_testimonials_page
+    goto_coach_reviews
+
+    @browser.link(:text, 'testimonials page').click
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
+
     failure = []
     @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
-
-      @eyes.open @browser, 'TS-263 Test Testimonials Page', width, height
-      goto_coach_reviews
-      section = @browser.find_element(:class, 'node-title-reviews--do-coaches-use-ncsa-copy-block---blockquotes')
-      field = section.find_element(:class, 'row').find_element(:class, 'field-name-body')
-      field.find_elements(:tag_name, 'blockquote').last.location_once_scrolled_into_view
-      sleep 0.5
-      @browser.find_element(:link_text, 'testimonials page').click
-
-      # scroll down to trigger image loading first
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view
-      sleep 0.5
+      open_eyes("TS-263 Test Testimonials Page - #{size.keys[0]}", size)
 
       # check footer
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
       # Take snapshot review page with applitool eyes
-      @eyes.screenshot "Testimonials #{size.keys} view"
+      @eyes.screenshot "Testimonials #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      msg = "Testimonials page #{size.keys} - #{result.mismatches} mismatches found"
+      msg = "Testimonials page #{size.keys[0]} - #{result.mismatches} mismatches found"
       failure << msg unless result.mismatches.eql? 0
     end
 

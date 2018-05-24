@@ -4,68 +4,59 @@ require_relative '../test_helper'
 # Daily Mornitor: TS-170
 # UI Test: Daily Monitor - Contact Us Pages
 # Verify That All Left Nav Links are Present and Working
-class ContactUsPagesMonitorTest < Minitest::Test
+class ContactUsPagesMonitorTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @contact_us = config['pages']['contact_us_page']
-    @viewports = [
-      { ipad: config['viewport']['ipad'] },
-      { iphone: config['viewport']['iphone'] },
-      { desktop: config['viewport']['desktop'] }
-    ]
-    @eyes = Applitool.new 'Content'
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    super
 
-    @pages = { 'About Us': 'About NCSA Next College Student Athlete',
-               'What We Do': 'What We Do',
-               'How We Do It': 'What to Expect with NCSA',
-               'What Does NCSA Cost?': 'How much does NCSA Cost',
-               'Products': 'NCSA Product',
-               'Getting Started': '3 Easy Steps to Get Started with NCSA',
-               'Our Mission': 'Our Mission',
-               'Our People': 'Meet the NCSA Team',
-               'Partners': 'NCSA Partners',
-               'Press & Media': 'Press and Media',
-               'Careers': 'NCSA Careers',
-               'Contact Us': 'Contact Us' }
+    @related_pages = {
+      'About Us' => 'About NCSA Next College Student Athlete',
+      'What We Do' => 'What We Do | The NCSA Experience',
+      'How We Do It' => 'What to Expect with NCSA',
+      'What Does NCSA Cost?' => 'How much does NCSA Cost | NCSA Membership Levels',
+      'Products' => 'NCSA Product | The Collegiate Athletic Recruiting Network',
+      'Getting Started' => '3 Easy Steps to Get Started with NCSA',
+      'Our Mission' => 'Our Mission | NCSA is the trusted source in recruiting',
+      'Our People' => 'Meet the NCSA Team | The NCSA Difference',
+      'Partners' => '120+ companies partner with NCSA | NCSA Partners',
+      'Press & Media' => 'Press and Media',
+      'Careers' => 'NCSA Careers | Open Opportunities with NCSA',
+      'Contact Us' => 'Contact Us | NCSA Address, Phone Number and Email'
+    }
   end
 
   def teardown
-    @browser.quit
+    super
   end
 
   def test_contact_us_page
-    failure = []
-    @viewports.each do |size|
-      width = size.values[0]['width']
-      height = size.values[0]['height']
+    DailyMonitor.goto_page('contact_us_page')
+    DailyMonitor.subfooter.scroll.to; sleep 0.5
 
-      @eyes.open @browser, 'TS-170 Test Contact Us Page', width, height
-      @browser.get @contact_us
-      assert @browser.title.match(/Contact Us/), @browser.title
+    failure = []
+
+    @viewports.each do |size|
+      open_eyes("TS-170 Test Contact Us Page - #{size.keys[0]}", size)
+
+      title = @related_pages['Contact Us']
+      assert_equal title, @browser.title, 'Incorrect page title'
 
       # verify about us nav bar and its buttons
-      assert @browser.find_element(:id, 'block-menu-block-19--2').displayed?, 'Side nav-bar not found'
+      assert @browser.element(:id, 'block-menu-block-19--2').present?, 'Side nav-bar not found'
 
-      failure = []
-      @pages.each do |link_text, _title|
-        failure << "#{button} button not found" unless @browser.find_element(:link_text, link_text).enabled?
+      button_not_found = []
+      @related_pages.each do |link_text, _title|
+        button_not_found << "#{button}" unless @browser.link(:text, link_text).enabled?
       end
-      assert_empty failure
 
-      #scroll to bottom for bottom icons to load
-      @browser.find_elements(:class, 'container').last.location_once_scrolled_into_view; sleep 0.5
+      assert_empty button_not_found
 
-      # Make sure subfooter has correct phone number for different viewports
-      subfooter = UIActions.get_subfooter
-      UIActions.check_subfooter_msg(subfooter, size.keys[0].to_s)
+      DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 
-      # Take snapshot events page with applitool eyes
-      @eyes.screenshot "Contact Us page #{size.keys} view"
+      @eyes.screenshot "Contact Us page #{size.keys[0]} view"
+
       result = @eyes.action.close(false)
-      failure << "Contact Us page #{size.keys} - #{result.mismatches} mismatches found" unless result.mismatches.eql? 0
+      msg = "Contact Us page #{size.keys[0]} - #{result.mismatches} mismatches found"
+      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure
@@ -73,13 +64,18 @@ class ContactUsPagesMonitorTest < Minitest::Test
 
   def test_nav_bar_buttons_redir
     failure = []
-    @pages.each do |link_text, expect_title|
-      @browser.get @contact_us
-      @browser.find_element(:link_text, link_text).click; sleep 1
-      real_title = @browser.title
 
-      failure << "#{link_text} page title: #{real_title} vs #{expect_title}" unless real_title.match expect_title
+    @related_pages.each do |link_text, expect_title|
+      DailyMonitor.goto_page('contact_us_page')
+
+      menu_block = @browser.div(:id, 'block-menu-block-19--2')
+      menu_block.link(:text, link_text).click
+
+      page_title = @browser.title
+      msg = "#{link_text} page title: #{page_title} V.S. #{expect_title}"
+      failure << msg unless page_title.eql? expect_title
     end
+
     assert_empty failure
   end
 end

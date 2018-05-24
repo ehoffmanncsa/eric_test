@@ -5,28 +5,31 @@ require 'zip'
 
 # Daily Mornitor: TS-186
 # UI Test: Daily Monitor - Press/Media ZIP Download Links Don't 404
-class PressMediaZipDownloadTest < Minitest::Test
+class PressMediaZipDownloadTest < VisualCommon
   def setup
-    config = YAML.load_file('old_config/config.yml')
-    @press_media = config['pages']['press_media_page']
+    super
 
     File.expand_path('downloads/', __FILE__)
-
     @agent = Mechanize.new
-    @ui = UI.new 'browserstack', 'chrome'
-    @browser = @ui.driver
   end
 
   def teardown
     FileUtils.rm_rf(Dir.glob('downloads'))
-    @browser.quit
+
+    super
+  end
+
+  def goto_press_media
+    DailyMonitor.goto_page('press_media_page')
+
+    title = 'Press and Media'
+    assert_equal title, @browser.title, 'Incorrect page title'
   end
 
   def test_download_zip_file
-    @browser.get @press_media
-    assert @browser.title.match(/Press and Media/), @browser.title
+    goto_press_media
 
-    download_link = @browser.find_element(:link_text, 'download our Brand Guidelines').attribute('href')
+    download_link = @browser.link(:text, 'download our Brand Guidelines').attribute('href')
     file_name = "media-#{Random.rand(99_999)}.zip"
     @agent.get(download_link).save("downloads/#{file_name}")
 
@@ -45,13 +48,13 @@ class PressMediaZipDownloadTest < Minitest::Test
   end
 
   def test_download_pdf_files
+    goto_press_media
+
     failure = []
-    @browser.get @press_media
-    assert @browser.title.match(/Press and Media/), @browser.title
 
     # make sure all downloaded pdf files not empty
     ['NCSA Fact Sheet', 'NCSA History'].each do |link_text|
-      download_link = @browser.find_element(:link_text, link_text).attribute('href')
+      download_link = @browser.link(:text, link_text).attribute('href')
       file_name = "media-#{Random.rand(99_999)}.pdf"
       @agent.get(download_link).save("downloads/#{file_name}")
 

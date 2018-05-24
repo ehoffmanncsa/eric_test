@@ -30,43 +30,47 @@ class TEDUpdateCoachDetailsTest < Common
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
 
     # check info loading correctly
-    info_form = @browser.elements(:tag_name, 'form').first
-    inputs = info_form.elements(:tag_name, 'input').to_a
-    firstname = inputs[0].attribute_value('value')
-    lastname = inputs[1].attribute_value('value')
-    email = inputs[2].attribute_value('value')
-    phone = inputs[3].attribute_value('value')
-    position = inputs[4].attribute_value('value')
+    firstname = @browser.text_field(:id, 'firstName')
+    lastname = @browser.text_field(:id, 'lastName')
+    email = @browser.text_field(:id, 'email')
+    phone = @browser.text_field(:id, 'phone')
+    position = @browser.text_field(:id, 'positionTitle')
 
     failure = []
+
     msg = "Incorrect first name #{firstname}"
-    failure << msg unless firstname.eql? 'Tiffany'
+    failure << msg unless firstname.attribute_value('value').eql? 'Tiffany'
+
     msg = "Incorrect last name #{lastname}"
-    failure << msg unless lastname.eql? 'Rea'
+    failure << msg unless lastname.attribute_value('value').eql? 'Rea'
+
     msg = "Incorrect email #{email}"
-    failure << msg unless email.eql? 'ncsa.automation+ted@gmail.com'
+    failure << msg unless email.attribute_value('value').eql? 'ncsa.automation+ted@gmail.com'
+
     assert_empty failure
 
     # now make change, refresh page and check change
     new_phone = MakeRandom.number(10)
     new_position = MakeRandom.name
-    inputs[3].set new_phone
-    inputs[4].set new_position
-    info_form.button(:text, 'Update').click
 
-    alert = info_form.div(:class, 'alert')
+    phone.set new_phone
+    position.set new_position
+
+    @browser.button(:text, 'Update').click
+
+    alert = @browser.div(:class, 'alert')
     assert_equal 'User information successfully updated.', alert.text, 'Incorrect success alert'
 
     @browser.refresh
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
-    phone = inputs[3].attribute_value('value')
-    position = inputs[4].attribute_value('value')
+
     failure = []
     msg = "Incorrect phone number expected #{new_phone} vs #{phone}"
-    failure << msg unless phone.eql? new_phone.to_s
+    failure << msg unless phone.attribute_value('value').eql? new_phone.to_s
 
     msg = "Incorrect position expected #{new_position} vs #{position}"
-    failure << msg unless position.eql? position
+    failure << msg unless position.attribute_value('value').eql? new_position
+
     assert_empty failure
   end
 end
