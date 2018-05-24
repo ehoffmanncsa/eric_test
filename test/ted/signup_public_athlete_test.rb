@@ -87,9 +87,6 @@ class SignupPublicAthleteTest < Common
     assert_equal @browser.element(:id, 'athlete_email').value,
       @athlete_email,
       'Athlete email not present on Edit Client page.'
-    # assert_equal @browser.element(:id, 'parent1_email').value,
-    #   @parent_email,
-    #   'Parent email not present on Edit Client page.'
   end
 
   def verify_athlete
