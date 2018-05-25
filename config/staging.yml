@@ -10,7 +10,7 @@ fasttrack:
 
 # TED coach/partner login
 ted:
-  login_page: 'https://team-staging.ncsasports.org/sign_in'
+  base_url: 'https://team-staging.ncsasports.org'
   prem_username: 'ncsa.automation+ted@gmail.com'
   prem_password: 'password'
   free_username: 'noel.ronnie1@yopmail.com'

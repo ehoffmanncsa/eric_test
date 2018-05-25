@@ -10,7 +10,7 @@ fasttrack:
 
 # TED coach/partner login
 ted:
-  login_page:
+  base_url:
   prem_username:
   prem_password:
   free_username:

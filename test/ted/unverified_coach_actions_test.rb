@@ -79,19 +79,27 @@ class UnverifiedCoachActionsTest < Common
     @athlete_name = "#{@first_name} #{@last_name}"
   end
 
-  # def check_new_coach_is_added_to_staff
-  #   UIActions.ted_login
-  #   TED.go_to_staff_tab
-  #
-  #   @browser.element(:text, @new_coach_name).parent
-  #   assert coach_row.button(:text, 'Unverified').enabled?, 'Unverified button not found'
-  # end
+  def college_coach_emails_hidden
+    @browser.goto(Default.env_config['ted']['base_url'] + '/colleges/15568')
+    UIActions.wait_for_spinner
+
+    refute @browser.element(:text, 'Staff Directory').present?, 'College Coaches visible to unverified coach.'
+  end
+
+  def add_other_staff_blocked
+    refute @browser.element(:text, 'Add Staff').present?, 'Add Staff button visible to unverified coach.'
+  end
+
+  def verify_other_staff_blocked
+    @browser.button(:text, 'Unverified').click
+    assert TED.modal.element(:class, 'modal-body').text.include?('You do not have permission to verify coaches.'),
+      'Modal does not block unverified coaches from adding new staff.'
+  end
 
   def test_unverified_coach_add_new_athlete
     UIActions.ted_login(@coach_email, @coach_password)
     TED.go_to_athlete_tab
     set_athlete_attributes
-
     add_ted_athlete_through_ui
     send_invite_email
     delete_athlete
@@ -102,19 +110,16 @@ class UnverifiedCoachActionsTest < Common
     UIActions.ted_login(@coach_email, @coach_password)
     TED.go_to_athlete_tab
     add_ted_athlete_through_ui
-
     send_invite_email
     delete_athlete
   end
-  #
-  # def test_unverified_coach_blocked_features
-  #   college_coach_emails_hidden
-  #   add_other_staff_blocked
-  #   verify_other_staff_blocked
-  # end
-  #
-  # def test_signup_unverified_coach_to_existing_org
-  #   add_unverified_coach_to_existing_org
-  #   check_new_coach_is_added_to_staff
-  # end
+
+  def test_unverified_coach_blocked_features
+    UIActions.ted_login(@coach_email, @coach_password)
+    college_coach_emails_hidden
+
+    TED.go_to_staff_tab
+    add_other_staff_blocked
+    verify_other_staff_blocked
+  end
 end
