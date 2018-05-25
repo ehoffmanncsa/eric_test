@@ -4,6 +4,10 @@ def APPLICATION = params.application_name
 def CONFIG_FILE = params.config_file
 
 node {
+  stage('git checkout') {
+    checkout scm
+  }
+
   stage('Launch Selenium Grid') {
     sh 'docker pull elgalu/selenium:latest';
     try {
@@ -17,14 +21,6 @@ node {
         -v /var/lib/jenkins/workspace/regression_tests:/tmp/qa_regression \
         -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
         --privileged elgalu/selenium'
-  }
-
-  stage('git checkout') {
-    checkout([
-      $class: 'GitSCM',
-      branches: scm.branches,
-      extensions: [[$class: 'CleanBeforeCheckout']]
-    ])
   }
 
   stage('Check Selenium health') {
