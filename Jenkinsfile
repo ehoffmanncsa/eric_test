@@ -34,12 +34,10 @@ node {
 
   stage('Execute tests') {
     try {
-      println 'rake test "${APPLICATION}"'
-
-      sh 'docker run --name testbox \
+      sh "docker run --name testbox \
           -v ${WORKSPACE}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
-          --privileged testbox rake test "${APPLICATION}"'
+          --privileged testbox 'rake test ${APPLICATION}'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
