@@ -34,7 +34,7 @@ node {
   stage('Execute tests') {
     try {
       sh "docker run --name testbox \
-          -v "$(pwd)":/tmp/qa_regression \
+          -v '$(pwd)':/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
           --privileged testbox 'rake test $APPLICATION'"
     } catch(error) {
