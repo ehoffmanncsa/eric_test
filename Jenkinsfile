@@ -36,7 +36,7 @@ node {
       sh 'docker run --name testbox \
           -v "$(pwd)":/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
-          --privileged testbox rake test "$APPLICATION"'
+          --privileged testbox rake test "${APPLICATION}"'
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
