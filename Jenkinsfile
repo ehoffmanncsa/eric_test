@@ -34,6 +34,8 @@ node {
 
   stage('Execute tests') {
     try {
+      println 'rake test "${APPLICATION}"'
+
       sh 'docker run --name testbox \
           -v ${WORKSPACE}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
