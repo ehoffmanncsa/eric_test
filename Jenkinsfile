@@ -2,7 +2,7 @@
 
 def APPLICATION = params.application_name
 def CONFIG_FILE = params.config_file
-def WORKSPACE = pwd
+def WORKSPACE = 'sh pwd'
 println ${WORKSPACE}
 
 node {
