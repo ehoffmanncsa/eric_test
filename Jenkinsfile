@@ -3,7 +3,6 @@
 def APPLICATION = params.application_name
 def CONFIG_FILE = params.config_file
 def WORKSPACE = 'sh pwd'
-println ${WORKSPACE}
 
 node {
   stage('git checkout') {
