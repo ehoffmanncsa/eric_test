@@ -28,7 +28,7 @@ node {
   }
 
   stage('Build testbox') {
-    sh 'docker build -t testbox .'
+    sh 'docker build --no-cache -t testbox .'
   }
 
   stage('Execute tests') {
