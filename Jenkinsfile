@@ -18,7 +18,7 @@ node {
 
     sh 'docker run -d -it --name elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
-        -v ${pwd}:/tmp/qa_regression \
+        -v "$(pwd)":/tmp/qa_regression \
         -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
         --privileged elgalu/selenium'
   }
@@ -34,7 +34,7 @@ node {
   stage('Execute tests') {
     try {
       sh 'docker run --name testbox \
-          -v ${pwd}:/tmp/qa_regression \
+          -v "$(pwd)":/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
           --privileged testbox rake test ${APPLICATION}'
     } catch(error) {
