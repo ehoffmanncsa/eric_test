@@ -2,26 +2,29 @@
 
 def APPLICATION = params.application_name
 def CONFIG_FILE = params.config_file
-def WORKSPACE = 'sh pwd'
 
 node {
+
+  def PWD = pwd();
+
   stage('git checkout') {
     checkout scm
   }
 
   stage('Launch Selenium Grid') {
-    sh 'docker pull elgalu/selenium:latest';
     try {
       sh 'docker rm -f elgalu'
     } catch(err) {
       print err
     }
 
-    sh 'docker run -d -it --name elgalu -p 4444:24444 \
+    sh 'docker pull elgalu/selenium:latest';
+
+    sh "docker run -d -it --name elgalu -p 4444:24444 \
         -v /dev/shm:/dev/shm \
-        -v ${WORKSPACE}:/tmp/qa_regression \
+        -v ${PWD}:/tmp/qa_regression \
         -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
-        --privileged elgalu/selenium'
+        --privileged elgalu/selenium"
   }
 
   stage('Check Selenium health') {
@@ -35,9 +38,9 @@ node {
   stage('Execute tests') {
     try {
       sh "docker run --name testbox \
-          -v ${WORKSPACE}:/tmp/qa_regression \
+          -v ${PWD}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
-          --privileged testbox 'rake test ${APPLICATION}'"
+          --privileged testbox 'rake test $APPLICATION'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
