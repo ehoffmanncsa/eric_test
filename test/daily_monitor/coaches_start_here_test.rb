@@ -65,7 +65,7 @@ class CoachesStartHereTest < VisualCommon
 
     button = @browser.element(:class, 'button--primary')
 
-    expected_url = 'https://team.ncsasports.org'
+    expected_url = 'https://team.ncsasports.org/'
     url = button.attribute('href')
     assert_equal expected_url, url, 'Login url for HS Coach is incorrect'
 
