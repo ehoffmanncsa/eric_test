@@ -21,7 +21,7 @@ module TED
     # this shows all the teams
     Watir::Wait.until { sidebar.present? }
     sidebar.link(:text, 'Roster Management').click
-    UIActions.wait_for_spinner
+    UIActions.wait_for_spinner; sleep 1
   end
 
   def self.goto_account_settings

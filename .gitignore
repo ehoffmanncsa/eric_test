@@ -20,3 +20,6 @@ package-lock.json
 
 # Athletes CSV file
 athletes.csv
+
+# Gemfile.lock
+Gemfile.lock

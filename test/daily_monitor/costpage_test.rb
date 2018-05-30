@@ -38,7 +38,7 @@ class CostPageMonitorTest < VisualCommon
       expected = 'http://www.ncsasports.org/Schedule-Your-NCSA-Recruiting-Evaluation'
 
       unless url == expected
-        failure "#{button.attribute_value('class')} has incorrect url"
+        failure << "#{button.attribute_value('class')} has incorrect url"
         next
       end
 
