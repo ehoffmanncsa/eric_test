@@ -1,4 +1,4 @@
-FROM ruby:2.4.0
+FROM ruby:2.5.0
 MAINTAINER Tiffany Rea <trea@ncsasports.org>
 
 RUN apt-get update \

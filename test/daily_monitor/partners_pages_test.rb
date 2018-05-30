@@ -127,7 +127,7 @@ class PartnersPagesMonitorTest < VisualCommon
     DailyMonitor.goto_page('partners_page')
     @browser.link(:text, 'All Partners Page').click
 
-    title = 'View all NCSA partners | 120+ strategic partners'
+    title = 'View all NCSA partners | 90+ strategic partners'
     assert_equal title, @browser.title, 'Incorrect page title'
 
     # check url response
@@ -171,7 +171,7 @@ class PartnersPagesMonitorTest < VisualCommon
 
       # verify mailto link
       email_address = @browser.links(:text, 'partnerships@ncsasports.org')
-      assert email_address.present?, 'Cannot find mailto email address'
+      assert email_address, 'Cannot find mailto email address'
       assert (email_address.attribute('href').include? 'mailto:'), 'Email href not including mailto'
 
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)

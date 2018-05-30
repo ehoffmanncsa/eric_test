@@ -35,7 +35,7 @@ class TEDPageMonitorTest < VisualCommon
     end
 
     # Verify breadcrum is visible on this page
-    assert @browser.element(:class, 'breadcrumb').displayed?
+    assert @browser.element(:class, 'breadcrumb').present?
   end
 
   def check_team_edition_sub_menu
