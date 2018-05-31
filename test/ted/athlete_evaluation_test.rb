@@ -87,6 +87,7 @@ class AthleteEvaluationTest < Common
   end
 
   def test_PA_cannot_evaluate_athlete
+    skip # need some time to rethink this case
     TED.impersonate_org
     goto_athlete_evaluation
     select_2star_rating
