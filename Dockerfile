@@ -8,7 +8,7 @@ RUN mkdir /tmp/qa_regression
 WORKDIR /tmp/qa_regression
 
 COPY Gemfile /tmp/qa_regression
-RUN cd /tmp/qa_regression && bundle install
+RUN cd /tmp/qa_regression
 
 COPY Rakefile /tmp/qa_regression
 COPY lib /tmp/qa_regression/lib
