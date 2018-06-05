@@ -8,6 +8,7 @@ class SignupPublicAthleteTest < Common
   def setup
     super
     TED.setup(@browser)
+    POSSetup.setup(@browser)
   end
 
   def teardown
@@ -54,11 +55,18 @@ class SignupPublicAthleteTest < Common
     inputs[10].send_keys(FFaker::PhoneNumber.short_phone_number)
   end
 
-  def check_redirect_to_clientrms
+  def check_redirect_to_clientrms_password_reset
     Watir::Wait.until { @browser.element(:text, 'Set a Username and Password').present? }
 
     assert_equal 'https://qa.ncsasports.org/clientrms/user_accounts/edit',
-      @browser.url, 'No redirect to Client RMS'
+      @browser.url, 'No redirect to Client RMS reset password page'
+  end
+
+  def check_redirect_to_clientrms_login
+    Watir::Wait.until { @browser.element(:text, 'Student-Athlete Sign In').present? }
+
+    assert_equal 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in',
+      @browser.url, 'No redirect to Client RMS login page'
   end
 
   def assign_new_password
@@ -122,9 +130,23 @@ class SignupPublicAthleteTest < Common
     @zip_code = post_body[:recruit][:zip]
   end
 
+  def login_to_athlete_profile_with_password_reset
+    POSSetup.set_password(@athlete_email)
+
+    @browser.element(:class, 'fa-angle-down').click
+    navbar = @browser.element(:id, 'secondary-nav-menu')
+    navbar.link(:text, 'Logout').click
+  end
+
+  def login_to_athlete_profile
+    @browser.text_field(:id, 'user_account_login').set @athlete_email
+    @browser.text_field(:id, 'user_account_password').set 'ncsa'
+    @browser.button(:name, 'commit').click; sleep 1
+  end
+
   def test_public_new_athlete_sign_up
     fillout_signup_form
-    check_redirect_to_clientrms
+    check_redirect_to_clientrms_password_reset
     assign_new_password
     check_athlete_profile_info
     verify_athlete
@@ -133,9 +155,10 @@ class SignupPublicAthleteTest < Common
 
   def test_public_existing_athlete_sign_up
     create_ncsa_recruit_from_api
+    login_to_athlete_profile_with_password_reset
     fillout_signup_form
-    check_redirect_to_clientrms
-    assign_new_password
+    check_redirect_to_clientrms_login
+    login_to_athlete_profile
     check_athlete_profile_info
     verify_athlete
     delete_athlete

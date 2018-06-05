@@ -14,6 +14,7 @@ require 'csv'
 require 'jwt'
 require 'time'
 require 'ffaker'
+require 'pry'
 require_relative 'common'
 require_relative 'visual_common'
 
