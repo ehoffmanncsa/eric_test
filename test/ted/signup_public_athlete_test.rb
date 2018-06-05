@@ -97,6 +97,12 @@ class SignupPublicAthleteTest < Common
       'Athlete email not present on Edit Client page.'
   end
 
+  def check_athlete_profile_has_parent_email
+    assert_equal @browser.element(:id, 'parent1_email').value,
+      @parent_email,
+      'Parent email not present on Edit Client page.'
+  end
+
   def verify_athlete
     UIActions.ted_login
     TED.goto_roster
@@ -149,6 +155,7 @@ class SignupPublicAthleteTest < Common
     check_redirect_to_clientrms_password_reset
     assign_new_password
     check_athlete_profile_info
+    check_athlete_profile_has_parent_email
     verify_athlete
     delete_athlete
   end
