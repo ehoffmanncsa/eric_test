@@ -95,16 +95,6 @@ class FasttrackAddNewRecruit < Common
     attendees.sample.set
   end
 
-  def create_save_emails
-    %w[emailPrimary parent1EmailPrimary].each do |email|
-      @browser.text_field(:name, email).set @recruit_email
-
-      if email.eql? 'emailPrimary'
-        open('recruit_emails', 'a') { |f| f << "#{@recruit_email}," }
-      end
-    end
-  end
-
   def main(enroll_yr = nil)
     setup
     goto_recruit_info_form
@@ -113,7 +103,6 @@ class FasttrackAddNewRecruit < Common
     select_specials
     select_dropdowns
     select_hs_grad_year(enroll_yr)
-    create_save_emails
 
     # find submit button and click it then close browser
     tables = @browser.elements(:class, 'filter').to_a

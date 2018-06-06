@@ -7,6 +7,8 @@ class AddRecruitToFasttrackTest < Common
   def setup
     # add a new recruit and get back his email address and name
     @recruit_email, @firstName, @lastName = FasttrackAddNewRecruit.new.main
+    pp "Athlete created in this script: #{@recruit_email}"
+
     super
   end
 

@@ -4,10 +4,6 @@
 .DS_Store?
 **/.DS_Store
 
-# Recruit emails list #
-#######################
-recruit_emails
-
 # Test Reports #
 ################
 test/reports/*
