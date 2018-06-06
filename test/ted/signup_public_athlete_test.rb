@@ -37,15 +37,26 @@ class SignupPublicAthleteTest < Common
     sleep 1
   end
 
+  def fill_out_birthday(element)
+    year = Time.now.year - rand(15 .. 18)
+    date = (Time.now).strftime("%m-%d")
+    birthday = "#{year}-#{date}"
+
+    text = "arguments[0].type='text'"
+    TED.modal.execute_script(text, element)
+
+    element.send_keys birthday
+  end
+
   def fill_inputs
     inputs = @browser.elements(:tag_name, 'input').to_a
 
     inputs[0].send_keys(@athlete_first_name)
     inputs[1].send_keys(@athlete_last_name)
-    inputs[2].send_keys(Time.now.year + 1)
+    inputs[2].send_keys(Time.now.year + rand(1 .. 3))
 
-    birth_year = Time.now.year - 15
-    inputs[3].send_keys("04/01/#{birth_year}")
+    fill_out_birthday(inputs[3])
+
     inputs[4].send_keys(@zip_code || FFaker::AddressUS.zip_code)
     inputs[5].send_keys(@athlete_phone || FFaker::PhoneNumber.short_phone_number)
     inputs[6].send_keys(@athlete_email)
