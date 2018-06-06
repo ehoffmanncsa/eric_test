@@ -6,8 +6,9 @@ require_relative 'make_random'
 # To add new recruit via Fasttrack and return his email and username
 class FasttrackAddNewRecruit < Common
   def initialize
-    @recruit_email = "automation#{SecureRandom.hex(2)}@ncsasports.org"
-    @firstName = MakeRandom.name; @lastName = MakeRandom.name
+    @recruit_email = MakeRandom.email
+    @firstName = MakeRandom.first_name
+    @lastName = MakeRandom.last_name
   end
 
   def setup
@@ -21,6 +22,7 @@ class FasttrackAddNewRecruit < Common
     list = nav_bar.elements(:tag_name, 'li')
     add = list.detect { |e| e.text == 'Add' }
     add.hover; add.link(:text, 'Recruit').click
+
     Watir::Wait.until { @browser.title =~ /Enter Recruit Information/ }
   end
 
@@ -43,6 +45,7 @@ class FasttrackAddNewRecruit < Common
 
   def select_dropdowns
     Watir::Wait.until { @browser.select_list(:name, 'highSchoolId').present? }
+
     %w[parent1Relationship parent1PrimaryPhoneType
        scoutID rcUserID gender sport highSchoolId].each do |attr_name|
       list = @browser.select_list(:name, attr_name); list.click

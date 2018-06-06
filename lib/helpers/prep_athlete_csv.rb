@@ -13,12 +13,12 @@ class AtheteCSV
   end
 
   def generate_data
-  	@firstname = MakeRandom.name
-  	@lastname = MakeRandom.name
+  	@firstname = MakeRandom.first_name
+  	@lastname = MakeRandom.last_name
   	@email = MakeRandom.email
   	@grad_yr = MakeRandom.grad_yr
-  	@zipcode = MakeRandom.number(5)
-  	@phone = MakeRandom.number(10)
+  	@zipcode = MakeRandom.zip_code
+  	@phone = MakeRandom.phone_number
     @team = get_team_name
   end
 

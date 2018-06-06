@@ -36,6 +36,12 @@ module MakeRandom
 	end
 
 	def self.zip_code
-		FFaker::AddressUS.zip_code
+		num = nil
+    loop do
+      num = FFaker::AddressUS.zip_code
+      break if num[0] != '0'
+    end
+
+    num
 	end
 end
