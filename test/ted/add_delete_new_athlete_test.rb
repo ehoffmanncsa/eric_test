@@ -101,7 +101,6 @@ class TEDAddDeleteNewAthleteTest < Common
 
   def check_welcome_email
     @gmail.mail_box = 'TED_Welcome'
-    @gmail.subject = 'Welcome to NCSA Team Edition'
     emails = @gmail.get_unread_emails
     refute_empty emails, 'No welcome email found after inviting athlete'
 

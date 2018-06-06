@@ -42,7 +42,7 @@ node {
           --name testbox \
           -v ${PWD}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
-          --privileged testbox 'rake test $APPLICATION'"
+          --privileged testbox 'bundle install && rake test $APPLICATION'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
