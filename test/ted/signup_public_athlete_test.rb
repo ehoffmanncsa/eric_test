@@ -128,6 +128,7 @@ class SignupPublicAthleteTest < Common
     verify_button.click
     TED.modal.button(:text, 'Verify').click
     UIActions.wait_for_modal
+    sleep 1
 
     assert_equal 'Accepted',
       athlete_row.elements(:tag_name, 'td')[4].text,
