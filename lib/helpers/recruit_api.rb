@@ -32,12 +32,12 @@ class RecruitAPI
     grad_yr = year
     body = { recruit: {
                athlete_email: @email,
-               athlete_first_name: MakeRandom.name,
-               athlete_last_name: MakeRandom.name,
-               athlete_phone: MakeRandom.number(10),
+               athlete_first_name: MakeRandom.first_name,
+               athlete_last_name: MakeRandom.last_name,
+               athlete_phone: Default.static_info['gmail']['google_voice'],
                graduation_year: grad_yr,
                state_code: 'IL',
-               zip: MakeRandom.number(5),
+               zip: MakeRandom.zip_code,
                sport_id: @sport_id.to_s,
                event_id: '3285'
               }

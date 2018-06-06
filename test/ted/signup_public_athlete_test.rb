@@ -17,8 +17,8 @@ class SignupPublicAthleteTest < Common
 
   def store_names_and_emails
     @athlete_email ||= MakeRandom.email
-    @athlete_first_name ||= FFaker::Name.first_name
-    @athlete_last_name ||= FFaker::Name.last_name
+    @athlete_first_name ||= MakeRandom.first_name
+    @athlete_last_name ||= MakeRandom.last_name
     @parent_email = MakeRandom.email
   end
 
@@ -57,13 +57,13 @@ class SignupPublicAthleteTest < Common
 
     fill_out_birthday(inputs[3])
 
-    inputs[4].send_keys(@zip_code || FFaker::AddressUS.zip_code)
-    inputs[5].send_keys(@athlete_phone || FFaker::PhoneNumber.short_phone_number)
+    inputs[4].send_keys(@zip_code || MakeRandom.zip_code)
+    inputs[5].send_keys(@athlete_phone || MakeRandom.phone_number)
     inputs[6].send_keys(@athlete_email)
-    inputs[7].send_keys(FFaker::Name.first_name)
-    inputs[8].send_keys(FFaker::Name.last_name)
+    inputs[7].send_keys(MakeRandom.first_name)
+    inputs[8].send_keys(MakeRandom.last_name)
     inputs[9].send_keys(@parent_email)
-    inputs[10].send_keys(FFaker::PhoneNumber.short_phone_number)
+    inputs[10].send_keys(MakeRandom.phone_number)
   end
 
   def check_redirect_to_clientrms_password_reset

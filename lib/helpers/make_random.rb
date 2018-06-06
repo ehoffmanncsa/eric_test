@@ -22,4 +22,20 @@ module MakeRandom
   def self.email
     "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
   end
+
+	def self.first_name
+		FFaker::Name.first_name
+	end
+
+	def self.last_name
+		FFaker::Name.last_name
+	end
+
+	def self.phone_number
+		FFaker::PhoneNumber.short_phone_number
+	end
+
+	def self.zip_code
+		FFaker::AddressUS.zip_code
+	end
 end
