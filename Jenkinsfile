@@ -16,7 +16,7 @@ node {
 
   stage('Launch Selenium Grid') {
     try {
-      sh 'docker rm -f elgalu'
+      sh "docker rm -f ${SEL_GRID}"
     } catch(err) {
       print err
     }
