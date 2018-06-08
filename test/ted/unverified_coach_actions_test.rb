@@ -12,6 +12,9 @@ class UnverifiedCoachActionsTest < Common
     @coach_password = Default.env_config['ted']['unverified_password']
     @org_id ||= '737'
     @api = TEDApi.new('unverified_coach')
+
+    @gmail = GmailCalls.new
+    @gmail.get_connection
   end
 
   def teardown
@@ -99,12 +102,51 @@ class UnverifiedCoachActionsTest < Common
       'Modal does not block unverified coaches from adding new staff.'
   end
 
+  def check_welcome_email
+    @gmail.mail_box = 'TED_Welcome'
+    emails = @gmail.get_unread_emails
+    refute_empty emails, 'No welcome email found after inviting athlete'
+
+    @gmail.delete(emails)
+  end
+
+  def accept_invitation
+    UIActions.user_login(@athlete_email); sleep 2
+    Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
+    popup = @browser.element(:class, 'mfp-content')
+    popup.element(:class, 'button--secondary').click
+  end
+
+  def check_athlete_accepted
+    @browser.goto(Default.env_config['ted']['base_url'])
+    status = TED.get_athlete_status(@athlete_name)
+    assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
+  end
+
+
+  def check_recommend_college
+    @browser.goto(Default.env_config['ted']['base_url'] + "/athletes/#{@athlete_id}")
+    @browser.button(:text, 'Recommend Colleges').click
+    search_bar = @browser.element(:type, 'search')
+    search_bar.send_keys 'UCLA'
+    search_bar.send_keys :enter
+    sleep 1
+    @browser.element(:class, 'fa-thumbs-o-up').click
+    sleep 1
+    assert @browser.element(:text, 'Remove Recommendation').present?, 'Could not recommend college to athlete'
+    TED.modal.element(:class, 'fa-times').click
+  end
+
   def test_unverified_coach_add_new_athlete
     UIActions.ted_login(@coach_email, @coach_password)
     TED.go_to_athlete_tab
     set_athlete_attributes
     add_ted_athlete_through_ui
     send_invite_email
+    check_welcome_email
+    accept_invitation
+    check_athlete_accepted
+    check_recommend_college
     delete_athlete
   end
 
