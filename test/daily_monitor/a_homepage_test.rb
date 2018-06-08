@@ -122,7 +122,7 @@ class HomePageTest < VisualCommon
   def check_hamburger_menu
     # Using Ipad viewport size
     size = @viewports[0]
-    @browser.window.resize_to(DailyMonitor.width(size), DailyMonitor.height(size))
+    DailyMonitor.resize_browser(size)
 
     DailyMonitor.hamburger_menu.click # open
     menu = @browser.div(:id, 'block-menu-menu-single-page-menu-interior')

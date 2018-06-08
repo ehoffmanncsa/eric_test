@@ -22,7 +22,7 @@ class PartnersPagesMonitorTest < VisualCommon
 
     failure = []
     @viewports.each do |size|
-      @browser.window.resize_to(DailyMonitor.width(size), DailyMonitor.height(size))
+      DailyMonitor.resize_browser(size)
 
       # make sure breadcrums present
       failure << "#{size.keys[0]} Breab crumbs not found" unless @browser.element(:class, 'breadcrumb').present?
@@ -162,17 +162,19 @@ class PartnersPagesMonitorTest < VisualCommon
     title = 'NCSA Partnership Program | Apply Now'
     assert_equal title, @browser.title, 'Incorrect page title'
 
+    # verify mailto link
+    email_address = @browser.link(:text, 'partnerships@ncsasports.org')
+    assert email_address, 'Cannot find mailto email address'
+
+    assert (email_address.attribute('href').include? 'mailto:'),
+      'Email href not including mailto'
+
     DailyMonitor.subfooter.scroll.to; sleep 0.5
 
     failure = []
 
     @viewports.each do |size|
       open_eyes("TS-169 Test Apply Partnership Page - #{size.keys[0]}", size)
-
-      # verify mailto link
-      email_address = @browser.links(:text, 'partnerships@ncsasports.org')
-      assert email_address, 'Cannot find mailto email address'
-      assert (email_address.attribute('href').include? 'mailto:'), 'Email href not including mailto'
 
       DailyMonitor.check_subfooter_msg(size.keys[0].to_s)
 

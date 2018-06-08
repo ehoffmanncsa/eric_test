@@ -65,7 +65,7 @@ class TEDPageMonitorTest < VisualCommon
 
   def check_top_nav_and_sub_menu
     # Make sure top nav bar exist
-    assert @browser.element(:id, 'block-menu-menu-team-edition-top-nav').displayed?, 'Top nav bar not found'
+    assert @browser.element(:id, 'block-menu-menu-team-edition-top-nav').present?, 'Top nav bar not found'
 
     # Make sure header options enable
     failure = []
@@ -150,25 +150,26 @@ class TEDPageMonitorTest < VisualCommon
     assert_empty failure
   end
 
-  # Verify related pages redir and content spotcheck
-  def test_related_pages_visual
+  def test_related_page_spotcheck
     failure = []
 
-    pages = {
+    related_pages = {
       'Coach Features' => 'NCSA Team Edition Features for Club Coaches',
       'Player Features' => 'NCSA Team Edition Features for Athletes',
       'Pricing' => 'NCSA Team Edition Pricing | Cost of Team Edition',
       "Who's Using It" => 'NCSA Team Edition Partners | Team Edition Reviews',
-      'Why NCSA?' => 'About NCSA Team Edition',
+      'Why NCSA?' => 'About NCSA Team Edition | NCSA for Club Coaches',
       'Resource Center' => 'Recruiting Resources for Club & High School Coaches',
       'Get Started' => 'Signup for NCSA Team Edition'
     }
 
     @viewports.each do |size|
-      open_eyes("TS-122 Test TED Related Pages - #{size.keys[0]}", size)
+      DailyMonitor.resize_browser(size)
 
-      pages.each do |page, expect_title|
+      related_pages.each do |page, expect_title|
         goto_feature_page(size.keys[0].to_s, page)
+
+        page_spot_check(size.keys[0].to_s)
 
         unless @browser.title == expect_title
           failure << "#{page} - Incorrect page title"
@@ -179,15 +180,7 @@ class TEDPageMonitorTest < VisualCommon
           failure << "#{page} #{size.keys[0]} view - Side-nav bar not found"
           next
         end
-
-        @eyes.screenshot "#{page} page #{size.keys[0]} view"
-
-        page_spot_check(size.keys[0].to_s)
       end
-
-      result = @eyes.action.close(false)
-      msg = "#{page} #{size.keys[0]} view - #{result.mismatches} mismatches found"
-      failure << msg unless result.mismatches.eql? 0
     end
 
     assert_empty failure

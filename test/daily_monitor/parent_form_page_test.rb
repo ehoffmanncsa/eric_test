@@ -29,7 +29,7 @@ class ParentFormPageTest < VisualCommon
   def test_redir_from_mobile_homepage
     # Using Ipad viewport size
     size = @viewports[1]
-    @browser.window.resize_to(DailyMonitor.width(size), DailyMonitor.height(size))
+    DailyMonitor.resize_browser(size)
 
     goto_parent_form
 

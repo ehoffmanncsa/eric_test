@@ -15,6 +15,10 @@ module DailyMonitor
     size.values[0]['height']
   end
 
+  def self.resize_browser(size)
+    @browser.window.resize_to(width(size), height(size))
+  end
+
   def self.goto_page(page)
     @browser.goto @pages[page]['url']
   end
