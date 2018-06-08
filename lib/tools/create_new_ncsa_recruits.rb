@@ -66,7 +66,7 @@ class RecruitCreator
   end
 end
 
-student_count =ARGV[0]
+student_count = ARGV[0].nil? ? 1 : ARGV[0]
 for i in 1 .. student_count.to_i
   RecruitCreator.new.main
 end
