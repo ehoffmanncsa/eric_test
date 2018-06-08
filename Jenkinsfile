@@ -4,6 +4,7 @@ def APPLICATION = params.application_name
 def CONFIG_FILE = params.config_file
 def SEL_GRID = params.application_name + '_' + 'selenium_grid'
 def TEST_BOX = params.application_name + '_' + 'testbox'
+def PORT = params.port
 
 node {
 
@@ -23,7 +24,7 @@ node {
     sh 'docker pull elgalu/selenium:latest';
 
     sh "docker run --restart=unless-stopped \
-        -d -it --name ${SEL_GRID} -p 4444:24444 \
+        -d -it --name ${SEL_GRID} -p ${PORT} \
         -v /dev/shm:/dev/shm \
         -v ${PWD}:/tmp/qa_regression \
         -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
