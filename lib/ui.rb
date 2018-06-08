@@ -21,7 +21,7 @@ class UI
     # or when run docker on your machine (E.g: Mac)
     #'http://kb-jenkins01:4444/wd/hub' - jenkins server
 
-    port = ENV['PORT'].nil? ? 4444 : ENV['PORT']
+    port = ENV['PORT'].nil? ? 4444 : ENV['PORT'].split(':')[0]
 
     opts = { timeout: 120, url: "http://kb-jenkins01:#{port}/wd/hub" }
     self.driver = Watir::Browser.new :"#{browser}", opts
