@@ -24,7 +24,8 @@ node {
     sh 'docker pull elgalu/selenium:latest';
 
     sh "docker run --restart=unless-stopped \
-        -d -it --name ${SEL_GRID} -p ${PORT} \
+        -d -it --name ${SEL_GRID} \
+        -p ${PORT}:${PORT} \
         -v /dev/shm:/dev/shm \
         -v ${PWD}:/tmp/qa_regression \
         -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
@@ -32,7 +33,7 @@ node {
   }
 
   stage('Check Selenium health') {
-    sh './script/grid_check.sh'
+    sh "./script/grid_check.sh ${PORT}"
   }
 
   stage('Build testbox') {
@@ -45,6 +46,7 @@ node {
           --name ${TEST_BOX} \
           -v ${PWD}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
+          -e PORT=${PORT} \
           --privileged testbox 'bundle install && rake test $APPLICATION'"
     } catch(error) {
         println error
