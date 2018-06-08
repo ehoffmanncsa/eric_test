@@ -10,6 +10,8 @@ class UnverifiedCoachActionsTest < Common
 
     @coach_email = Default.env_config["ted"]["unverified_username"]
     @coach_password = Default.env_config['ted']['unverified_password']
+    @org_id ||= '737'
+    @api = TEDApi.new('unverified_coach')
   end
 
   def teardown
@@ -50,19 +52,20 @@ class UnverifiedCoachActionsTest < Common
   end
 
   def send_invite_email
-    # find and click the not sent button for the newly added athlete
-    # make sure Edit Athlete modal shows up before proceeding
-    row = TED.get_row_by_name(@athlete_name)
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
-    assert TED.modal.visible?, 'Edit Athlete modal not found'
+    endpoint = "organizations/#{@org_id}/athletes"
+    all_athletes = @api.read(endpoint)['data']
+    athlete = all_athletes.detect { |athlete| athlete['attributes']['profile']['email'].eql? @athlete_email }
+    assert athlete, 'Athlete does not exist in org'
 
-    TED.modal.button(:text, 'Save & Invite').click
-    UIActions.wait_for_modal
+    @athlete_id = athlete['id']
+    endpoint = "athletes/#{@athlete_id}/invite_single_athlete"
+    response_body = @api.patch(endpoint, nil)
+    expected_meta_resp = { "invited" => 1 }
 
-    # refresh the page and go back to athlete tab
-    # make sure athlete status is now pending after email sent
-    status = TED.get_athlete_status(@athlete_name)
-    assert_equal status, 'Pending', "Expected status #{status} to be Pending"
+    assert_equal expected_meta_resp, response_body["meta"], "Invite athlete API request didn't work"
+    assert_equal "pending",
+      response_body["data"]["attributes"]["invite-status"],
+      'Athlete did not get invited'
   end
 
   def delete_athlete

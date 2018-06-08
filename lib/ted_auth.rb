@@ -20,6 +20,9 @@ class TEDAuth
   		when 'free_coach'
   			@username = creds['ted']['free_username']
   			@password = creds['ted']['free_password']
+			when 'unverified_coach'
+				@username = creds['ted']['unverified_username']
+				@password = creds['ted']['unverified_password']
       end
 		end
 	end
