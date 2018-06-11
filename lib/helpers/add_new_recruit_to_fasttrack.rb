@@ -15,6 +15,10 @@ class FasttrackAddNewRecruit < Common
     super
   end
 
+  def teardown
+    super
+  end
+
   def goto_recruit_info_form
     UIActions.fasttrack_login
 
@@ -60,39 +64,59 @@ class FasttrackAddNewRecruit < Common
     # so select fix value
     { 'eventID' => 'TAKKLE Free RFEs',
       'primaryPhoneType' => 'My Mobile',
-      'highSchoolStateId' => 'AB' }.each do |k, v|
+      'highSchoolStateId' => 'IL' }.each do |k, v|
       list = @browser.select_list(:name, k)
       list.select(v)
     end
   end
 
-  def select_hs_grad_year(enroll_yr = nil)
-    grad_yr = Time.now.year
+  def grad_year(enroll_yr = nil)
+    grad_year = Time.now.year
     month = Time.now.month
+
     case enroll_yr
-      when 'freshman'
-        month > 6 ? grad_yr += 4 : grad_yr += 3
       when 'sophomore'
-        month > 6 ? grad_yr += 3 : grad_yr += 2
+        month > 6 ? grad_year += 3 : grad_year += 2
       when 'junior'
-        month > 6 ? grad_yr += 2 : grad_yr += 1
+        month > 6 ? grad_year += 2 : grad_year += 1
       when 'senior'
-        month > 6 ? grad_yr += 1 : grad_yr
+        month > 6 ? grad_year += 1 : grad_year
+      else
+        month > 6 ? grad_year += 4 : grad_year += 3
     end
 
-    list = @browser.element(:name, 'highSchoolGradYear'); list.click
-    options = list.options.to_a; options.shift
+    grad_year
+  end
 
-    if enroll_yr.nil?
-      options.sample.click
-    else
-      options.each { |opt| opt.click if opt.text == grad_yr.to_s }
-    end
+  def select_hs_grad_year(enroll_yr = nil)
+    list = @browser.select_list(:name, 'highSchoolGradYear')
+    list.click
+
+    list.select grad_year(enroll_yr).to_s
   end
 
   def select_attendee
     attendees = @browser.radios(:name, 'eventAtendees').to_a
     attendees.sample.set
+  end
+
+  def select_birthday
+    %w[month day year].each do |attr_name|
+      list = @browser.select_list(:name, attr_name)
+      list.click
+
+      options = list.options.to_a
+
+      if attr_name == 'year'
+        list.select (grad_year - 17).to_s
+      else
+        list.select options.sample.text
+      end
+    end
+  end
+
+  def log_out
+    @browser.link(:text, 'Log Out').click
   end
 
   def main(enroll_yr = nil)
@@ -103,13 +127,15 @@ class FasttrackAddNewRecruit < Common
     select_specials
     select_dropdowns
     select_hs_grad_year(enroll_yr)
+    select_birthday
 
     # find submit button and click it then close browser
     tables = @browser.elements(:class, 'filter').to_a
     col = tables[2].elements(:tag_name, 'td').last
     btn = col.elements(:tag_name, 'input').last
     btn.click
-    @browser.close
+
+    log_out
 
     [@recruit_email, @firstName, @lastName]
   end
