@@ -16,6 +16,7 @@ require_relative '../test_helper'
 class AddPaymentMethodTest < Common
   def setup
     super
+
     TED.setup(@browser)
 
     @gmail = GmailCalls.new
@@ -28,6 +29,7 @@ class AddPaymentMethodTest < Common
   def teardown
     TEDOrgApi.org_id = @org_id
     TEDOrgApi.delete_org
+
     super
   end
 
@@ -64,8 +66,10 @@ class AddPaymentMethodTest < Common
   end
 
   def sign_TOS
-    TED.modal.text_field(:placeholder, 'Signature').set @new_org['attributes']['name']
-    TED.modal.button(:text, 'I Accept').click; sleep 3
+    TED.modal.text_field(:placeholder, 'Signature').set MakeRandom.first_name
+    sleep 2
+    TED.modal.button(:text, 'I Accept').click
+    sleep 3
   end
 
   def add_payment
@@ -78,8 +82,8 @@ class AddPaymentMethodTest < Common
   end
 
   def fill_out_form
-    first_name = MakeRandom.name
-    last_name = MakeRandom.name
+    first_name = MakeRandom.first_name
+    last_name = MakeRandom.last_name
 
     inputs = TED.modal.elements(:tag_name, 'input')
     inputs[0].send_keys first_name
@@ -102,6 +106,22 @@ class AddPaymentMethodTest < Common
     end
   end
 
+  def clear_activity_emails
+    emails = []
+
+    @gmail.mail_box = 'Inbox'
+
+    ['Free TOS Signed', 'Introduction to Team Edition'].each do |subject|
+      @gmail.subject = subject
+      emails << @gmail.get_unread_emails
+      emails.flatten!
+    end
+
+    refute_empty emails, 'No activity emails found'
+
+    @gmail.delete(emails)
+  end
+
   def test_coach_add_payment_method
     send_free_invite_email
     coach_password = get_coach_password
@@ -116,6 +136,8 @@ class AddPaymentMethodTest < Common
 
     TED.go_to_payment_method_tab
     assert_includes @browser.html, @full_name, 'New payment method not found'
+
+    clear_activity_emails
   end
 
   def test_PA_add_payment_method
