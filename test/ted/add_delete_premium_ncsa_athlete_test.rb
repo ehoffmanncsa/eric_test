@@ -27,9 +27,6 @@ class TEDAddDeletePremiumAthlete < Common
     super
     POSSetup.setup(@browser)
     TED.setup(@browser)
-
-    @gmail = GmailCalls.new
-    @gmail.get_connection
   end
 
   def teardown
@@ -95,23 +92,6 @@ class TEDAddDeletePremiumAthlete < Common
     TED.sign_out
   end
 
-  def check_accepted_email
-    @gmail.mail_box = 'Inbox'
-    @gmail.subject = "#{@athlete_name} has accepted your Team Edition request"
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No accepted email found after athlete accepted invitation'
-
-    @gmail.delete(emails)
-  end
-
-  def check_welcome_email
-    @gmail.mail_box = 'TED_Welcome'
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No welcome email found after inviting athlete'
-
-    @gmail.delete(emails)
-  end
-
   def athlete_accept_invitation
     UIActions.user_login(@email); sleep 2
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
@@ -162,11 +142,11 @@ class TEDAddDeletePremiumAthlete < Common
     POSSetup.buy_package(@email, 'champion')
     add_athlete
     send_invite_email
-    check_welcome_email
+    TED.check_welcome_email
     athlete_accept_invitation
     check_athlete_premium_profile
     check_athlete_accepted_status
-    check_accepted_email
+    TED.check_accepted_email
     delete_athlete
   end
 end

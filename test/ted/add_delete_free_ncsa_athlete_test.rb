@@ -28,9 +28,6 @@ class PremCoachAddFreeAthlete < Common
     super
     POSSetup.setup(@browser)
     TED.setup(@browser)
-
-    @gmail = GmailCalls.new
-    @gmail.get_connection
   end
 
   def teardown
@@ -94,23 +91,6 @@ class PremCoachAddFreeAthlete < Common
     TED.sign_out
   end
 
-  def check_accepted_email
-    @gmail.mail_box = 'Inbox'
-    @gmail.subject = "#{@athlete_name} has accepted your Team Edition request"
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No accepted email found after athlete accepted invitation'
-
-    @gmail.delete(emails)
-  end
-
-  def check_welcome_email
-    @gmail.mail_box = 'TED_Welcome'
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No welcome email found after inviting athlete'
-
-    @gmail.delete(emails)
-  end
-
   def check_athlete_membership
     # Giving staging grace period before checking premium status
     POSSetup.set_password(@email)
@@ -158,11 +138,11 @@ class PremCoachAddFreeAthlete < Common
 
     send_invite_email
     check_pending_status
-    check_welcome_email
+    TED.check_welcome_email
     check_athlete_membership
 
     check_athlete_accepted_status
-    check_accepted_email
+    TED.check_accepted_email
     delete_athlete
   end
 end

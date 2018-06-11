@@ -26,11 +26,6 @@ class FreeCoachAddNewAthleteTest < Common
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
-    @gmail = GmailCalls.new
-    @gmail.get_connection
-    @gmail.mail_box = 'TED_Welcome'
-    @gmail.sender = 'TeamEdition@ncsasports.org'
-
     @free_username = Default.env_config['ted']['free_username']
     @free_password = Default.env_config['ted']['free_password']
   end
@@ -76,13 +71,6 @@ class FreeCoachAddNewAthleteTest < Common
     UIActions.clear_cookies
   end
 
-  def check_welcome_email
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No welcome email found after inviting athlete'
-
-    @gmail.delete(emails)
-  end
-
   def check_athlete_free_profile
     POSSetup.set_password(@athlete_email)
     @browser.element(:class, 'fa-angle-down').click
@@ -113,9 +101,10 @@ class FreeCoachAddNewAthleteTest < Common
   def test_add_delete_new_athlete_as_free_coach
     add_athlete
     send_invite_email
-    check_welcome_email
+    TED.check_welcome_email
     check_athlete_free_profile
     check_athlete_accepted_status
+    TED.check_accepted_email
     delete_athlete
   end
 end

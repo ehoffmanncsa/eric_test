@@ -27,12 +27,9 @@ class TEDAddDeleteNewAthleteTest < Common
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
-    @gmail = GmailCalls.new
-    @gmail.get_connection
-
     @email = MakeRandom.email
-    @first_name = MakeRandom.name
-    @last_name = MakeRandom.name
+    @first_name = MakeRandom.first_name
+    @last_name = MakeRandom.last_name
     @athlete_name = "#{@first_name} #{@last_name}"
     puts "Adding athlete name: #{@athlete_name}"
   end
@@ -62,9 +59,9 @@ class TEDAddDeleteNewAthleteTest < Common
     inputs[0].send_keys @first_name              # first name
     inputs[1].send_keys @last_name               # last name
     inputs[2].send_keys MakeRandom.grad_yr       # graduation year
-    inputs[3].send_keys MakeRandom.number(5)     # zipcode
+    inputs[3].send_keys MakeRandom.zip_code      # zipcode
     inputs[4].send_keys @email                   # email
-    inputs[5].send_keys MakeRandom.number(10)    # phone
+    inputs[5].send_keys MakeRandom.phone_number  # phone
     TED.modal.button(:text, 'Add Athlete').click
     UIActions.wait_for_modal
 
@@ -88,23 +85,6 @@ class TEDAddDeleteNewAthleteTest < Common
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
     TED.sign_out
-  end
-
-  def check_accepted_email
-    @gmail.mail_box = 'Inbox'
-    @gmail.subject = "#{@athlete_name} has accepted your Team Edition request"
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No accepted email found after athlete accepted invitation'
-
-    @gmail.delete(emails)
-  end
-
-  def check_welcome_email
-    @gmail.mail_box = 'TED_Welcome'
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No welcome email found after inviting athlete'
-
-    @gmail.delete(emails)
   end
 
   def check_athlete_profile
@@ -134,10 +114,10 @@ class TEDAddDeleteNewAthleteTest < Common
   def test_add_delete_new_athlete
     add_athlete
     send_invite_email
-    check_welcome_email
+    TED.check_welcome_email
     check_athlete_profile
     check_athlete_accepted_status
-    check_accepted_email
+    TED.check_accepted_email
     delete_athlete
   end
 end

@@ -10,9 +10,6 @@ class RestoredAthleteRequestTest < Common
 
     TEDAthleteApi.setup
     TEDTeamApi.setup
-
-    @gmail = GmailCalls.new
-    @gmail.get_connection
   end
 
   def teardown
@@ -72,15 +69,6 @@ class RestoredAthleteRequestTest < Common
     assert resp['data']['id'], 'Inviting athlete failed'
   end
 
-  def check_and_clean_invite_email
-    @gmail.mail_box = 'TED_Welcome'
-    emails = @gmail.get_unread_emails
-
-    refute_empty emails, 'No invitation email'
-
-    @gmail.delete(emails)
-  end
-
   def check_for_athlete_pop_up
     UIActions.user_login(athlete_email); sleep 2
     assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
@@ -107,26 +95,16 @@ class RestoredAthleteRequestTest < Common
     TED.sign_out
   end
 
-  def check_and_clean_accepted_email
-    @gmail.mail_box = 'Inbox'
-    @gmail.subject = "#{athlete_name} has accepted your Team Edition request"
-    emails = @gmail.get_unread_emails
-
-    refute_empty emails, 'No accepted email found after athlete accepted invitation'
-
-    @gmail.delete(emails)
-  end
-
   def test_restore_athlete_with_request
     store_accepted_athlete_info
     delete_athlete
     add_athlete
     send_invite_email
-    check_and_clean_invite_email
+    TED.check_welcome_email
     check_athlete_has_status('Pending')
     check_for_athlete_pop_up
     grant_access
     check_athlete_has_status('Accepted')
-    check_and_clean_accepted_email
+    TED.check_accepted_email
   end
 end

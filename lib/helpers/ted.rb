@@ -7,6 +7,9 @@ module TED
     @browser = ui_object
     UIActions.setup(@browser)
     @api = Api.new
+
+    @gmail = GmailCalls.new
+    @gmail.get_connection
   end
 
   def self.sidebar
@@ -126,5 +129,21 @@ module TED
     UIActions.wait_for_spinner
     @browser.link(:text, 'Enter Org as Coach').click
     UIActions.wait_for_spinner
+  end
+
+  def self.check_accepted_email
+    @gmail.mail_box = 'TED_Accepted_Request'
+    emails = @gmail.get_unread_emails
+    raise 'No accepted email found after athlete accepted invitation' if emails.empty?
+
+    @gmail.delete(emails)
+  end
+
+  def self.check_welcome_email
+    @gmail.mail_box = 'TED_Welcome'
+    emails = @gmail.get_unread_emails
+    raise 'No welcome email found after inviting athlete' if emails.empty?
+
+    @gmail.delete(emails)
   end
 end
