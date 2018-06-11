@@ -62,7 +62,8 @@ class FreeCoachAddNewAthleteTest < Common
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
     assert TED.modal.visible?
 
-    TED.modal.button(:text, 'Save & Invite').click; sleep 5
+    TED.modal.button(:text, 'Save & Invite').click
+    UIActions.wait_for_modal
 
     # make sure athlete status is now pending after email sent
     status = row.elements(:tag_name, 'td')[4].text
@@ -73,16 +74,20 @@ class FreeCoachAddNewAthleteTest < Common
 
   def check_athlete_free_profile
     POSSetup.set_password(@athlete_email)
+
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
+
     refute (navbar.html.include? 'Membership Info'), 'Found membership option in menu'
   end
 
   def check_athlete_accepted_status
     UIActions.ted_login(@free_username, @free_password)
     TED.go_to_athlete_tab
+
     row = TED.get_row_by_name(@athlete_name)
     status = row.elements(:tag_name, 'td')[4].text
+
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
@@ -93,7 +98,8 @@ class FreeCoachAddNewAthleteTest < Common
 
     TED.modal.button(:text, 'Delete').click
     small_modal = TED.modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click; sleep 1
+    small_modal.button(:text, 'Delete').click
+    UIActions.wait_for_modal
 
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
@@ -104,7 +110,6 @@ class FreeCoachAddNewAthleteTest < Common
     TED.check_welcome_email
     check_athlete_free_profile
     check_athlete_accepted_status
-    TED.check_accepted_email
     delete_athlete
   end
 end
