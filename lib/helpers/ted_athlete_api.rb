@@ -27,11 +27,11 @@ module TEDAthleteApi
         data: {
           attributes: {
             email: MakeRandom.email,
-            first_name: MakeRandom.name,
+            first_name: MakeRandom.first_name,
             graduation_year: MakeRandom.grad_yr,
-            last_name: MakeRandom.name,
-            phone: MakeRandom.number(10),
-            zip_code: MakeRandom.number(5)
+            last_name: MakeRandom.last_name,
+            phone: MakeRandom.phone_number,
+            zip_code: MakeRandom.zip_code
           },
           relationships: {
             team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }

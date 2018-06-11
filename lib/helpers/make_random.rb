@@ -44,4 +44,8 @@ module MakeRandom
 
     num
 	end
+
+	def self.company_name
+		FFaker::Company.name
+	end
 end
