@@ -35,9 +35,9 @@ class TEDAddDeleteACoachTest < Common
   end
 
   def add_a_coach
-    firstname = MakeRandom.name
-    lastname = MakeRandom.name
-    phone = MakeRandom.number(10)
+    firstname = MakeRandom.first_name
+    lastname = MakeRandom.last_name
+    phone = MakeRandom.phone_number
     position = MakeRandom.name
 
     @coach_name = "#{firstname} #{lastname}"
@@ -78,7 +78,9 @@ class TEDAddDeleteACoachTest < Common
     inputs = TED.modal.elements(:tag_name, 'input').to_a
     inputs[0].send_keys 'ncsa'
     inputs[1].send_keys 'ncsa'
-    TED.modal.element(:tag_name, 'button').click; sleep 1
+    TED.modal.element(:tag_name, 'button').click
+
+    UIActions.wait_for_modal
   end
 
   def check_new_coach_can_login
