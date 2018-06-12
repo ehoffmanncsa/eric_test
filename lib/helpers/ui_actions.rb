@@ -14,6 +14,7 @@ module UIActions
 
   def self.wait_for_modal
     Watir::Wait.while { @browser.element(:class, 'modal-content').present? }
+    sleep 1
   end
 
   def self.fasttrack_login
