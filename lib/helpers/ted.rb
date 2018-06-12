@@ -102,6 +102,7 @@ module TED
 
   def self.get_athlete_status(name = nil)
     go_to_athlete_tab
+
     row = get_row_by_name(name)
     row.elements(:tag_name, 'td')[4].text # this is status
   end
@@ -109,24 +110,30 @@ module TED
   def self.delete_athlete(name)
     row = TED.get_row_by_name(name)
     cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
-    cog.click; sleep 1
+    cog.click
+
+    Watir::Wait.until { modal.present? }
 
     modal.button(:text, 'Delete').click
     small_modal = modal.div(:class, 'modal-content')
     small_modal.button(:text, 'Delete').click
+
     UIActions.wait_for_modal
   end
 
   def self.impersonate_org(org_id = nil)
     partner_username = Default.env_config['ted']['partner_username']
     partner_password = Default.env_config['ted']['partner_password']
+
     UIActions.ted_login(partner_username, partner_password)
 
     # default to Awesome Sauce
     org_id = '440' if org_id.nil?
     url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
+
     @browser.goto url
     UIActions.wait_for_spinner
+
     @browser.link(:text, 'Enter Org as Coach').click
     UIActions.wait_for_spinner
   end
