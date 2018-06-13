@@ -21,7 +21,8 @@ node {
       print err
     }
 
-    sh 'docker pull dosel/zalenium:latest';
+    sh 'docker pull elgalu/selenium';
+    sh 'docker pull dosel/zalenium';
 
     sh "docker run --restart=unless-stopped \
         -d -it --name ${SEL_GRID} -p ${PORT} \
