@@ -21,14 +21,14 @@ node {
       print err
     }
 
-    sh 'docker pull elgalu/selenium:latest';
+    sh 'docker pull dosel/zalenium:latest';
 
     sh "docker run --restart=unless-stopped \
         -d -it --name ${SEL_GRID} -p ${PORT} \
-        -v /dev/shm:/dev/shm \
-        -v ${PWD}:/tmp/qa_regression \
-        -e MAX_INSTANCES=20 -e MAX_SESSIONS=20 \
-        --privileged elgalu/selenium"
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /tmp/videos:/home/seluser/videos \
+        -v ${PWD}:/tmp/node/tmp/qa_regression \
+        --privileged dosel/zalenium start"
   }
 
   stage('Check Selenium health') {
