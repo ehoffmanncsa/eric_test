@@ -88,7 +88,7 @@ class SignupExistingOrgTest < Common
 
   def check_verification_request_email
     @gmail.mail_box = 'Inbox'
-    @gmail.subject = 'Public Coach Verification Request'
+    @gmail.subject = 'Coach Verification Request'
     emails = @gmail.get_unread_emails
     msg = @gmail.parse_body(emails.last)
 
@@ -107,7 +107,7 @@ class SignupExistingOrgTest < Common
 
   def check_new_coach_unverified
     UIActions.ted_login
-    TED.go_to_staff_tab
+    TED.go_to_staff_tab; sleep 1
 
     @browser.element(:text, @coach_name).parent
     assert coach_row.button(:text, 'Unverified').enabled?, 'Unverified button not found'
