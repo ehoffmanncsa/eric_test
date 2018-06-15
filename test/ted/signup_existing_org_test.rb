@@ -26,8 +26,8 @@ class SignupExistingOrgTest < Common
     @gmail.get_connection
 
     @org_name = 'Awesome Sauce'
-    @coach_firstname = MakeRandom.name
-    @coach_lastname = MakeRandom.name
+    @coach_firstname = MakeRandom.first_name
+    @coach_lastname = MakeRandom.last_name
     @coach_name = "#{@coach_firstname} #{@coach_lastname}"
     @coach_email = MakeRandom.email
   end
@@ -60,7 +60,7 @@ class SignupExistingOrgTest < Common
     inputs[4].send_keys @coach_firstname
     inputs[5].send_keys @coach_lastname
     inputs[6].send_keys @coach_email
-    inputs[7].send_keys MakeRandom.number(10)
+    inputs[7].send_keys MakeRandom.phone_number
 
     TED.modal.button(:text, 'Add').click; sleep 3
   end
@@ -127,7 +127,7 @@ class SignupExistingOrgTest < Common
   end
 
   def check_new_coach_can_login
-    UIActions.ted_login(@coach_email, get_coach_password)
+    UIActions.ted_login(@coach_email, get_coach_password); sleep 5
     assert TED.modal.visible?, 'No change password modal'
 
     inputs = TED.modal.elements(:tag_name, 'input')
