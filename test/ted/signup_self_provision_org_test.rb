@@ -46,7 +46,7 @@ class SignupSelfProvisionOrgTest < Common
     # Make sure name is unique
     # Retry if name found
     loop do
-      @org_name = MakeRandom.name
+      @org_name = MakeRandom.company_name
       TED.modal.text_field(:class, 'resizable-input').set @org_name; sleep 0.5
       break if (TED.modal.div(:class, 'alert').present? &&
         TED.modal.div(:class, 'alert').text == 'No Clubs Found with that name.')
@@ -60,11 +60,11 @@ class SignupSelfProvisionOrgTest < Common
     inputs = TED.modal.elements(:tag_name, 'input').to_a
     inputs[0].send_keys @org_name
     inputs[3].send_keys 'IL'
-    inputs[4].send_keys MakeRandom.number(5)
-    inputs[5].send_keys MakeRandom.name
-    inputs[6].send_keys MakeRandom.name
+    inputs[4].send_keys MakeRandom.zip_code
+    inputs[5].send_keys MakeRandom.first_name
+    inputs[6].send_keys MakeRandom.last_name
     inputs[7].send_keys MakeRandom.email
-    inputs[8].send_keys MakeRandom.number(10)
+    inputs[8].send_keys MakeRandom.phone_number
 
     # select info from dropdowns in modal
     lists = TED.modal.select_lists(:class, 'form-control')

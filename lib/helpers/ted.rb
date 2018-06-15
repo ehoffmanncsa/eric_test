@@ -65,7 +65,7 @@ module TED
     # go to Roster Management -> staff
     @browser.refresh; sleep 1
     goto_roster
-    @browser.link(:text, 'Staff').click
+    @browser.link(:text, 'Staff').click; sleep 1
   end
 
   def self.go_to_payment_method_tab
