@@ -25,17 +25,11 @@ class AthleteEvaluationTest < Common
   def setup
     super
     TED.setup(@browser)
-    @athlete_id = get_accepted_athlete_id
+    @athlete_id = '2180'
   end
 
   def teardown
     super
-  end
-
-  def get_accepted_athlete_id
-    TEDAthleteApi.setup
-    accepted_athletes = TEDAthleteApi.find_athletes_by_status('accepted')
-    accepted_athletes.sample['id']
   end
 
   def goto_athlete_evaluation
