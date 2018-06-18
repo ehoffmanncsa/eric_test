@@ -62,7 +62,7 @@ class FasttrackAddNewRecruit < Common
     # these dropdowns have too many special cases
     # selecting random is a bad idea
     # so select fix value
-    { 'eventID' => 'TAKKLE Free RFEs',
+    { 'eventID' => 'SAEF-AthletesWanted', #'TAKKLE Free RFEs',
       'primaryPhoneType' => 'My Mobile',
       'highSchoolStateId' => 'IL' }.each do |k, v|
       list = @browser.select_list(:name, k)
@@ -122,6 +122,7 @@ class FasttrackAddNewRecruit < Common
   def main(enroll_yr = nil)
     setup
     goto_recruit_info_form
+
     fill_in_configs
     select_attendee
     select_specials
