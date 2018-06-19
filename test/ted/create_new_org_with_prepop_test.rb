@@ -12,16 +12,16 @@ require_relative '../test_helper'
     shows up on coach dashboard (pre-populated)
 =end
 
-class AddOrg0DollarContractTest < Common
+class CreateNewOrgWithPrepop < Common
   def setup
     super
     C3PO.setup(@browser)
     POSSetup.setup(@browser)
     TED.setup(@browser)
 
-    @org_name = MakeRandom.name
-    @coach_firstname = MakeRandom.name
-    @coach_lastname = MakeRandom.name
+    @org_name = MakeRandom.company_name
+    @coach_firstname = MakeRandom.first_name
+    @coach_lastname = MakeRandom.last_name
     @coach_name = "#{@coach_firstname} #{@coach_lastname}"
     @coach_email = MakeRandom.email
     @phone_1 = MakeRandom.number(3).to_s
