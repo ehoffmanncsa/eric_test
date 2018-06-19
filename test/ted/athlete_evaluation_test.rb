@@ -25,7 +25,7 @@ class AthleteEvaluationTest < Common
   def setup
     super
     TED.setup(@browser)
-    @athlete_id = '2180'
+    @athlete_id = '1936'
   end
 
   def teardown

@@ -80,7 +80,7 @@ class TEDAddDeletePremiumAthlete < Common
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click
+    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
     assert TED.modal.visible?
 
     TED.modal.button(:text, 'Save & Invite').click; sleep 5

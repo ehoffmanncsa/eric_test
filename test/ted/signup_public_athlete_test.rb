@@ -37,7 +37,9 @@ class SignupPublicAthleteTest < Common
     sleep 1
   end
 
-  def fill_out_birthday(element)
+  def fill_out_birthday
+    element = @browser.elements(:tag_name, 'input')[3]
+
     year = Time.now.year - rand(15 .. 18)
     date = (Time.now).strftime("%m-%d")
     birthday = "#{year}-#{date}"
@@ -49,21 +51,19 @@ class SignupPublicAthleteTest < Common
   end
 
   def fill_inputs
-    inputs = @browser.elements(:tag_name, 'input').to_a
+    @browser.text_field(:id, 'firstName').set @athlete_first_name
+    @browser.text_field(:id, 'lastName').set @athlete_last_name
+    @browser.text_field(:id, 'graduationYear').set (Time.now.year + rand(1 .. 3))
 
-    inputs[0].send_keys(@athlete_first_name)
-    inputs[1].send_keys(@athlete_last_name)
-    inputs[2].send_keys(Time.now.year + rand(1 .. 3))
+    fill_out_birthday
 
-    fill_out_birthday(inputs[3])
-
-    inputs[4].send_keys(@zip_code || MakeRandom.zip_code)
-    inputs[5].send_keys(@athlete_phone || MakeRandom.phone_number)
-    inputs[6].send_keys(@athlete_email)
-    inputs[7].send_keys(MakeRandom.first_name)
-    inputs[8].send_keys(MakeRandom.last_name)
-    inputs[9].send_keys(@parent_email)
-    inputs[10].send_keys(MakeRandom.phone_number)
+    @browser.text_field(:id, 'phone').set (@athlete_phone ||= MakeRandom.phone_number)
+    @browser.text_field(:id, 'zipCode').set (@zip_code ||= MakeRandom.zip_code)
+    @browser.text_field(:id, 'email').set @athlete_email
+    @browser.text_field(:id, 'parentFirstName').set MakeRandom.first_name
+    @browser.text_field(:id, 'parentLastName').set MakeRandom.last_name
+    @browser.text_field(:id, 'parentEmail').set @parent_email
+    @browser.text_field(:id, 'parentPhone').set MakeRandom.phone_number
   end
 
   def check_redirect_to_clientrms_password_reset
