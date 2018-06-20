@@ -3,17 +3,16 @@ require_relative '../test_helper'
 
 # TS-316: C3PO Regression
 # UI Test: Coach References
-class AddCoachReferencesTest < Minitest::Test
+class AddCoachReferencesTest < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-    C3PO.setup(@browser)
 
+    C3PO.setup(@browser)
     POSSetup.setup(@browser)
+
     POSSetup.buy_package(@email, 'elite')
 
     @coach_name = MakeRandom.name
@@ -21,7 +20,7 @@ class AddCoachReferencesTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def coach_section
@@ -63,7 +62,7 @@ class AddCoachReferencesTest < Minitest::Test
 
     about_section = @browser.element(:id, 'about-section')
     coach_ref = about_section.element(:id, 'coach-references-section')
-    
+
     failure = []
     actual_name = coach_ref.element(:css, 'div.col.th').text.downcase
     msg = "Expected name: #{@coach_name} - Actual name: #{actual_name}"

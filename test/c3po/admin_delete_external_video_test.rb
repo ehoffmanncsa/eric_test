@@ -3,14 +3,13 @@ require_relative '../test_helper'
 
 # TS-250: C3PO Regression
 # UI Test: Delete External Video (As Admin)
-class AdminDeleteExternalVideo < Minitest::Test
+class AdminDeleteExternalVideo < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
     POSSetup.setup(@browser)
     C3PO.setup(@browser)
 
@@ -19,7 +18,7 @@ class AdminDeleteExternalVideo < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def test_admin_delete_external_videos

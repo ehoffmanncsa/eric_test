@@ -3,14 +3,12 @@ require_relative '../test_helper'
 
 # TS-284: C3PO Regression
 # UI Test: Upload Photo (Admin)
-class AdminUploadPhotoTest < Minitest::Test
+class AdminUploadPhotoTest < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
 
     POSSetup.setup(@browser)
     POSSetup.buy_package(@email, 'elite')
@@ -20,7 +18,7 @@ class AdminUploadPhotoTest < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def photo

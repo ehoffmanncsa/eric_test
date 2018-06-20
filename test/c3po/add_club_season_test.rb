@@ -3,17 +3,16 @@ require_relative '../test_helper'
 
 # TS-289: C3PO Regression
 # UI Test: Add Club Season
-class AddClubSeasonTest < Minitest::Test
+class AddClubSeasonTest < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
     C3PO.setup(@browser)
-
     POSSetup.setup(@browser)
+
     POSSetup.buy_package(@email, 'elite')
   end
 

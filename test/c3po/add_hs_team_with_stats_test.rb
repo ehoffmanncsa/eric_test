@@ -3,22 +3,21 @@ require_relative '../test_helper'
 
 # TS-292: C3PO Regression
 # UI Test: Add High School Team with Stats
-class AddHSTeamWithStatsTest < Minitest::Test
+class AddHSTeamWithStatsTest < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-    C3PO.setup(@browser)
 
+    C3PO.setup(@browser)
     POSSetup.setup(@browser)
+
     POSSetup.buy_package(@email, 'elite')
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def open_hs_team

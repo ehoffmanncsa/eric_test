@@ -3,14 +3,12 @@ require_relative '../test_helper'
 
 # TS-246: C3PO Regression
 # UI Test: Add External Video (As Admin)
-class AdminAddExternalVideo < Minitest::Test
+class AdminAddExternalVideo < Common
   def setup
+    super
+
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
-    
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
 
     POSSetup.setup(@browser)
     POSSetup.buy_package(@email, 'elite')
@@ -20,13 +18,13 @@ class AdminAddExternalVideo < Minitest::Test
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def get_video_count
     area = @browser.element(:class, 'mg-btm-1')
     section = area.elements(:class, 'remaining')[1]
-    
+
     section.element(:class, 'js-external-videos-count').text.to_i
   end
 
@@ -34,20 +32,20 @@ class AdminAddExternalVideo < Minitest::Test
     bad_msg = []; bad_count = []; failure = []
 
     # Add Youtube video
-    C3PO.goto_video    
+    C3PO.goto_video
     counter = get_video_count
 
     C3PO.upload_youtube
     browser_msg = @browser.element(:class, '_js-success-text')
     bad_msg << 'Youtube added success message not found' unless browser_msg.visible?
-    
+
     expect_msg = 'Your YouTube video was added to your profile.'
     msg = "Wrong success Youtube added message - #{browser_msg.text}"
     bad_msg << msg unless browser_msg.text == expect_msg
-    
+
     counter -= 1
     msg = "Video count is #{get_video_count} after adding Youtube video"
-    bad_count << msg unless counter == get_video_count 
+    bad_count << msg unless counter == get_video_count
 
     # Add Hudl video
     C3PO.goto_video
