@@ -82,6 +82,8 @@ module TEDAthleteApi
   def self.find_athletes_by_status(status)
     endpoint = "organizations/#{@org_id}/athletes"
     all_athletes = get_all_athletes
-    all_athletes.select { |athlete| athlete['attributes']['invite-status'] == status }
+    all_athletes.select do |athlete|
+      athlete['attributes']['invite-status'] == status && athlete['attributes']['deleted'] == false
+    end
   end
 end

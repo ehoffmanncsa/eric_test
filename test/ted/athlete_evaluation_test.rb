@@ -25,11 +25,18 @@ class AthleteEvaluationTest < Common
   def setup
     super
     TED.setup(@browser)
-    @athlete_id = '1936'
+    @athlete_id = get_athlete_id
   end
 
   def teardown
     super
+  end
+
+  def get_athlete_id
+    TEDAthleteApi.setup
+    athletes = TEDAthleteApi.find_athletes_by_status('accepted')
+
+    athletes.sample['id']
   end
 
   def goto_athlete_evaluation
@@ -59,8 +66,8 @@ class AthleteEvaluationTest < Common
     ratings = stat_area.elements(:class, 'fa')
     ratings.each { |r| stars << r.attribute_value('class') }
 
-    failure << 'First start not highlighted' unless stars[0].eql? 'fa fa-star fa-undefined'
-    failure << 'Second start not highlighted' unless stars[1].eql? 'fa fa-star fa-undefined'
+    failure << 'First star not highlighted' unless stars[0].eql? 'fa fa-star fa-undefined'
+    failure << 'Second star not highlighted' unless stars[1].eql? 'fa fa-star fa-undefined'
     assert_empty failure
   end
 
