@@ -8,7 +8,7 @@ class UnverifiedCoachActionsTest < Common
     super
     TED.setup(@browser)
 
-    @coach_email = Default.env_config["ted"]["unverified_username"]
+    @coach_email = Default.env_config['ted']['unverified_username']
     @coach_password = Default.env_config['ted']['unverified_password']
     @org_id ||= '737'
     @api = TEDApi.new('unverified_coach')
@@ -21,31 +21,27 @@ class UnverifiedCoachActionsTest < Common
     super
   end
 
-  def set_athlete_attributes
-    @athlete_email = MakeRandom.email
-    @first_name = FFaker::Name.first_name
-    @last_name = FFaker::Name.last_name
-    @athlete_name = "#{@first_name} #{@last_name}"
-  end
-
   def add_ted_athlete_through_ui
     open_add_athlete_modal
 
     # fill out athlete form
     Watir::Wait.until { TED.modal.visible? }
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[0].send_keys @first_name              # first name
-    inputs[1].send_keys @last_name               # last name
-    inputs[2].send_keys MakeRandom.grad_yr       # graduation year
-    inputs[3].send_keys MakeRandom.number(5)     # zipcode
-    inputs[4].send_keys @athlete_email           # email
-    inputs[5].send_keys MakeRandom.number(10)    # phone
-    TED.modal.button(:text, 'Add Athlete').click
 
-    UIActions.wait_for_modal
+    @browser.text_field(:id, 'firstName').set @first_name ||= MakeRandom.first_name
+    @browser.text_field(:id, 'lastName').set @last_name ||= MakeRandom.last_name
+    @browser.text_field(:id, 'graduationYear').set @grad_yr ||= MakeRandom.grad_yr
+    @browser.text_field(:id, 'zipCode').set @zip_code ||= MakeRandom.zip_code
+    @browser.text_field(:id, 'email').set @athlete_email ||= MakeRandom.email
+    @browser.text_field(:id, 'phone').set @phone_number ||= MakeRandom.phone_number
+
+    TED.modal.button(:text, 'Add Athlete').click
+    UIActions.wait_for_modal; sleep 1
+
+    @athlete_name = "#{@first_name} #{@last_name}"
 
     # make sure athlete name shows up after added
-    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
+    assert (@browser.element(:text, @athlete_name).present?),
+      "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def open_add_athlete_modal
@@ -79,10 +75,13 @@ class UnverifiedCoachActionsTest < Common
   def create_athlete_account
     # add a new freshman recruit, get back his email address and username
     _post, post_body = RecruitAPI.new.ppost
-    @athlete_email = post_body[:recruit][:athlete_email]
+
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
-    @athlete_name = "#{@first_name} #{@last_name}"
+    @athlete_email = post_body[:recruit][:athlete_email]
+    @zip_code = post_body[:recruit][:zip]
+    @phone_number = post_body[:recruit]['athlete_phone']
+    @grad_yr = post_body[:recruit][:graduationYear]
   end
 
   def college_coach_emails_hidden
@@ -123,30 +122,55 @@ class UnverifiedCoachActionsTest < Common
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
-
-  def check_recommend_college
-    @browser.goto(Default.env_config['ted']['base_url'] + "/athletes/#{@athlete_id}")
+  def find_UCLA
     @browser.button(:text, 'Recommend Colleges').click
     search_bar = @browser.element(:type, 'search')
     search_bar.send_keys 'UCLA'
     search_bar.send_keys :enter
-    sleep 1
-    @browser.element(:class, 'fa-thumbs-o-up').click
-    sleep 1
-    assert @browser.element(:text, 'Remove Recommendation').present?, 'Could not recommend college to athlete'
+
+    UIActions.wait_for_spinner
+  end
+
+  def check_recommend_college
+    @browser.goto(Default.env_config['ted']['base_url'] + "/athletes/#{@athlete_id}")
+
+    find_UCLA
+
+    @browser.element(:class, 'fa-thumbs-o-up').click; sleep 1
+
+    assert @browser.element(:text, 'Remove Recommendation').present?,
+      'Could not recommend college to athlete'
+
+    TED.modal.element(:class, 'fa-times').click
+  end
+
+  def check_unrecommend_college
+    find_UCLA
+
+    @browser.element(:class, 'fa-thumbs-up').click; sleep 1
+
+    assert @browser.element(:text, 'Recommend College').present?,
+      'Could not unrecommend college to athlete'
+
     TED.modal.element(:class, 'fa-times').click
   end
 
   def test_unverified_coach_add_new_athlete
     UIActions.ted_login(@coach_email, @coach_password)
     TED.go_to_athlete_tab
-    set_athlete_attributes
+
     add_ted_athlete_through_ui
     send_invite_email
     check_welcome_email
+
     accept_invitation
     check_athlete_accepted
+
     check_recommend_college
+    check_unrecommend_college
+
+    TED.go_to_athlete_tab
+
     delete_athlete
   end
 
@@ -154,8 +178,11 @@ class UnverifiedCoachActionsTest < Common
     create_athlete_account
     UIActions.ted_login(@coach_email, @coach_password)
     TED.go_to_athlete_tab
+
     add_ted_athlete_through_ui
     send_invite_email
+    check_welcome_email
+
     delete_athlete
   end
 
