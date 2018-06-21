@@ -10,7 +10,7 @@ fasttrack:
 
 # TED coach/partner login
 ted:
-  login_page: 'https://team.ncsasports.org/sign_in'
+  base_url: 'https://team.ncsasports.org'
   prem_username:
   prem_password:
   free_username:
