@@ -37,7 +37,7 @@ class SignupExistingOrgTest < Common
   end
 
   def open_club_form
-    @browser.goto Default.env_config['ted']['login_page']
+    @browser.goto Default.env_config['ted']['base_url']
     @browser.elements(:text, 'Sign Up')[1].click
     assert TED.modal, 'Add Organization modal not found'
 
