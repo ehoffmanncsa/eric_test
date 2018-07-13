@@ -255,13 +255,18 @@ end
 
     section =  @browser.element(:id, 'academic-section')
     academic_section = section.element(:id, 'scores-section')
-    row = academic_section.elements(:tag_name, 'li').to_a.sample
+  
+    expected_gpa = '3.60  /  4.0'
+    actual_gpa = @browser.element(:class, 'value').text
+    msg = "GPA: #{actual_gpa} not as expected: #{expected_gpa}"
+    assert_equal expected_gpa, actual_gpa, msg
   
 
-    expected_trans = '- This is my Transcript'
-    actual_trans = row.element(:class, 'text--size-small').text
+    expected_trans = 'Official Transcript - This is my Transcript'
+    actual_trans = @browser.element(:class, 'pd-btm-0').text
     msg = "Transcript text: #{actual_trans} not as expected: #{expected_trans}"
     assert_equal expected_trans, actual_trans, msg
+
 
     
   end
