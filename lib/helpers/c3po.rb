@@ -167,6 +167,8 @@ module C3PO
     subheader.element(:id, 'edit_athletic_link').click
   end
 
+ 
+
   def self.add_hs_team
     hs_section = @browser.element(:class, 'high_school_seasons')
     hs_section.element(:class, 'add_icon').click
@@ -264,4 +266,11 @@ module C3PO
 
     headers.join(',')
   end
+
+   def self.goto_academics
+    # go to Athletics
+    subheader = @browser.element(:class, 'subheader')
+    subheader.element(:id, 'edit_academics_link').click
+  end
+  
 end
