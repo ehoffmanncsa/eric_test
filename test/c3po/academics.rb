@@ -26,10 +26,29 @@ class AddAcademicsTest < Common
     @conf_act = 32
     @conf_plan = 28
     @conf_act_notes = 'I am ACT Notes, I am retaking in the Spring'
-    @conf_honors_details = 'I am honors details. The Presidents Honor Roll, published during Week 6 of the Fall and Spring semesters, is recognition of an undergraduate’s outstanding academic achievement that particular semester. Based on semester GPA, approximately the top 30 percent of all undergraduates receive this academic recognition. The GPA required to be on the Presidents Honor Roll varies each semester. The President’s Honor Roll designation is placed on the student’s academic transcript for the appropriate semester.'
-    @conf_ap_details =  'At the end of sophomore year, I hesitated before registering for 11th-grade classes. Most of my choices had been obvious, and English should have been too — I had already received approval to take Advanced Placement English language and composition, a class I knew would impress colleges. But the honors English class my school offered also sounded enticing. In addition to the standard coursework, students in that class would write their own novels over the course of the year. The novels would be short and largely unpublishable, but learning about literature through hands-on experience seemed tailor-made for me.'
-    @conf_aa_details =  'Accomplishments are relevant honors, achievements or awards that you earned for exceeding average standards in either academics, athletics, or in a work environment. Some examples of accomplishments are: Scholarships. ... Awards won for specific activities or subjects (i.e., Most Valuable Player (MVP), Fine Art Award'
-    @conf_extra_details = 'Overall, I think that you have to find hobbies that you think they would enjoy or that are tailored toward their existing interests. If something doesnt work out, and theyve run the full course (some things such as cake decorating may just be a few weeks or months) then just think of it as nothing ventured, nothing gained, and look at other options. The main objective here is to get them out of the house to try new things and socialize. Some extra curricular activities may be costlier than others, but depending on where you live, your city may even offer affordable / free activities for youths and young adults. Additionally, a lot of area community colleges also offer youth enrichment programs at more affordable prices than private academies.'
+    @conf_honors_details = 'I am honors details. The Presidents Honor Roll, published during Week 6 of the Fall ' \
+    'and Spring semesters, is recognition of an undergraduate’s outstanding academic achievement that particular ' \
+    'semester. Based on semester GPA, approximately the top 30 percent of all undergraduates receive this academic ' \
+    'recognition. The GPA required to be on the Presidents Honor Roll varies each semester. The President’s Honor '\
+    'Roll designation is placed on the student’s academic transcript for the appropriate semester.'
+    @conf_ap_details =  'At the end of sophomore year, I hesitated before registering for 11th-grade classes. '\
+    'Most of my choices had been obvious, and English should have been too — I had already received approval to '\
+    'take Advanced Placement English language and composition, a class I knew would impress colleges. But the '\
+    'honors English class my school offered also sounded enticing. In addition to the standard coursework, '\
+    'students in that class would write their own novels over the course of the year. The novels would be short '\
+    'and largely unpublishable, but learning about literature through hands-on experience seemed tailor-made for me.'
+    @conf_aa_details =  'Accomplishments are relevant honors, achievements or awards that you earned for exceeding '\
+    'average standards in either academics, athletics, or in a work environment. Some examples of accomplishments'\
+    'are: Scholarships. ... Awards won for specific activities or subjects (i.e., Most Valuable Player (MVP), '\
+    'Fine Art Award'
+    @conf_extra_details = 'Overall, I think that you have to find hobbies that you think they would enjoy or '\
+    'that are tailored toward their existing interests. If something doesnt work out, and theyve run the full '\
+    'course (some things such as cake decorating may just be a few weeks or months) then just think of it as '\
+    'nothing ventured, nothing gained, and look at other options. The main objective here is to get them out of '\
+    'the house to try new things and socialize. Some extra curricular activities may be costlier than others, but '\
+    'depending on where you live, your city may even offer affordable / free activities for youths and young adults. '\
+    'Additionally, a lot of area community colleges also offer youth enrichment programs at more affordable prices '\
+    'than private academies.'
   end
 
   def teardown
