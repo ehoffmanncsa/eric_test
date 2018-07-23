@@ -137,9 +137,14 @@ class TEDAddDeletePremiumAthlete < Common
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
+  def buy_premium_package
+    POSSetup.buy_package(@email, 'champion')
+    athlete_sign_out
+  end
+
   def test_add_delete_premium_ncsa_athlete
     create_athlete
-    POSSetup.buy_package(@email, 'champion')
+    buy_premium_package
     add_athlete
     send_invite_email
     TED.check_welcome_email
