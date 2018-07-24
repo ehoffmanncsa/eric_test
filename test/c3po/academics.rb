@@ -11,7 +11,7 @@ class AddAcademicsTest < Common
 
     @conf = 'City League'
     @conf_tran = 'This is my Transcript'
-    @conf_cum_gpa =  3.60
+    @conf_cum_gpa = 3.60
     @conf_core_gpa = 3.25
     @conf_weighted_gpa = 3.54
     @conf_rank = 199
@@ -31,13 +31,13 @@ class AddAcademicsTest < Common
     'semester. Based on semester GPA, approximately the top 30 percent of all undergraduates receive this academic ' \
     'recognition. The GPA required to be on the Presidents Honor Roll varies each semester. The President’s Honor '\
     'Roll designation is placed on the student’s academic transcript for the appropriate semester.'
-    @conf_ap_details =  'At the end of sophomore year, I hesitated before registering for 11th-grade classes. '\
+    @conf_ap_details = 'At the end of sophomore year, I hesitated before registering for 11th-grade classes. '\
     'Most of my choices had been obvious, and English should have been too — I had already received approval to '\
     'take Advanced Placement English language and composition, a class I knew would impress colleges. But the '\
     'honors English class my school offered also sounded enticing. In addition to the standard coursework, '\
     'students in that class would write their own novels over the course of the year. The novels would be short '\
     'and largely unpublishable, but learning about literature through hands-on experience seemed tailor-made for me.'
-    @conf_aa_details =  'Accomplishments are relevant honors, achievements or awards that you earned for exceeding '\
+    @conf_aa_details = 'Accomplishments are relevant honors, achievements or awards that you earned for exceeding '\
     'average standards in either academics, athletics, or in a work environment. Some examples of accomplishments'\
     'are: Scholarships. ... Awards won for specific activities or subjects (i.e., Most Valuable Player (MVP), '\
     'Fine Art Award'
@@ -166,8 +166,8 @@ class AddAcademicsTest < Common
   def act
     # add act
 
-    sat_form = @browser.element(:class, 'm-form-set')
-    sat_form.scroll.to
+    act_form = @browser.element(:class, 'm-form-set')
+    act_form.scroll.to
     @browser.text_field(:id, 'act_score').set @conf_act
 
     @browser.text_field(:id, 'plan_score').set @conf_plan
@@ -226,15 +226,16 @@ class AddAcademicsTest < Common
 
   def save_record
     # save academics
-    @browser.element(:name, 'commit').click; sleep 10
+    @browser.element(:name, 'commit').click;
   end
 
-  def check_profile_history
-    # go to Preview Profile
-    @browser.element(:class, 'button--primary').click; sleep 10
+  def check_profile_history_gpa
+    # go to Preview Profile and check gpa and transcript
+    @browser.element(:class, 'button--primary').click;
 
     section = @browser.element(:id, 'academic-section')
     academic_section = section.element(:id, 'scores-section')
+    row = academic_section.elements(:class, 'score half mg-btm-1').to_a.sample
 
     failure = [] # this is your empty array
 
@@ -242,6 +243,11 @@ class AddAcademicsTest < Common
     actual_gpa = @browser.element(:class, 'value').text
     msg = "GPA: #{actual_gpa} not as expected: #{expected_gpa}"
     failure << msg unless actual_gpa.eql? expected_gpa
+
+    expected_act= '32 / 36'
+    actual_act = @browser.element(:class, 'value').text
+    msg = "ACT: #{actual_act} not as expected: #{expected_act}"
+    failure << msg unless actual_act.eql? expected_act
 
     expected_trans = 'Official Transcript - This is my Transcript'
     actual_trans = @browser.element(:class, 'pd-btm-0').text
@@ -251,8 +257,9 @@ class AddAcademicsTest < Common
     assert_empty failure
   end
 
+
   def test_add_academics
-    email = 'test1a617432713'
+    email = 'test208b9309597'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
@@ -268,6 +275,6 @@ class AddAcademicsTest < Common
     ap
     academic_accomplishment
     save_record
-    check_profile_history
+    check_profile_history_gpa
   end
 end
