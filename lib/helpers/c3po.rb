@@ -267,10 +267,16 @@ module C3PO
     headers.join(',')
   end
 
-   def self.goto_academics
+  def self.goto_academics
     # go to Athletics
     subheader = @browser.element(:class, 'subheader')
     subheader.element(:id, 'edit_academics_link').click
+  end
+
+  def self.goto_my_information
+    # go to My Information page
+    subheader = @browser.element(:class, 'subheader')
+    subheader.element(:id, 'edit_my_information_link').click
   end
   
 end
