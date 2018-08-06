@@ -278,5 +278,11 @@ module C3PO
     subheader = @browser.element(:class, 'subheader')
     subheader.element(:id, 'edit_my_information_link').click
   end
+
+  def self.goto_key_stats
+    # go to key Stats page
+    subheader = @browser.element(:class, 'subheader')
+    subheader.element(:id, 'edit_physical_measurables_link').click
+  end
   
 end
