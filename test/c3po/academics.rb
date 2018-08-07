@@ -49,6 +49,7 @@ class AddAcademicsTest < Common
     'depending on where you live, your city may even offer affordable / free activities for youths and young adults. '\
     'Additionally, a lot of area community colleges also offer youth enrichment programs at more affordable prices '\
     'than private academies.'
+    @gpa = 'GPA\n3.60  /  4.0\nOfficial Transcript - This is my Transcript\nOfficial Transcript - This is my Transcript\nOther Notes:\nCore GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400 not as expected: GPA 3.60  /  4.0 Official Transcript - This is my Transcript Other Notes: Core GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400 not as expected: Lane Tech High School\", \"SAT text: GPA 3.60  /  4.0 Official Transcript  - This is my Transcript Other Notes: Core GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400'
   end
 
   def teardown
@@ -82,6 +83,7 @@ class AddAcademicsTest < Common
     options.shift; options.sample.click
 
     # fill out conf
+    @browser.element(:id, 'high_school_conference').to_subtype.clear
     @browser.element(:id, 'high_school_conference').send_keys @conf
   end
 
@@ -229,13 +231,14 @@ class AddAcademicsTest < Common
     @browser.element(:name, 'commit').click;
   end
 
-  def check_profile_history_gpa
+    def check_profile_history_gpa
     # go to Preview Profile and check gpa and transcript
     @browser.element(:class, 'button--primary').click;
 
     section = @browser.element(:id, 'academic-section')
     academic_section = section.element(:id, 'scores-section')
-    row = academic_section.elements(:class, 'score half mg-btm-1').to_a.sample
+    #academic_section.scroll.to
+    #row = academic_section.elements(:class, 'score half mg-btm-1').to_a.sample
 
     failure = [] # this is your empty array
 
@@ -244,22 +247,22 @@ class AddAcademicsTest < Common
     msg = "GPA: #{actual_gpa} not as expected: #{expected_gpa}"
     failure << msg unless actual_gpa.eql? expected_gpa
 
-    expected_act= '32 / 36'
-    actual_act = @browser.element(:class, 'value').text
-    msg = "ACT: #{actual_act} not as expected: #{expected_act}"
-    failure << msg unless actual_act.eql? expected_act
-
     expected_trans = 'Official Transcript - This is my Transcript'
     actual_trans = @browser.element(:class, 'pd-btm-0').text
     msg = "Transcript text: #{actual_trans} not as expected: #{expected_trans}"
     failure << msg unless actual_trans.eql? expected_trans
 
+    expected_gpanotes = 'Other Notes:
+Core GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400'
+    actual_gpanotes = @browser.element(:class, 'notes text--size-small').text
+    msg = "GPA Notes: #{actual_gpanotes} not as expected: #{expected_gpanotes}"
+    failure << msg unless actual_gpanotes.eql? expected_gpanotes
+
     assert_empty failure
   end
 
-
   def test_add_academics
-    email = 'test208b9309597'
+    email = 'test+790c@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
