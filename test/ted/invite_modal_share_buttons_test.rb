@@ -28,7 +28,7 @@ class InviteModalShareButtonsTest < Common
   def check_copy_button
     copy_input = @browser.element(:class, 'input-group').element(:tag_name, 'input')
 
-    assert_equal 'https://team-staging.ncsasports.org/teams/awesome-sauce/sign_up',
+    assert_match /https:\/\/team-staging\.ncsasports\.org\/teams\/awesome-sauce\/sign_up/,
       copy_input.attribute('value'),
       'Incorrect Sign Up page URL in Copy link'
   end
@@ -44,7 +44,7 @@ class InviteModalShareButtonsTest < Common
   def check_fb_button
     fb_link = @browser.element(:class, 'share-buttons').elements(:tag_name, 'a')[1]
 
-    assert_match /^https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=https:\/\/team-staging\.ncsasports\.org\/teams\/awesome-sauce\/sign_up&quote=You/,
+    assert_match /^https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=https:\/\/team-staging\.ncsasports\.org\/teams\/awesome-sauce\/sign_up/,
       fb_link.attribute('href'),
       'Incorrect URL for Facebook button'
   end
@@ -52,7 +52,7 @@ class InviteModalShareButtonsTest < Common
   def check_twitter_button
     twitter_link = @browser.element(:class, 'share-buttons').elements(:tag_name, 'a')[2]
 
-    assert_match /https:\/\/twitter\.com\/intent\/tweet\?url=https:\/\/team-staging\.ncsasports\.org\/teams\/awesome-sauce\/sign_up&text=You/,
+    assert_match /https:\/\/twitter\.com\/intent\/tweet\?url=https:\/\/team-staging\.ncsasports\.org\/teams\/awesome-sauce\/sign_up/,
       twitter_link.attribute('href'),
       'Incorrect URL for Twitter button'
   end
