@@ -67,6 +67,7 @@ class AddAcademicsTest < Common
 
     options.each do |option|
       option.click if option.text == 'Illinois'
+    sleep 1 
     end
 
     # select high school
@@ -133,7 +134,7 @@ class AddAcademicsTest < Common
     options = dropdown.elements(:tag_name, 'option').to_a
 
     options.each do |option|
-      option.click if option.text == '5.0'
+      option.click if option.text == '4.0'
     end
   end
 
@@ -253,7 +254,7 @@ class AddAcademicsTest < Common
     failure << msg unless actual_trans.eql? expected_trans
 
     expected_gpanotes = 'Other Notes:
-Core GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400'
+Core GPA: 3.25/4.0 Weighted GPA: 3.54/4.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400'
     actual_gpanotes = @browser.element(:class, 'notes text--size-small').text
     msg = "GPA Notes: #{actual_gpanotes} not as expected: #{expected_gpanotes}"
     failure << msg unless actual_gpanotes.eql? expected_gpanotes
@@ -262,7 +263,7 @@ Core GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighte
   end
 
   def test_add_academics
-    email = 'test+790c@yopmail.com'
+    email = 'test+1daa@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
