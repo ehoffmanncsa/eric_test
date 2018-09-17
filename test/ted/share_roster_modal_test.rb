@@ -41,9 +41,8 @@ class ShareRosterModalTest < Common
   def check_mail_button
     mail_to_link = @browser.element(:class, 'share-buttons').element(:class, 'fa-envelope').parent
 
-    assert_match /^mailto:\?subject=See%20Awesome%20Sauce/,
-      mail_to_link.attribute('href'),
-      'Incorrect URL for mailto link'
+    mail_to_text = "mailto:?subject=See Awesome Sauce"
+    assert_includes mail_to_link.attribute('href'), mail_to_text, 'Incorrect URL for mailto link'
   end
 
   def check_fb_button

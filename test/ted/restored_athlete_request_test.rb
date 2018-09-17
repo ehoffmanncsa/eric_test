@@ -19,6 +19,8 @@ class RestoredAthleteRequestTest < Common
   def store_accepted_athlete_info
     accepted_athletes = TEDAthleteApi.find_athletes_by_status('accepted')
     @athlete = accepted_athletes.sample
+    pp "Deleting this athlete #{@athlete['attributes']['profile']['email']}, client id "\
+       "#{@athlete['attributes']['client-id']}"
     refute @athlete['id'].nil?, 'No accepted athletes found'
   end
 
@@ -70,7 +72,7 @@ class RestoredAthleteRequestTest < Common
   end
 
   def check_for_athlete_pop_up
-    UIActions.user_login(athlete_email); sleep 2
+    UIActions.user_login(athlete_email); sleep 30
     assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
   end
 
