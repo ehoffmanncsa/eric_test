@@ -78,12 +78,12 @@ class SignupExistingOrgTest < Common
   def get_coach_password
     @gmail.mail_box = 'TED_Welcome'
     @gmail.subject = 'Welcome to NCSA Team Edition'
+
     emails = @gmail.get_unread_emails
     msg = @gmail.parse_body(emails.last, 'password')
-    password = msg[1].split(':').last.split()[0]
     @gmail.delete(emails)
 
-    password
+    msg[1].split(':').last.split()[0] # this is password
   end
 
   def check_verification_request_email
@@ -127,7 +127,8 @@ class SignupExistingOrgTest < Common
   end
 
   def check_new_coach_can_login
-    UIActions.ted_login(@coach_email, get_coach_password); sleep 5
+    UIActions.ted_login(@coach_email, get_coach_password)
+    Watir::Wait.until(timeout: 40) { TED.modal.present? }
     assert TED.modal.visible?, 'No change password modal'
 
     inputs = TED.modal.elements(:tag_name, 'input')
