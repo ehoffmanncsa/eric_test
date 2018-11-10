@@ -29,16 +29,44 @@ class AddOrg0DollarContractTest < Common
     @partner_username = Default.env_config['ted']['partner_username']
     @partner_password = Default.env_config['ted']['partner_password']
 
-    @org_name = MakeRandom.name
-    @zipcode = MakeRandom.number(5)
-    @first_name = MakeRandom.name
-    @last_name = MakeRandom.name
-    @email = MakeRandom.email
-    @phone = MakeRandom.number(10)
+    @org_name = MakeRandom.company_name
   end
 
   def teardown
     super
+  end
+
+  def open_form
+    @browser.button(:text, 'Add Organization').click
+    assert TED.modal, 'Add modal not found'
+
+    # select club
+    list = TED.modal.select_list(:class, 'form-control')
+    list.select 'Club'; sleep 1
+  end
+
+  def fill_out_textfields
+    TED.modal.text_field(:id, 'name').set @org_name
+    TED.modal.text_field(:id, 'address').set MakeRandom.address
+    TED.modal.text_field(:id, 'city').set MakeRandom.city
+    TED.modal.text_field(:id, 'state').set MakeRandom.state
+    TED.modal.text_field(:id, 'zipCode').set MakeRandom.zip_code
+    TED.modal.text_field(:id, 'primaryContactFirstName').set MakeRandom.first_name
+    TED.modal.text_field(:id, 'primaryContactLastName').set MakeRandom.last_name
+    TED.modal.text_field(:id, 'email').set MakeRandom.email
+    TED.modal.text_field(:id, 'phone').set MakeRandom.phone_number
+  end
+
+  def select_sports
+    TED.modal.select_list(:id, 'sportIds').options.to_a.sample.select
+  end
+
+  def select_other_dropdowns
+    %w[primaryPartnerId country].each do |list_id|
+      options = TED.modal.select_list(:id, list_id).options.to_a
+      options.shift
+      options.sample.select; sleep 1
+    end
   end
 
   def add_organization
@@ -46,28 +74,11 @@ class AddOrg0DollarContractTest < Common
     Watir::Wait.until { TED.sidebar.visible? }
     UIActions.wait_for_spinner
 
-    # open add modal and make sure it shows up
-    @browser.button(:text, 'Add Organization').click
-    assert TED.modal, 'Add modal not found'
+    open_form
+    fill_out_textfields
+    select_sports
+    select_other_dropdowns
 
-    # select club
-    list = TED.modal.select_list(:class, 'form-control')
-    list.select 'Club'; sleep 1
-
-    # fill out club info
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[0].send_keys @org_name
-    inputs[3].send_keys 'IL'
-    inputs[4].send_keys @zipcode
-    inputs[5].send_keys @first_name
-    inputs[6].send_keys @last_name
-    inputs[7].send_keys @email
-    inputs[8].send_keys @phone
-
-    # select info from dropdowns in modal
-    lists = TED.modal.select_lists(:class, 'form-control')
-    lists[0].select 'US'; sleep 1
-    lists[2].options.to_a.sample.select
     TED.modal.button(:text, 'Add').click; sleep 1
   end
 
