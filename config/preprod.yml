@@ -1,0 +1,35 @@
+# Clientrms:
+clientrms:
+  login_page: 'https://pp.ncsasports.org/clientrms/user_accounts/sign_in'
+
+# Fasttrack Admin login
+fasttrack:
+  login_page: 'http://pp.ncsasports.org/fasttrack/Welcome.do'
+  admin_username: 'trea'
+  admin_password: 'ncsa1333'
+
+# TED coach/partner login
+ted:
+  base_url: 'https://team-pp.ncsasports.org'
+  prem_username:
+  prem_password:
+  free_username:
+  free_password:
+  unverified_username:
+  unverified_password:
+  no_content_username:
+  no_content_password:
+  partner_username:
+  partner_password:
+  api_base: 'https://pp.ncsasports.org/api/team_edition'
+
+# sample video user login
+video_user:
+  username:
+  password:
+
+# Coach RMS
+coach_rms:
+  login_page: 'http://coach-pp.ncsasports.org/coach/coachrms/login'
+  username:
+  password:

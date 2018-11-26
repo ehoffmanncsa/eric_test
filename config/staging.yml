@@ -5,8 +5,8 @@ clientrms:
 # Fasttrack Admin login
 fasttrack:
   login_page: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
-  admin_username: 'automation'
-  admin_password: 'Secure.123'
+  admin_username: 'trea'
+  admin_password: 'ncsa1333'
 
 # TED coach/partner login
 ted:

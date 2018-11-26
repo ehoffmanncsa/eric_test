@@ -12,6 +12,8 @@ module POSSetup
   def self.set_password(email)
     UIActions.user_login(email); sleep 1
 
+    @browser.refresh; sleep 1
+
     begin
       # in some cases there will be a popup modal for athlete to accept
       Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
