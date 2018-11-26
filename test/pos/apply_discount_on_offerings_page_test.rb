@@ -20,7 +20,7 @@ class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
     POSSetup.setup(@browser)
-    @athlete_email = 'ncsa.automation+POS@gmail.com'
+    @athlete_email = 'turkeytom@yopmail.com'
     @discount_codes = Default.static_info['ncsa_discount_code']
   end
 
