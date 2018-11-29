@@ -3,9 +3,7 @@ require 'minitest-ci'
 
 Minitest::Ci.new.start
 
-exceptions = ['test/pos/enroll_mvp_user_freshman_test.rb',
-              'test/pos/enroll_mvp_user_junior_test.rb',
-              'test/pos/enroll_use_ACH_payment_test.rb']
+exceptions = ['test/pos/add_recruit_to_fasttrack_test.rb']
 
 namespace :first_run do
   desc 'execute all tests....'

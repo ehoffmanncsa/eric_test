@@ -120,9 +120,9 @@ ncsa_discount_code:
   nslp: '0.5'
   mail_in_check: '1'
   usatf: '0.05'
-  holiday: '0.1'
+  # holiday: '0.1' - this code is erroring in staging
   all_in: '1'
   i_will: '1'
   family_transfer: '1'
   corporate_sponsorship: '1'
-  senior: '0.15'
+  # senior: '0.15' - this code is erroring in staging

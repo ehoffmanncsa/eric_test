@@ -8,13 +8,11 @@ class EnrollChampionFreshmanTest < Common
     super
 
     # add a new freshman recruit, get back his email address
-    @enroll_yr = 'freshman'; @package = 'champion'
+    @enroll_yr = 'freshman'
+    @package = 'champion'
+
     _post, post_body = RecruitAPI.new(@enroll_yr).ppost
     @recruit_email = post_body[:recruit][:athlete_email]
-
-    # while process through the premium purchase process
-    # also calculate expected membership and 1st payment
-    add_champion_freshman
   end
 
   def teardown
@@ -35,15 +33,17 @@ class EnrollChampionFreshmanTest < Common
 
     @membership = POSSetup.calculate(full_price, 6)
     @expect_first_pymt = (@membership / 6)
-    UIActions.clear_cookies
+  end
+
+  def goto_payments
+    @browser.goto 'https://qa.ncsasports.org/clientrms/finances'
   end
 
   def test_enroll_champion_freshman
-    expect_remain_balance = @membership - @expect_first_pymt
+    add_champion_freshman
+    goto_payments
 
-    UIActions.user_login(@recruit_email)
-    @browser.element(:class, 'fa-angle-down').click
-    @browser.element(:id, 'secondary-nav-menu').link(:text, 'Payments').click
+    expect_remain_balance = @membership - @expect_first_pymt
 
     boxes = @browser.elements(:css, 'div.column.third').to_a
     elem = boxes[2].elements(:class, 'text--size-small').to_a

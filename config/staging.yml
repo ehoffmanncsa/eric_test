@@ -20,8 +20,8 @@ ted:
   no_content_username:
   no_content_password:
   partner_username: 'ncsa.automation@gmail.com'
-  partner_password: 'mixed_martial_arts_678594'
-  api_base: 'https://qa.ncsasports.org/api/team_edition'
+  partner_password: 'ncsa1333'
+  api_base: 'https://qa.ncsasports.org/api/team_edition/'
 
 # sample video user login
 video_user:

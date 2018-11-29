@@ -136,6 +136,8 @@ class FasttrackAddNewRecruit < Common
     btn = col.elements(:tag_name, 'input').last
     btn.click
 
+    sleep 5
+
     log_out
 
     [@recruit_email, @firstName, @lastName]

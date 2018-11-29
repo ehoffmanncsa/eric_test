@@ -27,8 +27,11 @@ module POSSetup
     @browser.text_field(:id, 'user_account_username').value = username
     @browser.text_field(:id, 'user_account_password').set 'ncsa'
     @browser.text_field(:id, 'user_account_password_confirmation').set 'ncsa'
-    @browser.button(:name, 'commit').click; sleep 1
+    @browser.button(:name, 'commit').click
+    sleep 1
+
     Watir::Wait.until { @browser.url.include? 'custom_drills/free_onboarding' }
+    sleep 1
   end
 
   def self.make_commitment
@@ -56,6 +59,7 @@ module POSSetup
     raise '[ERROR] Cannot find activate button' unless get_activate.enabled?
 
     get_activate.click
+    sleep 1
   end
 
   def self.goto_offerings
@@ -115,16 +119,14 @@ module POSSetup
       else; blocks[1].click
     end
 
-    # click next button
     @browser.element(:class, 'summary-js').click
 
-    # return full_price
     full_price
   end
 
   def self.apply_discount_enrollment(code)
     @browser.text_field(:placeholder, 'Discount Code').value = code
-    @browser.element(:class, 'apply').click; sleep 0.5
+    @browser.element(:class, 'apply').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
     check_discount_message(code)
@@ -132,7 +134,7 @@ module POSSetup
 
   def self.apply_discount_offerings(code)
     @browser.element(:placeholder, 'Enter Discount Code').send_keys code
-    @browser.element(:class, 'apply').click; sleep 0.5
+    @browser.element(:class, 'apply').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
     check_discount_message(code)
@@ -156,14 +158,16 @@ module POSSetup
   def self.calculate(full_price, months, discount_code = nil)
     interest_rate = 1
     case months
-    when 6 then interest_rate = 1.11
-    when 12 then interest_rate = 1.19
-    when 18 then interest_rate = 1.194
+      when 6 then interest_rate = 1.11
+      when 12 then interest_rate = 1.19
+      when 18 then interest_rate = 1.194
     end
 
     pay_rate = (discount_code.nil?) ? 1 : (1 - Default.static_info['ncsa_discount_code'][discount_code].to_f)
 
-    (((full_price * interest_rate) / months) * pay_rate).round * months
+    # Adarsh's recipe
+    # ((((original_amount * (1 - percent_amount)).round) * interest_rate) / months).round
+    ((((full_price * pay_rate).round) * interest_rate) / months).round * months
   end
 
   def self.check_enrollment_discount_calculate(enroll_yr = nil)
@@ -228,8 +232,7 @@ module POSSetup
       raise msg unless cart_count.eql? get_cart_count
     end
 
-    @browser.element(:class, 'button--next').click
-    @browser.element(:class, 'button--next').click
+    2.times { @browser.element(:class, 'button--next').click }
   end
 
   def self.fill_out_credit
@@ -251,6 +254,7 @@ module POSSetup
     begin
       Watir::Wait.until { @browser.element(:class, 'agreement-js').visible? }
       @browser.element(:class, 'agreement-js').click
+      sleep 1
     rescue; end
   end
 
@@ -286,18 +290,21 @@ module POSSetup
     # sign and authorize
     Watir::Wait.until { @browser.element(:id, 'order-submit').visible? }
     @browser.text_field(:id, 'order_authorization_signature').set 'qa automation'
+    sleep 1
     @browser.element(:id, 'order-submit').click
   end
 
   def self.setup_billing(ach = false)
     fill_out_registration_form
     agreement_check
+    sleep 1
 
     # fill in payment info depends on which way was chosen
     (ach.eql? true) ? fill_out_ACH : fill_out_credit
     select_billing_state
 
     sign_and_auth
+    sleep 3
   end
 
   def self.get_cart_total

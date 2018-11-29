@@ -26,10 +26,11 @@ class AddRecruitToFasttrackTest < Common
     # give it a grace period and 3 tries before failing test
     begin
       retries ||= 0
+      @browser.checkbox(:id, 'selectAll').set
       @browser.text_field(:name, 'emailAddress').set @recruit_email
       @browser.button(:name, 'Submit').click
 
-      Watir::Wait.until { @browser.table(:class, 'breakdowndatatable').exists? }
+      Watir::Wait.until(timeout: 90) { @browser.table(:class, 'breakdowndatatable').exists? }
       @table = @browser.table(:class, 'breakdowndatatable')
     rescue
       @browser.text_field(:name, 'emailAddress').clear
