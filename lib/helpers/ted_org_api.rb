@@ -44,6 +44,11 @@ module TEDOrgApi
     @partner_api.create(endpoint, body)['data']
   end
 
+  def self.get_org_id_by_name(name)
+    @partner_api.read("partners/1/organizations?contracts_status=" \
+      "&text_query=#{name}&org_type=&page=1")['data'][0]['id']
+  end
+
   def self.delete_org(org_id = nil)
     @org_id ||= org_id
     prep_conditions

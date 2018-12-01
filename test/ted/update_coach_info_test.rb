@@ -24,7 +24,7 @@ class TEDUpdateCoachDetailsTest < Common
 
   def test_update_coach_details
     UIActions.ted_login
-    Watir::Wait.until { @browser.element(:class, 'navigation').present? }
+    UIActions.wait_for_spinner
 
     @browser.link(:text, 'Account Settings').click; sleep 1
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
@@ -39,10 +39,10 @@ class TEDUpdateCoachDetailsTest < Common
     failure = []
 
     msg = "Incorrect first name #{firstname}"
-    failure << msg unless firstname.attribute_value('value').eql? 'Tiffany'
+    failure << msg unless firstname.attribute_value('value').eql? 'Tee'
 
     msg = "Incorrect last name #{lastname}"
-    failure << msg unless lastname.attribute_value('value').eql? 'Rea'
+    failure << msg unless lastname.attribute_value('value').eql? 'Rex'
 
     msg = "Incorrect email #{email}"
     failure << msg unless email.attribute_value('value').eql? 'ncsa.automation+ted@gmail.com'

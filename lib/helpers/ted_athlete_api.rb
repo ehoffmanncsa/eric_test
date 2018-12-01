@@ -14,7 +14,7 @@ module TEDAthleteApi
     # default to Awesome Volleyball org and Otto Mation PA
     @partner_api ||= TEDApi.new('partner')
     @coach_api ||= TEDApi.new('prem_coach')
-    @org_id ||= '440'
+    @org_id ||= '728'
     @org_name ||= 'Awesome Sauce'
   end
 
@@ -54,6 +54,11 @@ module TEDAthleteApi
   def self.get_athlete_by_email(email, coach = false)
     all_athletes = get_all_athletes(coach)
     all_athletes.detect { |athlete| athlete['attributes']['profile']['email'].eql? email }
+  end
+
+  def self.get_athlete_id_by_email(email, coach = false)
+    athlete = get_athlete_by_email(email, coach)
+    athlete['id']
   end
 
   def self.get_all_athletes(coach = false)

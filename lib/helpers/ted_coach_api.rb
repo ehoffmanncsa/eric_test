@@ -11,7 +11,7 @@ module TEDCoachApi
   def self.setup
     # default to Otto Mation PA
     @partner_api ||= TEDApi.new('partner')
-    @org_id ||= '440'
+    @org_id ||= '728'
   end
 
   def self.get_all_coaches(coach = false)

@@ -34,10 +34,15 @@ class FreeCoachAddNewAthleteTest < Common
     super
   end
 
+  def get_org_id
+    TEDOrgApi.setup
+    TEDOrgApi.get_org_id_by_name("Emard Heidenreich") # default free org
+  end
+
   def add_athlete
     TEDAthleteApi.setup
     TEDAthleteApi.coach_api = TEDApi.new('free_coach')
-    TEDAthleteApi.org_id = '50' # use free org "Test Free Org Sprint 20"
+    TEDAthleteApi.org_id = get_org_id
 
     new_athlete = TEDAthleteApi.add_athlete(nil, true)
     first_name = new_athlete['attributes']['profile']['first-name']

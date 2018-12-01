@@ -6,19 +6,13 @@ module TEDContractApi
     attr_accessor :org_id
     attr_accessor :org_name
     attr_accessor :partner_api
-    attr_accessor :coach_api
   end
 
   def self.setup
-    # default to Awesome Volleyball org and Otto Mation PA
+    # default to Awesome Sauce org and Otto Mation PA
     @partner_api ||= TEDApi.new('partner')
-    @coach_api ||= TEDApi.new('prem_coach')
-    @org_id ||= '440'
+    @org_id ||= '728'
     @org_name ||= 'Awesome Sauce'
-  end
-
-  def self.decode(token)
-    JWT.decode(token, nil, false)[0]
   end
 
   def self.get_pricing(sport_id, team_count)
@@ -45,14 +39,15 @@ module TEDContractApi
     [one_payment, total]
   end
 
-  def self.add_contract
-    sport_id = rand(1 .. 9).to_s
+  def self.post_contract(sport_id = nil)
+    sport_id = (sport_id.nil?) ? rand(1 .. 9).to_s : sport_id
     payment_count = [1, 2, 3, 4, 6, 12].sample.to_s
     team_count = rand(1 .. 100).to_s
     _one_payment, total = calculate_contract(sport_id, team_count, payment_count)
     today = Time.now.strftime("%Y-%m-%d")
 
     endpoint = "organizations/#{@org_id}/organization_contracts"
+
     body = {
       data: {
         type: 'organization_contracts',
@@ -106,17 +101,16 @@ module TEDContractApi
     @partner_api.create(endpoint, body)
   end
 
-  def self.accept_terms_of_service(contract_id, decoded_data)
-    coach_id = decoded_data['id']
-    phrase = decoded_data['phrase']
-
+  def self.accept_terms_of_service
+    contract_id = @decoded_data['organization_contract_id']
     endpoint = "organization_contracts/#{contract_id}/accept_terms_of_service"
+
     body = {
       data: {
         type: 'organization_contracts',
         attributes: {
           accepted_by: @org_name,
-          phrase: phrase
+          phrase: @decoded_data['phrase']
         },
         relationships: {
           organization_contract: {
@@ -125,17 +119,18 @@ module TEDContractApi
               type: 'organization_contracts'
             }
           },
-          coach: { data: { id: coach_id, type: 'coaches' } }
+          coach: { data: { id: @decoded_data['coach_id'], type: 'coaches' } }
         }
       }
     }.to_json
 
+    @coach_api = TEDApi.new(nil, @token)
     @coach_api.patch(endpoint, body)
   end
 
-  def self.submit_credit_card_info(contract_id, decoded_data, year = nil)
+  def self.submit_credit_card_info
     month = rand(1 .. 12).to_s
-    year = year.nil? ? (Date.today.year + 4).to_s : year
+    year = (Date.today.year + rand(3 .. 5)).to_s
     card = Default.static_info['credit_billing']
     endpoint = "organizations/#{@org_id}/organization_accounts"
 
@@ -152,17 +147,17 @@ module TEDContractApi
           expiration_month: month,
           expiration_year: year,
           initial_payment: true,
-          phrase: decoded_data['phrase'],
+          phrase: @decoded_data['phrase'],
           united_states: true
         },
         relationships: {
-          coach: { data: { id: decoded_data['id'], type: 'coaches'} },
+          coach: { data: { id: @decoded_data['coach_id'], type: 'coaches'} },
           organization: {
-            data: { id: decoded_data['organization_id'], type: 'organizations' }
+            data: { id: @decoded_data['organization_id'], type: 'organizations' }
           },
           organization_contract: {
             data: {
-              id: contract_id,
+              id: @decoded_data['organization_contract_id'],
               type: 'organization_contracts'
             }
           }
@@ -171,6 +166,52 @@ module TEDContractApi
     }.to_json
 
     @partner_api.create(endpoint, body)['data']
+  end
+
+  def self.create_contract_complete_process(sport_id = nil)
+    new_contract = post_contract(sport_id)
+    send_invoice(new_contract['id'])
+
+    connect_to_gmail
+    decode_org_data
+
+    accept_terms_of_service
+    submit_credit_card_info
+
+    # return new contract id
+    new_contract['id']
+  end
+
+  def self.decode_org_data
+    url = get_sign_page_url_in_email
+
+    @token = url.split('=')[1]
+    @decoded_data = JWT.decode(@token, nil, false)[0]
+  end
+
+  def self.get_sign_page_url_in_email
+    @gmail.mail_box = 'TED_Contract'
+    keyword = 'ncsasports.org/terms_of_service?'
+
+    emails = @gmail.get_unread_emails
+    email_body = @gmail.parse_body(emails.last, keyword)
+    @gmail.delete(emails)
+
+    email_body[1].split("\"")[1]
+  end
+
+  def self.connect_to_gmail
+    @gmail = GmailCalls.new
+    @gmail.get_connection
+  end
+
+  def self.cleanup_email(inbox = nil, subject = nil)
+    @gmail.mail_box = inbox
+    @gmail.subject = subject
+
+    emails = @gmail.get_unread_emails
+
+    @gmail.delete(emails)
   end
 
   def self.cancel_signed_contract(contract_id)

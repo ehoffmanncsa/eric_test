@@ -128,8 +128,8 @@ module TED
     UIActions.ted_login(partner_username, partner_password)
 
     # default to Awesome Sauce
-    org_id = '440' if org_id.nil?
-    url = "https://team-staging.ncsasports.org/organizations/#{org_id}"
+    org_id = '728' if org_id.nil?
+    url = Default.env_config['ted']['base_url'] + "organizations/#{org_id}"
 
     @browser.goto url
     UIActions.wait_for_spinner

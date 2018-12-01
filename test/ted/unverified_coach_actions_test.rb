@@ -6,65 +6,61 @@ require_relative '../test_helper'
 class UnverifiedCoachActionsTest < Common
   def setup
     super
+
     TED.setup(@browser)
+    TEDOrgApi.setup
+    TEDAthleteApi.setup
 
     @coach_email = Default.env_config['ted']['unverified_username']
     @coach_password = Default.env_config['ted']['unverified_password']
-    @org_id ||= '737'
-    @api = TEDApi.new('unverified_coach')
 
-    @gmail = GmailCalls.new
-    @gmail.get_connection
+    @org_id = TEDOrgApi.get_org_id_by_name('Frozen High')
+    TEDAthleteApi.org_id = @org_id
   end
 
   def teardown
     super
   end
 
-  def add_ted_athlete_through_ui
-    open_add_athlete_modal
-
-    # fill out athlete form
-    Watir::Wait.until { TED.modal.visible? }
-
-    @browser.text_field(:id, 'firstName').set @first_name ||= MakeRandom.first_name
-    @browser.text_field(:id, 'lastName').set @last_name ||= MakeRandom.last_name
-    @browser.text_field(:id, 'graduationYear').set @grad_yr ||= MakeRandom.grad_yr
-    @browser.text_field(:id, 'zipCode').set @zip_code ||= MakeRandom.zip_code
-    @browser.text_field(:id, 'email').set @athlete_email ||= MakeRandom.email
-    @browser.text_field(:id, 'phone').set @phone_number ||= MakeRandom.phone_number
-
-    TED.modal.button(:text, 'Add Athlete').click
-    UIActions.wait_for_modal; sleep 1
-
-    @athlete_name = "#{@first_name} #{@last_name}"
-
-    # make sure athlete name shows up after added
-    assert (@browser.element(:text, @athlete_name).present?),
-      "Cannot find newly added Athlete #{@athlete_name}"
-  end
-
   def open_add_athlete_modal
     @browser.button(:text, 'Invite Athletes').click
     TED.modal.button(:text, 'Manually Add Athlete').click
     TED.modal.button(:text, 'Add Athlete').click; sleep 0.5
+
+    Watir::Wait.until { TED.modal.visible? }
   end
 
-  def send_invite_email
-    endpoint = "organizations/#{@org_id}/athletes"
-    all_athletes = @api.read(endpoint)['data']
-    athlete = all_athletes.detect { |athlete| athlete['attributes']['profile']['email'].eql? @athlete_email }
-    assert athlete, 'Athlete does not exist in org'
+  def fill_in_textfields
+    form = TED.modal
 
-    @athlete_id = athlete['id']
-    endpoint = "athletes/#{@athlete_id}/invite_single_athlete"
-    response_body = @api.patch(endpoint, nil)
-    expected_meta_resp = { "invited" => 1 }
+    form.text_field(:id, 'firstName').set @first_name ||= MakeRandom.first_name
+    form.text_field(:id, 'lastName').set @last_name ||= MakeRandom.last_name
+    form.text_field(:id, 'graduationYear').set @grad_yr ||= MakeRandom.grad_yr
+    form.text_field(:id, 'zipCode').set @zip_code ||= MakeRandom.zip_code
+    form.text_field(:id, 'email').set @athlete_email ||= MakeRandom.email
+    form.text_field(:id, 'phone').set @phone_number ||= MakeRandom.phone_number
+  end
 
-    assert_equal expected_meta_resp, response_body["meta"], "Invite athlete API request didn't work"
-    assert_equal "pending",
-      response_body["data"]["attributes"]["invite-status"],
-      'Athlete did not get invited'
+  def select_team
+    teams_list = TED.modal.select_list(:id, 'teamId')
+    teams_list.options.to_a.sample.click
+  end
+
+  def add_ted_athlete_through_ui
+    open_add_athlete_modal
+
+    fill_in_textfields
+    select_team
+
+    TED.modal.button(:text, 'Add Athlete').click
+    UIActions.wait_for_modal; sleep 3
+
+    @athlete_name = "#{@first_name} #{@last_name}"
+    @athlete_id = TEDAthleteApi.get_athlete_id_by_email(@athlete_email)
+
+    # make sure athlete name shows up after added
+    assert (@browser.element(:text, @athlete_name).present?),
+      "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def delete_athlete
@@ -72,7 +68,7 @@ class UnverifiedCoachActionsTest < Common
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"
   end
 
-  def create_athlete_account
+  def create_new_client
     # add a new freshman recruit, get back his email address and username
     _post, post_body = RecruitAPI.new.ppost
 
@@ -85,7 +81,7 @@ class UnverifiedCoachActionsTest < Common
   end
 
   def college_coach_emails_hidden
-    @browser.goto(Default.env_config['ted']['base_url'] + '/colleges/15568')
+    @browser.goto(Default.env_config['ted']['base_url'] + 'colleges/15568')
     UIActions.wait_for_spinner
 
     refute @browser.element(:text, 'Staff Directory').present?, 'College Coaches visible to unverified coach.'
@@ -99,14 +95,6 @@ class UnverifiedCoachActionsTest < Common
     @browser.button(:text, 'Unverified').click
     assert TED.modal.element(:class, 'modal-body').text.include?('You do not have permission to verify coaches.'),
       'Modal does not block unverified coaches from adding new staff.'
-  end
-
-  def check_welcome_email
-    @gmail.mail_box = 'TED_Welcome'
-    emails = @gmail.get_unread_emails
-    refute_empty emails, 'No welcome email found after inviting athlete'
-
-    @gmail.delete(emails)
   end
 
   def accept_invitation
@@ -132,7 +120,7 @@ class UnverifiedCoachActionsTest < Common
   end
 
   def check_recommend_college
-    @browser.goto(Default.env_config['ted']['base_url'] + "/athletes/#{@athlete_id}")
+    @browser.goto(Default.env_config['ted']['base_url'] + "athletes/#{@athlete_id}")
 
     find_UCLA
 
@@ -157,33 +145,33 @@ class UnverifiedCoachActionsTest < Common
 
   def test_unverified_coach_add_new_athlete
     UIActions.ted_login(@coach_email, @coach_password)
+
     TED.go_to_athlete_tab
-
     add_ted_athlete_through_ui
-    send_invite_email
-    check_welcome_email
 
+    TEDAthleteApi.send_invite_email(@athlete_id)
+    TED.check_welcome_email
     accept_invitation
     check_athlete_accepted
 
     check_recommend_college
     check_unrecommend_college
 
-    TED.go_to_athlete_tab
-
-    delete_athlete
+    TEDAthleteApi.delete_athlete(@athlete_id)
   end
 
   def test_unverified_coach_add_existing_athlete
-    create_athlete_account
+    create_new_client
+
     UIActions.ted_login(@coach_email, @coach_password)
+
     TED.go_to_athlete_tab
-
     add_ted_athlete_through_ui
-    send_invite_email
-    check_welcome_email
 
-    delete_athlete
+    TEDAthleteApi.send_invite_email(@athlete_id)
+    TED.check_welcome_email
+
+    TEDAthleteApi.delete_athlete(@athlete_id)
   end
 
   def test_unverified_coach_blocked_features

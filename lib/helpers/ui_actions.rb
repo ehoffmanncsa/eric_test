@@ -54,7 +54,7 @@ module UIActions
     username = username.nil? ? @config['ted']['prem_username'] : username
     password = password.nil? ? @config['ted']['prem_password'] : password
 
-    @browser.goto(@config['ted']['base_url'] + '/sign_in')
+    @browser.goto(@config['ted']['base_url'] + 'sign_in')
     @browser.text_field(:id, 'email').set username
     @browser.text_field(:id, 'password').set password
     @browser.button(:text, 'Sign In').click; sleep 0.5

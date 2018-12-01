@@ -48,6 +48,22 @@ class TEDAddDeleteNewAthleteTest < Common
     TED.modal.button(:text, 'Add Athlete').click; sleep 0.5
   end
 
+  def fill_in_textfields
+    form = TED.modal
+
+    form.text_field(:id, 'firstName').set @first_name
+    form.text_field(:id, 'lastName').set @last_name
+    form.text_field(:id, 'graduationYear').set MakeRandom.grad_yr
+    form.text_field(:id, 'zipCode').set MakeRandom.zip_code
+    form.text_field(:id, 'email').set @email
+    form.text_field(:id, 'phone').set MakeRandom.phone_number
+  end
+
+  def select_team
+    teams_list = TED.modal.select_list(:id, 'teamId')
+    teams_list.options.to_a.sample.click
+  end
+
   def add_athlete
     UIActions.ted_login
     TED.go_to_athlete_tab
@@ -55,13 +71,9 @@ class TEDAddDeleteNewAthleteTest < Common
 
     # fill out athlete form
     Watir::Wait.until { TED.modal.visible? }
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[0].send_keys @first_name              # first name
-    inputs[1].send_keys @last_name               # last name
-    inputs[2].send_keys MakeRandom.grad_yr       # graduation year
-    inputs[3].send_keys MakeRandom.zip_code      # zipcode
-    inputs[4].send_keys @email                   # email
-    inputs[5].send_keys MakeRandom.phone_number  # phone
+    select_team
+    fill_in_textfields
+
     TED.modal.button(:text, 'Add Athlete').click
     UIActions.wait_for_modal
 

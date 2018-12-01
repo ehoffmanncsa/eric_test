@@ -35,7 +35,7 @@ class TEDAuth
 				   }
 				 }.to_json
 
-		staging_url = 'https://qa.ncsasports.org/api/team_edition/sign_in'
+		staging_url = Default.env_config['ted']['api_base'] + 'sign_in'
 		resp_code, resp = @api.ppost staging_url, params, header
 		msg = "[ERROR] Get #{resp_code} requesting for #{@username} session token"
 		raise msg unless resp_code.eql? 200

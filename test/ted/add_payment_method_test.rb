@@ -77,7 +77,7 @@ class AddPaymentMethodTest < Common
     @browser.button(:text, 'Add Payment Method').click
 
     fill_out_form
-    select_dropdowns
+    select_dropdowns; sleep 2
     TED.modal.button(:text, 'Submit').click; sleep 3
   end
 
