@@ -30,9 +30,8 @@ class UpdateContractPaymentMethodTest < Common
 
     TEDContractApi.setup
     @partner_api = TEDContractApi.partner_api
-    @org_name = TEDContractApi.org_name
     @org_id = TEDContractApi.org_id
-    @contract_id = '422' # Use this contract for this scenario
+    @contract_id = '497' # Use this contract for this scenario
   end
 
   def teardown
@@ -80,7 +79,7 @@ class UpdateContractPaymentMethodTest < Common
     column = @browser.element(:text, 'Signed Contracts').parent.parent
     table = column.element(:class, 'table')
 
-    table.element(:text, @org_name).parent # find contract Accepted By 'Awesome Sauce'
+    table.element(:text, 'qa').parent # find contract Accepted By 'qa'
   end
 
   def check_success_message
