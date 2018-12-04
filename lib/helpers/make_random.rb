@@ -36,7 +36,7 @@ module MakeRandom
 	end
 
 	def self.phone_number
-		FFaker::PhoneNumber.short_phone_number
+		FFaker.numerify("(###) ###-####")
 	end
 
 	def self.zip_code
