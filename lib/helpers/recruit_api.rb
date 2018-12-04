@@ -36,7 +36,7 @@ class RecruitAPI
                athlete_last_name: MakeRandom.last_name,
                athlete_phone: Default.static_info['gmail']['google_voice'],
                graduation_year: grad_yr,
-               state_code: 'IL',
+               state_code: MakeRandom.state,
                zip: MakeRandom.zip_code,
                sport_id: @sport_id.to_s,
                event_id: '3285'
