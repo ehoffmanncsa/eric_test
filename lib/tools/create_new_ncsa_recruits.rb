@@ -57,6 +57,8 @@ class RecruitCreator
     msg = "[ERROR] #{resp_code} when POST new recruit via API - #{resp_body}"
     raise msg unless resp_code.eql? 200
 
+    pp body
+    pp resp_body
     pp "Athete created in this script: #{body[:recruit][:athlete_email]}"
   end
 
