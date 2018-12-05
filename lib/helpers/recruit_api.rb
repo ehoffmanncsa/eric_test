@@ -54,6 +54,7 @@ class RecruitAPI
     raise msg unless resp_code.eql? 200
 
     pp "Athete created in this script: #{body[:recruit][:athlete_email]}"
+    pp resp_body
     [resp_body, body]
   end
 end
