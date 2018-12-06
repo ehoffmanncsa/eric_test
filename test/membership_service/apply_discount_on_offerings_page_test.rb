@@ -2,24 +2,15 @@
 require_relative '../test_helper'
 
 # POS Regression
-# This script is to apply all 24 exisiting discount discount codes
+# This script is to apply all exisiting discount codes
 # in offerings page using the below static athlete
-#
-# {:recruit=>
-#   {:athlete_email=>"ncsa.automation+POS@gmail.com",
-#    :athlete_first_name=>"amwjricvzc",
-#    :athlete_last_name=>"vduwmpztdd",
-#    :athlete_phone=>"8347603206",
-#    :graduation_year=>2021,
-#    :state_code=>"IL",
-#    :zip=>"52164",
-#    :sport_id=>"17665",
-#    :event_id=>"3285"}}
 
 class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
+
     POSSetup.setup(@browser)
+
     @athlete_email = 'turkeytom@yopmail.com'
     @discount_codes = Default.static_info['ncsa_discount_code']
   end
@@ -64,7 +55,8 @@ class ApplyDiscountOnOfferingsPage < Common
 
   def test_apply_discount_on_offerings_page
     UIActions.user_login(@athlete_email)
-    POSSetup.goto_offerings
+
+    POSSetup.goto_offerings; sleep 2
     POSSetup.open_payment_plan
 
     # activate discount feature
