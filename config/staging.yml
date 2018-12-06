@@ -1,11 +1,17 @@
 # Clientrms:
 clientrms:
   base_url: 'https://qa.ncsasports.org/'
-  login_page: 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in'
+  rss_endpoint: 'api/submit/v1/new_recruit'
+  login_page: 'clientrms/user_accounts/sign_in'
+  offerings_page: 'clientrms/membership/offerings'
+  payments_page: 'clientrms/finances'
+  dashboard: 'clientrms/dashboard/show'
 
 # Fasttrack Admin login
+# base UI url is the same with client rms
 fasttrack:
-  login_page: 'http://qa.ncsasports.org/fasttrack/Welcome.do'
+  login_page: 'fasttrack/Welcome.do'
+  recruit_search_form: 'fasttrack/lead/Search.do?method=preSearch'
   admin_username: 'trea'
   admin_password: 'ncsa1333'
 
@@ -32,5 +38,5 @@ video_user:
 # Coach RMS
 coach_rms:
   login_page: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
-  username: 'lajball@yopmail.com'
+  username: 'ehoffmanncsa@gmail.com'
   password: 'ncsa123'

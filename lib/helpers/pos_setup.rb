@@ -30,7 +30,7 @@ module POSSetup
     @browser.button(:name, 'commit').click
     sleep 1
 
-    Watir::Wait.until { @browser.url.include? 'custom_drills/free_onboarding' }
+    Watir::Wait.until(timeout: 90) { @browser.url.include? 'custom_drills/free_onboarding' }
     sleep 1
   end
 
@@ -63,7 +63,8 @@ module POSSetup
   end
 
   def self.goto_offerings
-    @browser.goto 'https://qa.ncsasports.org/clientrms/membership/offerings'
+    clientrms = Default.env_config['clientrms']
+    @browser.goto(clientrms['base_url'] + clientrms['offerings_page'])
   end
 
   def self.get_cart_count
@@ -73,7 +74,9 @@ module POSSetup
   end
 
   def self.open_payment_plan
-    @browser.link(:text, 'Choose Payment Plan').click; sleep 0.5
+    payment_plan = @browser.link(:text, 'Choose Payment Plan')
+    payment_plan.click; sleep 0.5
+    payment_plan.scroll.to :center
   end
 
   def self.choose_a_package(package)
@@ -105,7 +108,8 @@ module POSSetup
     raise msg unless cart_count.eql? new_cart_count
 
     # go to next step
-    @browser.element(:class, 'button--next').click
+    @browser.element(:class, 'button--next').click; sleep 1
+    Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
   end
 
   def self.choose_payment_plan(size = nil)

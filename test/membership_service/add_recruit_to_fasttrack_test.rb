@@ -10,6 +10,8 @@ class AddRecruitToFasttrackTest < Common
     pp "Athlete created in this script: #{@recruit_email}"
 
     super
+
+    @config = Default.env_config
   end
 
   # verify the new recruit we added earlier can be found
@@ -17,7 +19,10 @@ class AddRecruitToFasttrackTest < Common
   def test_find_new_recruit
     UIActions.fasttrack_login
 
-    @browser.goto 'https://qa.ncsasports.org/fasttrack/lead/Search.do?method=preSearch'
+    search_form = @config['clientrms']['base_url'] + @config['fasttrack']['recruit_search_form']
+
+    pp search_form
+    @browser.goto search_form
     content = @browser.div(:id, 'content')
     header = content.element(:tag_name, 'h1').text
     assert_equal 'Search Recruits', header, 'Search Recruits form not found'

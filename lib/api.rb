@@ -5,13 +5,8 @@ require 'json'
 class Api
   def initialize; end
 
-  # return JSON from the provided HTTP response.body
-  def parse(response, element = nil)
-    if element
-      return JSON.parse("#{response}")["#{element}"]
-    else
-      return JSON.parse("#{response}")
-    end
+  def parse(response)
+    JSON.parse(response.to_s)
   end
 
   def get(url, header = nil)

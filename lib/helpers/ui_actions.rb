@@ -18,13 +18,17 @@ module UIActions
   end
 
   def self.fasttrack_login
-    @browser.goto @config['fasttrack']['login_page']
+    login_page = @config['clientrms']['base_url'] + @config['fasttrack']['login_page']
+
+    @browser.goto login_page
 
     @browser.text_field(:id, 'username').set @config['fasttrack']['admin_username']
     @browser.text_field(:id, 'password').set @config['fasttrack']['admin_password']
     @browser.button(:name, 'submit').click
 
-    @browser.goto @config['fasttrack']['login_page']
+    sleep 3
+
+    @browser.goto login_page
 
     #waiting for the right title
     begin
@@ -37,7 +41,7 @@ module UIActions
   def self.user_login(email_addr, password = nil)
     password ||= 'ncsa'
 
-    @browser.goto @config['clientrms']['login_page']
+    @browser.goto(@config['clientrms']['base_url'] + @config['clientrms']['login_page'])
     @browser.text_field(:id, 'user_account_login').set email_addr
     @browser.text_field(:id, 'user_account_password').set password
     @browser.button(:name, 'commit').click; sleep 1
