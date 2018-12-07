@@ -295,7 +295,7 @@ module POSSetup
     Watir::Wait.until { @browser.element(:id, 'order-submit').visible? }
     @browser.text_field(:id, 'order_authorization_signature').set 'qa automation'
     sleep 1
-    @browser.element(:id, 'order-submit').click
+    @browser.element(:id, 'order-submit').click; sleep 1
   end
 
   def self.setup_billing(ach = false)
@@ -308,7 +308,9 @@ module POSSetup
     select_billing_state
 
     sign_and_auth
-    sleep 3
+
+    # probably need to chill a bit here or else lightning bolt if viewing Payments right after
+    sleep 10
   end
 
   def self.get_cart_total

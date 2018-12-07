@@ -7,14 +7,9 @@ class EnrollEliteFreshmanTest < Common
   def setup
     super
 
-    # add a new freshman recruit, get back his email address
     @enroll_yr = 'freshman'; @package = 'elite'
     _post, post_body = RecruitAPI.new(@enroll_yr).ppost
     @recruit_email = post_body[:recruit][:athlete_email]
-
-    # while process through the premium purchase process
-    # also calculate expected membership and 1st payment
-    add_elite_freshman
   end
 
   def teardown
@@ -33,13 +28,8 @@ class EnrollEliteFreshmanTest < Common
 
     @membership = POSSetup.calculate(full_price, 6)
     @expect_first_pymt = (@membership / 6)
-    sleep 3
-    goto_dashboard
-  end
 
-  def goto_dashboard
-    clientrms = Default.env_config['clientrms']
-    @browser.goto(clientrms['base_url']+ clientrms['dashboard'])
+    goto_dashboard
   end
 
   def goto_payments
@@ -48,14 +38,10 @@ class EnrollEliteFreshmanTest < Common
   end
 
   def test_enroll_elite_freshman
+    add_elite_freshman
     goto_payments
 
     expect_remain_balance = @membership - @expect_first_pymt
-
-    # UIActions.user_login(@recruit_email)
-    # @browser.refresh; sleep 3
-    # @browser.element(:class, 'fa-angle-down').click
-    # @browser.element(:id, 'secondary-nav-menu').link(:text, 'Payments').click; sleep 1
 
     boxes = @browser.elements(:css, 'div.column.third').to_a
     elem = boxes[2].elements(:class, 'text--size-small').to_a
