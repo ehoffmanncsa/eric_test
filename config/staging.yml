@@ -30,6 +30,12 @@ ted:
   partner_password: 'ncsa1333'
   api_base: 'https://qa.ncsasports.org/api/team_edition/'
 
+# Coachlive
+coachlive:
+  base_url: 'https://data-staging.ncsasports.org/api/coachlive-be/'
+  email: 'email@email.com'
+  password: 'password'
+
 # sample video user login
 video_user:
   username: 'elite2'
