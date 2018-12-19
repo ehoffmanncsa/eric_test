@@ -92,10 +92,12 @@ module UIActions
   def self.coach_rms_login(username = nil, password = nil)
     @browser.goto @config['coach_rms']['login_page']
 
-    username = username.nil? ? @creds['coach_rms']['username'] : username
-    password = password.nil? ? @creds['coach_rms']['password'] : password
+    username = username.nil? ? @config['coach_rms']['username'] : username
+    password = password.nil? ? @config['coach_rms']['password'] : password
+
     @browser.text_field(:id, 'j_username').set username
     @browser.text_field(:id, 'j_password').set password
+
     @browser.button(:name, '_submit').click
   end
 
