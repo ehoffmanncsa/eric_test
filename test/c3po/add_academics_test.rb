@@ -4,8 +4,7 @@ require_relative '../test_helper'
 # C3PO Regression
 # UI Test: Academics page
 # Insert an email address at the bottom of this script, can be a free or prem user.
-# This script must run before My information test script or verification will be off...
-# group of half has some arrays in the contact section.
+# If this script is rerun,  delete the transcript or the check_profile_history_gpa will fail.
 class AddAcademicsInfoTest < Common
   def setup
     super
@@ -192,40 +191,33 @@ class AddAcademicsInfoTest < Common
   def check_profile_history_gpa
     # go to Preview Profile and check gpa, transcript, sat and high school
     @browser.element(:class, 'button--primary').click;
-    group_of_half = @browser.elements(:class, %w[half mg-btm-1])
+    academics = @browser.elements(:class, %w[info-category scores])
 
-    expected_gpa = "GPA\n3.60  /  4.0\nOfficial Transcript - This is my Transcript\nOther Notes:\nCore GPA: 3.25/4.0"+
-    " Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400"
-    assert_includes group_of_half[1].text, expected_gpa
-
-    expected_act = "ACT\n32 / 36\nOther Notes:\nI am some ACT notes"
-    assert_includes group_of_half[2].text, expected_act
-
-    expected_sat = "SAT\n1221 / 1600\nOther Notes:\nI am some SAT notes"
-    assert_includes group_of_half[3].text, expected_sat
-
-    expected_hs = 'Lane Tech High School'
-    assert_includes group_of_half.last.text, expected_hs
+    expected_academics = "ACADEMIC INFO\nGPA\n3.60  /  4.0\nOfficial Transcript - This is my Transcript\nOther Notes:"+
+    "\nCore GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400"+
+    "\nACT\n32 / 36\nOther Notes:\nI am some ACT notes\nSAT\n1221 / 1600\nOther Notes:\nI am some SAT notes"+
+    "\nHigh School\nLane Tech High School\nEnrollment: 4278"
+    assert_includes academics.first.text, expected_academics
   end
 
   def check_honors
     group_of_hon = @browser.elements(:class, %w[half accomplishments])
 
-    expected_hon = "Honors Classes\nI am honors classes text.\nAP Classes\nI am AP classes text.\nRegistered"+
-    " with NCAA Eligibility Center\nYes"
+    expected_hon = "ACADEMIC ACCOMPLISHMENTS\nHonors Classes\nI am honors classes text.\nAP Classes\nI am AP classes"+
+    " text.\nPreferred Field of Study\nBusiness\nRegistered with NCAA Eligibility Center\nYes"
     assert_includes group_of_hon.first.text, expected_hon
   end
 
   def check_accomplishments
     group_of_acc = @browser.elements(:class, %w[half awards])
 
-    expected_aa = "Academic Awards:\nList any academic achievements and/or awards:\nExtracurricular"+
+    expected_aa = "AWARDS AND ACTIVITIES\nAcademic Awards:\nList any academic achievements and/or awards:\nExtracurricular"+
     " Notes:\nList your extracurricular (non sports related) activities:"
     assert_includes group_of_acc.first.text, expected_aa
   end
 
   def test_add_academics
-    email = 'test+76d1@yopmail.com'
+    email = 'test6e80@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

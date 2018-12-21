@@ -2,13 +2,12 @@
 require_relative '../test_helper'
 
 # C3PO Regression
-# UI Test: My Information
-# Run this script before Academics script or verification will not work.
+# UI Test: My Information for free users only.
 # Enter a new email address in the athlete_email_enter method, the check_profile_history_contact and the
 # test_add_my_information method at the bottom of the script.
 # If a premium user is entered then they will be assigned a message center email addres and the
 # def check_profile_history_contact will fail.
-class AddMyInformationTest < Common
+class AddMyInformationTestFreeEmailInsert < Common
   def setup
     super
 
@@ -22,7 +21,7 @@ class AddMyInformationTest < Common
   def firstname_enter
     # fill out first name
     @browser.element(:id, 'first_name').to_subtype.clear
-    @browser.element(:id, 'first_name').send_keys 'FirstName'
+    @browser.element(:id, 'first_name').send_keys 'Annetta'
   end
 
   def mid_initial_enter
@@ -34,7 +33,7 @@ class AddMyInformationTest < Common
   def lastname_enter
     # fill out last name
     @browser.element(:id, 'last_name').to_subtype.clear
-    @browser.element(:id, 'last_name').send_keys 'LastName'
+    @browser.element(:id, 'last_name').send_keys 'Kautzer'
   end
 
   def suffix_enter
@@ -89,7 +88,7 @@ class AddMyInformationTest < Common
   def primary_phone_enter
     # fill out athlete_phone
     @browser.element(:id, 'athlete_phone').to_subtype.clear
-    @browser.element(:id, 'athlete_phone').send_keys '(312)555-1000'
+    @browser.element(:id, 'athlete_phone').send_keys '(802) 676-0642'
 
     # select Phone type
     dropdown = @browser.element(:id, 'primary_phone_type')
@@ -125,7 +124,7 @@ class AddMyInformationTest < Common
   def athlete_email_enter
     # fill out athlete email --enter email here!!
     @browser.element(:id, 'athlete_email').to_subtype.clear
-    @browser.element(:id, 'athlete_email').send_keys 'test8bb4@yopmail.com'
+    @browser.element(:id, 'athlete_email').send_keys 'testd522@yopmail.com'
   end
 
   def secondary_email_enter
@@ -195,7 +194,7 @@ class AddMyInformationTest < Common
   def guardian1_email_enter
     # fill out guardian 1 email
     @browser.element(:id, 'parent1_email').to_subtype.clear
-    @browser.element(:id, 'parent1_email').send_keys 'guard915@yopmail.com'
+    @browser.element(:id, 'parent1_email').send_keys 'test44f1@yopmail.com'
   end
 
   def relationship2_enter
@@ -360,14 +359,14 @@ class AddMyInformationTest < Common
     # go to Preview Profile and check athlete and guradian info
     group_of_half = @browser.elements(:class, %w[half mg-btm-1])
 
-    expected_ath = "FIRSTNAME J. LASTNAME (Athlete)\ntest8bb4@yopmail.com\n(312) 555-1000 My mobile"+
+    expected_ath = "Annetta J. Kautzer (Athlete)\ntestd522@yopmail.com\n(802) 676-0642 My mobile"+
     "\n(312) 222-2000 Home"
     assert_includes group_of_half[0].text, expected_ath
 
     expected_g1 = "GUARDIAN2FIRST GUARDIAN2LAST (Father)\nguard2@yopmail.com\n(312)111-1000\n(312) 222-2222 Home"
     assert_includes group_of_half[1].text, expected_g1
 
-    expected_g2 = "GUARDIAN1FIRST GUARDIAN1LAST (Mother)\nguard915@yopmail.com\n(312) 666-1000\n(312) 666-2000 Home"
+    expected_g2 = "GUARDIAN1FIRST GUARDIAN1LAST (Mother)\ntest44f1@yopmail.com\n(312) 666-1000\n(312) 666-2000 Home"
     assert_includes group_of_half[2].text, expected_g2
   end
 
@@ -404,7 +403,7 @@ class AddMyInformationTest < Common
   end
 
   def test_add_my_information
-    email = 'test8bb4@yopmail.com'
+    email = 'testd522@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

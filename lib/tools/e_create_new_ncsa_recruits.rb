@@ -1,6 +1,7 @@
 # encoding: utf-8
+require_relative '../../test/test_helper'
 
-class RecruitAPI
+class RecruitCreator
   def initialize(enroll_yr = nil)
     @api = Api.new
     @email = "test#{SecureRandom.hex(2)}@yopmail.com"
@@ -8,8 +9,8 @@ class RecruitAPI
     # if nothing is passed in, assumed freshman
     @enroll_yr = enroll_yr.nil? ? 'freshman' : enroll_yr
     @url = 'https://qa.ncsasports.org/api/submit/v1/new_recruit'
-    #@sport_id = Default.static_info['sport_ids'].sample
-    @sport_id = '17633'
+
+    @random_sport_id = Default.static_info['sport_ids'].sample
   end
 
   def year
@@ -29,8 +30,10 @@ class RecruitAPI
     grad_yr
   end
 
-  def ppost
+  def ppost(sport_id = nil)
     grad_yr = year
+    sport_id ||= @random_sport_id
+
     body = { recruit: {
                athlete_email: @email,
                athlete_first_name: MakeRandom.first_name,
@@ -38,8 +41,8 @@ class RecruitAPI
                athlete_phone: MakeRandom.phone_number,
                graduation_year: grad_yr,
                state_code: 'IL',
-               zip: MakeRandom.zip_code,
-               sport_id: @sport_id.to_s,
+               zip: MakeRandom.number(5),
+               sport_id: sport_id.to_s,
                event_id: '3285'
               }
             }
@@ -55,6 +58,15 @@ class RecruitAPI
     raise msg unless resp_code.eql? 200
 
     pp "Athete created in this script: #{body[:recruit][:athlete_email]}"
-    [resp_body, body]
   end
+
+  def main
+    sport_id = ARGV[1]
+    ppost(sport_id)
+  end
+end
+
+student_count = ARGV[0].nil? ? 1 : ARGV[0]
+for i in 1 .. student_count.to_i
+  RecruitCreator.new.main
 end

@@ -3,14 +3,11 @@
 # Set up a new lead for POS base 2 conditions: grad year and package type
 # choosing and returning 6 payments financing option as default
 # that way we can test for remaining balance and first payment made
-module POSSetup
+module POSSetupold
   def self.setup(ui_object)
     @browser = ui_object
     UIActions.setup(@browser)
-  end
-
-  def self.set_guardian(guardian_email)
-    @guardian_email = guardian_email
+    @guardian_email = "test#{SecureRandom.hex(2)}@yopmail.com"
   end
 
   def self.set_password(email)
@@ -100,11 +97,10 @@ module POSSetup
     # compare cart count before and after selecting package
     new_cart_count = get_cart_count
     msg = "[ERROR] Cart count #{new_cart_count} after selecting a package"
-    raise msg unless cart_count.eql? new_cart_count 
+    raise msg unless cart_count.eql? new_cart_count
     
     # go to next step
-    @browser.element(:class, 'button--next').scroll.to :center; sleep 5
-    @browser.element(:class, 'button--next').click
+    @browser.element(:class, 'button--next').click sleep 0.5
   end
 
   def self.choose_payment_plan(size = nil)
@@ -259,6 +255,7 @@ module POSSetup
 
   def self.fill_out_registration_form
     # guardian email
+    #@browser.text_field(:id, 'order_guardian_email').set 'fake@fake.com'
     @browser.text_field(:id, 'order_guardian_email').send_keys @guardian_email
 
     # select specialist
@@ -355,3 +352,8 @@ module POSSetup
     UIActions.clear_cookies
   end
 end
+
+
+
+
+

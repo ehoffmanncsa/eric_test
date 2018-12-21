@@ -3,25 +3,22 @@ require_relative '../test_helper'
 
 # TS-202: NCSA University Regression
 # UI Test: Meet Your Team Milestone
-class MeetYourTeamMilestoneTest < Minitest::Test
+class MeetYourTeamMilestoneTest < Common
   def setup
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
+    super
 
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-    POSSetup.setup(@browser)
-
-    POSSetup.buy_package(@email, 'elite')
-    UIActions.user_login(@email)
+    C3PO.setup(@browser)
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def test_complete_your_personal_statement_drill
+
+    email = 'test6170@yopmail.com'
+    UIActions.user_login(email)
+    
     UIActions.goto_ncsa_university
     milestone = @browser.link(:text, 'Meet my team').click
     @browser.element(:class, 'button--wide').click

@@ -31,5 +31,11 @@ video_user:
 # Coach RMS
 coach_rms:
   login_page: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
-  username: 'lajball@yopmail.com'
-  password: 'ncsa123'
+  username: 'Test27217nh@gmail.com'
+  password: 'ncsa1333'
+
+  # Coach Live
+coach_live:
+  login_page: 'http://coachlive-staging.ncsasports.org/login'
+  username: 'email@email.com'
+  password: 'password'

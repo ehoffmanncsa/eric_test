@@ -285,4 +285,15 @@ module C3PO
     subheader.element(:id, 'edit_physical_measurables_link').click
   end
   
+  def self.goto_events
+    # go to key Events page
+    subheader = @browser.element(:class, 'subheader')
+    subheader.element(:id, 'edit_events_link').click
+  end
+
+  def self.goto_tapresults
+    # go to key Events page
+    subheader = @browser.element(:class, 'subheader')
+    subheader.element(:id, 'tap_results_link').click
+  end
 end

@@ -2,7 +2,7 @@
 require_relative '../test_helper'
 
 # TS-292: C3PO Regression
-# UI Test: Add High School Team with Stats
+# UI Test: Add High School Team with Stats, enter an email and run.
 class AddHSTeamWithStatsTest < Common
   def setup
     super
@@ -41,7 +41,7 @@ class AddHSTeamWithStatsTest < Common
   end
 
   def test_add_hs_team_with_stats
-    email = 'testcd9f@yopmail.com'
+    email = 'test6e80@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

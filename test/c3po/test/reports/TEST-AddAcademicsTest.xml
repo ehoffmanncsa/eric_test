@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite time='32.553749' skipped='0' failures='0' errors='1' name="AddAcademicsTest" assertions='0' tests='1' timestamp="2018-07-25T09:42:16-05:00">
+  <testcase time='32.553749' file="academics.rb" name="test_add_academics" assertions='0'>
+    <error type='Errno::ENOENT' message="No such file or directory - /Users/ehoffman/qa_regression/test/c3po/test/c3po/cat.png">/Users/ehoffman/.rvm/gems/ruby-2.5.0/gems/watir-6.11.0/lib/watir/elements/file_field.rb:12:in `set&#39;
+/Users/ehoffman/qa_regression/test/c3po/academics.rb:101:in `transcript&#39;
+/Users/ehoffman/qa_regression/test/c3po/academics.rb:266:in `test_add_academics&#39;
+    </error>
+  </testcase>
+</testsuite>
