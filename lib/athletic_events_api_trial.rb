@@ -1,45 +1,47 @@
-require 'faraday'
-require 'ey-hmac/faraday'
-require 'pry'
-require 'json'
-
-base_uri = 'http://data-staging.ncsasports.org' #ENV.fetch("ATHLETIC_EVENT_SERVICE_BASE_URI")
-auth_id = 'ncsa' #ENV.fetch("ATHLETIC_EVENT_SERVICE_AUTH_ID")
-api_key = '26d11c0ddc892821496cec3c2e' #ENV.fetch("ATHLETIC_EVENT_SERVICE_API_KEY")
-
-# http_client = Faraday.new(base_uri, ssl: {verify: false}) do |c|
+# require 'faraday'
+# require 'ey-hmac/faraday'
+# require 'pry'
+# require 'json'
+#
+# base_uri = 'http://data-staging.ncsasports.org' #ENV.fetch("ATHLETIC_EVENT_SERVICE_BASE_URI")
+# auth_id = 'ncsa' #ENV.fetch("ATHLETIC_EVENT_SERVICE_AUTH_ID")
+# api_key = '26d11c0ddc892821496cec3c2e' #ENV.fetch("ATHLETIC_EVENT_SERVICE_API_KEY")
+#
+# # http_client = Faraday.new(base_uri, ssl: {verify: false}) do |c|
+# #   c.use :hmac, auth_id, api_key, sign_with: :sha256
+# #   c.adapter(Faraday.default_adapter)
+# # end
+#
+# url = '/api/athletic_events/v1/event_operators'
+#
+# http_client2 = Faraday.new(base_uri + url, ssl: {verify: false}) do |c|
 #   c.use :hmac, auth_id, api_key, sign_with: :sha256
 #   c.adapter(Faraday.default_adapter)
 # end
-
-url = '/api/athletic_events/v1/event_operators'
-
-http_client2 = Faraday.new(base_uri + url, ssl: {verify: false}) do |c|
-  c.use :hmac, auth_id, api_key, sign_with: :sha256
-  c.adapter(Faraday.default_adapter)
-end
-
-body = {'website_url'=> 'http://test.tst',
-  'primary_email' => 'zerogravitybasketball1@yopmail.com', "name"=>"Zero Gravity 2"}.to_json
-
-# body = {
-#  :grant_type    => ‘client_credentials’,
-#  :client_id     => client_id,
-#  :client_secret => client_key
-# }
-
-# Case 1: This works
-response = http_client2.post do |req|
- req.body = body
-end
-
+#
 # body = {'website_url'=> 'http://test.tst',
 #   'primary_email' => 'zerogravitybasketball1@yopmail.com', "name"=>"Zero Gravity 2"}.to_json
+#
+# # body = {
+# #  :grant_type    => ‘client_credentials’,
+# #  :client_id     => client_id,
+# #  :client_secret => client_key
+# # }
+#
+# # Case 1: This works
+# response = http_client2.post do |req|
+#  req.body = body
+# end
+#
+# # body = {'website_url'=> 'http://test.tst',
+# #   'primary_email' => 'zerogravitybasketball1@yopmail.com', "name"=>"Zero Gravity 2"}.to_json
+#
+#
+#
+# binding.pry
+# response = http_client.get(url)
 
 
-
-binding.pry
-response = http_client.get(url)
 
 
 # module AthleticEventService
