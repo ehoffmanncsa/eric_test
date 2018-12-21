@@ -1,12 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'csv', '1.0.1'
-gem 'capybara', '3.0.2'
-gem 'eyes_selenium', '3.14.3'
-gem 'faraday', '0.15.0'
+gem 'api-auth'
+
+gem 'csv'
+
+gem 'ey-hmac'
+gem 'faraday'
+
 gem 'gmail', '0.6.0'
 gem 'jwt', '2.1.0'
-gem 'mechanize', '2.7.5'
+
 gem 'minitest', '5.11.3'
 gem 'minitest-ci', '3.4.0'
 gem 'net-ssh', '4.2.0'
@@ -23,3 +26,7 @@ gem 'watir-scroll', '0.4.0'
 gem 'xml-simple', '1.1.5'
 gem 'ffaker', '~> 2.9'
 gem 'pry', '~> 0.11'
+
+# gem 'capybara'
+# gem 'eyes_selenium', '3.14.3'
+# gem 'mechanize', '2.7.5'
