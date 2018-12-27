@@ -31,5 +31,7 @@ gem 'ffaker'
 
 gem 'pry'
 
+gem 'eyes_selenium'
+
 # gem 'capybara'
 # gem 'eyes_selenium', '3.14.3'
