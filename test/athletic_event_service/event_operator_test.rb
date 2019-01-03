@@ -24,10 +24,28 @@ class EventOperatorTest < Common
       json_body: json_body
     )
 
-    assert_equal event_operator_data[:name], response["data"]["name"], "Name submitted does not match Name returned"
-    assert_equal event_operator_data[:primary_email], response["data"]["primary_email"], "Primary_email submitted does not match Primary_email returned"
-    assert_equal event_operator_data[:logo_url], response["data"]["logo_url"], "logo_url submitted does not match Logo_url returned"
-    assert_equal event_operator_data[:website_url], response["data"]["website_url"], "website_url submitted does not match website_url returned"
-    assert_instance_of Integer, response["data"]["id"], "Id from response is not an Integer"
+    errors_array = []
+
+    if event_operator_data[:name] != response["data"]["name"]
+      errors_array <<  "Name submitted does not match Name returned"
+    end
+
+    if event_operator_data[:primary_email] != response["data"]["primary_email"]
+      errors_array << "Primary_email submitted does not match Primary_email returned"
+    end
+
+    if event_operator_data[:logo_url] != response["data"]["logo_url"]
+      errors_array << "Logo_url submitted does not match logo_url returned"
+    end
+
+    if event_operator_data[:website_url] != response["data"]["website_url"]
+      errors_array << "Website_url submitted does not match website_url returned"
+    end
+
+    if !response["data"]["id"].integer?
+      errors_array << "Id from response is not an Integer"
+    end
+
+    assert_empty errors_array
   end
 end
