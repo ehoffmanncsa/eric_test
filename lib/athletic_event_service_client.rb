@@ -1,7 +1,3 @@
-require 'json'
-require 'faraday'
-require 'ey-hmac/faraday'
-
 class AthleticEventServiceClient
   def initialize
     @client = create_client
