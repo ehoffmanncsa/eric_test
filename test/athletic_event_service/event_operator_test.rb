@@ -26,26 +26,47 @@ class EventOperatorTest < Common
 
     errors_array = []
 
-    if event_operator_data[:name] != response["data"]["name"]
-      errors_array <<  "Name submitted does not match Name returned"
+    if response.empty?
+      errors_array << "Empty response."
     end
 
-    if event_operator_data[:primary_email] != response["data"]["primary_email"]
-      errors_array << "Primary_email submitted does not match Primary_email returned"
+    if response["data"].empty?
+      errors_array <<  "Empty data."
     end
 
-    if event_operator_data[:logo_url] != response["data"]["logo_url"]
-      errors_array << "Logo_url submitted does not match logo_url returned"
+    if event_operator_data[:name] != response.dig("data", "name")
+      errors_array <<  "name mismatch: submitted #{event_operator_data[:name]}, returned #{response.dig("data", "name")}."
     end
 
-    if event_operator_data[:website_url] != response["data"]["website_url"]
-      errors_array << "Website_url submitted does not match website_url returned"
+    if event_operator_data[:primary_email] != response.dig("data", "primary_email")
+      errors_array << "primary_email mismatch: submitted #{event_operator_data[:primary_email]}, returned #{response.dig("data", "primary_email")}."
     end
 
-    if !response["data"]["id"].integer?
-      errors_array << "Id from response is not an Integer"
+    if event_operator_data[:logo_url] != response.dig("data", "logo_url")
+      errors_array << "logo_url mismatch: submitted #{event_operator_data[:logo_url]}, returned #{response.dig("data", "logo_url")}."
+    end
+
+    if event_operator_data[:website_url] != response.dig("data", "website_url")
+      errors_array << "website_url mismatch: submitted #{event_operator_data[:website_url]}, returned #{response.dig("data", "website_url")}."
+    end
+
+    if !response.dig("data", "id").integer?
+      errors_array << "Id from response is not an Integer."
     end
 
     assert_empty errors_array
   end
 end
+
+=begin
+Sample Expected Response
+{
+  "data"=> {
+    "website_url "=>" http://pfeffer.se",
+     "primary_email "=>" jillian_stehr@parker.com",
+     "name "=>" Schaden Inc",
+     "logo_url "=>" http://morar.se",
+     "id"=>39
+    }
+}
+=end
