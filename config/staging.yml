@@ -35,6 +35,9 @@ coachlive:
   base_url: 'https://data-staging.ncsasports.org/api/coachlive-be/'
   email: 'email@email.com'
   password: 'password'
+  account: "ncsa"
+  api_key: "26d11c0ddc892821496cec3c2e"
+  base_uri: "http://data-staging.ncsasports.org"
 
 # sample video user login
 video_user:

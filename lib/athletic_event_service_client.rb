@@ -17,22 +17,26 @@ class AthleticEventServiceClient
 
   attr_reader :client
 
-  def account
-    "ncsa"
-  end
-
-  def api_key
-    "26d11c0ddc892821496cec3c2e"
-  end
-
-  def base_uri
-    "http://data-staging.ncsasports.org"
-  end
-
   def create_client
     Faraday.new(ssl: {verify: false}) do |c|
       c.use :hmac, account, api_key, sign_with: :sha256
       c.adapter(Faraday.default_adapter)
     end
+  end
+
+  def account
+    coachlive_credentials['account']
+  end
+
+  def api_key
+    coachlive_credentials['api_key']
+  end
+
+  def base_uri
+    coachlive_credentials['base_uri']
+  end
+
+  def coachlive_credentials
+    Default.env_config['coachlive']
   end
 end
