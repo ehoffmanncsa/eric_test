@@ -23,6 +23,10 @@ module MakeRandom
     "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
   end
 
+	def self.url
+		FFaker::InternetSE.http_url
+	end
+
 	def self.fake_email
 		FFaker::Internet.email
 	end
