@@ -114,6 +114,7 @@ module POSSetup
 
   def self.choose_payment_plan(size = nil)
     # choose 6 months payment plan by default for testing purpose
+    Watir::Wait.until(timeout: 45) { @browser.element(:class, 'payment-block').present? }
     blocks = @browser.elements(:class, 'payment-block').to_a
     full_price = blocks[0].attribute_value('data-total').gsub!(/[^0-9]/, '').to_i
 

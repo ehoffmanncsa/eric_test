@@ -113,7 +113,7 @@ class SignupSelfProvisionOrgTest < Common
     list = @browser.select_list(:class, 'form-control')
     list.select 'Unverified'
     @browser.button(:text, 'Search').click
-    UIActions.wait_for_spinner
+    UIActions.wait_for_spinner; sleep 2
 
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Unverified'
