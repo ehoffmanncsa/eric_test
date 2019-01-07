@@ -20,7 +20,7 @@ class AddTAPTest < Common
     # need guardian, parent info and dob entered
     @browser.link(:text, 'TAP Assessment Drill').click
     @browser.element(:class, 'button--secondary button--wide').click sleep 5
-    
+
 
     @browser.window(title: 'TAP Plus with NCSA').use do
       @browser.button(:id, 'movenextbtn').scroll.to :center;
@@ -125,7 +125,7 @@ class AddTAPTest < Common
   end
 
   def test_do_tap
-    email = 'testdf2f@yopmail.com'
+    email = 'test0f48@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

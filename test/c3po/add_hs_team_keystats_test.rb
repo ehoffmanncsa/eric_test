@@ -41,7 +41,7 @@ class AddHSTeamWithStatsTest < Common
   end
 
   def test_add_hs_team_with_stats
-    email = 'test6e80@yopmail.com'
+    email = 'test0f48@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

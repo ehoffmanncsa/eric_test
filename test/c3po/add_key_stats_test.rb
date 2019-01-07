@@ -156,11 +156,11 @@ class AddKeyStatsTestFree < Common
     header_stats = @browser.elements(:class, 'stats')
     expected_header_stats = "2022 Quarterback  •  6' 11\" 300lbs"
     assert_includes header_stats.last.text, expected_header_stats
-  
+
     header_loc = @browser.elements(:class, 'location')
     expected_header_loc = "Chicago, Illinois"
     assert_includes header_loc.last.text, expected_header_loc
- 
+
     header_con = @browser.elements(:class, 'contact')
     expected_header_con = "(802) 676-0642"
     assert_includes header_con.first.text, expected_header_con
@@ -184,7 +184,7 @@ class AddKeyStatsTestFree < Common
     keystats_40 = @browser.elements(:class, 'col th')
     expected_keystats_40 = "40 Yard Dash"
     assert_includes keystats_40.first.text, expected_keystats_40
- 
+
     keystats_40val = @browser.elements(:class, 'stat-val')
     expected_keystats_40val = '5'
     assert_includes keystats_40val.first.text, expected_keystats_40val
@@ -199,7 +199,7 @@ class AddKeyStatsTestFree < Common
     keystats_shut = @browser.elements(:class, 'col th')
     expected_keystats_shut = "5-10-5 Shuttle"
     assert_includes keystats_shut[1].text, expected_keystats_shut
- 
+
     keystats_shutval = @browser.elements(:class, 'stat-val')
     expected_keystats_shutval = '4.5'
     assert_includes keystats_shutval[1].text, expected_keystats_shutval
@@ -214,7 +214,7 @@ class AddKeyStatsTestFree < Common
     keystats_bench = @browser.elements(:class, 'col th')
     expected_keystats_bench = "Bench Press"
     assert_includes keystats_bench[2].text, expected_keystats_bench
- 
+
     keystats_benchval = @browser.elements(:class, 'stat-val')
     expected_keystats_benchval = '250'
     assert_includes keystats_benchval[2].text, expected_keystats_benchval
@@ -229,7 +229,7 @@ class AddKeyStatsTestFree < Common
     keystats_squat = @browser.elements(:class, 'col th')
     expected_keystats_squat= "Squat"
     assert_includes keystats_squat[3].text, expected_keystats_squat
- 
+
     keystats_squatval = @browser.elements(:class, 'stat-val')
     expected_keystats_squatval = '500'
     assert_includes keystats_squatval[3].text, expected_keystats_squatval
@@ -244,7 +244,7 @@ class AddKeyStatsTestFree < Common
     keystats_vertical = @browser.elements(:class, 'col th')
     expected_keystats_vertical= "Vertical"
     assert_includes keystats_vertical[4].text, expected_keystats_vertical
- 
+
     keystats_verticalval = @browser.elements(:class, 'stat-val')
     expected_keystats_verticalval = '28.0'
     assert_includes keystats_verticalval[4].text, expected_keystats_verticalval
@@ -259,7 +259,7 @@ class AddKeyStatsTestFree < Common
     keystats_cone = @browser.elements(:class, 'col th')
     expected_keystats_cone= "3 Cone Drill"
     assert_includes keystats_cone[5].text, expected_keystats_cone
- 
+
     keystats_coneval = @browser.elements(:class, 'stat-val')
     expected_keystats_coneval = '7.5'
     assert_includes keystats_coneval[5].text, expected_keystats_coneval
@@ -274,7 +274,7 @@ class AddKeyStatsTestFree < Common
     keystats_jump= @browser.elements(:class, 'col th')
     expected_keystats_jump= "Broad Jump"
     assert_includes keystats_jump.last.text, expected_keystats_jump
- 
+
     keystats_jumpval = @browser.elements(:class, 'stat-val')
     expected_keystats_jumpval = '124'
     assert_includes keystats_jumpval.last.text, expected_keystats_jumpval
@@ -285,7 +285,7 @@ class AddKeyStatsTestFree < Common
   end
 
   def test_add_keystats
-    email = 'test6e80@yopmail.com'
+    email = 'test0f48@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

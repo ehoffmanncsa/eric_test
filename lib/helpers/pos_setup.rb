@@ -100,8 +100,8 @@ module POSSetup
     # compare cart count before and after selecting package
     new_cart_count = get_cart_count
     msg = "[ERROR] Cart count #{new_cart_count} after selecting a package"
-    raise msg unless cart_count.eql? new_cart_count 
-    
+    raise msg unless cart_count.eql? new_cart_count
+
     # go to next step
     @browser.element(:class, 'button--next').scroll.to :center; sleep 5
     @browser.element(:class, 'button--next').click
@@ -238,6 +238,13 @@ module POSSetup
   def self.fill_out_credit
     Default.static_info['credit_billing'].each do |id, value|
       @browser.text_field(:id, id).set value
+    end
+
+    dropdown = @browser.element(:id, 'order_expiration_year')
+    options = dropdown.elements(:tag_name, 'option').to_a
+
+    options.each do |option|
+      option.click if option.text == '2023'
     end
   end
 
