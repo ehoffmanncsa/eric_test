@@ -15,6 +15,8 @@ require 'jwt'
 require 'time'
 require 'ffaker'
 require 'pry'
+require 'faraday'
+require 'ey-hmac/faraday'
 require_relative 'common'
 require_relative 'visual_common'
 
