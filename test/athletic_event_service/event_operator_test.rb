@@ -1,27 +1,25 @@
 require_relative '../test_helper'
 
 class EventOperatorTest < Common
-  def setup; end
+  def setup
+    @connection_client = AthleticEventServiceClient.new
+
+    @event_operator_data = { event_operator:
+      {
+        name: MakeRandom.company_name,
+        primary_email: MakeRandom.fake_email,
+        logo_url: MakeRandom.url,
+        website_url: MakeRandom.url,
+      }
+    }.to_json
+  end
 
   def teardown; end
 
-  def test_create_event_operator
-    connection_client = AthleticEventServiceClient.new
-
-    event_operator_data = {
-      name: MakeRandom.company_name,
-      primary_email: MakeRandom.fake_email,
-      logo_url: MakeRandom.url,
-      website_url: MakeRandom.url,
-    }
-
-    json_body = {
-      event_operator: event_operator_data
-    }.to_json
-
+  def create_event_operator
     response = connection_client.post(
       url: "/api/athletic_events/v1/event_operators",
-      json_body: json_body
+      json_body: @event_operator_data
     )
 
     errors_array = []
@@ -34,6 +32,10 @@ class EventOperatorTest < Common
       errors_array <<  "Empty data."
     end
 
+    assert_empty errors_array
+  end
+
+  def read_event_operator
     if event_operator_data[:name] != response.dig("data", "name")
       errors_array <<  "name mismatch: submitted #{event_operator_data[:name]}, returned #{response.dig("data", "name")}."
     end
@@ -53,12 +55,16 @@ class EventOperatorTest < Common
     if !response.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
     end
+  end
 
-    assert_empty errors_array
+  def test_create_read_event_operator
+    create_event_operator
   end
 end
 
 =begin
+//call this later when i figure out the syntax for GET in AES
+//read_event_operator
 Sample Expected Response
 {
   "data"=> {
