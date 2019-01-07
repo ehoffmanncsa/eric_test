@@ -21,11 +21,13 @@ class CoachLiveAuth
 	end
 
 	def token
-		login_endpoint = @creds['coachlive']['base_url'] + 'auth/login'
+		coachlive = @creds['coachlive']
+
+		login_endpoint = coachlive['base_url'] + coachlive['coachlive_api'] + 'auth/login'
     params = { email: @username, password: @password }
 
 		resp_code, resp = @api.ppost login_endpoint, params
- 
+
 		msg = "[ERROR] Get #{resp_code} requesting for #{@username} session token"
 		raise msg unless resp_code.eql? 200
 

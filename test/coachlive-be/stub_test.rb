@@ -7,7 +7,6 @@ class StubTest < Common
 
   def test_graphql_response
     token = CoachLiveAuth.new.token
-    pp token
 
     api = Api.new
 
@@ -34,22 +33,18 @@ class StubTest < Common
           }
         }
       }
-  HEREDOC
+    HEREDOC
 
     body = {
       'query' => query
-      #variables: variables
     }.to_json
 
-    endpoint = Default.env_config['coachlive']['base_url'] + 'graphql'
+    coachlive = Default.env_config['coachlive']
 
-    # resp_code, resp_body = api.pget endpoint, header
-    # binding.pry
-    # assert_equal 200, resp_code, "GET #{endpoint} gives #{resp_code}"
+    endpoint = coachlive['base_uri'] + coachlive['coachlive_api'] + 'graphql'
+    #endpoint = "http://data-staging.ncsasports.org/api/coachlive-be/graphql"
 
-
-    resp_code, resp_body = api.ppost endpoint, body, header
-    binding.pry
-    assert_equal 200, resp_code, "POST #{endpoint} gives #{resp_code}"
+    resp_code, resp_body = api.pget endpoint, header
+    assert_equal 200, resp_code, "GET #{endpoint} gives #{resp_code}"
   end
 end
