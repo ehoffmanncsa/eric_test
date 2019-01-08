@@ -68,4 +68,15 @@ module MakeRandom
 	def self.state
 		FFaker::AddressUS.state_abbr
 	end
+
+	def self.age_range
+		start_rand = rand(12 .. 18)
+		end_rand = rand(start_rand .. 18)
+
+		"#{start_rand}-#{end_rand}"
+	end
+
+	def self.lorem(sentence_count = 1)
+		FFaker::Lorem.paragraph(sentence_count)
+	end
 end

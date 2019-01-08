@@ -22,7 +22,7 @@ class AthleticEventServiceClient
       req.headers['Content-Type'] = 'application/json'
     end
 
-    msg = "[ERROR] - Receive response #{response.status} when try to POST to AES"
+    msg = "[ERROR] - Receive response #{response.status} when try to GET from AES"
     raise msg unless response.status.eql? 200
 
     JSON.parse(response.body)

@@ -1,15 +1,33 @@
 require_relative '../test_helper'
+require 'time'
 
 =begin
 Sample Expected Response
 {
-  "data"=> {
-    "website_url "=>" http://pfeffer.se",
-     "primary_email "=>" jillian_stehr@parker.com",
-     "name "=>" Schaden Inc",
-     "logo_url "=>" http://morar.se",
-     "id"=>39
-    }
+    logo_url: "some logo_url",
+    name: "some name",
+    event_operator_id: 123456
+    primary_email: "some primary_email",
+    website_url: "some website_url",
+    start_date: "2010-04-17T14:00:00",
+    end_date: "2010-04-17T14:00:00",
+    city: "Chicago",
+    state: "IL",
+    sports: [
+      {ncsa_id: 11111},
+      {ncsa_id: 22222}
+    ],
+    locations: [
+      {
+        address1: "1 two street",
+        address2: "Apt A",
+        city: "Harrisburg",
+        country: "US",
+        name: "event address",
+        state: "PA",
+        zip: "34567"
+      }
+    ]
 }
 =end
 
@@ -17,55 +35,82 @@ class AthleticEventTest < Minitest::Test
 
   def setup
     @connection_client = AthleticEventServiceClient.new
+  end
 
-    @name = MakeRandom.name
-    @description = MakeRandom.name
-    @event_operator_id = '1'
-    @start_date = '2018-12-17 15:27:06'
-    @end_date = '2018-12-17 15:27:06'
-    @website = MakeRandom.url
-    @point_of_contact_name = MakeRandom.name
-    @point_of_contact_email = MakeRandom.fake_email
-    @registration_link = MakeRandom.url
-    @age_range = '12-18'
-    @city = MakeRandom.city
-    @state = MakeRandom.state
-    @logo_url = MakeRandom.url
-    @status = 'Draft'
-    #@activated_at = '2019-01-08 15:27:06'
-    @coach_live_approved = true
+  def get_EO_id
+    url = "/api/athletic_events/v1/event_operators"
+    event = @connection_client.get(url: url)['data'].sample # get random event
+
+    event['id']
+  end
+
+  def get_sport_id
+    url = "/api/athletic_events/v1/sports"
+    event = @connection_client.get(url: url)['data'].sample # get random sport
+
+    event['id']
+  end
+
+  def date
+    (DateTime.parse(Time.now.iso8601)).to_s
+  end
+
+  def sport_ids
+    ## preferred using this logic, but only have 5 sports in DB
+    ## so comment out for now and use the 5 default ids
+    # id_set = Default.static_info['sport_ids']
+
+    id_set = [17634, 17638, 17683, 17684, 17639]
+    ids_arr = []
+
+    for i in 1 .. rand(1 .. id_set.length)
+      sport_id = id_set.sample
+      ids_arr << { ncsa_id: sport_id }
+      id_set.delete(sport_id)
+    end
+
+    ids_arr
   end
 
   def athletic_event_data
     {
-      athletic_event: {
-        name: @name,
-        description: @description,
-        event_operator_id: @event_operator_id,
-        start_date: @start_date,
-        end_date: @end_date,
-        website: @website,
-        point_of_contact_name: @point_of_contact_name,
-        point_of_contact_email: @point_of_contact_email,
-        registration_link: @registration_link,
-        age_range: @age_range,
-        city: @city,
-        state: @state,
-        logo_url: @logo_url,
-        status: @status,
-        #activated_at: @activated_at,
-        coach_live_approved: @coach_live_approved,
-      }
+      age_range: MakeRandom.age_range,
+      description: MakeRandom.lorem(rand(1 .. 4)),
+      end_date: date,
+      start_date: date,
+      name: MakeRandom.company_name,
+      point_of_contact_email: MakeRandom.fake_email,
+      point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
+      registration_link: MakeRandom.url,
+      website: MakeRandom.url,
+      city: MakeRandom.city,
+      state: MakeRandom.state,
+      logo_url: MakeRandom.url,
+      coach_live_approved: true,
+      event_operator_id: get_EO_id,
+      sports: sport_ids,
+      locations: [
+        {
+          address1: '4500 Cliffside Court',
+          address2: 'field 1',
+          city: 'Fort Collins',
+          country: 'USA',
+          name: 'Location4',
+          state: 'CO',
+          zip: '80526'
+        }
+      ]
     }
   end
 
 
   def create_athletic_event
-    @new_event = @connection_client.post(
+    binding.pry
+
+    @new_athletic_event = @connection_client.post(
       url: "/api/athletic_events/v1/athletic_events",
       json_body: athletic_event_data.to_json
     )
-    binding.pry
 
     refute_empty @new_event, "POST to AES response is empty"
 
@@ -96,6 +141,6 @@ class AthleticEventTest < Minitest::Test
 
   def test_create_read_athletic_event
     create_athletic_event
-    read_athletic_event
+    # read_athletic_event
   end
 end
