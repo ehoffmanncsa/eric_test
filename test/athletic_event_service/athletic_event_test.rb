@@ -3,36 +3,37 @@ require 'time'
 
 =begin
 Sample Expected Response
-{
-    logo_url: "some logo_url",
-    name: "some name",
-    event_operator_id: 123456
-    primary_email: "some primary_email",
-    website_url: "some website_url",
-    start_date: "2010-04-17T14:00:00",
-    end_date: "2010-04-17T14:00:00",
-    city: "Chicago",
-    state: "IL",
-    sports: [
-      {ncsa_id: 11111},
-      {ncsa_id: 22222}
-    ],
-    locations: [
-      {
-        address1: "1 two street",
-        address2: "Apt A",
-        city: "Harrisburg",
-        country: "US",
-        name: "event address",
-        state: "PA",
-        zip: "34567"
-      }
-    ]
+{:age_range=>"15-16",
+ :description=>"Ea sunt perspiciatis eum quam est.",
+ :end_date=>"2019-01-08T15:07:58-08:00",
+ :start_date=>"2019-01-08T15:07:58-08:00",
+ :name=>"Bogisich-Rolfson",
+ :point_of_contact_email=>"ariana@lesch.name",
+ :point_of_contact_name=>"Ernie Lesch",
+ :registration_link=>"http://shields.nu",
+ :website=>"http://kirlin.se",
+ :city=>"New Samuel",
+ :state=>"PA",
+ :logo_url=>"http://stromancole.com",
+ :coach_live_approved=>true,
+ :event_operator_id=>72,
+ :sports=>
+  [{:ncsa_id=>17634},
+   {:ncsa_id=>17683},
+   {:ncsa_id=>17684},
+   {:ncsa_id=>17638}],
+ :locations=>
+  [{:address1=>"4500 Cliffside Court",
+    :address2=>"field 1",
+    :city=>"Fort Collins",
+    :country=>"USA",
+    :name=>"Location4",
+    :state=>"CO",
+    :zip=>"80526"}]
 }
 =end
 
 class AthleticEventTest < Minitest::Test
-
   def setup
     @connection_client = AthleticEventServiceClient.new
   end
@@ -51,8 +52,8 @@ class AthleticEventTest < Minitest::Test
     event['id']
   end
 
-  def date
-    (DateTime.parse(Time.now.iso8601)).to_s
+  def date(days_from_now = 0)
+    (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
   end
 
   def sport_ids
@@ -76,7 +77,7 @@ class AthleticEventTest < Minitest::Test
     {
       age_range: MakeRandom.age_range,
       description: MakeRandom.lorem(rand(1 .. 4)),
-      end_date: date,
+      end_date: date(rand(1 .. 7)),
       start_date: date,
       name: MakeRandom.company_name,
       point_of_contact_email: MakeRandom.fake_email,
