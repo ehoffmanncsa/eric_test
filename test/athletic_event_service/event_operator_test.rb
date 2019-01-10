@@ -41,7 +41,7 @@ class EventOperatorTest < Minitest::Test
       json_body: event_operator_data.to_json
     )
 
-    refute_empty @new_event, "POST to AES response is empty"
+    refute_empty @new_event, "POST to 'v1/event_operators' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
     assert_equal @new_event['data']['name'],

@@ -36,6 +36,7 @@ Sample Expected Response
 class AthleticEventTest < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
+    @athletic_event_data = athletic_event_data
   end
 
   def get_EO_id
@@ -45,15 +46,9 @@ class AthleticEventTest < Minitest::Test
     event['id']
   end
 
-  def get_sport_id
-    url = "/api/athletic_events/v1/sports"
-    event = @connection_client.get(url: url)['data'].sample # get random sport
-
-    event['id']
-  end
-
   def date(days_from_now = 0)
-    (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
+    date = (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
+    date.split('+')[0] + 'Z'
   end
 
   def sport_ids
@@ -75,62 +70,75 @@ class AthleticEventTest < Minitest::Test
 
   def athletic_event_data
     {
-      age_range: MakeRandom.age_range,
-      description: MakeRandom.lorem(rand(1 .. 4)),
-      end_date: date(rand(1 .. 7)),
-      start_date: date,
-      name: MakeRandom.company_name,
-      point_of_contact_email: MakeRandom.fake_email,
-      point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
-      registration_link: MakeRandom.url,
-      website: MakeRandom.url,
-      city: MakeRandom.city,
-      state: MakeRandom.state,
-      logo_url: MakeRandom.url,
-      coach_live_approved: true,
-      event_operator_id: get_EO_id,
-      sports: sport_ids,
-      locations: [
-        {
-          address1: '4500 Cliffside Court',
-          address2: 'field 1',
-          city: 'Fort Collins',
-          country: 'USA',
-          name: 'Location4',
-          state: 'CO',
-          zip: '80526'
-        }
-      ]
+      athletic_event: {
+        age_range: MakeRandom.age_range,
+        description: MakeRandom.lorem(rand(1 .. 4)),
+        end_date: date(rand(2 .. 4)),
+        start_date: date(1),
+        name: MakeRandom.company_name,
+        point_of_contact_email: MakeRandom.fake_email,
+        point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
+        registration_link: MakeRandom.url,
+        website: MakeRandom.url,
+        city: MakeRandom.city,
+        state: MakeRandom.state,
+        logo_url: MakeRandom.url,
+        coach_live_approved: true,
+        event_operator_id: get_EO_id,
+        sports: sport_ids,
+        locations: [
+          {
+            address1: MakeRandom.address,
+            address2: MakeRandom.address2,
+            city: MakeRandom.city,
+            country: 'USA',
+            name: MakeRandom.name,
+            state: MakeRandom.state,
+            zip: MakeRandom.zip_code
+          }
+        ]
+      }
     }
   end
 
-
   def create_athletic_event
-    binding.pry
+    @new_athletic_event = begin
+      retries ||= 0
+      @connection_client.post(
+        url: "/api/athletic_events/v1/athletic_events",
+        json_body: @athletic_event_data.to_json)
+      rescue => e
+        puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
+        sleep 2
+        retry if (retries += 1) < 10
+      end
 
-    @new_athletic_event = @connection_client.post(
-      url: "/api/athletic_events/v1/athletic_events",
-      json_body: athletic_event_data.to_json
-    )
-
-    refute_empty @new_event, "POST to AES response is empty"
+    refute_empty @new_athletic_event, "POST to 'v1/athletic_events' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
-    assert_equal @new_event['data']['name'],
-      athletic_event_data[:athletic_event][:name], msg
+    assert_equal @new_athletic_event['data']['name'],
+      @athletic_event_data[:athletic_event][:name], msg
   end
 
   def read_athletic_event
-    url = "/api/athletic_events/v1/athetic_events/#{@new_event['data']['id']}"
-    expected_data = athletic_event_data[:athletic_event]
+    url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
+    expected_data = @athletic_event_data[:athletic_event]
 
     event = @connection_client.get(url: url)
 
     errors_array = []
 
     expected_data.each do |key, value|
+      next if key == :locations
       msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
+    end
+
+    expected_location = expected_data[:locations].first
+    event_location = event['data']['locations'].first
+    expected_location.each do |key, value|
+      msg = "Expected #{key.to_s} #{value}, returned #{event_location.dig("#{key}")}."
+      errors_array << msg unless expected_location[:"#{key}"].eql? event_location.dig("#{key}")
     end
 
     if !event.dig("data", "id").integer?
@@ -142,6 +150,6 @@ class AthleticEventTest < Minitest::Test
 
   def test_create_read_athletic_event
     create_athletic_event
-    # read_athletic_event
+    read_athletic_event
   end
 end

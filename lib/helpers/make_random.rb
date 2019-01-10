@@ -61,6 +61,10 @@ module MakeRandom
 		FFaker::AddressUS.street_address
 	end
 
+	def self.address2
+		FFaker::AddressUS.secondary_address
+	end
+
 	def self.city
 		FFaker::AddressUS.city
 	end
