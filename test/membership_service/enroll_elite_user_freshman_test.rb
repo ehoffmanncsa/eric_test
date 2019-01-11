@@ -23,7 +23,7 @@ class EnrollEliteFreshmanTest < Common
     POSSetup.choose_a_package(@package)
     POSSetup.check_enrollment_discount_calculate(@enroll_yr)
 
-    full_price = POSSetup.choose_payment_plan('small')
+    full_price = POSSetup.choose_payment_plan
     POSSetup.setup_billing
 
     @membership = POSSetup.calculate(full_price, 6)
