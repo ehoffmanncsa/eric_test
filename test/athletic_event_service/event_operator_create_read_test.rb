@@ -24,6 +24,23 @@ class EventOperatorTest < Minitest::Test
     @website_url = MakeRandom.url
   end
 
+  def sport_ids
+    ## preferred using this logic, but only have 5 sports in DB
+    ## so comment out for now and use the 5 default ids
+    # id_set = Default.static_info['sport_ids']
+
+    id_set = [17634, 17638, 17683, 17684, 17639]
+    ids_arr = []
+
+    for i in 1 .. rand(1 .. id_set.length)
+      sport_id = id_set.sample
+      ids_arr << { ncsa_id: sport_id }
+      id_set.delete(sport_id)
+    end
+
+    ids_arr
+  end
+
   def event_operator_data
     {
       event_operator: {
@@ -31,6 +48,7 @@ class EventOperatorTest < Minitest::Test
         primary_email: @email,
         logo_url: @logo_url,
         website_url: @website_url,
+        sports: sport_ids
       }
     }
   end
