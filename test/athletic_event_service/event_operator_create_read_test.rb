@@ -5,6 +5,7 @@ require_relative '../test_helper'
 =begin
 Sample Expected Response
 {
+
   "data"=> {
     "website_url "=>" http://pfeffer.se",
      "primary_email "=>" jillian_stehr@parker.com",
@@ -15,14 +16,14 @@ Sample Expected Response
 }
 =end
 
-class EventOperatorTest < Minitest::Test
+class EventOperatorTest2 < Minitest::Test
 
   def setup
     @connection_client = AthleticEventServiceClient.new
 
     @company_name = MakeRandom.company_name
     @email = MakeRandom.fake_email
-    @logo_url = MakeRandom.url
+    @logo_url = logo_urls
     @website_url = MakeRandom.url
   end
 
@@ -31,7 +32,7 @@ class EventOperatorTest < Minitest::Test
     ## so comment out for now and use the 5 default ids
     # id_set = Default.static_info['sport_ids']
 
-    id_set = [17634, 17638, 17683, 17684, 17639]
+    id_set = [17638]
     ids_arr = []
 
     for i in 1 .. rand(1 .. id_set.length)
@@ -43,12 +44,24 @@ class EventOperatorTest < Minitest::Test
     ids_arr
   end
 
+  def logo_urls
+
+    logo_arr = ['https://demoimages-45r6gc2nv.now.sh/zg.png',
+    'https://demoimages-45r6gc2nv.now.sh/west_coast_elite.png',
+    'https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png',
+    'https://demoimages-45r6gc2nv.now.sh/battle_for_the_border.png',
+    'https://demoimages-45r6gc2nv.now.sh/battle_for_the_belt.png',
+    'https://demoimages-45r6gc2nv.now.sh/windy_city_open.png']
+
+    logo_arr.sample
+  end
+
   def event_operator_data
     {
       event_operator: {
         name: @company_name,
         primary_email: @email,
-        logo_url: @logo_url,
+        logo_url: logo_urls,
         website_url: @website_url,
         sports: sport_ids
       }

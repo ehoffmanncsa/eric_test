@@ -35,7 +35,7 @@ Sample Expected Response
 }
 =end
 
-class AthleticEventTest < Minitest::Test
+class AthleticEventTest2 < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
     @athletic_event_data = athletic_event_data
@@ -49,6 +49,7 @@ class AthleticEventTest < Minitest::Test
   end
 
   def date(days_from_now = 0)
+
     date = (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
     date.split('+')[0] + 'Z'
   end
@@ -56,9 +57,9 @@ class AthleticEventTest < Minitest::Test
   def sport_ids
     ## preferred using this logic, but only have 5 sports in DB
     ## so comment out for now and use the 5 default ids
-    # id_set = Default.static_info['sport_ids']
+    #id_set = Default.static_info['sport_ids']
 
-    id_set = [17634, 17638, 17683, 17684, 17639]
+    id_set = [17638]
     ids_arr = []
 
     for i in 1 .. rand(1 .. id_set.length)
@@ -70,13 +71,25 @@ class AthleticEventTest < Minitest::Test
     ids_arr
   end
 
+  def logo_urls
+
+    logo_arr = ['https://demoimages-45r6gc2nv.now.sh/zg.png',
+    'https://demoimages-45r6gc2nv.now.sh/west_coast_elite.png',
+    'https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png',
+    'https://demoimages-45r6gc2nv.now.sh/battle_for_the_border.png',
+    'https://demoimages-45r6gc2nv.now.sh/battle_for_the_belt.png',
+    'https://demoimages-45r6gc2nv.now.sh/windy_city_open.png']
+
+    logo_arr.sample
+  end
+
   def athletic_event_data
     {
       athletic_event: {
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1 .. 4)),
         end_date: date(rand(2 .. 4)),
-        start_date: date(1),
+        start_date: date(0),
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
         point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
@@ -84,8 +97,10 @@ class AthleticEventTest < Minitest::Test
         website: MakeRandom.url,
         city: MakeRandom.city,
         state: MakeRandom.state,
-        logo_url: MakeRandom.url,
+        logo_url: logo_urls,
         coach_live_approved: true,
+        status: 'Activated',
+        activated_at: date(0),
         event_operator_id: get_EO_id,
         sports: sport_ids,
         locations: [
@@ -112,7 +127,7 @@ class AthleticEventTest < Minitest::Test
       rescue => e
         puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
         sleep 2
-        retry if (retries += 1) < 10
+        retry if (retries += 1) < 2
       end
 
     refute_empty @new_athletic_event, "POST to 'v1/athletic_events' response is empty"

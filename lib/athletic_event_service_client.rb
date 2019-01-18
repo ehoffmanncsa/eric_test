@@ -9,7 +9,6 @@ class AthleticEventServiceClient
       req.headers['Content-Type'] = 'application/json'
       req.body = json_body
     end
-
     msg = "[ERROR] - Receive response #{response.status} when try to POST to #{url}"
     raise msg unless response.status.eql? 201
 
