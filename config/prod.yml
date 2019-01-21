@@ -1,6 +1,7 @@
 # Clientrms:
 clientrms:
-  login_page:
+  base_url: 'https://recruit-match.ncsasports.org/'
+  rss_endpoint: 'api/submit/v1/new_recruit'
 
 # Fasttrack Admin login
 fasttrack:
