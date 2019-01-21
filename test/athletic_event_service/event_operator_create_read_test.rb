@@ -61,7 +61,7 @@ class EventOperatorTest2 < Minitest::Test
       event_operator: {
         name: @company_name,
         primary_email: @email,
-        logo_url: logo_urls,
+        logo_url: @logo_url,
         website_url: @website_url,
         sports: sport_ids
       }
