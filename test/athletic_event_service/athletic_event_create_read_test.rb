@@ -35,7 +35,7 @@ Sample Expected Response
 }
 =end
 
-class AthleticEventTest2 < Minitest::Test
+class AthleticEventTest < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
     @athletic_event_data = athletic_event_data
