@@ -57,7 +57,7 @@ class AthleticEventTest < Minitest::Test
   def sport_ids
     ## preferred using this logic, but only have 5 sports in DB
     ## so comment out for now and use the 5 default ids
-    #id_set = Default.static_info['sport_ids']
+    # id_set = Default.static_info['sport_ids']
 
     id_set = [17638]
     ids_arr = []
@@ -122,7 +122,7 @@ class AthleticEventTest < Minitest::Test
     @new_athletic_event = begin
       retries ||= 0
       @connection_client.post(
-        url: "/api/athletic_events/v1/athletic_events",
+        url: '/api/athletic_events/v1/athletic_events',
         json_body: @athletic_event_data.to_json)
       rescue => e
         puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
@@ -147,6 +147,8 @@ class AthleticEventTest < Minitest::Test
 
     expected_data.each do |key, value|
       next if key == :locations
+      next if key == :sports
+
       msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
     end
@@ -165,8 +167,18 @@ class AthleticEventTest < Minitest::Test
     assert_empty errors_array
   end
 
+  def check_sports
+    url = '/api/athletic_events/v1/athletic_events'
+    expected_sports = athletic_event_data[:athletic_event][:sports]
+
+    actual_sports = { ncsa_id: 17638 }
+
+    assert_includes expected_sports, actual_sports
+  end
+
   def test_create_read_athletic_event
     create_athletic_event
     read_athletic_event
+    check_sports
   end
 end

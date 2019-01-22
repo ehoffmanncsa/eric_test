@@ -17,7 +17,6 @@ Sample Expected Response
 =end
 
 class EventOperatorTest < Minitest::Test
-
   def setup
     @connection_client = AthleticEventServiceClient.new
 
@@ -90,6 +89,8 @@ class EventOperatorTest < Minitest::Test
     errors_array = []
 
     expected_data.each do |key, value|
+      next if key == :sports
+
       msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
     end
@@ -101,8 +102,18 @@ class EventOperatorTest < Minitest::Test
     assert_empty errors_array
   end
 
+  def check_sports
+    url = '/api/athletic_events/v1/event_operators'
+    expected_sports = event_operator_data[:event_operator][:sports]
+
+    actual_sports = { ncsa_id: 17638 }
+
+    assert_includes expected_sports, actual_sports
+  end
+
   def test_create_read_event_operator
     create_event_operator
     read_event_operator
+    check_sports
   end
 end
