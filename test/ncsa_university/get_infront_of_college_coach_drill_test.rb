@@ -14,8 +14,8 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     @browser = @ui.driver
     UIActions.setup(@browser)
 
-    POSSetup.setup(@browser)
-    POSSetup.set_password(@email)
+    MSSetup.setup(@browser)
+    MSSetup.set_password(@email)
   end
 
   def teardown
@@ -271,7 +271,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now drill should be marked completed
     UIActions.goto_ncsa_university
     timeline_history = @browser.element(:class, 'timeline-history')
-    
+
     drill_point = timeline_history.element(:css, 'li.drill.point.complete')
     expect_title = 'Get In Front of College Coaches'
     title = drill_point.element(:class, 'drill-title').text

@@ -11,9 +11,9 @@ class AddPressTest < Common
     @email = post_body[:recruit][:athlete_email]
 
     C3PO.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.buy_package(@email, 'elite')
 
     @title = 'Press Title'
     @link = 'http://www.google.com/'

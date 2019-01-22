@@ -24,7 +24,7 @@ require_relative '../test_helper'
 class TEDAddDeleteNewAthleteTest < Common
   def setup
     super
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     TED.setup(@browser)
 
     @email = MakeRandom.email
@@ -100,7 +100,7 @@ class TEDAddDeleteNewAthleteTest < Common
   end
 
   def check_athlete_profile
-    POSSetup.set_password(@email)
+    MSSetup.set_password(@email)
     @browser.element(:class, 'fa-angle-down').click
 
     navbar = @browser.element(:id, 'secondary-nav-menu')

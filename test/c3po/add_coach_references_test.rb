@@ -11,9 +11,9 @@ class AddCoachReferencesTest < Common
     @email = post_body[:recruit][:athlete_email]
 
     C3PO.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.buy_package(@email, 'elite')
 
     @coach_name = MakeRandom.name
     @coach_email = "#{@coach_name}@fake.com"

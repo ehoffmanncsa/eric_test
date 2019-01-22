@@ -17,8 +17,8 @@ class PurchaseOnlyVIPItemsTests < Common
   end
 
   def test_purchase_only_VIP_items
-    POSSetup.setup(@browser)
-    POSSetup.buy_alacarte(@recruit_email)
+    MSSetup.setup(@browser)
+    MSSetup.buy_alacarte(@recruit_email)
 
     UIActions.user_login(@recruit_email)
     @browser.element(:class, 'fa-angle-down').click

@@ -23,7 +23,7 @@ require_relative '../test_helper'
 class FreeCoachAddNewAthleteTest < Common
   def setup
     super
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     TED.setup(@browser)
 
     @free_username = Default.env_config['ted']['free_username']
@@ -78,7 +78,7 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def check_athlete_free_profile
-    POSSetup.set_password(@athlete_email)
+    MSSetup.set_password(@athlete_email)
 
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')

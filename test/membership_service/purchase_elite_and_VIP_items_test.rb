@@ -17,8 +17,8 @@ class PurchaseEliteAndVIPItemsTests < Common
   end
 
   def test_purchase_elite_and_VIP_items
-    POSSetup.setup(@browser)
-    POSSetup.buy_combo(@recruit_email, 'elite')
+    MSSetup.setup(@browser)
+    MSSetup.buy_combo(@recruit_email, 'elite')
 
     UIActions.user_login(@recruit_email)
     @browser.element(:class, 'fa-angle-down').click

@@ -9,7 +9,7 @@ class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
 
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
 
     @athlete_email = 'turkeytom@yopmail.com'
     @discount_codes = Default.static_info['ncsa_discount_code']
@@ -50,20 +50,20 @@ class ApplyDiscountOnOfferingsPage < Common
   end
 
   def calculate_discount(code)
-    POSSetup.calculate(full_price, months, code)
+    MSSetup.calculate(full_price, months, code)
   end
 
   def test_apply_discount_on_offerings_page
     UIActions.user_login(@athlete_email)
 
-    POSSetup.goto_offerings; sleep 2
-    POSSetup.open_payment_plan
+    MSSetup.goto_offerings; sleep 2
+    MSSetup.open_payment_plan
 
     # activate discount feature
     @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
 
     @discount_codes.each do |code, _rate|
-      POSSetup.apply_discount_offerings(code)
+      MSSetup.apply_discount_offerings(code)
 
       [champion, elite, mvp].each do |package|
         orignal_price = package[1]
@@ -72,7 +72,7 @@ class ApplyDiscountOnOfferingsPage < Common
         calculated_prices = []
         months = [1, 6, 12] # add 18 here when that feature available and pop last 2 if senior
         months.each do |months|
-          calculated_prices << POSSetup.calculate(orignal_price, months, code)
+          calculated_prices << MSSetup.calculate(orignal_price, months, code)
         end
 
         failure = []
@@ -82,7 +82,7 @@ class ApplyDiscountOnOfferingsPage < Common
         end
       end
 
-      POSSetup.remove_discount
+      MSSetup.remove_discount
     end
   end
 end

@@ -16,7 +16,7 @@ class CreateNewOrgWithPrepop < Common
   def setup
     super
     C3PO.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     TED.setup(@browser)
 
     @org_name = MakeRandom.company_name
@@ -42,7 +42,7 @@ class CreateNewOrgWithPrepop < Common
     last_name = post_body[:recruit][:athlete_last_name]
     @athlete_name = "#{first_name} #{last_name}"
 
-    POSSetup.set_password(@athlete_email)
+    MSSetup.set_password(@athlete_email)
   end
 
   def add_coach_reference

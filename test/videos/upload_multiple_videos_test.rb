@@ -17,8 +17,8 @@ class UploadMultipleVideosTest < Minitest::Test
   def add_premium
     ui = UI.new 'local', 'firefox'
     browser = ui.driver
-    POSSetup.setup(browser)
-    POSSetup.buy_package(@recruit_email, 'champion')
+    MSSetup.setup(browser)
+    MSSetup.buy_package(@recruit_email, 'champion')
     browser.close
   end
 

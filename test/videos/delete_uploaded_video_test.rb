@@ -19,8 +19,8 @@ class DeleteUploadedVideoTest < Minitest::Test
   def add_premium
     ui = UI.new 'local', 'firefox'
     browser = ui.driver
-    POSSetup.setup(browser)
-    POSSetup.buy_package(@recruit_email, 'elite')
+    MSSetup.setup(browser)
+    MSSetup.buy_package(@recruit_email, 'elite')
     browser.close
   end
 

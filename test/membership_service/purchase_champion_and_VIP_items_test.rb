@@ -11,8 +11,8 @@ class PurchaseChampionAndVIPItemsTests < Common
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
 
-    POSSetup.setup(@browser)
-    POSSetup.buy_combo(@recruit_email, 'champion')
+    MSSetup.setup(@browser)
+    MSSetup.buy_combo(@recruit_email, 'champion')
   end
 
   def teardown

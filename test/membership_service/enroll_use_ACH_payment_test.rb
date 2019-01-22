@@ -22,17 +22,17 @@ class EnrollUsingACHPaymentTest < Common
   end
 
   def add_premium
-    POSSetup.setup(@browser)
-    POSSetup.set_password(@recruit_email)
-    POSSetup.make_commitment
-    POSSetup.choose_a_package(@package)
+    MSSetup.setup(@browser)
+    MSSetup.set_password(@recruit_email)
+    MSSetup.make_commitment
+    MSSetup.choose_a_package(@package)
 
     # choose 6 months payment plan as default
     # get back full price for membership calculation
-    full_price = POSSetup.choose_payment_plan
-    POSSetup.setup_billing(true) # ach = true
+    full_price = MSSetup.choose_payment_plan
+    MSSetup.setup_billing(true) # ach = true
 
-    @membership = POSSetup.calculate(full_price, 6)
+    @membership = MSSetup.calculate(full_price, 6)
     @expect_first_pymt = (@membership / 6)
     UIActions.clear_cookies
   end
