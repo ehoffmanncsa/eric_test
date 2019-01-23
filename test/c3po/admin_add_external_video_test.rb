@@ -10,8 +10,8 @@ class AdminAddExternalVideo < Common
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    POSSetup.setup(@browser)
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.setup(@browser)
+    MSSetup.buy_package(@email, 'elite')
 
     C3PO.setup(@browser)
     C3PO.impersonate(@email)

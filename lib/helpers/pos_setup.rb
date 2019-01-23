@@ -3,7 +3,7 @@
 # Set up a new lead for POS base 2 conditions: grad year and package type
 # choosing and returning 6 payments financing option as default
 # that way we can test for remaining balance and first payment made
-module POSSetup
+module MSSetup
   def self.setup(ui_object)
     @browser = ui_object
     UIActions.setup(@browser)

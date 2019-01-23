@@ -20,8 +20,8 @@ class AdminPublishVideoTest < Minitest::Test
   def add_premium
     ui = UI.new 'local', 'firefox'
     browser = ui.driver
-    POSSetup.setup(browser)
-    POSSetup.buy_package(@recruit_email, 'elite')
+    MSSetup.setup(browser)
+    MSSetup.buy_package(@recruit_email, 'elite')
     browser.close
   end
 
@@ -72,10 +72,10 @@ class AdminPublishVideoTest < Minitest::Test
     C3PO.activate_first_row_of_new_video
     check_uploaded_video_table
     check_publish_video_table
-    
+
     # publish it
     C3PO.publish_video(@file_name)
-    
+
     # now check if the published video shows up in the athlete's profile
     # giving 180 seconds grace period in helper method
     thumbnail = C3PO.wait_for_video_thumbnail; sleep 1

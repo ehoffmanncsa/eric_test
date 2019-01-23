@@ -8,7 +8,7 @@ class SignupPublicAthleteTest < Common
   def setup
     super
     TED.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
   end
 
   def teardown
@@ -149,7 +149,7 @@ class SignupPublicAthleteTest < Common
   end
 
   def login_to_athlete_profile_with_password_reset
-    POSSetup.set_password(@athlete_email)
+    MSSetup.set_password(@athlete_email)
 
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')

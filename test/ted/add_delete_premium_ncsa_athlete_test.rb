@@ -25,7 +25,7 @@ require_relative '../test_helper'
 class TEDAddDeletePremiumAthlete < Common
   def setup
     super
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     TED.setup(@browser)
   end
 
@@ -138,7 +138,7 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def buy_premium_package
-    POSSetup.buy_package(@email, 'champion')
+    MSSetup.buy_package(@email, 'champion')
     athlete_sign_out
   end
 

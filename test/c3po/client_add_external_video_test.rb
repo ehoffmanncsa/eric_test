@@ -10,10 +10,10 @@ class ClientAddExternalVideo < Common
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     C3PO.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.buy_package(@email, 'elite')
     UIActions.user_login(@email)
   end
 

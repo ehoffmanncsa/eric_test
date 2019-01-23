@@ -26,7 +26,7 @@ require_relative '../test_helper'
 class PremCoachAddFreeAthlete < Common
   def setup
     super
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
     TED.setup(@browser)
   end
 
@@ -93,7 +93,7 @@ class PremCoachAddFreeAthlete < Common
 
   def check_athlete_membership
     # Giving staging grace period before checking premium status
-    POSSetup.set_password(@email)
+    MSSetup.set_password(@email)
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
     navbar.link(:text, 'Membership Info').click

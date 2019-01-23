@@ -11,9 +11,9 @@ class YourPersonalStatementDrillTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.buy_package(@email, 'elite')
     UIActions.user_login(@email)
   end
 
@@ -41,7 +41,7 @@ class YourPersonalStatementDrillTest < Minitest::Test
 
     @browser.element(:class, 'button--wide').click; sleep 1
     timeline_history = @browser.element(:class, 'timeline-history')
-    
+
     drill_point = timeline_history.element(:class, 'drill')
     title = drill_point.span(:class, 'drill-title').text
     assert_equal 'Your Personal Statement', title, "#{title} - Expected: Your Personal Statement"

@@ -22,18 +22,18 @@ class EnrollMVPFreshmanTest < Common
   end
 
   def add_mvp_freshman
-    POSSetup.setup(@browser)
-    POSSetup.set_password(@recruit_email)
-    POSSetup.make_commitment
-    POSSetup.choose_a_package(@package)
-    POSSetup.check_enrollment_discount_calculate(@enroll_yr)
+    MSSetup.setup(@browser)
+    MSSetup.set_password(@recruit_email)
+    MSSetup.make_commitment
+    MSSetup.choose_a_package(@package)
+    MSSetup.check_enrollment_discount_calculate(@enroll_yr)
 
     # choose 6 months payment plan as default
     # get back full price for membership calculation
-    full_price = POSSetup.choose_payment_plan
-    POSSetup.setup_billing
+    full_price = MSSetup.choose_payment_plan
+    MSSetup.setup_billing
 
-    @membership = POSSetup.calculate(full_price, 6)
+    @membership = MSSetup.calculate(full_price, 6)
     @expect_first_pymt = (@membership / 6)
     UIActions.clear_cookies
   end

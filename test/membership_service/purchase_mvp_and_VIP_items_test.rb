@@ -18,8 +18,8 @@ class PurchaseMVPAndVIPItemsTests < Common
   end
 
   def test_purchase_mvp_and_VIP_items
-    POSSetup.setup(@browser)
-    POSSetup.buy_combo(@recruit_email, 'mvp')
+    MSSetup.setup(@browser)
+    MSSetup.buy_combo(@recruit_email, 'mvp')
 
     UIActions.user_login(@recruit_email)
     @browser.element(:class, 'fa-angle-down').click

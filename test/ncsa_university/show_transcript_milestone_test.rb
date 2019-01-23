@@ -11,9 +11,9 @@ class UploadTranscriptMilestoneTest < Minitest::Test
     @ui = UI.new 'local', 'firefox'
     @browser = @ui.driver
     UIActions.setup(@browser)
-    POSSetup.setup(@browser)
+    MSSetup.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
+    MSSetup.buy_package(@email, 'elite')
     UIActions.clear_cookies
     UIActions.user_login(@email)
 
