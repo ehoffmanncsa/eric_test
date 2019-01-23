@@ -49,7 +49,6 @@ class AthleticEventTest < Minitest::Test
   end
 
   def date(days_from_now = 0)
-
     date = (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
     date.split('+')[0] + 'Z'
   end
@@ -72,7 +71,6 @@ class AthleticEventTest < Minitest::Test
   end
 
   def logo_urls
-
     logo_arr = ['https://demoimages-45r6gc2nv.now.sh/zg.png',
     'https://demoimages-45r6gc2nv.now.sh/west_coast_elite.png',
     'https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png',
@@ -146,8 +144,7 @@ class AthleticEventTest < Minitest::Test
     errors_array = []
 
     expected_data.each do |key, value|
-      next if key == :locations
-      next if key == :sports
+      next if key == :locations || key == :sports
 
       msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")

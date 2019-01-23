@@ -44,7 +44,6 @@ class EventOperatorTest < Minitest::Test
   end
 
   def logo_urls
-
     logo_arr = ['https://demoimages-45r6gc2nv.now.sh/zg.png',
     'https://demoimages-45r6gc2nv.now.sh/west_coast_elite.png',
     'https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png',
