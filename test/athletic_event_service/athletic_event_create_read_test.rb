@@ -164,18 +164,27 @@ class AthleticEventTest < Minitest::Test
     assert_empty errors_array
   end
 
-  def check_sports
-    url = '/api/athletic_events/v1/athletic_events'
-    expected_sports = athletic_event_data[:athletic_event][:sports]
+  def read_athletic_event_sports
+    url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
+    expected_data = @athletic_event_data[:athletic_event]
 
-    actual_sports = { ncsa_id: 17638 }
+    event = @connection_client.get(url: url)
 
-    assert_includes expected_sports, actual_sports
+    errors_array = []
+
+    expected_sport = expected_data[:sports].sample
+    event_sport = event['data']['sports'].sample
+    expected_sport.each do |key, value|
+      msg = "Expected #{key.to_s} #{value}, returned #{event_sport.dig("#{key}")}."
+      errors_array << msg unless expected_sport[:"#{key}"].eql? event_sport.dig("#{key}")
+    end
+
+    assert_empty errors_array
   end
 
   def test_create_read_athletic_event
     create_athletic_event
     read_athletic_event
-    check_sports
+    read_athletic_event_sports
   end
 end
