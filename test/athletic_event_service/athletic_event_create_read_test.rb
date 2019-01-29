@@ -5,34 +5,40 @@ require 'time'
 
 =begin
 Sample Expected Response
-{:age_range=>"15-16",
- :description=>"Ea sunt perspiciatis eum quam est.",
- :end_date=>"2019-01-08T15:07:58-08:00",
- :start_date=>"2019-01-08T15:07:58-08:00",
- :name=>"Bogisich-Rolfson",
- :point_of_contact_email=>"ariana@lesch.name",
- :point_of_contact_name=>"Ernie Lesch",
- :registration_link=>"http://shields.nu",
- :website=>"http://kirlin.se",
- :city=>"New Samuel",
- :state=>"PA",
- :logo_url=>"http://stromancole.com",
- :coach_live_approved=>true,
- :event_operator_id=>72,
- :sports=>
-  [{:ncsa_id=>17634},
-   {:ncsa_id=>17683},
-   {:ncsa_id=>17684},
-   {:ncsa_id=>17638}],
- :locations=>
-  [{:address1=>"4500 Cliffside Court",
-    :address2=>"field 1",
-    :city=>"Fort Collins",
-    :country=>"USA",
-    :name=>"Location4",
-    :state=>"CO",
-    :zip=>"80526"}]
-}
+{"data"=>
+  {"website"=>"http://windler.nu",
+   "status"=>"Activated",
+   "state"=>"DE",
+   "start_date"=>"2019-01-29T00:00:00Z",
+   "sports"=>[{"sport_name"=>"Basketball (M)", "ncsa_id"=>17638}],
+   "registration_link"=>"http://hermannhansen.nu",
+   "point_of_contact_name"=>"Arnulfo Dach",
+   "point_of_contact_email"=>"berna_quigley@cristfadel.ca",
+   "name"=>"Weber, Greenholt and Schinner",
+   "logo_url"=>"https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png",
+   "locations"=>
+      [{"zip"=>"60910",
+        "state"=>"AL",
+        "name"=>"djsxhdgbkl",
+        "country"=>"USA",
+        "city"=>"West Randi",
+        "address2"=>"Suite 322",
+        "address1"=>"55040 Jacques Grove"}],
+   "id"=>118,
+   "event_operator_id"=>16,
+   "event_operator"=>
+      {"website_url"=>"http://hahn.com",
+      "primary_email"=>"debroah.lueilwitz@bahringer.info",
+      "name"=>"Denesik-Schroeder",
+      "logo_url"=>"https://demoimages-45r6gc2nv.now.sh/zg.png",
+      "id"=>16},
+   "end_date"=>"2019-01-31T00:00:00Z",
+   "description"=>
+    "Minus repellendus minima exercitationem in unde. Qui cumque placeat error aut magni.",
+   "coach_live_approved"=>true,
+   "city"=>"Goldnerbury",
+   "age_range"=>"18-18",
+   "activated_at"=>"2019-01-29T00:00:00Z"}}
 =end
 
 class AthleticEventTest < Minitest::Test
@@ -54,11 +60,8 @@ class AthleticEventTest < Minitest::Test
   end
 
   def sport_ids
-    ## preferred using this logic, but only have 5 sports in DB
-    ## so comment out for now and use the 5 default ids
-    # id_set = Default.static_info['sport_ids']
+    id_set = Default.static_info['sport_ids']
 
-    id_set = [17638]
     ids_arr = []
 
     for i in 1 .. rand(1 .. id_set.length)
@@ -87,7 +90,7 @@ class AthleticEventTest < Minitest::Test
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1 .. 4)),
         end_date: date(rand(2 .. 4)),
-        start_date: date(0),
+        start_date: date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
         point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
@@ -98,7 +101,7 @@ class AthleticEventTest < Minitest::Test
         logo_url: logo_urls,
         coach_live_approved: true,
         status: 'Activated',
-        activated_at: date(0),
+        activated_at: date,
         event_operator_id: get_EO_id,
         sports: sport_ids,
         locations: [
@@ -118,16 +121,18 @@ class AthleticEventTest < Minitest::Test
 
   def create_athletic_event
     @new_athletic_event = begin
-      retries ||= 0
-      @connection_client.post(
-        url: '/api/athletic_events/v1/athletic_events',
-        json_body: @athletic_event_data.to_json)
-      rescue => e
-        puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
-        sleep 2
-        retry if (retries += 1) < 2
-      end
+                            retries ||= 0
+                            @connection_client.post(
+                              url: '/api/athletic_events/v1/athletic_events',
+                              json_body: @athletic_event_data.to_json)
+                          rescue => e
+                            puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
+                            sleep 2
+                            retry if (retries += 1) < 2
+                          end
+  end
 
+  def check_creation
     refute_empty @new_athletic_event, "POST to 'v1/athletic_events' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
@@ -135,11 +140,15 @@ class AthleticEventTest < Minitest::Test
       @athletic_event_data[:athletic_event][:name], msg
   end
 
-  def read_athletic_event
+  def get_creation
     url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
     expected_data = @athletic_event_data[:athletic_event]
 
-    event = @connection_client.get(url: url)
+    @connection_client.get(url: url)
+  end
+
+  def read_athletic_event
+    event = get_creation
 
     errors_array = []
 
@@ -150,12 +159,9 @@ class AthleticEventTest < Minitest::Test
       errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
     end
 
-    expected_location = expected_data[:locations].first
-    event_location = event['data']['locations'].first
-    expected_location.each do |key, value|
-      msg = "Expected #{key.to_s} #{value}, returned #{event_location.dig("#{key}")}."
-      errors_array << msg unless expected_location[:"#{key}"].eql? event_location.dig("#{key}")
-    end
+    check_sports
+
+    check_locations
 
     if !event.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
@@ -164,27 +170,40 @@ class AthleticEventTest < Minitest::Test
     assert_empty errors_array
   end
 
-  def read_athletic_event_sports
-    url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
-    expected_data = @athletic_event_data[:athletic_event]
-
-    event = @connection_client.get(url: url)
+  def check_sports
+    event = get_creation
 
     errors_array = []
 
-    expected_sport = expected_data[:sports].sample
-    event_sport = event['data']['sports'].sample
-    expected_sport.each do |key, value|
-      msg = "Expected #{key.to_s} #{value}, returned #{event_sport.dig("#{key}")}."
-      errors_array << msg unless expected_sport[:"#{key}"].eql? event_sport.dig("#{key}")
+    expected_sport = expected_data[:sports]
+    event_sport = event['data']['sports']
+
+    i = 0
+    expected_sport.each do |sport|
+      id = sport[:ncsa_id]
+
+      msg = "Expected sport id #{id}, returned #{event_sport["#{i}"][:ncsa_id]}."
+      errors_array << msg unless expected_sport[i][:ncsa_id].eql? event_sport["#{i}"][:ncsa_id]
+
+      i += 1
     end
 
     assert_empty errors_array
   end
 
+  def check_locations
+    expected_location = expected_data[:locations].first
+    event_location = event['data']['locations'].first
+    expected_location.each do |key, value|
+      msg = "Expected #{key.to_s} #{value}, returned #{event_location.dig("#{key}")}."
+      errors_array << msg unless expected_location[:"#{key}"].eql? event_location.dig("#{key}")
+    end
+  end
+
   def test_create_read_athletic_event
     create_athletic_event
+    check_creation
+
     read_athletic_event
-    read_athletic_event_sports
   end
 end
