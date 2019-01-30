@@ -10,7 +10,9 @@ Sample Expected Response
    "status"=>"Activated",
    "state"=>"DE",
    "start_date"=>"2019-01-29T00:00:00Z",
-   "sports"=>[{"sport_name"=>"Basketball (M)", "ncsa_id"=>17638}],
+   "sports"=>
+    [{"sport_name"=>"Basketball (M)",
+      "ncsa_id"=>17638}],
    "registration_link"=>"http://hermannhansen.nu",
    "point_of_contact_name"=>"Arnulfo Dach",
    "point_of_contact_email"=>"berna_quigley@cristfadel.ca",
@@ -45,6 +47,7 @@ class AthleticEventTest < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
     @athletic_event_data = athletic_event_data
+    @expected_data = @athletic_event_data[:athletic_event]
   end
 
   def get_EO_id
@@ -64,7 +67,7 @@ class AthleticEventTest < Minitest::Test
 
     ids_arr = []
 
-    for i in 1 .. rand(1 .. id_set.length)
+    for i in 1 .. rand(1 .. 4) #id_set.length
       sport_id = id_set.sample
       ids_arr << { ncsa_id: sport_id }
       id_set.delete(sport_id)
@@ -126,9 +129,9 @@ class AthleticEventTest < Minitest::Test
                               url: '/api/athletic_events/v1/athletic_events',
                               json_body: @athletic_event_data.to_json)
                           rescue => e
-                            puts "Gets error #{e} \nWhen POST to v1/athletic_events, going to retry"
-                            sleep 2
-                            retry if (retries += 1) < 2
+                            msg = "#{e} \nPOST body \n#{@athletic_event_data} \nGoing to retry"
+                            puts msg; sleep 2
+                            retry if (retries += 1) < 10
                           end
   end
 
@@ -142,28 +145,28 @@ class AthleticEventTest < Minitest::Test
 
   def get_creation
     url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
-    expected_data = @athletic_event_data[:athletic_event]
-
     @connection_client.get(url: url)
   end
 
   def read_athletic_event
-    event = get_creation
+    @event = get_creation
 
     errors_array = []
 
-    expected_data.each do |key, value|
+   @expected_data.each do |key, value|
       next if key == :locations || key == :sports
 
-      msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
-      errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
+      msg = "Expected #{key.to_s} #{value}, returned #{@event.dig("data", "#{key}")}."
+      errors_array << msg unless @expected_data[:"#{key}"].eql? @event.dig("data", "#{key}")
     end
 
-    check_sports
+    errors_array << check_sports unless check_sports.empty?
+    errors_array.flatten!
 
-    check_locations
+    errors_array << check_locations unless check_locations.empty?
+    errors_array.flatten!
 
-    if !event.dig("data", "id").integer?
+    if !@event.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
     end
 
@@ -171,33 +174,45 @@ class AthleticEventTest < Minitest::Test
   end
 
   def check_sports
-    event = get_creation
-
     errors_array = []
 
-    expected_sport = expected_data[:sports]
-    event_sport = event['data']['sports']
+    expected_sport = @expected_data[:sports]
+    event_sport = @event['data']['sports']
 
     i = 0
     expected_sport.each do |sport|
       id = sport[:ncsa_id]
+      actual_id = event_sport[i]['ncsa_id']
 
-      msg = "Expected sport id #{id}, returned #{event_sport["#{i}"][:ncsa_id]}."
-      errors_array << msg unless expected_sport[i][:ncsa_id].eql? event_sport["#{i}"][:ncsa_id]
+      msg = "Expected sport id #{id}, returned #{actual_id}."
+      errors_array << msg unless id == actual_id
 
       i += 1
     end
 
-    assert_empty errors_array
+    errors_array
   end
 
   def check_locations
-    expected_location = expected_data[:locations].first
-    event_location = event['data']['locations'].first
-    expected_location.each do |key, value|
-      msg = "Expected #{key.to_s} #{value}, returned #{event_location.dig("#{key}")}."
-      errors_array << msg unless expected_location[:"#{key}"].eql? event_location.dig("#{key}")
+    errors_array = []
+
+    expected_location = @expected_data[:locations]
+    event_location = @event['data']['locations']
+
+    i = 0
+    expected_location.each do |location|
+      location.each do |key, value|
+        expected = value
+        actual = event_location[i][key.to_s]
+
+        msg = "Expected #{key.to_s} #{expected}, returned #{actual}."
+        errors_array << msg unless expected == actual
+      end
+
+      i += 1
     end
+
+    errors_array
   end
 
   def test_create_read_athletic_event
