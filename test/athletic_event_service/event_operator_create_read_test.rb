@@ -19,19 +19,15 @@ Sample Expected Response
 class EventOperatorTest < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
-
-    @company_name = MakeRandom.company_name
-    @email = MakeRandom.fake_email
-    @logo_url = logo_urls
-    @website_url = MakeRandom.url
+    @event_operator_data = event_operator_data
+    @expected_data = @event_operator_data [:event_operator]
   end
 
   def sport_ids
     ## preferred using this logic, but only have 5 sports in DB
     ## so comment out for now and use the 5 default ids
-    # id_set = Default.static_info['sport_ids']
 
-    id_set = [17638]
+    id_set = Default.static_info['sport_ids']
     ids_arr = []
 
     for i in 1 .. rand(1 .. id_set.length)
@@ -57,10 +53,10 @@ class EventOperatorTest < Minitest::Test
   def event_operator_data
     {
       event_operator: {
-        name: @company_name,
-        primary_email: @email,
-        logo_url: @logo_url,
-        website_url: @website_url,
+        name: MakeRandom.company_name,
+        primary_email: MakeRandom.fake_email,
+        logo_url: logo_urls,
+        website_url: MakeRandom.url,
         sports: sport_ids
       }
     }
@@ -69,32 +65,34 @@ class EventOperatorTest < Minitest::Test
   def create_event_operator
     @new_event = @connection_client.post(
       url: "/api/athletic_events/v1/event_operators",
-      json_body: event_operator_data.to_json
+      json_body: @event_operator_data.to_json
     )
 
     refute_empty @new_event, "POST to 'v1/event_operators' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
     assert_equal @new_event['data']['name'],
-      event_operator_data[:event_operator][:name], msg
+      @event_operator_data[:event_operator][:name], msg
+  end
+
+  def get_creation
+    url = "/api/athletic_events/v1/athletic_events/#{@new_event['data']['id']}"
+    @connection_client.get(url: url)
   end
 
   def read_event_operator
-    url = "/api/athletic_events/v1/event_operators/#{@new_event['data']['id']}"
-    expected_data = event_operator_data[:event_operator]
-
-    event = @connection_client.get(url: url)
+    @event = get_creation
 
     errors_array = []
 
-    expected_data.each do |key, value|
+   @expected_data.each do |key, value|
       next if key == :sports
 
-      msg = "Expected #{key.to_s} #{value}, returned #{event.dig("data", "#{key}")}."
-      errors_array << msg unless expected_data[:"#{key}"].eql? event.dig("data", "#{key}")
+      msg = "Expected #{key.to_s} #{value}, returned #{@event.dig("data", "#{key}")}."
+      errors_array << msg unless @expected_data[:"#{key}"].eql? @event.dig("data", "#{key}")
     end
 
-    if !event.dig("data", "id").integer?
+    if !@event.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
     end
 
@@ -102,16 +100,28 @@ class EventOperatorTest < Minitest::Test
   end
 
   def check_sports
-    url = '/api/athletic_events/v1/event_operators'
-    expected_sports = event_operator_data[:event_operator][:sports]
+    errors_array = []
 
-    actual_sports = { ncsa_id: 17638 }
+    expected_sport = @expected_data[:sports]
+    event_sport = @event['data']['sports']
 
-    assert_includes expected_sports, actual_sports
+    i = 0
+    expected_sport.each do |sport|
+      id = sport[:ncsa_id]
+      actual_id = event_sport[i]['ncsa_id']
+
+      msg = "Expected sport id #{id}, returned #{actual_id}."
+      errors_array << msg unless id == actual_id
+
+      i += 1
+    end
+
+    errors_array
   end
 
   def test_create_read_event_operator
     create_event_operator
+  
     read_event_operator
     check_sports
   end
