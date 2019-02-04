@@ -109,10 +109,10 @@ class AddPaymentMethodTest < Common
   def clear_activity_emails
     emails = []
 
-    @gmail.mail_box = 'Inbox'
-
-    ['Free TOS Signed', 'Introduction to Team Edition'].each do |subject|
-      @gmail.subject = subject
+    {'Inbox': 'Free TOS Signed',
+     'TED_Welcome': 'Welcome to NCSA Team Edition!'}.each do |box, subject|
+      @gmail.mail_box = box.to_s
+      @gmail.subject = subject.to_s
       emails << @gmail.get_unread_emails
       emails.flatten!
     end

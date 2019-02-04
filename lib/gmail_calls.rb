@@ -31,6 +31,7 @@ class GmailCalls
 
     # get unread mails from specific mail box and subject if any
     # keep trying for 180 seconds
+    pp "[INFO] Waiting on email #{subject}"
     Timeout::timeout(180) {
       loop do
         mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)

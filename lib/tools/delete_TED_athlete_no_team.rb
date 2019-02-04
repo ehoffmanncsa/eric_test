@@ -3,7 +3,7 @@ require_relative '../../test/test_helper'
 # Add teams of available sports to org
 class DeleteTEDAthleteNoTeam
   def initialize(org_id)
-    TEDAthleteApi.setup #TEDApi.new('partner')
+    TEDAthleteApi.setup
     @org_id = org_id
   end
 

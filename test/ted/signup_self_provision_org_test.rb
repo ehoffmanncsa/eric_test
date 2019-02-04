@@ -106,14 +106,21 @@ class SignupSelfProvisionOrgTest < Common
     TED.sign_out
   end
 
+  def find_org_in_UI(status)
+    list = @browser.select_list(:class, 'form-control')
+    list.select status
+
+    @browser.text_field(:class, 'form-control').set @org_name
+
+    @browser.button(:text, 'Search').click
+    UIActions.wait_for_spinner; sleep 2
+  end
+
   def verify_org_unverfied
     UIActions.ted_login(@partner_username, @partner_password)
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
 
-    list = @browser.select_list(:class, 'form-control')
-    list.select 'Unverified'
-    @browser.button(:text, 'Search').click
-    UIActions.wait_for_spinner; sleep 2
+    find_org_in_UI('Unverified')
 
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Unverified'
@@ -145,17 +152,13 @@ class SignupSelfProvisionOrgTest < Common
     UIActions.ted_login(@partner_username, @partner_password)
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
 
-    list = @browser.select_list(:class, 'form-control')
-    list.select 'Accepted' # this is value for Free Signed option
-    @browser.button(:text, 'Search').click
-    UIActions.wait_for_spinner
+    find_org_in_UI('Accepted')
 
     Watir::Wait.while { @browser.element(:class, 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Free Signed'
   end
 
-  def check_email(subject)
-    @gmail.mail_box = 'Inbox'
+  def check_email(subject = nil)
     @gmail.subject = subject
     emails = @gmail.get_unread_emails
     refute_empty emails, 'No Intro email received'
@@ -179,9 +182,14 @@ class SignupSelfProvisionOrgTest < Common
     verify_org_unverfied
     verify_org_self_provisoned
 
+    @gmail.mail_box = 'Inbox'
+    check_email('Club Verification Request')
+
     admin_verify_coach
     verify_org_free_signed
-    check_email('Introduction to Team Edition')
+
+    @gmail.mail_box = 'TED_Welcome'
+    check_email('Welcome to NCSA Team Edition!')
     delete_org
   end
 end

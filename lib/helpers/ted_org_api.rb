@@ -44,6 +44,15 @@ module TEDOrgApi
     @partner_api.create(endpoint, body)['data']
   end
 
+  def self.get_all_orgs
+    @partner_api.read("partners/1/organizations")['data']
+  end
+
+  def self.find_dummy_orgs
+    url = "partners/1/organizations?contracts_status=&text_query=ncsa.automation&org_type=&page=1"
+    @partner_api.read(url)['data']
+  end
+
   def self.get_org_id_by_name(name)
     @partner_api.read("partners/1/organizations?contracts_status=" \
       "&text_query=#{name}&org_type=&page=1")['data'][0]['id']
