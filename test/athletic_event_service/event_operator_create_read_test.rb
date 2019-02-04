@@ -63,20 +63,20 @@ class EventOperatorTest < Minitest::Test
   end
 
   def create_event_operator
-    @new_event = @connection_client.post(
+    @new_event_operator = @connection_client.post(
       url: "/api/athletic_events/v1/event_operators",
       json_body: @event_operator_data.to_json
     )
 
-    refute_empty @new_event, "POST to 'v1/event_operators' response is empty"
+    refute_empty @new_event_operator, "POST to 'v1/event_operators' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
-    assert_equal @new_event['data']['name'],
+    assert_equal @new_event_operator['data']['name'],
       @event_operator_data[:event_operator][:name], msg
   end
 
   def get_creation
-    url = "/api/athletic_events/v1/athletic_events/#{@new_event['data']['id']}"
+    url = "/api/athletic_events/v1/athletic_events/#{@new_event_operator['data']['id']}"
     @connection_client.get(url: url)
   end
 
@@ -121,7 +121,7 @@ class EventOperatorTest < Minitest::Test
 
   def test_create_read_event_operator
     create_event_operator
-  
+
     read_event_operator
     check_sports
   end
