@@ -178,7 +178,8 @@ class AthleticEventTest < Minitest::Test
 
     expected_sport = @expected_data[:sports]
     event_sport = @event['data']['sports']
-
+    puts expected_sport
+    puts event_sport
     i = 0
     expected_sport.each do |sport|
       id = sport[:ncsa_id]

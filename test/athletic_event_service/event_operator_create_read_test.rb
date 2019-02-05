@@ -76,7 +76,7 @@ class EventOperatorTest < Minitest::Test
   end
 
   def get_creation
-    url = "/api/athletic_events/v1/athletic_events/#{@new_event_operator['data']['id']}"
+    url = "/api/athletic_events/v1/event_operators/#{@new_event_operator['data']['id']}"
     @connection_client.get(url: url)
   end
 
@@ -85,7 +85,7 @@ class EventOperatorTest < Minitest::Test
 
     errors_array = []
 
-   @expected_data.each do |key, value|
+    @expected_data.each do |key, value|
       next if key == :sports
 
       msg = "Expected #{key.to_s} #{value}, returned #{@event.dig("data", "#{key}")}."
@@ -95,6 +95,7 @@ class EventOperatorTest < Minitest::Test
     if !@event.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
     end
+
 
     assert_empty errors_array
   end
