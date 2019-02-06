@@ -49,3 +49,16 @@ coach_rms:
   login_page: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
   username: 'Test27217nh@gmail.com'
   password: 'ncsa1333'
+
+# Ops Messaging Service
+ops_messaging:
+  athlete_email: 'ncsa.automation+helpscout@gmail.com'
+  client_id: '5771950'
+  coach_email: 'coachehoffman@ncsasports.org'
+
+# HelpScout
+helpscout:
+  app_id: 'a0e8d5c66f47418ea427816a471fcb81'
+  app_secret: 'e18281e38a894c589cc9f19bf48e7fee'
+  base_url: 'https://api.helpscout.net/v2/'
+  coach_ehoffman_mailbox_id: '115736'
