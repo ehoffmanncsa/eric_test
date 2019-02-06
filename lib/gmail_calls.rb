@@ -45,4 +45,15 @@ class GmailCalls
   def delete(emails)
     emails.each { |e| e.read!; e.delete! }
   end
+
+  def send_email(to: nil, from: nil, subject:nil, content:nil)
+    @conn.deliver do
+      from from
+      to to
+      subject subject
+      text_part do
+        body content
+      end
+    end
+  end
 end

@@ -5,7 +5,6 @@ require_relative '../../test/test_helper'
 module C3PO
   def self.setup(ui_object)
     @browser = ui_object
-    UIActions.setup(@browser)
   end
 
   def self.teardown
@@ -74,27 +73,12 @@ module C3PO
     @browser.element(:class, 'button--primary').click
   end
 
-  def self.impersonate(recruit_email)
+  def self.impersonate(client_id)
     UIActions.fasttrack_login
-    @browser.goto 'https://qa.ncsasports.org/fasttrack/client/Search.do'
+    @browser.goto "https://qa.ncsasports.org/recruit/admin/dashboard/search?q=#{client_id}"
 
-    # search for client via email address
-    begin
-      retries ||= 0
-      @browser.text_field(:name, 'emailAddress').set recruit_email
-      @browser.button(:name, 'button').click
-
-      Watir::Wait.until { @browser.table(:class, 'breakdowndatatable').exists? }
-      @table = @browser.table(:class, 'breakdowndatatable')
-    rescue
-      @browser.text_field(:name, 'emailAddress').clear
-      retry if (retries += 1) < 3
-    end
-
-    column = @table.elements(:tag_name, 'td')[1]
-    column.element(:tag_name, 'button').click; sleep 1
-
-    @browser.window(:index, 1).use
+    sleep 2
+    @browser.table(:class, %w[m-tbl d-wide l-bln-mg-btm-2])[1][1].click
   end
 
   def self.open_tracking_note(client_id)

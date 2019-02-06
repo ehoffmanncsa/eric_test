@@ -4,7 +4,7 @@ class RecruitAPI
   def initialize(enroll_yr = nil, sport_id = nil, need_google_voice = false)
     @api = Api.new
 
-    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
+    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com" 
     @enroll_yr = enroll_yr
 
     clientrms = Default.env_config['clientrms']
