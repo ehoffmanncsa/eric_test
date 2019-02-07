@@ -153,7 +153,7 @@ class AthleticEventTest < Minitest::Test
 
     errors_array = []
 
-   @expected_data.each do |key, value|
+    @expected_data.each do |key, value|
       next if key == :locations || key == :sports
 
       msg = "Expected #{key.to_s} #{value}, returned #{@event.dig("data", "#{key}")}."
@@ -174,21 +174,23 @@ class AthleticEventTest < Minitest::Test
   end
 
   def check_sports
+    expected_sports = @expected_data[:sports]
+    expected_sport_ids = []
+
+    expected_sports.each do |_key, value|
+      expected_sport_ids << value
+    end
+
+    actual_athletic_event_sports = @event['data']['sports']
+    actual_sport_ids = []
+
+    actual_athletic_event_sports.each do |_key, value|
+      actual_sport_ids << value
+    end
+
     errors_array = []
-
-    expected_sport = @expected_data[:sports]
-    event_sport = @event['data']['sports']
-    puts expected_sport
-    puts event_sport
-    i = 0
-    expected_sport.each do |sport|
-      id = sport[:ncsa_id]
-      actual_id = event_sport[i]['ncsa_id']
-
-      msg = "Expected sport id #{id}, returned #{actual_id}."
-      errors_array << msg unless id == actual_id
-
-      i += 1
+    actual_sport_ids.each do |id|
+      errors_array << "Unexpected sport id #{id}" unless expected_sport_ids.include? id
     end
 
     errors_array
