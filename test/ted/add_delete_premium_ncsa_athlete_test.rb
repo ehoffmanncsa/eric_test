@@ -93,16 +93,24 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def athlete_accept_invitation
-    UIActions.user_login(@email); sleep 2
+    UIActions.user_login(@email); sleep 1
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
+    sleep 1
+
+    @browser.refresh
+    sleep 1
+  end
+
+  def goto_membership_info
+    clientrms = Default.env_config['clientrms']
+    @browser.goto(clientrms['base_url']+ clientrms['membership_info'])
   end
 
   def check_athlete_premium_profile
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Membership Info').click
+    goto_membership_info
+
     expect_str = 'MVP/TEAM EDITION MEMBERSHIP FEATURES'
     begin
       Timeout::timeout(30) {
