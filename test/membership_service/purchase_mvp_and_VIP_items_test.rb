@@ -7,8 +7,6 @@ class PurchaseMVPAndVIPItemsTests < Common
   def setup
     super
 
-    # add a new recruit, get back his email address
-    # cannot add lead with random grad year until packages discount calculation is fixed for any year lower than senior
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
   end
@@ -20,10 +18,6 @@ class PurchaseMVPAndVIPItemsTests < Common
   def test_purchase_mvp_and_VIP_items
     MSSetup.setup(@browser)
     MSSetup.buy_combo(@recruit_email, 'mvp')
-
-    UIActions.user_login(@recruit_email)
-    @browser.element(:class, 'fa-angle-down').click
-    @browser.element(:id, 'secondary-nav-menu').link(:text, 'Membership Info').click
 
     failure = []
     box1 = @browser.element(:class, 'purchase-summary-js').element(:class, 'package-features')

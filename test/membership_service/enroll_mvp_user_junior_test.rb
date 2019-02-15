@@ -7,14 +7,9 @@ class EnrollMVPJuniorTest < Common
   def setup
     super
 
-    # add a new junior recruit, get back his email address
     @enroll_yr = 'junior'; @package = 'mvp'
     _post, post_body = RecruitAPI.new(@enroll_yr).ppost
     @recruit_email = post_body[:recruit][:athlete_email]
-
-    # while process through the premium purchase process
-    # also calculate expected membership and 1st payment
-    add_mvp_junior
   end
 
   def teardown
@@ -35,15 +30,18 @@ class EnrollMVPJuniorTest < Common
 
     @membership = MSSetup.calculate(full_price, 6)
     @expect_first_pymt = (@membership / 6)
-    UIActions.clear_cookies
+  end
+
+  def goto_payments
+    clientrms = Default.env_config['clientrms']
+    @browser.goto(clientrms['base_url']+ clientrms['payments_page'])
   end
 
   def test_enroll_mvp_junior
-    expect_remain_balance = @membership - @expect_first_pymt
+    add_mvp_junior
+    goto_payments
 
-    UIActions.user_login(@recruit_email)
-    @browser.element(:class, 'fa-angle-down').click
-    @browser.element(:id, 'secondary-nav-menu').link(:text, 'Payments').click
+    expect_remain_balance = @membership - @expect_first_pymt
 
     boxes = @browser.elements(:css, 'div.column.third').to_a
     elem = boxes[2].elements(:class, 'text--size-small').to_a

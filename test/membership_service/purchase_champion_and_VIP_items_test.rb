@@ -20,10 +20,6 @@ class PurchaseChampionAndVIPItemsTests < Common
   end
 
   def test_purchase_champion_and_VIP_items
-    UIActions.user_login(@recruit_email)
-    @browser.element(:class, 'fa-angle-down').click
-    @browser.element(:id, 'secondary-nav-menu').link(:text, 'Membership Info').click
-
     failure = []
 
     box1 = @browser.element(:class, 'purchase-summary-js').element(:class, 'package-features')

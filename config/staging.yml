@@ -5,6 +5,7 @@ clientrms:
   login_page: 'clientrms/user_accounts/sign_in'
   offerings_page: 'clientrms/membership/offerings'
   payments_page: 'clientrms/finances'
+  membership_info: 'clientrms/accounts'
   dashboard: 'clientrms/dashboard/show'
 
 # Fasttrack Admin login

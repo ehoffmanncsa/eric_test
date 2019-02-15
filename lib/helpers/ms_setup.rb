@@ -329,8 +329,6 @@ module MSSetup
     choose_a_package(package)
     choose_payment_plan
     setup_billing
-
-    UIActions.clear_cookies
   end
 
   # to purchase only alacarte items
@@ -339,8 +337,6 @@ module MSSetup
     make_commitment
     pick_VIP_items(all)
     setup_billing
-
-    UIActions.clear_cookies
   end
 
   # to purchase both a membership package and some alacarte items
@@ -351,8 +347,6 @@ module MSSetup
     choose_payment_plan('small')
     pick_VIP_items
     setup_billing
-
-    UIActions.clear_cookies
   end
 
   # to make payment using ACH instead of credit card
@@ -362,7 +356,5 @@ module MSSetup
     choose_a_package(package)
     choose_payment_plan
     setup_billing(true)
-
-    UIActions.clear_cookies
   end
 end
