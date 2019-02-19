@@ -58,6 +58,11 @@ class FindCollegesBySlideBarTest < Common
     college.click
     UIActions.wait_for_spinner
 
+    if @browser.element(:class, 'alert-warning').present?
+      @browser.refresh
+      UIActions.wait_for_spinner
+    end
+
     college_name
   end
 
