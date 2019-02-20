@@ -50,7 +50,8 @@ class AddPaymentMethodTest < Common
     @gmail.subject = 'Get Started with Team Edition'
     emails = @gmail.get_unread_emails
     msg = @gmail.parse_body(emails.last, 'PASSWORD')
-    password = msg[1].split(':').last.split()[0].split('<')[0]
+
+    password = msg.split(':').last.split()[0].split('<')[0]
     @gmail.delete(emails)
 
     password

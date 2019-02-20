@@ -159,7 +159,7 @@ class TEDAddDeletePremiumAthlete < Common
     athlete_accept_invitation
     check_athlete_premium_profile
     check_athlete_accepted_status
-    TED.check_accepted_email
+    # TED.check_accepted_email - impossible atm, taking approx 5 hours to receive email
     delete_athlete
   end
 end

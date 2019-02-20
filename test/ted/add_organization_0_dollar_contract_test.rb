@@ -23,7 +23,6 @@ class AddOrg0DollarContractTest < Common
 
     @gmail = GmailCalls.new
     @gmail.get_connection
-    @gmail.mail_box = 'TED_Contract'
     @gmail.sender = 'TeamEdition@ncsasports.org'
 
     @partner_username = Default.env_config['ted']['partner_username']
@@ -127,10 +126,13 @@ class AddOrg0DollarContractTest < Common
   end
 
   def get_sign_page_url_in_email
-    keyword = 'https://team-staging.ncsasports.org/terms_of_service?'
+    keyword = 'sendgrid.net/wf/click?'
+
+    @gmail.mail_box = 'TED_Contract'
     emails = @gmail.get_unread_emails
-    msg = @gmail.parse_body(emails.last, keyword)
-    url = msg[1].split("\"")[1]
+    msg = @gmail.parse_body(emails.last, keyword).strip!
+
+    url = msg.split("\"")[1]
     @gmail.delete(emails)
 
     url

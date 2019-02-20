@@ -173,7 +173,7 @@ module TEDContractApi
     send_invoice(new_contract['id'])
 
     connect_to_gmail
-    decode_org_data
+    decode_org_data; sleep 2
 
     accept_terms_of_service
     submit_credit_card_info
@@ -182,8 +182,15 @@ module TEDContractApi
     new_contract['id']
   end
 
+  def self.capture_redirect_url
+    uri = URI.parse(get_sign_page_url_in_email)
+    response = Net::HTTP.get_response(uri)
+
+    response['location']
+  end
+
   def self.decode_org_data
-    url = get_sign_page_url_in_email
+    url = capture_redirect_url
 
     @token = url.split('=')[1]
     @decoded_data = JWT.decode(@token, nil, false)[0]
@@ -191,13 +198,13 @@ module TEDContractApi
 
   def self.get_sign_page_url_in_email
     @gmail.mail_box = 'TED_Contract'
-    keyword = 'ncsasports.org/terms_of_service?'
+    keyword = 'sendgrid.net/wf/click?'
 
     emails = @gmail.get_unread_emails
-    email_body = @gmail.parse_body(emails.last, keyword)
+    email_body = @gmail.parse_body(emails.last, keyword).strip!
     @gmail.delete(emails)
 
-    email_body[1].split("\"")[1]
+    email_body.split("\"")[1]
   end
 
   def self.connect_to_gmail
