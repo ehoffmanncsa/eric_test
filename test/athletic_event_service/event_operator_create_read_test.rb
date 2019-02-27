@@ -16,21 +16,17 @@ Sample Expected Response
 }
 =end
 
-class EventOperatorTest < Minitest::Test
+class EventOperatorCRUTest < Minitest::Test
   def setup
     @connection_client = AthleticEventServiceClient.new
-    @event_operator_data = event_operator_data
-    @expected_data = @event_operator_data [:event_operator]
   end
 
   def sport_ids
-    ## preferred using this logic, but only have 5 sports in DB
-    ## so comment out for now and use the 5 default ids
-
     id_set = Default.static_info['sport_ids']
+
     ids_arr = []
 
-    for i in 1 .. rand(1 .. id_set.length)
+    for i in 1 .. rand(1 .. 4)
       sport_id = id_set.sample
       ids_arr << { ncsa_id: sport_id }
       id_set.delete(sport_id)
@@ -63,67 +59,102 @@ class EventOperatorTest < Minitest::Test
   end
 
   def create_event_operator
-    @new_event_operator = @connection_client.post(
-      url: "/api/athletic_events/v1/event_operators",
-      json_body: @event_operator_data.to_json
-    )
+    @new_event_operator = begin
+                            retries ||= 0
+                            @connection_client.post(
+                              url: '/api/athletic_events/v1/event_operators',
+                              json_body: @original_data.to_json)
+                          rescue => e
+                            msg = "#{e} \nPOST body \n#{@original_data} \nGoing to retry"
+                            puts msg; sleep 2
+                            retry if (retries += 1) < 2
+                          end
+  end
 
+  def check_creation(new_event_operator)
     refute_empty @new_event_operator, "POST to 'v1/event_operators' response is empty"
 
     msg = 'Created data doesnt have same name as POST request'
     assert_equal @new_event_operator['data']['name'],
-      @event_operator_data[:event_operator][:name], msg
+      @original_data[:event_operator][:name], msg
   end
 
-  def get_creation
+  def get_my_event_operator
     url = "/api/athletic_events/v1/event_operators/#{@new_event_operator['data']['id']}"
     @connection_client.get(url: url)
   end
 
-  def read_event_operator
-    @event = get_creation
+  def update_event_operator(new_data)
+    endpoint = "/api/athletic_events/v1/event_operators/#{@new_event_operator['data']['id']}"
 
+    begin
+      retries ||= 0
+      @connection_client.put(
+        url: endpoint,
+        json_body: new_data.to_json)
+    rescue => e
+      msg = "#{e} \nPUT body \n#{new_data} \nGoing to retry"
+      puts msg; sleep 2
+      retry if (retries += 1) < 2
+    end
+  end
+
+  def read_event_operator(expected_data, data_from_api)
     errors_array = []
 
-    @expected_data.each do |key, value|
+    expected_data = expected_data[:event_operator]
+    expected_data.each do |key, value|
       next if key == :sports
 
-      msg = "Expected #{key.to_s} #{value}, returned #{@event.dig("data", "#{key}")}."
-      errors_array << msg unless @expected_data[:"#{key}"].eql? @event.dig("data", "#{key}")
+      msg = "Expected #{key.to_s} #{value}, returned #{data_from_api.dig("data", "#{key}")}."
+      errors_array << msg unless expected_data[:"#{key}"].eql? data_from_api.dig("data", "#{key}")
     end
 
-    if !@event.dig("data", "id").integer?
+    check_sports_result = check_sports(expected_data, data_from_api)
+    errors_array << check_sports_result unless check_sports_result.empty?
+    errors_array.flatten!
+
+    if !data_from_api.dig("data", "id").integer?
       errors_array << "Id from response is not an Integer."
     end
-
 
     assert_empty errors_array
   end
 
-  def check_sports
+  def check_sports(expected_data, data_from_api)
+    expected_sports = expected_data[:sports]
+    expected_sport_ids = []
+
+    expected_sports.each do |_key, value|
+      expected_sport_ids << value
+    end
+
+    actual_event_operator_sports = data_from_api['data']['sports']
+    actual_sport_ids = []
+
+    actual_event_operator_sports.each do |_key, value|
+      actual_sport_ids << value
+    end
+
     errors_array = []
-
-    expected_sport = @expected_data[:sports]
-    event_sport = @event['data']['sports']
-
-    i = 0
-    expected_sport.each do |sport|
-      id = sport[:ncsa_id]
-      actual_id = event_sport[i]['ncsa_id']
-
-      msg = "Expected sport id #{id}, returned #{actual_id}."
-      errors_array << msg unless id == actual_id
-
-      i += 1
+    actual_sport_ids.each do |id|
+      errors_array << "Unexpected sport id #{id}" unless expected_sport_ids.include? id
     end
 
     errors_array
   end
 
-  def test_create_read_event_operator
-    create_event_operator
+  def test_create_read_update_event_operator
+    @original_data = event_operator_data
+    new_event_operator = create_event_operator
+    check_creation(new_event_operator)
 
-    read_event_operator
-    check_sports
+    newly_created_event_operator = get_my_event_operator
+    read_event_operator(@original_data, newly_created_event_operator)
+
+    updated_event_operator_data = event_operator_data
+    update_event_operator(updated_event_operator_data)
+    updated_event_operator = get_my_event_operator
+    read_event_operator(updated_event_operator_data, updated_event_operator)
   end
 end

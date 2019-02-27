@@ -9,6 +9,7 @@ class AthleticEventServiceClient
       req.headers['Content-Type'] = 'application/json'
       req.body = json_body
     end
+
     msg = "[ERROR] - Receive response #{response.status} when try to POST to #{url}"
     raise msg unless response.status.eql? 201
 
@@ -22,6 +23,19 @@ class AthleticEventServiceClient
     end
 
     msg = "[ERROR] - Receive response #{response.status} when try to GET from #{url}"
+    raise msg unless response.status.eql? 200
+
+    JSON.parse(response.body)
+  end
+
+  def put(url:, json_body:)
+    response = client.put do |req|
+      req.url(base_uri + url)
+      req.headers['Content-Type'] = 'application/json'
+      req.body = json_body
+    end
+
+    msg = "[ERROR] - Receive response #{response.status} when try to PUT to #{url}"
     raise msg unless response.status.eql? 200
 
     JSON.parse(response.body)
