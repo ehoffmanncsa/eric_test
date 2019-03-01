@@ -18,7 +18,7 @@ Sample Expected Response
    "point_of_contact_email"=>"berna_quigley@cristfadel.ca",
    "name"=>"Weber, Greenholt and Schinner",
    "logo_url"=>"https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png",
-   "locations"=>
+   "venues"=>
       [{"zip"=>"60910",
         "state"=>"AL",
         "name"=>"djsxhdgbkl",
@@ -105,7 +105,7 @@ class AthleticEventCRUTest < Minitest::Test
         activated_at: date,
         event_operator_id: get_EO_id,
         sports: sport_ids,
-        locations: [
+        venues: [
           {
             address1: MakeRandom.address,
             address2: MakeRandom.address2,
@@ -166,7 +166,7 @@ class AthleticEventCRUTest < Minitest::Test
 
     expected_data = expected_data[:athletic_event]
     expected_data.each do |key, value|
-      next if key == :locations || key == :sports
+      next if key == :venues || key == :sports
 
       msg = "Expected #{key.to_s} #{value}, returned #{data_from_api.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? data_from_api.dig("data", "#{key}")
@@ -176,8 +176,8 @@ class AthleticEventCRUTest < Minitest::Test
     errors_array << check_sports_result unless check_sports_result.empty?
     errors_array.flatten!
 
-    check_locations_result = check_locations(expected_data, data_from_api)
-    errors_array << check_locations_result unless check_locations_result.empty?
+    check_venues_result = check_venues(expected_data, data_from_api)
+    errors_array << check_venues_result unless check_venues_result.empty?
     errors_array.flatten!
 
     if !data_from_api.dig("data", "id").integer?
@@ -210,17 +210,17 @@ class AthleticEventCRUTest < Minitest::Test
     errors_array
   end
 
-  def check_locations(expected_data, data_from_api)
+  def check_venues(expected_data, data_from_api)
     errors_array = []
 
-    expected_location = expected_data[:locations]
-    event_location = data_from_api['data']['locations']
+    expected_venue = expected_data[:venues]
+    event_venue = data_from_api['data']['venues']
 
     i = 0
-    expected_location.each do |location|
-      location.each do |key, value|
+    expected_venue.each do |venue|
+      venue.each do |key, value|
         expected = value
-        actual = event_location[i][key.to_s]
+        actual = event_venue[i][key.to_s]
 
         msg = "Expected #{key.to_s} #{expected}, returned #{actual}."
         errors_array << msg unless expected == actual
