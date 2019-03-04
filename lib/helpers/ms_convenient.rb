@@ -14,12 +14,15 @@ module MSConvenient
 
   # to purchase only membership package
   def self.buy_package(email, package)
+    MSPricing.setup(@browser, package)
+
     MSSetup.set_password(email)
     MSSetup.goto_offerings
     MSSetup.open_payment_plan
 
-    MSPricing.setup(@browser, package)
     MSProcess.choose_the_package(MSPricing.membership_prices)
+    MSProcess.checkout
+
     MSFinish.setup_billing
   end
 

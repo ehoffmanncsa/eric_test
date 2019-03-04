@@ -26,6 +26,7 @@ class TEDAddDeletePremiumAthlete < Common
   def setup
     super
     MSSetup.setup(@browser)
+    C3PO.setup(@browser)
     TED.setup(@browser)
   end
 
@@ -80,7 +81,7 @@ class TEDAddDeletePremiumAthlete < Common
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
+    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 2
     assert TED.modal.visible?
 
     TED.modal.button(:text, 'Save & Invite').click; sleep 5
@@ -125,13 +126,7 @@ class TEDAddDeletePremiumAthlete < Common
 
     assert_equal expect_str, @title, "#{@title} not match expected #{expect_str}"
 
-    athlete_sign_out
-  end
-
-  def athlete_sign_out
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Logout').click
+    C3PO.sign_out
   end
 
   def check_athlete_accepted_status
@@ -146,8 +141,11 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def buy_premium_package
-    MSSetup.buy_package(@email, 'champion')
-    athlete_sign_out
+    UIActions.user_login(@email)
+
+    MSConvenient.setup(@browser)
+    MSConvenient.buy_package(@email, 'champion')
+    C3PO.sign_out
   end
 
   def test_add_delete_premium_ncsa_athlete
@@ -159,7 +157,7 @@ class TEDAddDeletePremiumAthlete < Common
     athlete_accept_invitation
     check_athlete_premium_profile
     check_athlete_accepted_status
-    # TED.check_accepted_email - impossible atm, taking approx 5 hours to receive email
+    TED.check_accepted_email # this email sometimes comes very late, don't fail the test here
     delete_athlete
   end
 end

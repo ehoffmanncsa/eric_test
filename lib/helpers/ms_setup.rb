@@ -18,7 +18,7 @@ module MSSetup
     end
   end
 
-  def click_yes
+  def self.click_yes
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
     sleep 1

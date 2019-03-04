@@ -60,6 +60,8 @@ class RecruitAPI
       puts e
     end
 
+    sleep 5 # I think taking actions right after often results in weirdness
+
     msg = "[ERROR] #{resp_code} when POST new recruit via API - #{resp_body}"
     raise msg unless resp_code.eql? 200
 

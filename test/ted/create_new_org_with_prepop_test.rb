@@ -42,6 +42,7 @@ class CreateNewOrgWithPrepop < Common
     last_name = post_body[:recruit][:athlete_last_name]
     @athlete_name = "#{first_name} #{last_name}"
 
+    UIActions.user_login(@athlete_email)
     MSSetup.set_password(@athlete_email)
   end
 
@@ -113,6 +114,7 @@ class CreateNewOrgWithPrepop < Common
     add_coach_reference
 
     TEDOrgApi.setup
+    pp "[INFO] Creating Org - #{@org_name}"
     new_org = TEDOrgApi.create_org(org_body)
     TED.impersonate_org(new_org['id'])
 

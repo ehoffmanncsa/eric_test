@@ -78,6 +78,7 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def check_athlete_free_profile
+    UIActions.user_login(@athlete_email)
     MSSetup.set_password(@athlete_email)
 
     @browser.element(:class, 'fa-angle-down').click

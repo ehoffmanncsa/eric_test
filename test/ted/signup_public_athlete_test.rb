@@ -81,22 +81,13 @@ class SignupPublicAthleteTest < Common
   end
 
   def assign_new_password
-    @browser.text_field(:id, "user_account_username").set(random_username)
-
-    @browser.text_field(:id, 'user_account_password').set('ncsa')
-    @browser.text_field(:id, 'user_account_password_confirmation').set('ncsa')
-    @browser.button(:type, 'submit').click
+    MSSetup.set_password(@athlete_email)
 
     Watir::Wait.until { @browser.element(:class, 'welcome').present? }
 
     assert_equal "Welcome to NCSA, #{@athlete_first_name.capitalize}!",
       @browser.element(:tag_name, 'h1').text,
       'Sign in to Client RMS unsuccessful.'
-  end
-
-  def random_username
-    # need to reset username because doesn't accept usernames with '+' in them
-    MakeRandom.name + MakeRandom.number(3).to_s
   end
 
   def check_athlete_profile_info
@@ -149,6 +140,7 @@ class SignupPublicAthleteTest < Common
   end
 
   def login_to_athlete_profile_with_password_reset
+    UIActions.user_login(@athlete_email)
     MSSetup.set_password(@athlete_email)
 
     @browser.element(:class, 'fa-angle-down').click
@@ -157,9 +149,7 @@ class SignupPublicAthleteTest < Common
   end
 
   def login_to_athlete_profile
-    @browser.text_field(:id, 'user_account_login').set @athlete_email
-    @browser.text_field(:id, 'user_account_password').set 'ncsa'
-    @browser.button(:name, 'commit').click; sleep 1
+    UIActions.user_login(@athlete_email)
   end
 
   def test_public_new_athlete_sign_up

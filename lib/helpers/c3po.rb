@@ -11,6 +11,12 @@ module C3PO
     @browser.close
   end
 
+  def self.sign_out
+    @browser.element(:class, 'fa-angle-down').click
+    navbar = @browser.element(:id, 'secondary-nav-menu')
+    navbar.link(:text, 'Logout').click
+  end
+
   def self.upload_video(file = nil)
     file ||= 'sample.mp4'
     path = File.absolute_path("test/videos/#{file}")

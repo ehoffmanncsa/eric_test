@@ -141,9 +141,13 @@ module TED
   def self.check_accepted_email
     @gmail.mail_box = 'TED_Accepted_Request'
     emails = @gmail.get_unread_emails
-    raise 'No accepted email found after athlete accepted invitation' if emails.empty?
 
-    @gmail.delete(emails)
+    msg = 'No accepted email found after 5 mins wait - Please check manually in case message comes later'
+    if emails.empty?
+      puts msg
+    else
+      @gmail.delete(emails)
+    end
   end
 
   def self.check_welcome_email
