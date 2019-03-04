@@ -7,12 +7,15 @@ class PurchaseChampionAndVIPItemsTests < Common
   def setup
     super
 
-    # add a new recruit, get back his email address
     _post, post_body = RecruitAPI.new.ppost
-    @recruit_email = post_body[:recruit][:athlete_email]
+    recruit_email = post_body[:recruit][:athlete_email]
+
+    UIActions.user_login(recruit_email)
 
     MSSetup.setup(@browser)
-    MSSetup.buy_combo(@recruit_email, 'champion')
+
+    MSConvenient.setup(@browser)
+    MSConvenient.buy_combo(recruit_email, 'champion')
   end
 
   def teardown

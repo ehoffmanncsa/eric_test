@@ -8,7 +8,14 @@ class PurchaseEliteAndVIPItemsTests < Common
     super
 
     _post, post_body = RecruitAPI.new.ppost
-    @recruit_email = post_body[:recruit][:athlete_email]
+    recruit_email = post_body[:recruit][:athlete_email]
+
+    UIActions.user_login(recruit_email)
+
+    MSSetup.setup(@browser)
+
+    MSConvenient.setup(@browser)
+    MSConvenient.buy_combo(recruit_email, 'elite')
   end
 
   def teardown
@@ -16,9 +23,6 @@ class PurchaseEliteAndVIPItemsTests < Common
   end
 
   def test_purchase_elite_and_VIP_items
-    MSSetup.setup(@browser)
-    MSSetup.buy_combo(@recruit_email, 'elite')
-
     failure = []
     box1 = @browser.element(:class, 'purchase-summary-js').element(:class, 'package-features')
     title = box1.element(:class, 'title-js').text.downcase

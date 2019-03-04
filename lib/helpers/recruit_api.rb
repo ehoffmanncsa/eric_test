@@ -4,7 +4,7 @@ class RecruitAPI
   def initialize(enroll_yr = nil, sport_id = nil, need_google_voice = false)
     @api = Api.new
 
-    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com" 
+    @email = "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
     @enroll_yr = enroll_yr
 
     clientrms = Default.env_config['clientrms']
@@ -55,8 +55,9 @@ class RecruitAPI
     begin
       retries ||= 0
       resp_code, resp_body = @api.ppost @url, body
-    rescue
+    rescue => e
       retry if (resp_code.nil? && ((retries += 1) < 10))
+      puts e
     end
 
     msg = "[ERROR] #{resp_code} when POST new recruit via API - #{resp_body}"

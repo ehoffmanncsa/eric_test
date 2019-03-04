@@ -9,80 +9,100 @@ class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
 
-    MSSetup.setup(@browser)
-
-    @athlete_email = 'turkeytom@yopmail.com'
+    UIActions.user_login('turkeytom@yopmail.com')
     @discount_codes = Default.static_info['ncsa_discount_code']
+
+    MSSetup.setup(@browser)
+    MSPricing.setup(@browser)
+    MSProcess.setup(@browser)
   end
 
   def teardown
     super
   end
 
+  def open_discount
+    @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
+  end
+
+  def base_steps
+    MSSetup.goto_offerings
+    MSSetup.open_payment_plan
+    open_discount
+  end
+
   def cells
-    @browser.elements(:class, ['select-plan', 'js-package-button'])
+    MSPricing.gather_all_payment_plan_cells
   end
 
   def champion
-    ['champion', 899, cells[9], cells[3], cells[6]]
+    #               1mo       6mo       12mo
+    ['champion', cells[9], cells[6], cells[3]]
   end
 
   def elite
-    ['elite', 1699, cells[10], cells[4], cells[7]]
+    ['elite', cells[10], cells[7], cells[4]]
   end
 
   def mvp
-    ['mvp', 2999, cells[11], cells[5], cells[8]]
+    ['mvp', cells[11], cells[8], cells[5]]
   end
 
   def collect_prices(package)
     prices = []
 
-    fullprice_cell = package[2]
-    monthly_cells = package[3 .. 4]
+    fullprice_cell = package[1]
+    monthly_cells = package[2 .. 3]
 
-    prices << fullprice_cell.element(:class, 'full').text.gsub(/\D/, '')
+    prices << fullprice_cell.element(:class, 'full').text.gsub(/\D/, '').to_i
     monthly_cells.each do |cell|
-      prices << cell.element(:class, 'small').text.gsub(/\D/, '')
+      prices << cell.element(:class, 'small').text.gsub(/\D/, '').to_i
     end
 
     prices
   end
 
-  def calculate_discount(code)
-    MSSetup.calculate(full_price, months, code)
-  end
+  def check_on_prices(original_prices, discount_code)
+    failure = []
+    i = 0
 
-  def test_apply_discount_on_offerings_page
-    UIActions.user_login(@athlete_email)
+    [champion, elite, mvp].each do |package|
+      original_price = original_prices[i]
+      discounted_price = collect_prices(package)
 
-    MSSetup.goto_offerings; sleep 2
-    MSSetup.open_payment_plan
-
-    # activate discount feature
-    @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
-
-    @discount_codes.each do |code, _rate|
-      MSSetup.apply_discount_offerings(code)
-
-      [champion, elite, mvp].each do |package|
-        orignal_price = package[1]
-        discounted_price = collect_prices(package)
-
-        calculated_prices = []
-        months = [1, 6, 12] # add 18 here when that feature available and pop last 2 if senior
-        months.each do |months|
-          calculated_prices << MSSetup.calculate(orignal_price, months, code)
-        end
-
-        failure = []
-        calculated_prices.zip(discounted_price).map do |c, d|
-          msg = "Package #{package[0]}, Code #{code} - Actual: #{d} vs Expected: #{c}"
-          failure << msg unless c.eql? d
-        end
+      calculated_prices = []
+      months = [1, 6, 12] # add 18 here when that feature available and pop last 2 if senior
+      months.each do |months|
+        calculated_prices << MSPricing.calculate(original_price, months, discount_code)
       end
 
-      MSSetup.remove_discount
+      calculated_prices.zip(discounted_price).map do |c, d|
+        msg = "Package #{package[0]}, Code #{discount_code} - Actual: #{d} vs Expected: #{c}"
+        failure << msg unless c.eql? d
+      end
+
+      i += 1
     end
+
+    MSProcess.remove_discount
+
+    failure
+  end
+
+
+  def test_apply_discount_on_offerings_page
+    base_steps
+
+    failure = []
+    original_prices = MSPricing.one_month_plan_prices
+
+    @discount_codes.each do |discount_code, _rate|
+      MSProcess.apply_discount_offerings(discount_code)
+      fail_message = check_on_prices(original_prices, discount_code)
+      failure << fail_message unless fail_message.empty?
+      failure.flatten!
+    end
+
+    assert_empty failure
   end
 end

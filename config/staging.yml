@@ -4,6 +4,7 @@ clientrms:
   rss_endpoint: 'api/submit/v1/new_recruit'
   login_page: 'clientrms/user_accounts/sign_in'
   offerings_page: 'clientrms/membership/offerings'
+  commitment_page: 'clientrms/membership/commitment'
   payments_page: 'clientrms/finances'
   membership_info: 'clientrms/accounts'
   dashboard: 'clientrms/dashboard/show'

@@ -1,13 +1,13 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-58: MS Regression
-# UI Test: Enroll as a Elite User - Freshman
-class EnrollEliteFreshmanTest < Common
+# TS-XXX: MS Regression
+# UI Test: Enroll as a Elite User - Sophomore
+class EnrollEliteSophomoreTest < Common
   def setup
     super
 
-    enroll_yr = 'freshman'
+    enroll_yr = 'sophomore'
     @package = 'elite'
 
     _post, post_body = RecruitAPI.new(enroll_yr).ppost
@@ -43,7 +43,7 @@ class EnrollEliteFreshmanTest < Common
     assert_equal @package, actual_package, 'Incorrect premium package shown'
   end
 
-  def test_enroll_elite_freshman
+  def test_enroll_elite_sophomore
     MSTestTemplate.get_enrolled
 
     check_membership_features

@@ -1,14 +1,14 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-58: MS Regression
-# UI Test: Enroll as a Elite User - Freshman
-class EnrollEliteFreshmanTest < Common
+# TS-XXX: MS Regression
+# UI Test: Enroll as a Champion User - Junior
+class EnrollChampionJuniorTest < Common
   def setup
     super
 
-    enroll_yr = 'freshman'
-    @package = 'elite'
+    enroll_yr = 'junior'
+    @package = 'champion'
 
     _post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
@@ -23,7 +23,7 @@ class EnrollEliteFreshmanTest < Common
 
   def check_membership_features
     ui_list = MSTestTemplate.get_UI_features_list
-    expected_list = Default.static_info['membership_service']['elite_features']
+    expected_list = Default.static_info['membership_service']['champion_features']
 
     assert_equal expected_list, ui_list, 'Membership features NOT matching what is expected'
   end
@@ -43,7 +43,7 @@ class EnrollEliteFreshmanTest < Common
     assert_equal @package, actual_package, 'Incorrect premium package shown'
   end
 
-  def test_enroll_elite_freshman
+  def test_enroll_champion_junior
     MSTestTemplate.get_enrolled
 
     check_membership_features
