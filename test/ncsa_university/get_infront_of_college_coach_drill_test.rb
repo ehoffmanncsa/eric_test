@@ -3,23 +3,22 @@ require_relative '../test_helper'
 
 # TS-248: NCSA University Regression
 # UI Test: Get in front of college Coaches Drill
-class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
+class GetInFrontOfCollegeCoachDrillTest < Common
   def setup
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
-    @firstname = post_body[:recruit][:athlete_first_name]
-    @firstname[0] = @firstname[0].capitalize
+    super
 
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
+    _post, post_body = RecruitAPI.new.ppost
+    @email = post_body[:recruit][:athlete_email] # 'ncsa.automation+c1b9@gmail.com'
+    @firstname = post_body[:recruit][:athlete_first_name] # 'Jacquetta'
+
+    UIActions.user_login(@email)
 
     MSSetup.setup(@browser)
     MSSetup.set_password(@email)
   end
 
   def teardown
-    @browser.close
+    super
   end
 
   def content_area
@@ -36,6 +35,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     options.shift;
     options.reject! { |o| o.text == 'None' }
     options.sample.click
+    sleep 1
   end
 
   def select_drill
@@ -45,6 +45,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
       item = d.element(:class, 'recruiting_u_default')
       if item.attribute('data-drill-name-id') == '28'
         item.element(:class, 'icon').click
+        sleep 1
         break
       else
         next
@@ -57,6 +58,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert_includes header, @firstname
 
     content_area.element(:class, 'button--primary').click
+    sleep 1
   end
 
   def verify_commitment
@@ -64,6 +66,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert content_area.element(:class, 'drill-questions').visible?, msg
     questions = content_area.elements(:class, 'button--clear-dark').to_a
     questions.sample.click
+    sleep 1
   end
 
   def verify_location
@@ -89,10 +92,12 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     verify_skip_modal
 
     form.element(:id, 'next').click
+    sleep 1
   end
 
   def verify_skip_modal
     form.elements(:class, 'skip-screen').last.click
+    sleep 1
     assert @browser.element(:id, 'skipping'), 'Skipping modal not visible'
 
     # make sure header text is right
@@ -109,7 +114,8 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert_empty failure
 
     # close modal to continue
-    modal.element(:id, 'skip-close').click; sleep 0.5
+    modal.element(:id, 'skip-close').click
+    sleep 1
   end
 
   def verify_position
@@ -125,6 +131,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
     form.element(:id, 'next').click
+    sleep 1
   end
 
   def verify_player_stats
@@ -143,15 +150,19 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
     form.element(:id, 'next').click
+    sleep 1
   end
 
   def select_key_stats
     form.elements(:class, 'custom-select').each do |cs|
       dropdown = cs.element(:tag_name, 'select')
       dropdown.click
+      sleep 1
       options = dropdown.elements(:tag_name, 'option').to_a
-      options.shift; options.reject! { |o| o.text == 'None' }
+      options.shift
+      options.reject! { |o| o.text == 'None' }
       options.sample.click
+      sleep 1
     end
   end
 
@@ -184,6 +195,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
     form.element(:id, 'next').click
+    sleep 1
   end
 
   def verify_familiar
@@ -197,6 +209,7 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
 
     questions = content_area.elements(:class, 'button--clear-dark').to_a
     questions.sample.click
+    sleep 1
   end
 
   def verify_customize
@@ -210,11 +223,13 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # pick random programs
     customs = form.elements(:class, 'custom-input').to_a
     customs.sample.click
+    sleep 1
 
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
     form.element(:id, 'next').click
+    sleep 1
   end
 
   def verify_club_information
@@ -237,7 +252,8 @@ class GetInFrontOfCollegeCoachDrillTest < Minitest::Test
     # now check button is enabled
     assert (form.element(:id, 'next').enabled?), 'Button not enabled after entering data'
 
-    form.element(:class, 'button--secondary').click; sleep 1
+    form.element(:class, 'button--secondary').click
+    sleep 1
   end
 
   def verify_done
