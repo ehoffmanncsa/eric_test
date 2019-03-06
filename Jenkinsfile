@@ -61,6 +61,6 @@ node {
 
     sh "./script/container_check.sh";
 
-    sh "docker rm -f ${SEL_GRID} ${TEST_BOX}";
+    sh "docker rm -f ${TEST_BOX}";
   }
 }
