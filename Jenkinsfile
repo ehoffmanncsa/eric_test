@@ -55,9 +55,9 @@ node {
   }
 
   stage('Clean up') {
-    sh "docker stop ${SEL_GRID}"
-    echo 'Waiting 1 minutes for Selenium grid and dependents to completely stop before proceeding'
-    sleep 60
+    sh "docker stop ${SEL_GRID}";
+    echo 'Waiting 1 minutes for Selenium grid and dependents to completely stop before proceeding';
+    sleep 60;
 
     sh "docker rm -f ${SEL_GRID} ${TEST_BOX}";
   }
