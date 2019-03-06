@@ -59,11 +59,7 @@ node {
     echo 'Waiting 1 minutes for Selenium grid and dependents to completely stop before proceeding';
     sleep 60;
 
-    sh "docker ps -a | grep sel";
-    sleep 60
-
-    sh "docker ps -a | grep sel";
-    sleep 60
+    sh "./script/container_check.sh";
 
     sh "docker rm -f ${SEL_GRID} ${TEST_BOX}";
   }
