@@ -4,7 +4,7 @@ gem 'api-auth'
 
 gem 'csv'
 
-gem 'ey-hmac'
+gem 'ey-hmac', '2.2.0'
 gem 'faraday'
 
 gem 'gmail'
