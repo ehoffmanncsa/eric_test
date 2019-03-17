@@ -57,6 +57,7 @@ ops_messaging:
   athlete_email: 'ncsa.automation+helpscout@gmail.com'
   client_id: '5771950'
   coach_email: 'coachehoffman@ncsasports.org'
+  base_uri: 'http://data-staging.ncsasports.org'
 
 # HelpScout
 helpscout:
