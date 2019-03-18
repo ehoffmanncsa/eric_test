@@ -41,9 +41,14 @@ class TEDAddDeletePremiumAthlete < Common
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
     @grad_yr = post_body[:recruit][:graduation_year]
+    @sport_id = post_body[:recruit][:sport_id]
     @phone = post_body[:recruit][:athlete_phone]
     @zipcode = post_body[:recruit][:zip]
     @athlete_name = "#{@first_name} #{@last_name}"
+  end
+
+  def get_team_id
+    TEDTeamApi.get_team_by_sport_id(@sport_id)['id']
   end
 
   def add_athlete
@@ -60,7 +65,7 @@ class TEDAddDeletePremiumAthlete < Common
           zip_code: @zipcode
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }
+          team: { data: { type: 'teams', id: get_team_id } }
         },
         type: 'athletes'
       }

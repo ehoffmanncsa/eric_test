@@ -100,6 +100,7 @@ class TEDAddDeleteNewAthleteTest < Common
   end
 
   def check_athlete_profile
+    UIActions.user_login(@email)
     MSSetup.set_password(@email)
     @browser.element(:class, 'fa-angle-down').click
 

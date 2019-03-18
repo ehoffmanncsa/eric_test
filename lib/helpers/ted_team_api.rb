@@ -23,6 +23,11 @@ module TEDTeamApi
     @partner_api.read(endpoint)['data']
   end
 
+  def self.get_team_by_sport_id(id)
+    all_teams = get_all_teams
+    all_teams.detect { |team| team['attributes']['sport-id'].eql? id.to_i }
+  end
+
   def self.delete_team(id)
     endpoint = "teams/#{id}/delete_team"
     @partner_api.delete(endpoint)['data']

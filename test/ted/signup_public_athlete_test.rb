@@ -15,18 +15,19 @@ class SignupPublicAthleteTest < Common
     super
   end
 
-  def store_names_and_emails
+  def store_athlete_meta_data
     @athlete_email ||= MakeRandom.email
     @athlete_first_name ||= MakeRandom.first_name
     @athlete_last_name ||= MakeRandom.last_name
     @parent_email = MakeRandom.email
+    @sport_id ||= Default.static_info['sport_ids'].sample
   end
 
   def fillout_signup_form
     @browser.goto 'https://team-staging.ncsasports.org/teams/awesome-sauce/sign_up'
     Watir::Wait.until { @browser.elements(:tag_name, 'input').any? }
 
-    store_names_and_emails
+    store_athlete_meta_data
     fill_inputs
 
     # agree with the Terms Of Service
@@ -50,6 +51,13 @@ class SignupPublicAthleteTest < Common
     element.send_keys birthday
   end
 
+  def select_sport
+    sport_list = @browser.select_list(:id, 'sportId')
+    sport_list.scroll.to :center; sleep 1
+    sport_list.select @sport_id.to_s
+    sleep 1
+  end
+
   def fill_inputs
     @browser.text_field(:id, 'firstName').set @athlete_first_name
     @browser.text_field(:id, 'lastName').set @athlete_last_name
@@ -64,6 +72,8 @@ class SignupPublicAthleteTest < Common
     @browser.text_field(:id, 'parentLastName').set MakeRandom.last_name
     @browser.text_field(:id, 'parentEmail').set @parent_email
     @browser.text_field(:id, 'parentPhone').set MakeRandom.phone_number
+
+    select_sport
   end
 
   def check_redirect_to_clientrms_password_reset
@@ -132,11 +142,13 @@ class SignupPublicAthleteTest < Common
 
   def create_ncsa_recruit_from_api
     _post, post_body = RecruitAPI.new.ppost
+
     @athlete_email = post_body[:recruit][:athlete_email]
     @athlete_first_name = post_body[:recruit][:athlete_first_name]
     @athlete_last_name = post_body[:recruit][:athlete_last_name]
     @athlete_phone = post_body[:recruit][:athlete_phone]
     @zip_code = post_body[:recruit][:zip]
+    @sport_id = post_body[:recruit][:sport_id]
   end
 
   def login_to_athlete_profile_with_password_reset

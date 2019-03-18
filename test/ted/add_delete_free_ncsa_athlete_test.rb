@@ -35,14 +35,19 @@ class PremCoachAddFreeAthlete < Common
   end
 
   def create_athlete
-    # add a new freshman recruit, get back his email address and username
+    # add a new freshman recruit, get back his meta data
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
     @first_name = post_body[:recruit][:athlete_first_name]
     @last_name = post_body[:recruit][:athlete_last_name]
     @grad_yr = post_body[:recruit][:graduation_year]
+    @sport_id = post_body[:recruit][:sport_id]
     @phone = post_body[:recruit][:athlete_phone]
     @athlete_name = "#{@first_name} #{@last_name}"
+  end
+
+  def get_team_id
+    TEDTeamApi.get_team_by_sport_id(@sport_id)['id']
   end
 
   def add_athlete
@@ -59,7 +64,7 @@ class PremCoachAddFreeAthlete < Common
           zip_code: MakeRandom.number(5)
         },
         relationships: {
-          team: { data: { type: 'teams', id: TEDTeamApi.get_random_team_id } }
+          team: { data: { type: 'teams', id: get_team_id } }
         },
         type: 'athletes'
       }
@@ -67,10 +72,6 @@ class PremCoachAddFreeAthlete < Common
 
     @new_athlete = TEDAthleteApi.add_athlete(body, true) # true to use coach_api
     TEDAthleteApi.athlete_id = @new_athlete['id']
-  end
-
-  def table
-    @browser.table(:class, 'table--administration')
   end
 
   def check_athlete_added
