@@ -74,6 +74,7 @@ module MSFinish
     select_billing_state
 
     sign_and_auth
+    @browser.refresh
 
     # need to chill a bit here or else lightning bolt when view Payments immediately after
     sleep 10
