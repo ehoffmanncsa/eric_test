@@ -120,7 +120,8 @@ class CreateNewOrgWithPrepop < Common
 
     failure = []
     begin
-      Timeout::timeout(120) {
+      five_minutes = 300 # seconds
+      Timeout::timeout(five_minutes) {
         loop do
           html = @browser.html
           break if html.include? name_cap(@athlete_name)

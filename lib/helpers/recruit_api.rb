@@ -56,8 +56,9 @@ class RecruitAPI
       retries ||= 0
       resp_code, resp_body = @api.ppost @url, body
     rescue => e
-      retry if (resp_code.nil? && ((retries += 1) < 10))
+      retry if (retries += 1) < 10
       puts e
+      sleep 3
     end
 
     sleep 5 # I think taking actions right after often results in weirdness
