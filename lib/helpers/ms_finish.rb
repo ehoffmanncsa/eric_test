@@ -61,7 +61,7 @@ module MSFinish
     Watir::Wait.until { @browser.element(:id, 'order-submit').visible? }
     @browser.text_field(:id, 'order_authorization_signature').set 'qa automation'
     sleep 1
-    @browser.element(:id, 'order-submit').click; sleep 1
+    @browser.element(:id, 'order-submit').click; sleep 3
   end
 
   def self.setup_billing(ach = false)
@@ -74,7 +74,6 @@ module MSFinish
     select_billing_state
 
     sign_and_auth
-    @browser.refresh
 
     # need to chill a bit here or else lightning bolt when view Payments immediately after
     sleep 10
