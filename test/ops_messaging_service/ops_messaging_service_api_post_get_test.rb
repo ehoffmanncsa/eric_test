@@ -4,11 +4,10 @@ require_relative '../test_helper'
   Ops Messaging Service regression test for its API endpoints.
 =end
 
-class OpsMessagingServiceRegressApiTest < Minitest::Test
+class OpsMessagingServiceApiPostGetTest < Minitest::Test
   MAILBOXES_URL = '/api/ops_messaging/v1/ncsa/mailbox_slug'
   WEB_HOOK_URL = '/api/ops_messaging/v1/help_scout/web_hook'
   CUSTOMER_SIDEBAR_URL = '/api/ops_messaging/v1/help_scout/customer_sidebar'
-  EXPECTED_MAILBOX_SLUG = '56c3f91aa842623d'
   EXPECTED_SIDEBAR_HTML = {'html' => '<h4>No Data Found</h4>'}
   EXPECTED_RESPONSE_CODE = '200'
 
@@ -17,39 +16,42 @@ class OpsMessagingServiceRegressApiTest < Minitest::Test
     @help_scout_hmac_client = HelpScoutHmacClient.new(base_uri: base_uri)
   end
 
-  def test_endpoints
-    get_mailbox_slug
-    post_web_hook
-    post_customer_sidebar
-  end
-
-  private
-  attr_reader :auth_adapter, :help_scout_hmac_client
-
-  def get_mailbox_slug
+  def test_ops_messaging_service_api_get
     response = auth_adapter.get do |request|
       request.url(base_uri + MAILBOXES_URL + query_params)
       request.headers['Content-Type'] = 'application/json'
     end
 
-    assert_equal(EXPECTED_MAILBOX_SLUG, JSON.parse(response.body))
+    assert_equal(expected_mailbox_slug, JSON.parse(response.body))
   end
 
-  def post_web_hook
+  def test_ops_messaging_service_api_post_web_hook
     response = help_scout_hmac_client.post(url: WEB_HOOK_URL)
 
     assert_equal(EXPECTED_RESPONSE_CODE, response.code)
   end
 
-  def post_customer_sidebar
+  def test_ops_messaging_service_api_post_custom_side_bar
     body = {'customer' => {'email' => athlete_email}}
+    count = 0
 
-    response = help_scout_hmac_client.post(url: CUSTOMER_SIDEBAR_URL, body: body)
-    response_body = JSON.parse(response.body)
+    begin
+      response = help_scout_hmac_client.post(url: CUSTOMER_SIDEBAR_URL, body: body)
+      response_body = JSON.parse(response.body)
+    rescue
+      count += 1
+      print "Retrying after 10 second timeout from HelpScout and 2 seconds from here."
+      sleep 2
+
+      retry if count < 5
+    end
 
     assert_equal(EXPECTED_RESPONSE_CODE, response.code)
     assert_equal(EXPECTED_SIDEBAR_HTML, response_body)
   end
+
+  private
+  attr_reader :auth_adapter, :help_scout_hmac_client
 
   def query_params
     "?email=#{help_scout_coach_email}"
@@ -72,10 +74,18 @@ class OpsMessagingServiceRegressApiTest < Minitest::Test
   end
 
   def athlete_email
-    'qa_regression_@fake_email.com'
+    MakeRandom.fake_email
+  end
+
+  def expected_mailbox_slug
+    helpscout_credentials['coach_ehoffman_mailbox_slug']
   end
 
   def credentials
     Default.env_config['ops_messaging']
+  end
+
+  def helpscout_credentials
+    Default.env_config['helpscout']
   end
 end
