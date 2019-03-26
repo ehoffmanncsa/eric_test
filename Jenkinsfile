@@ -5,6 +5,9 @@ def CONFIG_FILE = params.config_file
 def SEL_GRID = params.application_name + '_' + 'selenium_grid'
 def TEST_BOX = params.application_name + '_' + 'testbox'
 def PORT = params.port
+def HELPSCOUT_SECRET_KEY = params.helpscout_secret_key
+def NCSA_HELPSCOUT_API_KEY = params.ncsa_helpscout_api_key
+def NCSA_HELPSCOUT_ACCOUNT = params.ncsa_helpscout_account
 
 node {
 
@@ -47,6 +50,9 @@ node {
           -v ${PWD}:/tmp/qa_regression \
           -e CONFIG_FILE=${CONFIG_FILE} \
           -e PORT=${PORT} \
+          -e HELPSCOUT_SECRET_KEY=${HELPSCOUT_SECRET_KEY} \
+          -e NCSA_HELPSCOUT_API_KEY=${NCSA_HELPSCOUT_API_KEY} \
+          -e NCSA_HELPSCOUT_ACCOUNT=${NCSA_HELPSCOUT_ACCOUNT} \
           --privileged testbox 'bundle install && rake test $APPLICATION'"
     } catch(error) {
         println error
