@@ -20,7 +20,7 @@ class GmailCalls
     if keyword.nil?
       @msg = email.message.to_s
     else
-      body = email.body.decoded
+      body = email.multipart? ? email.text_part.decoded : email.body.decoded
       @msg = body.split("\n").detect { |e| e.include? keyword }
     end
 
