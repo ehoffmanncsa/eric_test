@@ -34,6 +34,7 @@ module MSProcess
   def self.checkout
     @browser.element(:class, 'button--next').click; sleep 1
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
+    sleep 2
   end
 
 
@@ -69,18 +70,26 @@ module MSProcess
 
     # add one of each alacarte options into cart
     # and make sure cart count increments
+    item_names = []
     msg = "[ERROR] Cart count #{get_cart_count} after selecting #{cart_count} VIP items"
+
     if all
-      @browser.elements(:class, 'alacarte-block').each do |block|
-        block.element(:class, 'button--medium').click; sleep 2
+      all_VIP_items.each do |item|
+        item.element(:class, 'button--medium').click; sleep 2
         cart_count += 1
         raise msg unless cart_count.eql? get_cart_count
       end
     else
-      block = @browser.elements(:class, 'alacarte-block').to_a.sample
+      all_VIP_items.sample
       block.element(:class, 'button--medium').click; sleep 2
       cart_count += 1
       raise msg unless cart_count.eql? get_cart_count
     end
+
+    item_names
+  end
+
+  def self.all_VIP_items
+    @browser.elements(:class, 'alacarte-block').to_a
   end
 end
