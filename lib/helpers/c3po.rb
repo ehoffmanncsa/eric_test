@@ -83,15 +83,14 @@ module C3PO
     UIActions.fasttrack_login
     @browser.goto "https://qa.ncsasports.org/recruit/admin/dashboard/search?q=#{client_id}"
 
-    sleep 2
+    sleep 4
     @browser.table(:class, %w[m-tbl d-wide l-bln-mg-btm-2])[1][1].click
   end
 
   def self.open_tracking_note(client_id)
+    sleep 2
     @browser.goto "https://qa.ncsasports.org/clientrms/profile/recruiting_profile/#{client_id}/admin"
-    side_bar = @browser.elements(:class, 'side-bar')[1]
-    nav_bar = side_bar.element(:class, 'm-nav-vert')
-    nav_bar.elements(:tag_name, 'li')[1].click
+    @browser.link(:text, 'Tracking Notes').click
   end
 
   def self.goto_video

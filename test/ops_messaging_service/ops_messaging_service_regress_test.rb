@@ -53,13 +53,27 @@ class OpsMessagingServiceRegressTest < Common
 
     C3PO.setup(@browser)
     C3PO.impersonate(athlete_client_id); sleep 1
-    C3PO.open_tracking_note(athlete_client_id)
 
-    table = @browser.table(:class, %w[l-bln-mg-btm-2 m-tbl tablesorter tn-table])
-    latest_note = table.tbody[0].td(:index, 3)
+    failure = []
 
-    message_title = latest_note.element(:tag_name, 'h6').text
-    assert_equal message_title, @subject
+    begin
+      Timeout::timeout(300) {
+        loop do
+          C3PO.open_tracking_note(athlete_client_id)
+
+          table = @browser.table(:class, %w[l-bln-mg-btm-2 m-tbl tablesorter tn-table])
+          latest_note = table.tbody[0].td(:index, 3)
+          message_title = latest_note.element(:tag_name, 'h6').text
+
+          break if message_title == @subject
+          sleep 2
+        end
+      }
+    rescue => error
+      failure << "No new tracking note after 5 minutes - #{error}"
+    end
+
+    assert_empty failure
   end
 
   def test_complete_email_tracking_cycle

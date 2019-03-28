@@ -4,7 +4,7 @@ require_relative '../test_helper'
   Ops Messaging Service regression test for its API endpoints.
 =end
 
-class OpsMessagingServiceApiPostGetTest < Minitest::Test
+class HelpScoutApiPostGetTest < Minitest::Test
   MAILBOXES_URL = '/api/ops_messaging/v1/ncsa/mailbox_slug'
   WEB_HOOK_URL = '/api/ops_messaging/v1/help_scout/web_hook'
   CUSTOMER_SIDEBAR_URL = '/api/ops_messaging/v1/help_scout/customer_sidebar'
@@ -16,7 +16,7 @@ class OpsMessagingServiceApiPostGetTest < Minitest::Test
     @help_scout_hmac_client = HelpScoutHmacClient.new(base_uri: base_uri)
   end
 
-  def test_ops_messaging_service_api_get
+  def test_help_scout_api_get
     response = auth_adapter.get do |request|
       request.url(base_uri + MAILBOXES_URL + query_params)
       request.headers['Content-Type'] = 'application/json'
@@ -25,13 +25,13 @@ class OpsMessagingServiceApiPostGetTest < Minitest::Test
     assert_equal(expected_mailbox_slug, JSON.parse(response.body))
   end
 
-  def test_ops_messaging_service_api_post_web_hook
+  def test_help_scout_api_post_web_hook
     response = help_scout_hmac_client.post(url: WEB_HOOK_URL)
 
     assert_equal(EXPECTED_RESPONSE_CODE, response.code)
   end
 
-  def test_ops_messaging_service_api_post_custom_side_bar
+  def test_help_scout_api_post_custom_side_bar
     body = {'customer' => {'email' => athlete_email}}
     count = 0
 
