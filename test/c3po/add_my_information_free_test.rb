@@ -11,7 +11,10 @@ class AddMyInformationTestFreeEmailInsert < Common
   def setup
     super
 
-    C3PO.setup(@browser)
+    UIActions.user_login(@email)
+
+    MSSetup.setup(@browser)
+    MSSetup.set_password(@email)
   end
 
   def teardown

@@ -8,7 +8,10 @@ class AddTAPTest < Common
   def setup
     super
 
-    C3PO.setup(@browser)
+    UIActions.user_login(@email)
+
+    MSSetup.setup(@browser)
+    MSSetup.set_password(@email)
   end
 
   def teardown
@@ -125,7 +128,7 @@ class AddTAPTest < Common
   end
 
   def test_do_tap
-    email = 'test0f48@yopmail.com'
+    email = 'testcd96@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

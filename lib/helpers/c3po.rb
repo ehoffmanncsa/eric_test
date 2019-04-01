@@ -5,7 +5,6 @@ require_relative '../../test/test_helper'
 module C3PO
   def self.setup(ui_object)
     @browser = ui_object
-    UIActions.setup(@browser)
   end
 
   def self.teardown
@@ -167,7 +166,7 @@ module C3PO
     subheader.element(:id, 'edit_athletic_link').click
   end
 
- 
+
 
   def self.add_hs_team
     hs_section = @browser.element(:class, 'high_school_seasons')
@@ -284,7 +283,7 @@ module C3PO
     subheader = @browser.element(:class, 'subheader')
     subheader.element(:id, 'edit_physical_measurables_link').click
   end
-  
+
   def self.goto_events
     # go to key Events page
     subheader = @browser.element(:class, 'subheader')
