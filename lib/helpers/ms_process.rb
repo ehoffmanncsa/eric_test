@@ -80,7 +80,7 @@ module MSProcess
         raise msg unless cart_count.eql? get_cart_count
       end
     else
-      all_VIP_items.sample
+      block = all_VIP_items.sample
       block.element(:class, 'button--medium').click; sleep 2
       cart_count += 1
       raise msg unless cart_count.eql? get_cart_count
