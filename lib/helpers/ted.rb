@@ -12,6 +12,10 @@ module TED
     @gmail.get_connection
   end
 
+  def self.navbar
+    UIActions.find('navbar')
+  end
+
   def self.sidebar
     @browser.element(:class, 'sidebar')
   end
@@ -35,7 +39,7 @@ module TED
 
   def self.goto_colleges
     # where user perform colleges search
-    sidebar.link(:text, 'Colleges').click
+    navbar.link(:text, 'Colleges').click
     UIActions.wait_for_spinner
     sleep 1.5
   end

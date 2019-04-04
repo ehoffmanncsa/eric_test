@@ -108,4 +108,8 @@ module UIActions
   def self.goto_ncsa_university
     @browser.link(:text, 'NCSA University').click
   end
+
+  def self.find(test_selector)
+    @browser.element("data-test-selector", test_selector)
+  end
 end
