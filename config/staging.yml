@@ -16,6 +16,7 @@ fasttrack:
   recruit_search_form: 'fasttrack/lead/Search.do?method=preSearch'
   admin_username: 'trea'
   admin_password: 'ncsa1333'
+  # if we reset DB, remember to give this admin helpscout email coachehoffman@ncsasports.org
 
 # TED coach/partner login
 ted:
