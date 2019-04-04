@@ -31,9 +31,11 @@ module MSConvenient
     MSSetup.set_password(email)
     MSSetup.goto_offerings
 
-    MSProcess.pick_VIP_items(all)
+    vip_items_picked = MSProcess.pick_VIP_items(all)
     MSProcess.checkout
     MSFinish.setup_billing
+
+    vip_items_picked
   end
 
   # to purchase both a membership package and some alacarte items
@@ -44,9 +46,11 @@ module MSConvenient
 
     MSPricing.setup(@browser, package)
     MSProcess.choose_the_package(MSPricing.membership_prices)
-    MSProcess.pick_VIP_items
+    vip_item_picked = MSProcess.pick_VIP_items
     MSProcess.checkout
     MSFinish.setup_billing
+
+    vip_item_picked
   end
 
   # to make payment using ACH instead of credit card

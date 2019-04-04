@@ -12,10 +12,8 @@ class PurchaseMVPAndVIPItemsTests < Common
 
     UIActions.user_login(recruit_email)
 
-    MSSetup.setup(@browser)
-
     MSConvenient.setup(@browser)
-    MSConvenient.buy_combo(recruit_email, 'mvp')
+    @vip_items_picked = MSConvenient.buy_combo(recruit_email, 'mvp')
   end
 
   def teardown
@@ -32,6 +30,8 @@ class PurchaseMVPAndVIPItemsTests < Common
 
     box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
+
+    @vip_items_picked.each { |e| pp e }
 
     assert_empty failure
   end
