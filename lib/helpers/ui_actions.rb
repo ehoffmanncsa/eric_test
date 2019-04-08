@@ -109,7 +109,7 @@ module UIActions
     @browser.link(:text, 'NCSA University').click
   end
 
-  def self.find(test_selector)
-    @browser.element("data-test-selector", test_selector)
+  def self.find_by_test_id(test_id)
+    @browser.element("data-test-id", test_id)
   end
 end

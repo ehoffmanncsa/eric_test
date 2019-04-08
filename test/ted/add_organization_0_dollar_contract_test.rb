@@ -70,7 +70,7 @@ class AddOrg0DollarContractTest < Common
 
   def add_organization
     UIActions.ted_login(@partner_username, @partner_password)
-    Watir::Wait.until { TED.sidebar.visible? }
+    Watir::Wait.until { TED.navbar.visible? }
     UIActions.wait_for_spinner
 
     open_form

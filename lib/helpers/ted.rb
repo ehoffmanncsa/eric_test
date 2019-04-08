@@ -13,7 +13,7 @@ module TED
   end
 
   def self.navbar
-    UIActions.find('navbar')
+    UIActions.find_by_test_id('navbar')
   end
 
   def self.sidebar
@@ -26,14 +26,15 @@ module TED
 
   def self.goto_roster
     # this shows all the teams
-    Watir::Wait.until { sidebar.present? }
-    sidebar.link(:text, 'Roster Management').click
+    Watir::Wait.until { navbar.present? }
+    navbar.link(:text, 'Roster').click
     UIActions.wait_for_spinner; sleep 1
   end
 
   def self.goto_account_settings
     # only coach admin and PA see this
-    sidebar.link(:text, 'Account Settings').click
+    UIActions.find_by_test_id("user-menu").click
+    UIActions.find_by_test_id("user-menu-account-settings").click
     UIActions.wait_for_spinner
   end
 
@@ -87,7 +88,9 @@ module TED
   end
 
   def self.sign_out
-    sidebar.link(:text, 'Sign Out').click; sleep 1
+    UIActions.find_by_test_id("user-menu").click
+    @browser.link(:text, 'Sign Out').click
+    sleep 1
   end
 
   def self.end_imperson

@@ -80,7 +80,7 @@ class FindCollegesBySlideBarTest < Common
 
   def check_in_state_tuition(college_name)
     # extract in state tuition from profile and compare
-    tuition = UIActions.find('in-state-tuition').text.gsub(/[$,]/, '').to_i
+    tuition = UIActions.find_by_test_id('in-state-tuition').text.gsub(/[$,]/, '').to_i
     assert tuition >= 10000, "#{college_name} tuition is #{tuition}, expected >= 10k"
   end
 
