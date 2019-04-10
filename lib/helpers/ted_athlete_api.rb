@@ -10,11 +10,10 @@ module TEDAthleteApi
     attr_accessor :athlete_id
   end
 
-  def self.setup
-    # default to Awesome Volleyball org and Otto Mation PA
+  def self.setup(org_id = '728') # default to Awesome Volleyball org and Otto Mation PA (on staging)
     @partner_api ||= TEDApi.new('partner')
     @coach_api ||= TEDApi.new('prem_coach')
-    @org_id ||= '728'
+    @org_id ||= org_id
     @org_name ||= 'Awesome Sauce'
   end
 

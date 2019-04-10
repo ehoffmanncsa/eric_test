@@ -81,7 +81,7 @@ class AthleteEvaluationTest < Common
 
   def test_coach_admin_evaluates_athlete
     UIActions.ted_login
-    goto_athlete_evaluation
+    TED.go_to_athlete_evaluation(@athlete_id)
     select_2star_rating
     check_2star_rating
     reset_rating
@@ -90,7 +90,7 @@ class AthleteEvaluationTest < Common
   def test_PA_cannot_evaluate_athlete
     skip # need some time to rethink this case
     TED.impersonate_org
-    goto_athlete_evaluation
+    TED.go_to_athlete_evaluation(@athlete_id)
     select_2star_rating
     check_rating_fail
   end

@@ -15,7 +15,6 @@ class TEDAuth
 				@username = creds['ted']['partner_username']
 				@password = creds['ted']['partner_password']
 			when 'prem_coach'
-				puts 'prem coach???'
 				@username = creds['ted']['prem_username']
 				@password = creds['ted']['prem_password']
 			when 'free_coach'

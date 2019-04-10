@@ -7,6 +7,7 @@ module TED
     @browser = ui_object
     UIActions.setup(@browser)
     @api = Api.new
+    @base_url = Default.env_config['ted']['base_url']
 
     @gmail = GmailCalls.new
     @gmail.get_connection
@@ -85,6 +86,15 @@ module TED
     @browser.refresh; sleep 1
     goto_account_settings
     @browser.link(:text, 'Organization').click
+  end
+
+  def self.go_to_athlete_evaluation(athlete_id)
+    go_to_endpoint "athletes/#{athlete_id}"
+    @browser.link(:text, 'Athlete Evaluation').click
+  end
+
+  def self.go_to_endpoint(endpoint)
+    @browser.goto "#{@base_url}#{endpoint}"
   end
 
   def self.sign_out
