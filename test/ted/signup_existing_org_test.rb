@@ -56,11 +56,16 @@ class SignupExistingOrgTest < Common
 
   def fill_out_form
     # fill out club info
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
-    inputs[4].send_keys @coach_firstname
-    inputs[5].send_keys @coach_lastname
-    inputs[6].send_keys @coach_email
-    inputs[7].send_keys MakeRandom.phone_number
+
+    TED.modal.input(id: "name").send_keys @org_name
+    TED.modal.select_list(id: "country").select "US"
+    TED.modal.input(id: "zipCode").send_keys "60642"
+    TED.modal.select_list(id: "state").select "IL"
+    TED.modal.input(id: "primaryContactFirstName").send_keys @coach_firstname
+    TED.modal.input(id: "primaryContactLastName").send_keys @coach_lastname
+    TED.modal.input(id: "email").send_keys @coach_email
+    TED.modal.input(id: "phone").send_keys MakeRandom.phone_number
+    TED.modal.select_list(id: "sportIds").select "17633"
 
     TED.modal.button(:text, 'Add').click; sleep 3
   end
@@ -72,7 +77,7 @@ class SignupExistingOrgTest < Common
     text = "#{@org_name} has already joined Team Edition. " \
     "An email has been sent to the primary contact on the account " \
     "with your request to join. Questions? Call NCSA at 312-999-6176."
-    assert_equal text, alert.text, 'Incorrect allert message'
+    assert_equal text, alert.text, 'Incorrect alert message'
   end
 
   def get_coach_password
@@ -90,7 +95,7 @@ class SignupExistingOrgTest < Common
     @gmail.mail_box = 'Inbox'
     @gmail.subject = 'Coach Verification Request'
     emails = @gmail.get_unread_emails
-    msg = @gmail.parse_body(emails.last)
+    msg = @gmail.parse_body(emails.last).gsub(/[\n=]/, "")
 
     failure = []
     failure << 'Coach name not found' unless msg.include? @coach_name

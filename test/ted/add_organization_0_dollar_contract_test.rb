@@ -84,6 +84,7 @@ class AddOrg0DollarContractTest < Common
   def add_contract
     # open add contract modal
     @browser.button(:text, 'Create New Contract').click
+    sleep 1
 
     # fill out form
     sports = TED.modal.select_list(:name, 'sportType').options.to_a

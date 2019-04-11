@@ -66,8 +66,12 @@ class AthleteEvaluationTest < Common
     ratings = stat_area.elements(:class, 'fa')
     ratings.each { |r| stars << r.attribute_value('class') }
 
-    failure << 'First star not highlighted' unless stars[0].eql? 'fa fa-star fa-undefined'
-    failure << 'Second star not highlighted' unless stars[1].eql? 'fa fa-star fa-undefined'
+    # Check the class names of the star icons.
+    # * `fa-star`          full star
+    # * `fa-star-half-o`   half star
+    # * `fa-star-o`        empty star
+    failure << 'First star not highlighted' unless stars[0].include? 'fa-star'
+    failure << 'Second star not highlighted' unless stars[1].include? 'fa-star'
     assert_empty failure
   end
 
