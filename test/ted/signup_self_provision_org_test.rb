@@ -86,7 +86,7 @@ class SignupSelfProvisionOrgTest < Common
     TED.modal.text_field(:placeholder, 'Signature').set @org_name
     TED.modal.button(:text, 'I Accept').click
     UIActions.wait_for_modal
-    Watir::Wait.until { @browser.element(:class, 'sidebar').present? }
+    Watir::Wait.until { TED.navbar.present? }
   end
 
   def verify_coach_unverified
