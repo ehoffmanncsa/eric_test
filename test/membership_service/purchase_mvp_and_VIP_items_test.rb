@@ -1,8 +1,8 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-67: POS Regression
-# UI Test: Purchase MVP + VIP Item (any grad year)
+# TS-67, TS-465, TS-466, TS-445, TS-464
+# Purchase MVP + VIP Item(s) (any grad year)
 class PurchaseMVPAndVIPItemsTests < Common
   def setup
     super
@@ -12,10 +12,8 @@ class PurchaseMVPAndVIPItemsTests < Common
 
     UIActions.user_login(recruit_email)
 
-    MSSetup.setup(@browser)
-
     MSConvenient.setup(@browser)
-    MSConvenient.buy_combo(recruit_email, 'mvp')
+    @vip_items_picked = MSConvenient.buy_combo(recruit_email, 'mvp')
   end
 
   def teardown
@@ -32,6 +30,12 @@ class PurchaseMVPAndVIPItemsTests < Common
 
     box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
+
+    box2_items = []
+    box2.elements(:tag_name, 'li').each { |item| box2_items << item.text.split(' ')[1..-1].join(' ') }
+    @vip_items_picked.each do |item|
+      failure << "VIP item #{item} not found in summary." unless box2_items.include? item
+    end
 
     assert_empty failure
   end

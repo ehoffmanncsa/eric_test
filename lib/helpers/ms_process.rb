@@ -27,14 +27,13 @@ module MSProcess
 
     # compare cart count before and after selecting package
     new_cart_count = get_cart_count
-    msg = "[ERROR] Cart count #{new_cart_count} after selecting a package"
-    raise msg unless cart_count.eql? new_cart_count
+    msg = "[ALERT] Cart count is #{new_cart_count} after selecting a package"
+    puts msg unless cart_count.eql? new_cart_count
   end
 
   def self.checkout
     @browser.element(:class, 'button--next').click; sleep 1
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
-    sleep 2
   end
 
 
@@ -61,35 +60,51 @@ module MSProcess
     Watir::Wait.while { discount_message.present? }
   end
 
-  def self.pick_VIP_items(all = false)
+  def self.open_alacarte_table
+    @browser.element(:class, 'alacarte-features').element(:class, 'vip-toggle-js').click
+  end
+
+  def self.alacarte_blocks
+    @browser.elements(:class, 'alacarte-block').to_a
+  end
+
+  def self.pick_VIP_items(items_count = nil)
+    open_alacarte_table
+    items_picked = []
+    items_count = items_count.nil? ? rand(1 .. alacarte_blocks.length) : items_count
+
     # get initial cart count
     cart_count = get_cart_count.nil? ? 0 : get_cart_count
 
-    # activate alacarte table
-    @browser.element(:class, 'alacarte-features').element(:class, 'vip-toggle-js').click
+    i = 0
+    item_text = nil
+    while i < items_count
+      loop do
+        block = alacarte_blocks.sample
+        add_button = block.element(:class, 'button--medium')
 
-    # add one of each alacarte options into cart
-    # and make sure cart count increments
-    item_names = []
-    msg = "[ERROR] Cart count #{get_cart_count} after selecting #{cart_count} VIP items"
+        error = nil;
+        begin
+          block.element(:class, 'button--medium').click
+        rescue => error; end
 
-    if all
-      all_VIP_items.each do |item|
-        item.element(:class, 'button--medium').click; sleep 2
-        cart_count += 1
-        raise msg unless cart_count.eql? get_cart_count
+        if error.nil?
+          item_text = block.element(:tag_name, 'h3').text
+          sleep 4
+          break
+        end
       end
-    else
-      block = all_VIP_items.sample
-      block.element(:class, 'button--medium').click; sleep 2
+
+      # make sure cart count increments
       cart_count += 1
-      raise msg unless cart_count.eql? get_cart_count
+      msg = "[ALERT] Cart count is incorrect, expecting #{cart_count} - show #{get_cart_count}"
+      puts msg unless cart_count.eql? get_cart_count
+
+      i += 1
+
+      items_picked << item_text unless items_picked.include? item_text
     end
 
-    item_names
-  end
-
-  def self.all_VIP_items
-    @browser.elements(:class, 'alacarte-block').to_a
+    items_picked
   end
 end
