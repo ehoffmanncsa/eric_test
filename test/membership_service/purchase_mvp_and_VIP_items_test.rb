@@ -1,8 +1,8 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-67: POS Regression
-# UI Test: Purchase MVP + VIP Item (any grad year)
+# TS-67, TS-465, TS-466, TS-445, TS-464
+# Purchase MVP + VIP Item(s) (any grad year)
 class PurchaseMVPAndVIPItemsTests < Common
   def setup
     super
