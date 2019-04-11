@@ -31,7 +31,11 @@ class PurchaseMVPAndVIPItemsTests < Common
     box2 = @browser.element(:class, 'purchase-summary-js').element(:css, 'div.column.third')
     failure << 'VIP items not found' if box2.elements(:tag_name, 'li').to_a.empty?
 
-    @vip_items_picked.each { |e| pp e }
+    box2_items = []
+    box2.elements(:tag_name, 'li').each { |item| box2_items << item.text.split(' ')[1..-1].join(' ') }
+    @vip_items_picked.each do |item|
+      failure << "VIP item #{item} not found in summary." unless box2_items.include? item
+    end
 
     assert_empty failure
   end
