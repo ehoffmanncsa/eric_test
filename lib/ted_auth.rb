@@ -6,24 +6,24 @@ class TEDAuth
 		@api = Api.new
 		creds = Default.env_config
 
-    if role.nil?
-      @username = username
-      @password = password
-    else
-  		case role
-  		when 'partner'
-  			@username = creds['ted']['partner_username']
-  			@password = creds['ted']['partner_password']
-  		when 'prem_coach'
-  			@username = creds['ted']['prem_username']
-  			@password = creds['ted']['prem_password']
-  		when 'free_coach'
-  			@username = creds['ted']['free_username']
-  			@password = creds['ted']['free_password']
+		if role.nil?
+			@username = username
+			@password = password
+		else
+			case role
+			when 'partner'
+				@username = creds['ted']['partner_username']
+				@password = creds['ted']['partner_password']
+			when 'prem_coach'
+				@username = creds['ted']['prem_username']
+				@password = creds['ted']['prem_password']
+			when 'free_coach'
+				@username = creds['ted']['free_username']
+				@password = creds['ted']['free_password']
 			when 'unverified_coach'
 				@username = creds['ted']['unverified_username']
 				@password = creds['ted']['unverified_password']
-      end
+			end
 		end
 	end
 

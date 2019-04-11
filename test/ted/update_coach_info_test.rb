@@ -26,7 +26,7 @@ class TEDUpdateCoachDetailsTest < Common
     UIActions.ted_login
     UIActions.wait_for_spinner
 
-    @browser.link(:text, 'Account Settings').click; sleep 1
+    TED.goto_account_settings; sleep 1
     Watir::Wait.until { @browser.div(:class, 'page-content').present? }
 
     # check info loading correctly
@@ -58,7 +58,7 @@ class TEDUpdateCoachDetailsTest < Common
 
     @browser.button(:text, 'Update').click
 
-    alert = @browser.div(:class, 'alert')
+    alert = @browser.div(:class, 'alert-success') # TODO: Update this with something that has less potential conflicts
     assert_equal 'User information successfully updated.', alert.text, 'Incorrect success alert'
 
     @browser.refresh

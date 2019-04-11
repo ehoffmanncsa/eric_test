@@ -7,9 +7,14 @@ module TED
     @browser = ui_object
     UIActions.setup(@browser)
     @api = Api.new
+    @base_url = Default.env_config['ted']['base_url']
 
     @gmail = GmailCalls.new
     @gmail.get_connection
+  end
+
+  def self.navbar
+    UIActions.find_by_test_id('navbar')
   end
 
   def self.sidebar
@@ -22,20 +27,21 @@ module TED
 
   def self.goto_roster
     # this shows all the teams
-    Watir::Wait.until { sidebar.present? }
-    sidebar.link(:text, 'Roster Management').click
+    Watir::Wait.until { navbar.present? }
+    navbar.link(:text, 'Roster').click
     UIActions.wait_for_spinner; sleep 1
   end
 
   def self.goto_account_settings
     # only coach admin and PA see this
-    sidebar.link(:text, 'Account Settings').click
+    UIActions.find_by_test_id("user-menu").click
+    UIActions.find_by_test_id("user-menu-account-settings").click
     UIActions.wait_for_spinner
   end
 
   def self.goto_colleges
     # where user perform colleges search
-    sidebar.link(:text, 'Colleges').click
+    navbar.link(:text, 'Colleges').click
     UIActions.wait_for_spinner
     sleep 1.5
   end
@@ -82,8 +88,19 @@ module TED
     @browser.link(:text, 'Organization').click
   end
 
+  def self.go_to_athlete_evaluation(athlete_id)
+    go_to_endpoint "athletes/#{athlete_id}"
+    @browser.link(:text, 'Athlete Evaluation').click
+  end
+
+  def self.go_to_endpoint(endpoint)
+    @browser.goto "#{@base_url}#{endpoint}"
+  end
+
   def self.sign_out
-    sidebar.link(:text, 'Sign Out').click; sleep 1
+    UIActions.find_by_test_id("user-menu").click
+    @browser.link(:text, 'Sign Out').click
+    sleep 1
   end
 
   def self.end_imperson

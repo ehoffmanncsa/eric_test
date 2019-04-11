@@ -135,7 +135,6 @@ class AddPaymentMethodTest < Common
     TED.go_to_payment_method_tab
     add_payment
 
-    TED.go_to_payment_method_tab
     assert_includes @browser.html, @full_name, 'New payment method not found'
 
     clear_activity_emails
@@ -146,7 +145,6 @@ class AddPaymentMethodTest < Common
     TED.go_to_payment_method_tab
     add_payment
 
-    TED.go_to_payment_method_tab
     assert_includes @browser.html, @full_name, 'New payment method not found'
   end
 end

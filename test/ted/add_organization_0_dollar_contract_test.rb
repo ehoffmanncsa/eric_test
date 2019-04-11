@@ -70,7 +70,7 @@ class AddOrg0DollarContractTest < Common
 
   def add_organization
     UIActions.ted_login(@partner_username, @partner_password)
-    Watir::Wait.until { TED.sidebar.visible? }
+    Watir::Wait.until { TED.navbar.visible? }
     UIActions.wait_for_spinner
 
     open_form
@@ -84,6 +84,7 @@ class AddOrg0DollarContractTest < Common
   def add_contract
     # open add contract modal
     @browser.button(:text, 'Create New Contract').click
+    sleep 1
 
     # fill out form
     sports = TED.modal.select_list(:name, 'sportType').options.to_a

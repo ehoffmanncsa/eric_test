@@ -66,8 +66,12 @@ class AthleteEvaluationTest < Common
     ratings = stat_area.elements(:class, 'fa')
     ratings.each { |r| stars << r.attribute_value('class') }
 
-    failure << 'First star not highlighted' unless stars[0].eql? 'fa fa-star fa-undefined'
-    failure << 'Second star not highlighted' unless stars[1].eql? 'fa fa-star fa-undefined'
+    # Check the class names of the star icons.
+    # * `fa-star`          full star
+    # * `fa-star-half-o`   half star
+    # * `fa-star-o`        empty star
+    failure << 'First star not highlighted' unless stars[0].include? 'fa-star'
+    failure << 'Second star not highlighted' unless stars[1].include? 'fa-star'
     assert_empty failure
   end
 
@@ -81,7 +85,7 @@ class AthleteEvaluationTest < Common
 
   def test_coach_admin_evaluates_athlete
     UIActions.ted_login
-    goto_athlete_evaluation
+    TED.go_to_athlete_evaluation(@athlete_id)
     select_2star_rating
     check_2star_rating
     reset_rating
@@ -90,7 +94,7 @@ class AthleteEvaluationTest < Common
   def test_PA_cannot_evaluate_athlete
     skip # need some time to rethink this case
     TED.impersonate_org
-    goto_athlete_evaluation
+    TED.go_to_athlete_evaluation(@athlete_id)
     select_2star_rating
     check_rating_fail
   end

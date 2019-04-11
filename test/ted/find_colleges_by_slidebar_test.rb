@@ -80,10 +80,7 @@ class FindCollegesBySlideBarTest < Common
 
   def check_in_state_tuition(college_name)
     # extract in state tuition from profile and compare
-    profile = @browser.element(:class, 'college-profile')
-    col = profile.div(:class, 'col-lg-7')
-    table = col.tables(:class, 'box')[1]
-    tuition = table.trs[1].td(:index, 0).text.gsub(/[$,]/, '').to_i
+    tuition = UIActions.find_by_test_id('in-state-tuition').text.gsub(/[$,]/, '').to_i
     assert tuition >= 10000, "#{college_name} tuition is #{tuition}, expected >= 10k"
   end
 

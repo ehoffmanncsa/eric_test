@@ -36,7 +36,7 @@ class InviteModalShareButtonsTest < Common
   def check_mail_button
     mail_to_link = @browser.element(:class, 'share-buttons').element(:class, 'fa-envelope').parent
 
-    mail_to_text = "mailto:?subject=Start your Awesome Sauce Recruiting Profile"
+    mail_to_text = "mailto:?subject=Start%20your%20Awesome%20Sauce%20Recruiting%20Profile"
     assert_includes mail_to_link.attribute('href'), mail_to_text, 'Incorrect URL for mailto link'
   end
 

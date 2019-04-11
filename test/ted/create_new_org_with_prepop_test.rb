@@ -24,10 +24,7 @@ class CreateNewOrgWithPrepop < Common
     @coach_lastname = MakeRandom.last_name
     @coach_name = "#{@coach_firstname} #{@coach_lastname}"
     @coach_email = MakeRandom.email
-    @phone_1 = MakeRandom.number(3).to_s
-    @phone_2 = MakeRandom.number(3).to_s
-    @phone_3 = MakeRandom.number(4).to_s
-    @phone_number = @phone_1 + @phone_2 + @phone_3
+    @phone_number = MakeRandom.phone_number
   end
 
   def teardown
@@ -61,9 +58,7 @@ class CreateNewOrgWithPrepop < Common
 
     # fill out text fields
     form.element(:name, 'name').send_keys @coach_name
-    form.element(:name, 'phone_1').send_keys @phone_1
-    form.element(:name, 'phone_2').send_keys @phone_2
-    form.element(:name, 'phone_3').send_keys @phone_3
+    form.element(:name, 'phone').send_keys @phone_number
     form.element(:name, 'email').send_keys @coach_email
 
     # select club coach type
