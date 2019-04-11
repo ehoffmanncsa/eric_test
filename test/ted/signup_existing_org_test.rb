@@ -88,7 +88,8 @@ class SignupExistingOrgTest < Common
     msg = @gmail.parse_body(emails.last, 'password')
     @gmail.delete(emails)
 
-    msg[1].split(':').last.split()[0] # this is password
+    # this is password
+    msg.split(':').last.gsub(/\r/, "").strip # TODO: Make this more robust
   end
 
   def check_verification_request_email
