@@ -30,7 +30,6 @@ node {
     sh "docker run --restart=unless-stopped \
         -d -it --name ${SEL_GRID} -p ${PORT} \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /tmp/videos:/home/seluser/videos \
         -v ${PWD}:/tmp/node/tmp/qa_regression \
         --privileged dosel/zalenium start"
   }

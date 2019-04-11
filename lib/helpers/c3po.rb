@@ -82,16 +82,19 @@ module C3PO
   def self.impersonate(client_id)
     UIActions.fasttrack_login
     @browser.goto "https://qa.ncsasports.org/recruit/admin/dashboard/search?q=#{client_id}"
+    sleep 1
 
-    sleep 2
-    @browser.table(:class, %w[m-tbl d-wide l-bln-mg-btm-2])[1][1].click
+    name_column = @browser.table(:class, %w[m-tbl d-wide l-bln-mg-btm-2])[1][1]
+    name_column.element(:tag_name, 'a').click
+
+    # impersonating opens new tab, hence switch focus onto that one
+    @browser.window(:index, 1).use
   end
 
   def self.open_tracking_note(client_id)
+    sleep 2
     @browser.goto "https://qa.ncsasports.org/clientrms/profile/recruiting_profile/#{client_id}/admin"
-    side_bar = @browser.elements(:class, 'side-bar')[1]
-    nav_bar = side_bar.element(:class, 'm-nav-vert')
-    nav_bar.elements(:tag_name, 'li')[1].click
+    @browser.link(:text, 'Tracking Notes').click
   end
 
   def self.goto_video

@@ -144,7 +144,6 @@ class AddOrg0DollarContractTest < Common
   end
 
   def check_email(subject = nil)
-    @gmail.mail_box = 'Inbox'
     @gmail.subject = subject
     emails = @gmail.get_unread_emails
     refute_empty emails, "Email #{subject} not found"
@@ -188,7 +187,10 @@ class AddOrg0DollarContractTest < Common
     # check email by subject and delete it afterward
     signed_confirm = "#{@org_name} has signed Terms of Service and authorized credit card"
     signed_receipt = 'Team Edition Signed Contract Receipt'
-    [signed_confirm, signed_receipt].each { |subject| check_email(subject) }
+    @gmail.mail_box = 'Inbox'
+    [signed_confirm, signed_receipt].each do |subject|
+      check_email(subject)
+    end
 
     @gmail.mail_box = 'TED_Welcome'
     check_email
