@@ -128,7 +128,7 @@ class AddTAPTest < Common
   end
 
   def test_do_tap
-    email = 'testcd96@yopmail.com'
+    email = 'testf7ac@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

@@ -193,7 +193,7 @@ class AddAcademicsInfoTest < Common
     @browser.element(:class, 'button--primary').click;
     academics = @browser.elements(:class, %w[info-category scores])
 
-    expected_academics = "ACADEMIC INFO\nGPA\n3.60  /  4.0\nView Transcript - This is my Transcript\nOther Notes:"+
+    expected_academics = "ACADEMIC INFO\nGPA\n3.60  /  4.0\n View Transcript - This is my Transcript\nOther Notes:"+
     "\nCore GPA: 3.25/4.0 Weighted GPA: 3.54/5.0 Cumulative Class Rank: 199/400 Weighted Class Rank: 200/400"+
     "\nACT\n32 / 36\nOther Notes:\nI am some ACT notes\nSAT\n1221 / 1600\nOther Notes:\nI am some SAT notes"+
     "\nHigh School\nLane Tech High School\nEnrollment: 4278"
@@ -217,7 +217,7 @@ class AddAcademicsInfoTest < Common
   end
 
   def test_add_academics
-    email = 'testcd96@yopmail.com'
+    email = 'testf7ac@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

@@ -18,7 +18,7 @@ class AddEventTest < Common
     # open event form
     event_section = @browser.element(:class, 'athletic_events_section')
     event_section.element(:class, 'f-yes add_elem add-element-side').click
-    
+
 
     dropdown = @browser.element(:class, 'text category')
     options = dropdown.elements(:tag_name, 'option').to_a
@@ -28,7 +28,7 @@ class AddEventTest < Common
     end
     # fill out textboxes
     form = @browser.element(:id, 'athletic_event_edit')
-    
+
     form.element(:name, 'name').send_keys "Event Name"
     form.element(:name, 'location').send_keys "Event Location"
     form.element(:name, 'city').send_keys "Event City"
@@ -43,7 +43,7 @@ class AddEventTest < Common
     form.element(:name, 'start_date').send_keys "09/05/2018"
     form.element(:name, 'end_date').send_keys "09/06/2018"
     form.element(:name, 'notes').send_keys "I am some Event Notes"
-    form.element(:class, 'save').click; 
+    form.element(:class, 'save').click;
   end
 
   def verify_event
@@ -56,7 +56,7 @@ class AddEventTest < Common
   end
 
   def test_add_event
-    email = 'test1df2@yopmail.com'
+    email = 'testf7ac@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
