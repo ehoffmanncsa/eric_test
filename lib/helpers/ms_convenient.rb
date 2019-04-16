@@ -31,7 +31,7 @@ module MSConvenient
     MSSetup.set_password(email)
     MSSetup.goto_offerings
 
-    vip_items_picked = MSProcess.pick_VIP_items(all)
+    vip_items_picked = MSProcess.pick_VIP_items
     MSProcess.checkout
     MSFinish.setup_billing
 
