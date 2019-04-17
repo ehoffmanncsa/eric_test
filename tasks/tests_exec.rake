@@ -4,7 +4,10 @@ require 'minitest-ci'
 Minitest::Ci.new.start
 
 exceptions = ['test/membership_service/add_recruit_to_fasttrack_test.rb',
-              'test/membership_service/enroll_use_ACH_payment_test.rb']
+              'test/membership_service/enroll_use_ACH_payment_test.rb',
+              'test/membership_service/enroll_champion_user_senior_test.rb',
+              'test/membership_service/enroll_elite_user_senior_test.rb',
+              'test/membership_service/enroll_mvp_user_senior_test.rb']
 
 namespace :first_run do
   desc 'execute all tests....'

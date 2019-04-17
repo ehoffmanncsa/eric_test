@@ -48,6 +48,7 @@ module UIActions
 
     # waiting for the right page title
     begin
+      sleep 2
       Watir::Wait.until { !@browser.title.match(/Student-Athlete Sign In/) }
     rescue => e
       puts e; @browser.close
