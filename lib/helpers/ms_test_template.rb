@@ -4,12 +4,13 @@
 # choosing and returning 6 payments financing option as default
 # that way we can test for remaining balance and first payment made
 module MSTestTemplate
-  def self.setup(ui_object, recruit_email, package)
+  def self.setup(ui_object, recruit_email = nil, package = nil, eighteen_mo = false)
     @browser = ui_object
     @recruit_email = recruit_email
+    @eighteen_mo = eighteen_mo
 
     MSSetup.setup(ui_object)
-    MSPricing.setup(ui_object, package)
+    MSPricing.setup(ui_object, package, eighteen_mo)
     MSProcess.setup(ui_object)
     MSFinish.setup(ui_object)
   end
@@ -17,26 +18,38 @@ module MSTestTemplate
   def self.goto_offerings
     MSSetup.set_password(@recruit_email)
     MSSetup.goto_offerings
+  end
+
+  def self.open_payment_plan
     MSSetup.open_payment_plan
+
+    if @eighteen_mo
+      MSSetup.reveal_18_mo_plan
+    end
   end
 
   def self.check_on_prices
-    @prices = MSPricing.collect_prices # respectively [1mo, 6mo, 12mo]
+    @prices = MSPricing.collect_prices # respectively [1mo, 6mo, 12mo, 18mo]
 
     months = []
     failure = []
 
-    if @prices.length == 3
-      months = [6, 12]
-    else
-      months = [6]
+    case @prices.length
+      when 2 then months = [6]
+      when 3 then months = [6, 12]
+      when 4 then months = [6, 12, 18]
     end
 
     months.each do |month|
       calculated_price = MSPricing.calculate(@prices[0], month)
-      actual_price = month == 6 ? @prices[1] : @prices[2]
 
-      msg = "Expected price: #{calculated_price} - UI shows: #{actual_price}"
+      case month
+        when 6 then actual_price = @prices[1]
+        when 12 then actual_price = @prices[2]
+        when 18 then actual_price = @prices[3]
+      end
+
+      msg = "Expected #{month} months price: #{calculated_price} - UI shows: #{actual_price}"
       failure << msg unless actual_price == calculated_price
     end
 
@@ -44,9 +57,20 @@ module MSTestTemplate
   end
 
   def self.define_expectations
-    months = 6 # default all tests to select 6 mo payment plan
+    months = 0
+    membership_cost = 0
 
-    membership_cost = @prices[1]
+    # default all tests to select 6 mo payment plan
+    # unless there is eigteen months enabled
+    if @eighteen_mo
+      months = 18
+      membership_cost = @prices.last
+    else
+      months = 6
+      membership_cost = @prices[1]
+    end
+
+
     @expect_first_pymt = (membership_cost / months)
     @expect_remain_balance = membership_cost - @expect_first_pymt
   end
@@ -60,19 +84,22 @@ module MSTestTemplate
   end
 
   def self.enroll
-    MSProcess.choose_the_package(raw_html_price_set)
+    MSProcess.choose_the_package(raw_html_price_set, @eighteen_mo)
     MSProcess.checkout
     MSFinish.setup_billing
   end
 
   def self.get_enrolled
     goto_offerings
+    open_payment_plan
     check_on_prices
     define_expectations
     enroll
   end
 
   def self.get_UI_features_list
+    Watir::Wait.until(timeout: 60) { @browser.url.include? 'clientrms/accounts' }
+
     # locate UI elements
     summary = @browser.element(:class, 'package-features')
     list_items = summary.elements(:tag_name, 'li').to_a
@@ -88,6 +115,8 @@ module MSTestTemplate
   end
 
   def self.get_ui_payments
+    Watir::Wait.until(timeout: 60) { @browser.url.include? 'clientrms/finances' }
+
     # locate UI elements
     boxes = @browser.elements(:css, 'div.column.third').to_a
     elem = boxes[2].elements(:class, 'text--size-small').to_a

@@ -4,9 +4,10 @@
 # choosing and returning 6 payments financing option as default
 # that way we can test for remaining balance and first payment made
 module MSPricing
-  def self.setup(ui_object, package = nil)
+  def self.setup(ui_object, package = nil, eighteen_mo = nil)
     @browser = ui_object
     @package = package
+    @eighteen_mo = eighteen_mo
   end
 
   def self.gather_all_payment_plan_cells
@@ -20,14 +21,15 @@ module MSPricing
       when 12 then return pricing_set1(cells)
       when 9 then return pricing_set2(cells)
       when 6 then return pricing_set3(cells)
+      when 3 then return pricing_set4(cells)
     end
   end
 
   def self.pricing_set1(cells)
-    #            1 mo       6 mo      12 mo
-    champion = [cells[9], cells[6], cells[3]]
-    elite = [cells[10], cells[7], cells[4]]
-    mvp = [cells[11], cells[8], cells[5]]
+    #            1 mo       6 mo      12 mo     18 mo
+    champion = [cells[9], cells[6], cells[3], cells[0]]
+    elite = [cells[10], cells[7], cells[4], cells[1]]
+    mvp = [cells[11], cells[8], cells[5], cells[2]]
 
     [champion, elite, mvp]
   end
@@ -50,6 +52,15 @@ module MSPricing
     [champion, elite, mvp]
   end
 
+  def self.pricing_set4(cells)
+    #             1 mo
+    champion = [cells[0]]
+    elite = [cells[1]]
+    mvp = [cells[2]]
+
+    [champion, elite, mvp]
+  end
+
   def self.membership_prices
     cells = []
 
@@ -66,13 +77,16 @@ module MSPricing
     raw_html_set = membership_prices
     prices = []
 
+    # extract 1mo price
     prices << raw_html_set[0].element(:class, 'full').text.gsub(/\D/, '').to_i
 
-    for i in (1 .. raw_html_set.length - 1) do
+    # extract payment plan prices
+    range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
+    for i in (1 .. range_end) do
       prices << raw_html_set[i].element(:class, 'small').text.gsub(/\D/, '').to_i
     end
 
-    prices # respectively [1mo, 6mo, 12mo] or [1mo, 6mo]
+    prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo]
   end
 
   def self.collect_one_month_plans

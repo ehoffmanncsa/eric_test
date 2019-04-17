@@ -14,14 +14,17 @@ module MSProcess
     return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
   end
 
-  def self.choose_the_package(price_set)
+  def self.choose_the_package(price_set, eighteen_mo = false)
     # get initial cart count
     cart_count = get_cart_count.nil? ? 0 : get_cart_count
 
     # select package as assigned, increment cart count by 1
-    # select 6 months payment plan by default for now
+    # select 6 months payment plan by default for most cases
     # to avoid violating braintree test credit charge cap at $2000
-    price_set[1].click
+    # select 18mo plan for 18mo test cases
+    eighteen_mo ? price_set.last.click : price_set[1].click
+    sleep 5
+
     cart_count += 1
     sleep 2
 
@@ -32,7 +35,7 @@ module MSProcess
   end
 
   def self.checkout
-    @browser.element(:class, 'button--next').click; sleep 1
+    @browser.element(:class, 'button--next').click; sleep 3
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
   end
 
