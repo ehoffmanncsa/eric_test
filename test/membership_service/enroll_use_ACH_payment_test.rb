@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-73: POS Regression
+# TS-73: MS Regression
 # UI Test: Enroll using ACH as Payment (Any Membership)
 class EnrollUsingACHPaymentTest < Common
   def setup

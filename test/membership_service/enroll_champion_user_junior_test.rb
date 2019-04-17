@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-XXX: MS Regression
+# TS-50: MS Regression
 # UI Test: Enroll as a Champion User - Junior
 class EnrollChampionJuniorTest < Common
   def setup

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-434: POS Regression
+# TS-434: MS Regression
 # UI Test: How student-athlete becomes Activation
 class GetStundentAthleteActivatedTest < Common
   def setup

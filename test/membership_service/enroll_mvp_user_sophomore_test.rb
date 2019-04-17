@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-XXX: MS Regression
+# TS-435: MS Regression
 # UI Test: Enroll as a MVP User - Sophomore
 class EnrollMVPSophomoreTest < Common
   def setup

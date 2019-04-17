@@ -1,9 +1,11 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# POS Regression
+# TS-421: MS Regression
+# UI Test
 # This script is to apply all exisiting discount codes
-# in offerings page using the below static athlete
+# in offerings page using a static athlete turkeytom@yopmail.com
+# i.e. this athlete needs to exist in any environment this test runs in
 
 class ApplyDiscountOnOfferingsPage < Common
   def setup

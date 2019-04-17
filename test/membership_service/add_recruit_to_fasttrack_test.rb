@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-38: POS Regression
+# TS-38: MS Regression
 # UI Test:  How to Add New Recruit to Fasttrack
 class AddRecruitToFasttrackTest < Common
   def setup
