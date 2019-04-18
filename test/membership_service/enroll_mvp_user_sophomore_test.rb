@@ -12,6 +12,7 @@ class EnrollMVPSophomoreTest < Common
 
     _post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
+    @sport_id = post_body[:recruit][:sport_id]
 
     UIActions.user_login(recruit_email)
     MSTestTemplate.setup(@browser, recruit_email, @package)
@@ -21,9 +22,15 @@ class EnrollMVPSophomoreTest < Common
     super
   end
 
+  def is_baseball
+    @sport_id == '17706'
+  end
+
   def check_membership_features
     ui_list = MSTestTemplate.get_UI_features_list
-    expected_list = Default.static_info['membership_service']['mvp_features']
+
+    membership_service = Default.static_info['membership_service']
+    expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
 
     assert_equal expected_list, ui_list, 'Membership features NOT matching what is expected'
   end
