@@ -15,7 +15,7 @@ class ApplyDiscountOnOfferingsPage < Common
     @discount_codes = Default.static_info['ncsa_discount_code']
 
     MSSetup.setup(@browser)
-    MSPricing.setup(@browser)
+    MSPricing.setup(@browser, nil, true)
     MSProcess.setup(@browser)
   end
 
@@ -33,53 +33,25 @@ class ApplyDiscountOnOfferingsPage < Common
     open_discount
   end
 
-  def cells
-    MSPricing.gather_all_payment_plan_cells
-  end
-
-  def champion
-    #               1mo       6mo       12mo
-    ['champion', cells[9], cells[6], cells[3]]
-  end
-
-  def elite
-    ['elite', cells[10], cells[7], cells[4]]
-  end
-
-  def mvp
-    ['mvp', cells[11], cells[8], cells[5]]
-  end
-
-  def collect_prices(package)
-    prices = []
-
-    fullprice_cell = package[1]
-    monthly_cells = package[2 .. 3]
-
-    prices << fullprice_cell.element(:class, 'full').text.gsub(/\D/, '').to_i
-    monthly_cells.each do |cell|
-      prices << cell.element(:class, 'small').text.gsub(/\D/, '').to_i
-    end
-
-    prices
-  end
-
   def check_on_prices(original_prices, discount_code)
     failure = []
     i = 0
 
-    [champion, elite, mvp].each do |package|
+    %w[champion elite mvp].each do |package|
       original_price = original_prices[i]
-      discounted_price = collect_prices(package)
+      discounted_price = MSPricing.collect_prices(package)
+      #pp discounted_price
 
       calculated_prices = []
-      months = [1, 6, 12] # add 18 here when that feature available and pop last 2 if senior
+      months = [1, 6, 12, 18]
       months.each do |months|
+        break if(package == 'champion' && months == 18)
         calculated_prices << MSPricing.calculate(original_price, months, discount_code)
       end
 
       calculated_prices.zip(discounted_price).map do |c, d|
-        msg = "Package #{package[0]}, Code #{discount_code} - Actual: #{d} vs Expected: #{c}"
+        #msg = "Package #{package}, Code #{discount_code} - Actual: #{d} vs Expected: #{c}"
+        msg = "Calculated price #{c} vs Discounted price #{d} - Code #{discount_code} - Package #{package}"
         failure << msg unless c.eql? d
       end
 
@@ -100,6 +72,7 @@ class ApplyDiscountOnOfferingsPage < Common
 
     @discount_codes.each do |discount_code, _rate|
       MSProcess.apply_discount_offerings(discount_code)
+      MSSetup.reveal_18_mo_plan; sleep 2
       fail_message = check_on_prices(original_prices, discount_code)
       failure << fail_message unless fail_message.empty?
       failure.flatten!

@@ -61,10 +61,12 @@ module MSPricing
     [champion, elite, mvp]
   end
 
-  def self.membership_prices
+  def self.membership_prices(package = nil)
     cells = []
 
-    case @package
+    package ||= @package
+
+    case package
       when 'champion' then cells = predict_payment_plans_position[0]
       when 'elite' then cells = predict_payment_plans_position[1]
       when 'mvp' then cells = predict_payment_plans_position[2]
@@ -73,20 +75,26 @@ module MSPricing
     cells
   end
 
-  def self.collect_prices
-    raw_html_set = membership_prices
+  def self.collect_prices(package = nil)
+    raw_html_set = membership_prices(package)
     prices = []
 
     # extract 1mo price
     prices << raw_html_set[0].element(:class, 'full').text.gsub(/\D/, '').to_i
 
     # extract payment plan prices
-    range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
+    #range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
+    range_end = if @eighteen_mo && package != 'champion'
+                  raw_html_set.length - 1
+                else
+                  raw_html_set.length - 2
+                end
+
     for i in (1 .. range_end) do
       prices << raw_html_set[i].element(:class, 'small').text.gsub(/\D/, '').to_i
     end
 
-    prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo]
+    prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo, 6mo, 12mo] or [1mo]
   end
 
   def self.collect_one_month_plans
