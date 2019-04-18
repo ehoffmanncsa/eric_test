@@ -40,7 +40,6 @@ class ApplyDiscountOnOfferingsPage < Common
     %w[champion elite mvp].each do |package|
       original_price = original_prices[i]
       discounted_price = MSPricing.collect_prices(package)
-      #pp discounted_price
 
       calculated_prices = []
       months = [1, 6, 12, 18]
@@ -50,8 +49,7 @@ class ApplyDiscountOnOfferingsPage < Common
       end
 
       calculated_prices.zip(discounted_price).map do |c, d|
-        #msg = "Package #{package}, Code #{discount_code} - Actual: #{d} vs Expected: #{c}"
-        msg = "Calculated price #{c} vs Discounted price #{d} - Code #{discount_code} - Package #{package}"
+        msg = "Calculated price #{c} vs Shown price #{d} - Code #{discount_code} - Package #{package}"
         failure << msg unless c.eql? d
       end
 
