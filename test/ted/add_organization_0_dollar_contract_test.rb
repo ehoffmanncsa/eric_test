@@ -173,7 +173,7 @@ class AddOrg0DollarContractTest < Common
 
     # send invoice email and signout of PA
     contracts[0].element(:class, 'drawer-toggle').click
-    contracts[0].element(:class, 'fa-envelope-o').click
+    contracts[0].element(:class, 'fa-envelope').click
     TED.sign_out
 
     goto_sign_page_via_url_in_email
