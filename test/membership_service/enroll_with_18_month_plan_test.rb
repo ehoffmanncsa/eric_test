@@ -24,15 +24,14 @@ class EnrollWith18MoPlanTest < Common
     super
   end
 
-  def is_baseball
-    @sport_id == '17706'
+  def is_mvp_baseball
+    @sport_id == '17706' && @package == 'mvp'
   end
 
   def check_membership_features
     ui_list = MSTestTemplate.get_UI_features_list
-
     membership_service = Default.static_info['membership_service']
-    expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
+    expected_list = is_mvp_baseball ? membership_service['mvp_baseball_features'] : membership_service["#{@package}_features"]
 
     assert_equal expected_list, ui_list, 'Membership features NOT matching what is expected'
   end
