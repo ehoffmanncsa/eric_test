@@ -124,7 +124,7 @@ class UnverifiedCoachActionsTest < Common
 
     find_UCLA
 
-    @browser.element(:class, 'fa-thumbs-o-up').click; sleep 1
+    @browser.element(:class, 'fa-thumbs-up').click; sleep 1
 
     assert @browser.element(:text, 'Remove Recommendation').present?,
       'Could not recommend college to athlete'
