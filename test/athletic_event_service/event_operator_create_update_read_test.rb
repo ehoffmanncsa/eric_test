@@ -53,6 +53,7 @@ class EventOperatorCRUTest < Minitest::Test
         primary_email: MakeRandom.fake_email,
         logo_url: logo_urls,
         website_url: MakeRandom.url,
+        partner_event_id: 14086,
         sports: sport_ids
       }
     }

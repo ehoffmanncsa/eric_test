@@ -55,8 +55,9 @@ class AthleticEventCRUTest < Minitest::Test
     event['id']
   end
 
-  def date(days_from_now = 0)
-    date = (DateTime.parse((Date.today + days_from_now).iso8601)).to_s
+  def date(days_from_now = 2)
+    target_day = Date.today + days_from_now
+    date = DateTime.new(target_day.year, target_day.month, target_day.day, 12).to_s
     date.split('+')[0] + 'Z'
   end
 
