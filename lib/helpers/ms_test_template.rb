@@ -8,6 +8,7 @@ module MSTestTemplate
     @browser = ui_object
     @recruit_email = recruit_email
     @eighteen_mo = eighteen_mo
+    @package = package
 
     MSSetup.setup(ui_object)
     MSPricing.setup(ui_object, package, eighteen_mo)
@@ -38,6 +39,7 @@ module MSTestTemplate
       when 2 then months = [6]
       when 3 then months = [6, 12]
       when 4 then months = [6, 12, 18]
+      else months = [1]
     end
 
     months.each do |month|
@@ -47,6 +49,7 @@ module MSTestTemplate
         when 6 then actual_price = @prices[1]
         when 12 then actual_price = @prices[2]
         when 18 then actual_price = @prices[3]
+        else actual_price = @prices[0]
       end
 
       msg = "Expected #{month} months price: #{calculated_price} - UI shows: #{actual_price}"
@@ -56,20 +59,21 @@ module MSTestTemplate
     puts failure unless failure.empty?
   end
 
-  def self.define_expectations
-    months = 0
+  def self.define_expectations(months)
+    prices = MSPricing.collect_prices
     membership_cost = 0
 
-    # default all tests to select 6 mo payment plan
-    # unless there is eigteen months enabled
     if @eighteen_mo
       months = 18
-      membership_cost = @prices.last
+      membership_cost = prices.last
     else
-      months = 6
-      membership_cost = @prices[1]
+      case months
+        when 6 then membership_cost = prices[1]
+        when 12 then membership_cost = prices[2]
+      else
+        membership_cost = prices[0]
+      end
     end
-
 
     @expect_first_pymt = (membership_cost / months)
     @expect_remain_balance = membership_cost - @expect_first_pymt
@@ -89,11 +93,17 @@ module MSTestTemplate
     MSFinish.setup_billing
   end
 
-  def self.get_enrolled
+  # placeholder for when we need to apply discount prior to purchasing
+  def self.apply_discount
+    MSSetup.open_discount_box
+    MSProcess.apply_discount('for_mvp_automation')
+  end
+
+  def self.get_enrolled(months = 6)
     goto_offerings
     open_payment_plan
     check_on_prices
-    define_expectations
+    define_expectations(months)
     enroll
   end
 

@@ -51,7 +51,7 @@ class EnrollMVPSeniorTest < Common
   end
 
   def test_enroll_mvp_senior
-    MSTestTemplate.get_enrolled
+    MSTestTemplate.get_enrolled(1) # 1 month - paid in full at once
 
     check_membership_features
 

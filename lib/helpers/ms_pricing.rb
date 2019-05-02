@@ -27,27 +27,27 @@ module MSPricing
 
   def self.pricing_set1(cells)
     #            1 mo       6 mo      12 mo     18 mo
-    champion = [cells[9], cells[6], cells[3], cells[0]]
-    elite = [cells[10], cells[7], cells[4], cells[1]]
-    mvp = [cells[11], cells[8], cells[5], cells[2]]
+    champion = [cells[0], cells[3], cells[6], cells[9]]
+    elite = [cells[1], cells[4], cells[7], cells[10]]
+    mvp = [cells[2], cells[5], cells[8], cells[11]]
 
     [champion, elite, mvp]
   end
 
   def self.pricing_set2(cells)
     #            1 mo       6 mo      12 mo
-    champion = [cells[6], cells[3], cells[0]]
-    elite = [cells[7], cells[4], cells[1]]
-    mvp = [cells[8], cells[5], cells[2]]
+    champion = [cells[0], cells[3], cells[6]]
+    elite = [cells[1], cells[4], cells[7]]
+    mvp = [cells[2], cells[5], cells[8]]
 
     [champion, elite, mvp]
   end
 
   def self.pricing_set3(cells)
     #             1 mo      6 mo
-    champion = [cells[3], cells[0]]
-    elite = [cells[4], cells[1]]
-    mvp = [cells[5], cells[2]]
+    champion = [cells[0], cells[3]]
+    elite = [cells[1], cells[4]]
+    mvp = [cells[2], cells[5]]
 
     [champion, elite, mvp]
   end
@@ -80,10 +80,9 @@ module MSPricing
     prices = []
 
     # extract 1mo price
-    prices << raw_html_set[0].element(:class, 'full').text.gsub(/\D/, '').to_i
+    prices << raw_html_set[0].p(:class, 'pricing-information-row__text__digits').text.to_i
 
     # extract payment plan prices
-    #range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
     range_end = if @eighteen_mo && package != 'champion'
                   raw_html_set.length - 1
                 else
@@ -91,7 +90,8 @@ module MSPricing
                 end
 
     for i in (1 .. range_end) do
-      prices << raw_html_set[i].element(:class, 'small').text.gsub(/\D/, '').to_i
+      class_names = %w[pricing-information-row__text__digits pricing-information-row__text__digits--small-digits]
+      prices << raw_html_set[i].p(:class, class_names).text.to_i
     end
 
     prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo, 6mo, 12mo] or [1mo]
@@ -110,7 +110,7 @@ module MSPricing
     prices = []
 
     price_set.each do |price|
-      prices << price.element(:class, 'full').text.gsub(/\D/, '').to_i
+      prices << price.p(:class, 'pricing-information-row__text__digits').text.to_i
     end
 
     prices

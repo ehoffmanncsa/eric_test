@@ -92,6 +92,10 @@ module MSSetup
     sleep 1
   end
 
+  def self.open_discount_box
+    @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
+  end
+
   def self.reveal_18_mo_plan
     # apparently there are 2 elements with text '12 Easy Payments' in the html :)
     # the 1st one is invisble/hidden, the 2nd one is what we see and want to click on

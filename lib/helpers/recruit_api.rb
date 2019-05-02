@@ -4,7 +4,7 @@ class RecruitAPI
   def initialize(enroll_yr = nil, sport_id = nil, need_google_voice = false)
     @api = Api.new
 
-    @enroll_yr = enroll_yr
+    @enroll_yr = 'senior' #enroll_yr
     @sport_id = sport_id.nil? ? Default.static_info['sport_ids'].sample : sport_id
     @need_google_voice = need_google_voice
   end

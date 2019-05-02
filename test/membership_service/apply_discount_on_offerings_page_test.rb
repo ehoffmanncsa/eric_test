@@ -23,14 +23,10 @@ class ApplyDiscountOnOfferingsPage < Common
     super
   end
 
-  def open_discount
-    @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
-  end
-
   def base_steps
     MSSetup.goto_offerings
     MSSetup.open_payment_plan
-    open_discount
+    MSSetup.open_discount_box
   end
 
   def check_on_prices(original_prices, discount_code)
@@ -68,10 +64,10 @@ class ApplyDiscountOnOfferingsPage < Common
     failure = []
     original_prices = MSPricing.one_month_plan_prices
 
-    @discount_codes.each do |discount_code, _rate|
-      MSProcess.apply_discount_offerings(discount_code)
+    @discount_codes.each do |code, _rate|
+      MSProcess.apply_discount(code)
       MSSetup.reveal_18_mo_plan; sleep 2
-      fail_message = check_on_prices(original_prices, discount_code)
+      fail_message = check_on_prices(original_prices, code)
       failure << fail_message unless fail_message.empty?
       failure.flatten!
     end
