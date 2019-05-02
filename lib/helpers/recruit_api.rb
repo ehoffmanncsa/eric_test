@@ -25,10 +25,16 @@ class RecruitAPI
       }
     }
 
+    retries = 0
     begin
       resp_code, resp_body = @api.ppost url, body
     rescue => e
       puts e
+      sleep 5
+      if (retries += 1) < 3
+        puts 'Retrying...'
+        retry
+      end
     end
 
     sleep 5 # I think taking actions right after often results in weirdness

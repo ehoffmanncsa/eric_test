@@ -74,7 +74,7 @@ module MSProcess
 
   def self.select_alacarte_item
     loop do
-      random_item = alacarte_blocks[0]#.sample
+      random_item = alacarte_blocks.sample
 
       error = nil
       begin
@@ -97,7 +97,6 @@ module MSProcess
     cart_count = get_cart_count.nil? ? 0 : get_cart_count
 
     i = 0
-    item_text = nil
     while i < items_count
       item_text = select_alacarte_item
 
@@ -108,23 +107,18 @@ module MSProcess
 
       i += 1
 
-      #items_picked = process_selected_item_name(item_text)
-
-      plural_text = item_text + 's'
-
       if item_text == 'VIP Videos'
         if !(items_picked.include? item_text)
           items_picked << item_text
         end
       else
         if items_picked.include? item_text
-          items_picked.map { |i| i == item_text ? (i + 's') : i }
+          items_picked.map! { |word| word == item_text ? word + 's' : word }
         else
           items_picked << item_text
         end
       end
     end
-    pp items_picked
 
     items_picked
   end
