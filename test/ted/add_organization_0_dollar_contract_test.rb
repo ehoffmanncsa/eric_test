@@ -40,6 +40,7 @@ class AddOrg0DollarContractTest < Common
     assert TED.modal, 'Add modal not found'
 
     # select club
+    sleep 2 # or else the UI is wiped blank :"(
     list = TED.modal.select_list(:class, 'form-control')
     list.select 'Club'; sleep 1
   end
