@@ -17,7 +17,10 @@ package-lock.json
 # Athletes CSV file
 athletes.csv
 
-# Gemfile.lock
+# Gemfile.lock #
 Gemfile.lock
 
+# Top secret stuff #
 .env
+config/postgres_databases.yml
+config/sql_databases.yml

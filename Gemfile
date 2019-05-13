@@ -1,15 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'api-auth'
-
 gem 'csv'
-
 gem 'ey-hmac', '2.2.0'
 gem 'faraday'
-
 gem 'gmail'
 gem 'jwt'
-
 gem 'mechanize'
 gem 'minitest'
 gem 'minitest-ci'
@@ -19,11 +15,11 @@ gem 'oj'
 gem 'os'
 gem 'parallel'
 gem 'rest-client'
-
 gem 'rubocop'
+gem 'ruby-pg'
 gem 'rubyzip'
-
 gem 'selenium-webdriver'
+gem 'tiny_tds'
 gem 'watir'
 gem 'watir-scroll'
 gem 'xml-simple'

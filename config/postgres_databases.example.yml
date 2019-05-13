@@ -1,0 +1,81 @@
+staging:
+  coachlive-be:
+    host:
+    dbname:
+    username:
+    password:
+
+  athletic_event_service:
+    host:
+    dbname:
+    username:
+    password:
+
+  club_service:
+    host:
+    dbname:
+    username:
+    password:
+
+  coach_activity:
+    host:
+    dbname:
+    username:
+    password:
+
+  features_service:
+    host:
+    dbname:
+    username:
+    password:
+
+  message_center:
+    host:
+    dbname:
+    username:
+    password:
+
+  payments_service:
+    host:
+    dbname:
+    username:
+    password:
+
+preprod:
+  coachlive-be:
+    host:
+    dbname:
+    username:
+    password:
+
+  athletic_event_service:
+    host:
+    dbname:
+    username:
+    password:
+
+dev:
+  coachlive-be:
+    host:
+    dbname:
+    username:
+    password:
+
+  athletic_event_service:
+    host:
+    dbname:
+    username:
+    password:
+
+prod:
+  coachlive-be:
+    host:
+    dbname:
+    username:
+    password:
+
+  athletic_event_service:
+    host:
+    dbname:
+    username:
+    password:
