@@ -18,7 +18,7 @@ module UIActions
   end
 
   def self.fasttrack_login
-    login_page = @config['clientrms']['base_url'] + @config['fasttrack']['login_page']
+    login_page = @config['fasttrack']['base_url'] + @config['fasttrack']['login_page']
 
     @browser.goto login_page
 
