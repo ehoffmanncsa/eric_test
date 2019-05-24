@@ -13,13 +13,13 @@ node {
 
   def PWD = pwd();
 
-  stage('git checkout') {
+  stage('Clone Repo') {
     checkout scm
   }
 
   stage('Launch Selenium Grid') {
     try {
-      sh "docker rm -f ${SEL_GRID}"
+      sh "./script/container_check.sh";
     } catch(err) {
       print err
     }
@@ -34,8 +34,8 @@ node {
         --privileged dosel/zalenium start"
   }
 
-  stage('Check Selenium health') {
-    sh "./script/grid_check.sh ${PORT.split(':')[0]}"
+  stage('Health Check') {
+    sh "./script/setup_check.sh ${PORT.split(':')[0]}"
   }
 
   stage('Build testbox') {
@@ -52,7 +52,7 @@ node {
           -e HELPSCOUT_SECRET_KEY=${HELPSCOUT_SECRET_KEY} \
           -e NCSA_HELPSCOUT_API_KEY=${NCSA_HELPSCOUT_API_KEY} \
           -e NCSA_HELPSCOUT_ACCOUNT=${NCSA_HELPSCOUT_ACCOUNT} \
-          --privileged testbox 'bundle install && rake test $APPLICATION'"
+          --privileged testbox 'gem i bundler -v 1.17.3 && bundle i && rake test ${APPLICATION}'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
