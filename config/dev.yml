@@ -10,16 +10,16 @@ fasttrack:
 
 # TED coach/partner login
 ted:
-  base_url: 'http://localhost:8080/'
-  prem_username: 'ncsa.automation+ted@gmail.com'
-  prem_password: 'password'
-  free_username: 'mia@example.com'
-  free_password: 'password'
+  base_url:
+  prem_username:
+  prem_password:
+  free_username:
+  free_password:
   no_content_username:
   no_content_password:
-  partner_username: 'john@example.com'
-  partner_password: 'password'
-  api_base: 'http://localhost:3000/api/team_edition/'
+  partner_username:
+  partner_password:
+  api_base:
 
 # sample video user login
 video_user:
