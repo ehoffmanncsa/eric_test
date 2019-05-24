@@ -25,6 +25,13 @@ module TED
     @browser.element(:class, 'modal-content')
   end
 
+  def self.goto_activity
+    # this shows all the athletes' activity
+    Watir::Wait.until { navbar.present? }
+    navbar.link(:text, 'Activity').click
+    UIActions.wait_for_spinner; sleep 1
+  end
+
   def self.goto_roster
     # this shows all the teams
     Watir::Wait.until { navbar.present? }
