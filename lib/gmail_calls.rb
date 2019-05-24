@@ -31,14 +31,20 @@ class GmailCalls
     mails = []
 
     # get unread mails from specific mail box and subject if any
-    # keep trying for 180 seconds
-    pp "[INFO] Waiting on email #{subject}"
-    Timeout::timeout(180) {
-      loop do
-        mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)
-        break unless mails.empty?
-      end
-    }
+    # keep trying for 300 seconds (5 minutes)
+    subject ? (pp "[INFO] Waiting on email #{subject}") : (pp "[INFO] Waiting on email in #{mail_box}")
+
+    five_minutes = 300 # seconds
+    begin
+      Timeout::timeout(five_minutes) {
+        loop do
+          mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)
+          break unless mails.empty?
+        end
+      }
+    rescue; end
+
+    mails.empty? ? (pp '[ALERT] No email found...') : (pp '[INFO] Email found!')
 
     mails
   end
