@@ -27,7 +27,7 @@ class SortAndFilterActivityPageTest < Common
     assert_equal data, data.sort, "Activity Page (athlete tab): not properly sorted by #{key}"
   end
 
-  def test_default_sort_athletes
+  def test_athletes_default_sort
     UIActions.ted_login
     TED.goto_activity
     Watir::Wait.until { UIActions.find_by_test_id("athlete-activity").present? }
@@ -40,7 +40,7 @@ class SortAndFilterActivityPageTest < Common
     end
   end
 
-  def test_sort_by_favorites_athletes
+  def test_athletes_sort_by_favorites
     UIActions.ted_login
     TED.goto_activity
     Watir::Wait.until { UIActions.find_by_test_id("athlete-activity").present? }
@@ -48,5 +48,20 @@ class SortAndFilterActivityPageTest < Common
     UIActions.find_by_test_id("athlete-activity-header-cell-nFavorites").click
     assert_active_sort_icon("nFavorites")
     assert_table_sorted_by("nFavorites") { |node| Integer(node.text) }
+  end
+
+  def test_filter_by_team
+    UIActions.ted_login
+    TED.goto_activity
+    Watir::Wait.until { UIActions.find_by_test_id("athlete-activity").present? }
+
+    team_name = "Football"
+    UIActions.find_by_test_id("activity-page-team-dropdown").click
+    UIActions.find_by_test_id("activity-page-team-dropdown-item-#{team_name}").click
+
+    team_bools = @browser.elements(class: "athlete-activity-row").each_with_index.map do |_, i|
+      UIActions.find_by_test_id("athlete-activity-row-#{i}-cell-name").text.split("\n")[1].include? team_name
+    end
+    assert_equal team_bools.all?, true, "Activity Page: not filtering by teams correctly"
   end
 end
