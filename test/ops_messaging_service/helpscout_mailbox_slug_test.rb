@@ -16,6 +16,7 @@ class HelpScoutMailboxSlugTest < Common
   end
 
   def test_helpscout_mailbox_slug
+    clear_cache
     impersonate
     open_admin_menu
     inspect_email_link
@@ -23,22 +24,32 @@ class HelpScoutMailboxSlugTest < Common
 
   private
 
+  def clear_cache
+    redis = RedisHelper.new
+    redis.delete(key_to_delete)
+  end
+
+  def key_to_delete
+    Default.env_config['helpscout']['coach_ehoffman_redis_key']
+  end
+
   def impersonate
     athlete_client_id = Default.env_config['ops_messaging']['client_id']
     C3PO.impersonate(athlete_client_id)
+    sleep 3 # not sure what's best to wait here yet, wait for gear will just flat out crash
   end
 
   def gear
     @browser.span(:'data-jq-dropdown', "#admin-menu")
   end
 
-  def open_admin_menu
-    gear.click
-    sleep 1
-  end
-
   def admin_menu
     @browser.div(:id, 'admin-menu')
+  end
+
+  def open_admin_menu
+    gear.click
+    Watir::Wait.until(timeout: 30) {admin_menu.present?}
   end
 
   def find_helpscout_email_link
