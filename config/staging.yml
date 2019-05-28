@@ -69,3 +69,10 @@ helpscout:
   base_url: 'https://api.helpscout.net/v2/'
   coach_ehoffman_mailbox_id: '115736'
   coach_ehoffman_mailbox_slug: '56c3f91aa842623d'
+  coach_ehoffman_redis_key: 'cache:c3po:helpscout_admin_coachehoffman@ncsasports.org'
+
+# Redis
+redis:
+  hostname: "redis-qa.ncsasports.org"
+  port: '6379'
+  db: '0'

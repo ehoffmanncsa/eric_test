@@ -24,6 +24,7 @@ gem 'watir'
 gem 'watir-scroll'
 gem 'xml-simple'
 gem 'ffaker'
+gem 'redis'
 
 gem 'pry'
 

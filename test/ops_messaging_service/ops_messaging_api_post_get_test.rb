@@ -1,4 +1,5 @@
 require_relative '../test_helper'
+require 'redis'
 
 =begin
   Ops Messaging Service regression test for its API endpoints.
@@ -14,6 +15,11 @@ class OpsMessagingApiPostGetTest < Minitest::Test
   def setup
     @auth_adapter = FaradayClient.new(account: account, api_key: api_key).adapter
     @help_scout_hmac_client = HelpScoutHmacClient.new(base_uri: base_uri)
+    Redis.new(
+      host: redis_credentials['hostname'],
+      port: redis_credentials['port'],
+      db: redis_credentials['db']
+    ).del(helpscout_credentials['coach_ehoffman_redis_key'])
   end
 
   def test_ops_messaging_api_get
@@ -87,5 +93,9 @@ class OpsMessagingApiPostGetTest < Minitest::Test
 
   def helpscout_credentials
     Default.env_config['helpscout']
+  end
+
+  def redis_credentials
+    Default.env_config['redis']
   end
 end
