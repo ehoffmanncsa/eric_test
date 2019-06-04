@@ -10,8 +10,10 @@ class ClientUploadPhotoTest < Common
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
+    UIActions.user_login(@email)
     MSSetup.setup(@browser)
-    MSSetup.buy_package(@email, 'elite')
+    MSSetup.set_password(@email)
+    UIActions.goto_edit_profile
   end
 
   def teardown
@@ -24,19 +26,19 @@ class ClientUploadPhotoTest < Common
 
   def test_client_upload_photo
     path = File.absolute_path('test/c3po/cat.png')
-    UIActions.user_login(@email)
-    UIActions.goto_edit_profile
 
     photo.hover
     photo.element(:class, 'fa-camera').click
+    sleep 1
 
-    form = @browser.element(:id, 'edit_client_photo')
-    form.element(:id, 'client_photo_image').send_keys path
-    form.element(:name, 'commit').click
+    form = @browser.form(:id, 'edit_client_photo')
+    form.element(:id, 'upload').send_keys path
+    sleep 1
+    Watir::Wait.until(timeout: 30) { photo.present? }
 
     # verify photo src is now from s3.amazonaws.com
     photo_src = photo.element(:tag_name, 'img').attribute('src')
-    s3_url = 'http://s3.amazonaws.com/rms-rmfiles-staging/client_photos/'
+    s3_url = 's3.amazonaws.com/rms-rmfiles-staging/client_photos/'
     assert (photo_src.include? s3_url), "Client photo not pulled from S3 - #{photo_src}"
 
     # verify upload successful message
