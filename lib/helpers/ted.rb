@@ -99,7 +99,6 @@ module TED
 
   def self.sign_out
     UIActions.find_by_test_id("user-menu").click; sleep 1
-
     @browser.div(:class, 'dropdown-menu__menu').link(:text, 'Sign Out').click
     sleep 1
   end
