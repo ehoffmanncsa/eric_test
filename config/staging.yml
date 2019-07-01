@@ -8,6 +8,7 @@ clientrms:
   payments_page: 'clientrms/finances'
   membership_info: 'clientrms/accounts'
   dashboard: 'clientrms/dashboard/show'
+  my_information: 'clientrms/profile/my_information/edit'
 
 # Fasttrack Admin login
 # base UI url is the same with client rms

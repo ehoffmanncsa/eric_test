@@ -110,6 +110,11 @@ module UIActions
     @browser.link(:text, 'NCSA University').click
   end
 
+  def self.goto_my_information
+    url = @config['clientrms']['base_url'] + @config['clientrms']['my_information']
+    @browser.goto url
+  end
+
   def self.find_by_test_id(test_id)
     @browser.element("data-test-id", test_id)
   end

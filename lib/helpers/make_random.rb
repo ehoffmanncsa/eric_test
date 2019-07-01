@@ -1,11 +1,7 @@
 module MakeRandom
 	def self.number(digits)
-    num = nil
-    loop do
-      num = digits.times.map{rand(10)}.join
-      break if num[0] != '0'
-    end
-
+    num = digits.times.map{rand(10)}.join
+    num = number(digits) if num[0] == '0'
     num
   end
 
@@ -16,7 +12,7 @@ module MakeRandom
 
   def self.grad_yr
   	year = Time.now.year
-    ((year - 5) .. (year + 10)).to_a.sample
+    (year .. (year + 5)).to_a.sample
   end
 
   def self.email
@@ -44,13 +40,9 @@ module MakeRandom
 	end
 
 	def self.zip_code
-		num = nil
-    loop do
-      num = FFaker::AddressUS.zip_code
-      break if num[0] != '0'
-    end
-
-    num
+		num = FFaker::AddressUS.zip_code
+		num = zip_code if num[0] == '0'
+		num
 	end
 
 	def self.company_name
@@ -82,5 +74,9 @@ module MakeRandom
 
 	def self.lorem(sentence_count = 1)
 		FFaker::Lorem.paragraph(sentence_count)
+	end
+
+	def self.major
+		FFaker::Education.major
 	end
 end
