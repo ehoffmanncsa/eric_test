@@ -57,7 +57,8 @@ c. Install geckodriver (for firefox, so you will need to have firefox installed 
 
 d. Install chromedriver
 
-    $ brew install chromedriver
+    $ brew tap homebrew/cask
+    $ brew cask install chromedriver
 
 
 ### Install RVM and Ruby
@@ -68,7 +69,7 @@ a. Install RVM:
 b. Exit terminal and restart.
 c. Install version of Ruby we use:
 
-    $ rvm install <version> (Right now I'm using 2.4.0)
+    $ rvm install <version> (Right now I'm using 2.5.0)
 
 Eric was running into an error while installing ruby, installing openssl seems to help with the problem. To install openssl, do:
 
