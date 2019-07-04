@@ -85,7 +85,7 @@ d. Last step:
 
 e. If you have multiple ruby binaries, you can use this command to set the default to the version installed in step 3b:
 
-    $ rvm --default ruby-<version> (Right now I'm using 2.4.0)
+    $ rvm --default ruby-<version> (Right now I'm using 2.5.0)
 
 f. You can verify it now works correctly with the command in a new terminal:
 
@@ -125,6 +125,11 @@ e. For more info on git settings/configs, click [here](https://help.github.com/a
 
 f. To learn how to generate SSH key and add the key to your github, click [here](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
+### Some more brew-ing
+
+    $ brew install postgresql
+    $ brew install freetds
+
 ### Clone
 Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
 
@@ -134,7 +139,7 @@ There is a Gemfile with a collection of gems I have added on the go (of course w
 
     $ cd qa_regression
     $ rvm gemset create qa (or whichever name you like it to be)
-    $ rvm --default use ruby-2.4.0@qa
+    $ rvm --default use ruby-2.5.0@qa
     $ gem install bundler
     $ bundle install
 
