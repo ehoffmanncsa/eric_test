@@ -1,0 +1,7 @@
+require_relative 'membership_service/ms_admin.rb'
+require_relative 'membership_service/ms_finish.rb'
+require_relative 'membership_service/ms_process.rb'
+require_relative 'membership_service/ms_test_template.rb'
+require_relative 'membership_service/ms_convenient.rb'
+require_relative 'membership_service/ms_pricing.rb'
+require_relative 'membership_service/ms_setup.rb'

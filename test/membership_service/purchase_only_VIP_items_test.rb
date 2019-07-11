@@ -16,10 +16,16 @@ class PurchaseOnlyVIPItemsTests < Common
 
     MSConvenient.setup(@browser)
     MSConvenient.buy_alacarte(recruit_email)
+    goto_membership_info
   end
 
   def teardown
     super
+  end
+
+  def goto_membership_info
+    clientrms = Default.env_config['clientrms']
+    @browser.goto(clientrms['base_url']+ clientrms['membership_info'])
   end
 
   def test_purchase_only_VIP_items

@@ -9,6 +9,7 @@ class EnrollMVPFreshmanTest < Common
 
     enroll_yr = 'freshman'
     @package = 'mvp'
+    @clientrms = Default.env_config['clientrms']
 
     _post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
@@ -26,6 +27,14 @@ class EnrollMVPFreshmanTest < Common
     @sport_id == '17706'
   end
 
+  def goto_membership_info
+    @browser.goto(@clientrms['base_url']+ @clientrms['membership_info'])
+  end
+
+  def goto_payments
+    @browser.goto(@clientrms['base_url']+ @clientrms['payments_page'])
+  end
+
   def check_membership_features
     ui_list = MSTestTemplate.get_UI_features_list
 
@@ -33,11 +42,6 @@ class EnrollMVPFreshmanTest < Common
     expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
 
     assert_equal expected_list, ui_list, 'Membership features NOT matching what is expected'
-  end
-
-  def goto_payments
-    clientrms = Default.env_config['clientrms']
-    @browser.goto(clientrms['base_url']+ clientrms['payments_page'])
   end
 
   def check_displayed_payment_info
@@ -50,9 +54,19 @@ class EnrollMVPFreshmanTest < Common
     assert_equal @package, actual_package, 'Incorrect premium package shown'
   end
 
+  def check_redirected_to_coachsession
+    # this check is only for premium enrollment - SALES-1427
+    current_url = @browser.url
+    failure_msg = "User is not redirected to coaching session - current url is #{current_url}"
+    assert_includes current_url, 'coaching_session_requests/new', failure_msg
+  end
+
   def test_enroll_mvp_freshman
     MSTestTemplate.get_enrolled
 
+    check_redirected_to_coachsession
+
+    goto_membership_info
     check_membership_features
 
     goto_payments
