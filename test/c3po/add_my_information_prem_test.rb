@@ -34,6 +34,7 @@ class V2AddMyInformationPremTest < Common
   def fill_out_information_page
     @filler.fill_out_textfields(true) # true for premium client - to ignore email textfield
     @filler.select_grad_year(@graduation_year)
+    @filler.personal_statement
     @filler.submit
   end
 
@@ -59,6 +60,7 @@ class V2AddMyInformationPremTest < Common
     @city = @filler.city
     @zip = @filler.zip
     @preferred_major = @filler.preferred_major
+    @personal_statement = @filler.personal_statement
   end
 
   def goto_athlete_profile_page
@@ -84,7 +86,10 @@ class V2AddMyInformationPremTest < Common
     failure << 'Incorrect parent2 email' unless @parent2_email == @profile_page.parent2_email
     failure << 'Incorrect parent2 phone' unless @parent2_phone == @profile_page.parent2_phone
     failure << 'Incorrect parent2 secondary phone' unless @parent2_secondary_phone == @profile_page.parent2_secondary_phone
-
+    failure << 'Incorrect address' unless @address == @profile_page.athlete_address
+    failure << 'Incorrect city' unless @city == @profile_page.athlete_bottom_city
+    failure << 'Incorrect zip' unless @zip == @profile_page.athlete_zipcode
+    failure << 'Incorrect major' unless @preferred_major == @profile_page.athlete_major
     assert_empty failure
   end
 end

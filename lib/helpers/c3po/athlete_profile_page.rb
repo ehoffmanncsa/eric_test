@@ -84,12 +84,12 @@ module C3PO
     end
 
     def personal_statement
-      @browser.section(:id, 'personal-statement-section').element(:tag_name, 'p')
+      @browser.elements(:class, %w[info-category personal-statement]).first.text
     end
 
     def athlete_major
       study_field = academic_section.element(:text, 'Preferred Field of Study').parent
-      study_field.text.gsub('Preferred Field of Study', '')
+      study_field.text.gsub("Preferred Field of Study\n", '')
     end
 
     private

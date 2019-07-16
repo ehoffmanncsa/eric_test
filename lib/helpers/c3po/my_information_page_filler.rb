@@ -20,6 +20,12 @@ module C3PO
       grad_yr.nil? ? list.options.sample.click : (list.select grad_yr)
     end
 
+    def personal_statement
+      personal_statement = @browser.element(:class, %w(froala-view froala-element not-msie f-basic))
+      personal_statement.wd.clear
+      personal_statement.send_keys  MakeRandom.lorem
+    end
+
     def submit
       @browser.button(:value, 'Save').click
     end
