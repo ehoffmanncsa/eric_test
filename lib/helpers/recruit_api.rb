@@ -38,7 +38,7 @@ class RecruitAPI
 
     pp body
     pp resp_body
-    pp "Athete created in this script: #{body[:recruit][:athlete_email]}"
+    puts "Athete created in this script: #{body[:recruit][:athlete_email]}"
 
     [resp_body, body]
   end
