@@ -6,14 +6,15 @@ require_relative '../test_helper'
 class AddCoachReferencesTest < Common
   def setup
     super
-
     _post, post_body = RecruitAPI.new.ppost
     @email = post_body[:recruit][:athlete_email]
 
-    C3PO.setup(@browser)
-    MSSetup.setup(@browser)
 
-    MSSetup.buy_package(@email, 'elite')
+    MSConvenient.setup(@browser)
+    C3PO.setup(@browser)
+    UIActions.user_login(@email)
+    MSConvenient.buy_package(@email, 'elite')
+
 
     @coach_name = MakeRandom.name
     @coach_email = "#{@coach_name}@fake.com"
@@ -34,9 +35,7 @@ class AddCoachReferencesTest < Common
 
     # fill out text fields
     form.element(:name, 'name').send_keys @coach_name
-    form.element(:name, 'phone_1').send_keys MakeRandom.number(3)
-    form.element(:name, 'phone_2').send_keys MakeRandom.number(3)
-    form.element(:name, 'phone_3').send_keys MakeRandom.number(4)
+    form.element(:name, 'phone').send_keys MakeRandom.number(10)
     form.element(:name, 'email').send_keys @coach_email
 
     # select random type
@@ -57,7 +56,7 @@ class AddCoachReferencesTest < Common
   end
 
   def check_profile_history
-    # go to Preview Profile
+    #go to Preview Profile
     @browser.element(:class, 'button--primary').click
 
     about_section = @browser.element(:id, 'about-section')
@@ -75,8 +74,8 @@ class AddCoachReferencesTest < Common
     assert_empty failure
   end
 
-  def test_add_coach_references
-    UIActions.user_login(@email)
+
+def test_add_coach_references
     UIActions.goto_edit_profile
 
     C3PO.goto_athletics

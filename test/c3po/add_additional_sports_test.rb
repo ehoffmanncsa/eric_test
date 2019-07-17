@@ -11,9 +11,8 @@ class AddAdditionalSportsTest < Common
     @email = post_body[:recruit][:athlete_email]
 
     C3PO.setup(@browser)
-    MSSetup.setup(@browser)
-
-    MSSetup.buy_package(@email, 'elite')
+    UIActions.user_login(@email)
+    MSConvenient.buy_package(@email, 'elite')
 
     @achievements = 'this is my achievements'
   end
@@ -106,8 +105,8 @@ class AddAdditionalSportsTest < Common
   end
 
   def test_add_additional_sports
-    UIActions.user_login(@email)
     UIActions.goto_edit_profile
+
 
     C3PO.goto_athletics
     add_sports
