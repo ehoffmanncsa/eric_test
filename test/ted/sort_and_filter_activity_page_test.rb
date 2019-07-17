@@ -54,7 +54,7 @@ class SortAndFilterActivityPageTest < Common
     contains_athlete_not_in_team = false
     @browser.elements(class: "athlete-activity-row").each_with_index do |_, i|
       athlete_details_text = UIActions.find_by_test_id("athlete-activity-row-#{i}-cell-name").text
-      team_details_text = athlete_details_cell_text.split("\n")[1]
+      team_details_text = athlete_details_text.split("\n")[1]
       contains_athlete_not_in_team = !team_details_text.include?(team_name)
       break if contains_athlete_not_in_team
     end

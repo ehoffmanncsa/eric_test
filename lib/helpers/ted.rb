@@ -28,7 +28,7 @@ module TED
   def self.goto_activity
     # this shows all the athletes' activity
     Watir::Wait.until { navbar.present? }
-    navbar.link(:text, 'Activity').click
+    go_to_endpoint "activity"
     UIActions.wait_for_spinner; sleep 1
   end
 
