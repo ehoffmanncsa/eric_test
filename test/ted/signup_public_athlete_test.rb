@@ -25,6 +25,7 @@ class SignupPublicAthleteTest < Common
 
   def fillout_signup_form
     @browser.goto 'https://team-staging.ncsasports.org/teams/awesome-sauce/sign_up'
+    @browser.back
     Watir::Wait.until { @browser.elements(:tag_name, 'input').any? }
 
     store_athlete_meta_data

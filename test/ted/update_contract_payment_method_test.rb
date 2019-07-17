@@ -103,6 +103,7 @@ class UpdateContractPaymentMethodTest < Common
   end
 
   def test_PA_update_contract_payment_method
+    skip
     TED.impersonate_org(@org_id)
     new_acc_id = get_another_acc_id
     update_payment_method(new_acc_id)
