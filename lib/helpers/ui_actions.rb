@@ -116,6 +116,6 @@ module UIActions
   end
 
   def self.find_by_test_id(test_id)
-    @browser.element("data-test-id", test_id)
+    @browser.element("data-test-id" => test_id)
   end
 end
