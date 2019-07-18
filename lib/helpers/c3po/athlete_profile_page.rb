@@ -84,7 +84,8 @@ module C3PO
     end
 
     def personal_statement
-      @browser.elements(:class, %w[info-category personal-statement]).first.text
+      personal_statement = @browser.elements(:class, %w[info-category personal-statement]).first.text
+      personal_statement.gsub("PERSONAL STATEMENT\n", '')
     end
 
     def athlete_major

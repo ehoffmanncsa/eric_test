@@ -19,6 +19,7 @@ module C3PO
     attr_reader :city
     attr_reader :zip
     attr_reader :preferred_major
+    attr_reader :personal_statement
 
     def initialize(browser)
       @browser = browser
@@ -70,6 +71,7 @@ module C3PO
       @city = MakeRandom.city
       @zip = MakeRandom.zip_code
       @preferred_major = MakeRandom.major
+      @personal_statement = MakeRandom.lorem
     end
   end
 end

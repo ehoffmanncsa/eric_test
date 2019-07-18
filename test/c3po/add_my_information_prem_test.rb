@@ -34,7 +34,7 @@ class V2AddMyInformationPremTest < Common
   def fill_out_information_page
     @filler.fill_out_textfields(true) # true for premium client - to ignore email textfield
     @filler.select_grad_year(@graduation_year)
-    @filler.personal_statement
+    @filler.fill_out_personal_statement
     @filler.submit
   end
 
@@ -46,6 +46,7 @@ class V2AddMyInformationPremTest < Common
 
   def gather_person_expected_information
     @athlete_fullname = "#{@filler.first_name} #{@filler.last_name}"
+    @athlete_grad_year = @filler.select_grad_year(@graduation_year)
     @athlete_phone = @filler.athlete_phone
     @athlete_secondary_phone = @filler.athlete_secondary_phone
     @parent1_fullname = "#{@filler.parent1_first_name} #{@filler.parent1_last_name}".upcase
@@ -71,6 +72,7 @@ class V2AddMyInformationPremTest < Common
   def compare_my_info_data_to_profile_page_data
     failure = []
     failure << 'Incorrect athlete name' unless @athlete_fullname == @profile_page.athlete_fullname
+    failure << 'Incorrect grad year' unless @athlete_grad_year == @profile_page.athlete_grad_year
     failure << 'Incorrect athlete top email' unless @athlete_email == @profile_page.athlete_top_email
     failure << "Incorrect athlete bottom email" unless @athlete_email == @profile_page.athlete_bottom_email
     failure << 'Incorrect athlete top phone' unless @athlete_phone == @profile_page.athlete_top_phone
@@ -90,6 +92,7 @@ class V2AddMyInformationPremTest < Common
     failure << 'Incorrect city' unless @city == @profile_page.athlete_bottom_city
     failure << 'Incorrect zip' unless @zip == @profile_page.athlete_zipcode
     failure << 'Incorrect major' unless @preferred_major == @profile_page.athlete_major
+    failure << 'Incorrect personal statement' unless @personal_statement == @profile_page.personal_statement
     assert_empty failure
   end
 end
