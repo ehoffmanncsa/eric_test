@@ -1,6 +1,19 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
+# TS-561: TED Regression
+# UI Test: Verify activity page sort and filter functionality
+
+=begin
+  This test uses coach Eric of the Bears organization.
+  We navigate to the activity page, and we want to make sure a coach can filter
+  their athletes, and/or sort their athletes by the columns in the table.
+  - This test verifies that the favorites column sorts as expected (by number of favorites, ascending order)
+  - This test verifies the default sort column (by last name, ascending order)
+  - This test verifies that the sort icon renders correctly (i.e. points up for ascending and down for descending)
+  - This test verifies that a coach can filter athletes by team
+=end
+
 class SortAndFilterActivityPageTest < Common
   def setup
     super

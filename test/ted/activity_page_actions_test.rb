@@ -1,6 +1,26 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
+# TS-561: TED Regression
+# UI Test: Verify activity page ellipses actions
+
+=begin
+  This test uses coach Eric of the Bears organization.
+  We navigate to the activity page, and we want to make sure that each athlete
+  row has the appropriate actions based off of the athlete's profile.
+
+  - If an athlete's status is 'accepted', and *has not* taken the TAPS assessment:
+    We expect the ellipses to be present
+    AND we expect both "Send Message" and "Request TAP" to be dropdown menu options
+
+  - If an athlete's status is 'accepted', but *has* taken the TAPS assessment:
+    We expect the ellipses to be present
+    AND we expect the "Send Message" option, but *not* the "Request TAP" option
+
+  - If an athlete's status is *not* 'accepted':
+    We expect the ellipses to *not* be present
+=end
+
 class ActivityPageActionsTest < Common
   def setup
     super
