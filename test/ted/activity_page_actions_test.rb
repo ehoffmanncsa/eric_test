@@ -8,6 +8,7 @@ require_relative '../test_helper'
   This test uses coach Eric of the Bears organization.
   We navigate to the activity page, and we want to make sure that each athlete
   row has the appropriate actions based off of the athlete's status and athlete type.
+  NOTE: An athlete is "Accepted" if they're status does not say "Pending", "Not Sent", or "Self Prov"
 
   - If an athlete's status is 'accepted', and *has not* taken the TAP assessment:
     We expect the ellipses to be present
