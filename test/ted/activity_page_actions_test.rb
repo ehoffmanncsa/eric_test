@@ -7,13 +7,13 @@ require_relative '../test_helper'
 =begin
   This test uses coach Eric of the Bears organization.
   We navigate to the activity page, and we want to make sure that each athlete
-  row has the appropriate actions based off of the athlete's profile.
+  row has the appropriate actions based off of the athlete's status and athlete type.
 
-  - If an athlete's status is 'accepted', and *has not* taken the TAPS assessment:
+  - If an athlete's status is 'accepted', and *has not* taken the TAP assessment:
     We expect the ellipses to be present
     AND we expect both "Send Message" and "Request TAP" to be dropdown menu options
 
-  - If an athlete's status is 'accepted', but *has* taken the TAPS assessment:
+  - If an athlete's status is 'accepted', but *has* taken the TAP assessment:
     We expect the ellipses to be present
     AND we expect the "Send Message" option, but *not* the "Request TAP" option
 

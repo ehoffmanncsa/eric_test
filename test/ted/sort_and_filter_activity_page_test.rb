@@ -7,11 +7,11 @@ require_relative '../test_helper'
 =begin
   This test uses coach Eric of the Bears organization.
   We navigate to the activity page, and we want to make sure a coach can filter
-  their athletes, and/or sort their athletes by the columns in the table.
-  - This test verifies that the favorites column sorts as expected (by number of favorites, ascending order)
-  - This test verifies the default sort column (by last name, ascending order)
-  - This test verifies that the sort icon renders correctly (i.e. points up for ascending and down for descending)
-  - This test verifies that a coach can filter athletes by team
+  their athletes by team and sort them by the columns in the table. This test verifies that:
+  - coaches can sort the favorites column on the Athlete tab (by number of favorites, ascending order)
+  - the default sort column (by last name, ascending order)
+  - the sort icon renders correctly (i.e. points up for ascending and down for descending)
+  - coaches can filter their athletes by team
 =end
 
 class SortAndFilterActivityPageTest < Common
