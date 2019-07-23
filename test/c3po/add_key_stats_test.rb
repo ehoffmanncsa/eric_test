@@ -285,7 +285,7 @@ class AddKeyStatsTestFree < Common
   end
 
   def test_add_keystats
-    email = 'testf7ac@yopmail.com'
+    email = 'testa53a@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
