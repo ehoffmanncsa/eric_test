@@ -17,11 +17,11 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def open_add_schedule
-    @browser.a(:class, 'new-payment-js').click
+    @browser.a(class: 'new-payment-js').click
   end
 
   def form
-    @browser.form(:class, 'create_payment')
+    @browser.form(class: 'create_payment')
   end
 
   def date
@@ -33,10 +33,11 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def fill_out_create_schedule_form
-    form.text_field(:name, 'scheduleDate').set date
-    form.text_field(:name, 'amount').set amount
-    form.text_field(:name, 'financeFee').set @given_amount
-    @browser.div(:class, 'add-payment-button-js').click
+    form.text_field(name: 'scheduleDate').set date
+    form.text_field(name: 'amount').set amount
+    form.text_field(name: 'financeFee').set @given_amount
+    @browser.div(class: 'add-payment-button-js').click
+    sleep 2
   end
 
   def find_newest_schedule(table)
@@ -83,9 +84,9 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def edit_payment_schedule
-    @schedule.button(:title, 'Edit Payment').click
-    @schedule.text_field(:name, 'paymentDate').set date
-    @schedule.button(:title, 'Update Payment').click
+    @schedule.button(title: 'Edit Payment').click
+    @schedule.text_field(name: 'paymentDate').set date
+    @schedule.button(title: 'Update Payment').click
   end
 
   def check_schedule_edited
@@ -94,16 +95,16 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def delete_payment_schedule
-    @schedule.button(:title, 'Delete Payment').click
-    @schedule.button(:class, 'tabledit-confirm-button').click
+    @schedule.button(title: 'Delete Payment').click
+    @schedule.button(class: 'tabledit-confirm-button').click
   end
 
   def reveal_deleted_schedules
-    @browser.element(:text, 'Deleted Payments').click
+    @browser.element(text: 'Deleted Payments').click
   end
 
   def deleted_payments_table
-    @browser.div(:id, 'deleted-payments').table(:id, 'payment-schedule')
+    @browser.div(id: 'deleted-payments').table(id: 'payment-schedule')
   end
 
   def check_schedule_deleted
