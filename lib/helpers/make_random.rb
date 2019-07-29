@@ -5,9 +5,10 @@ module MakeRandom
     num
   end
 
-  def self.name
+  def self.name(length = nil)
+		length ||= 10
     charset = Array('a'..'z')
-    Array.new(10) { charset.sample }.join
+    Array.new(length) { charset.sample }.join
   end
 
   def self.grad_yr

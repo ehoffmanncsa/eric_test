@@ -21,7 +21,6 @@ class PurchaseMVPAndVIPItemsTests < Common
   def goto_membership_info
     clientrms = Default.env_config['clientrms']
     @browser.goto(clientrms['base_url']+ clientrms['membership_info'])
-    sleep 2
   end
 
   def check_redirected_to_coachsession

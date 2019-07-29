@@ -16,26 +16,8 @@ class AdminCUDPaymentScheduleTest < Common
     super
   end
 
-  def goto_payments_page
-    client_id = MSAdmin.find_active_client_id
-    config = Default.env_config
-    url = config['fasttrack']['base_url'] + "recruit/admin/payments/#{client_id}"
-    puts "[INFO] Attempting to test payment schedule here...\n#{url}"
-    @browser.goto url
-    sleep 2
-  end
-
   def open_add_schedule
     @browser.a(:class, 'new-payment-js').click
-  end
-
-  def payment_table
-    @browser.table(:id, 'payment-schedule')
-  end
-
-  def table_has_payments
-    rows = payment_table.rows.to_a
-    rows.length > 1 ? true : false
   end
 
   def form
@@ -76,7 +58,7 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def collect_last_schedule_info
-    @schedule = find_newest_schedule(payment_table)
+    @schedule = find_newest_schedule(MSAdmin.payment_table)
 
     #[id, account, date, amount, finance, total, status, payment_id]
     @schedule_id = @schedule[0].text
@@ -93,17 +75,6 @@ class AdminCUDPaymentScheduleTest < Common
     failure << wrong_amount_msg unless @schedule_amount == @given_amount
 
     assert_empty failure
-  end
-
-  def preps
-    loop do
-      MSAdmin.goto_recruiting_dasboard
-      MSAdmin.search_client_by_membership
-      goto_payments_page
-      payment_table.scroll.to :center
-      break if table_has_payments
-      pp "[INFO] Page has no payment schedules, need to find a different client..."
-    end
   end
 
   def create_payment_schedule
@@ -144,7 +115,7 @@ class AdminCUDPaymentScheduleTest < Common
   end
 
   def test_admin_create_update_delete_payment_schedule
-    preps
+    MSAdmin.goto_payments_page
 
     create_payment_schedule
     collect_last_schedule_info

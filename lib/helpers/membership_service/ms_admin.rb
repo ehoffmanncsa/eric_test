@@ -5,44 +5,44 @@
 module MSAdmin
   def self.setup(ui_object)
     @browser = ui_object
+    @config = Default.env_config
+
+    app_name = 'fasttrack'
+    @sql = SQLConnection.new(app_name)
+    @sql.get_connection
   end
 
-  def self.goto_recruiting_dasboard
-    fasttrack = Default.env_config['fasttrack']
-    recruiting_dasboard = fasttrack['base_url'] + fasttrack['recruiting_dasboard']
-    @browser.goto recruiting_dasboard
-  end
-
-  def self.search_client_by_membership
-    premium = %w[champion elite mvp].sample
-    @browser.text_field(:name, 'q').set premium
-    @browser.text_field(:name, 'q').send_keys :enter
-    sleep 2
-  end
-
-  def self.search_results_table
-    @browser.table(:class, %w[m-tbl d-wide l-bln-mg-btm-2])
-  end
-
-  def self.random_row
-    rows = search_results_table.elements(:tag_name, 'tr').to_a
-    rows.sample
-  end
-
-  def self.find_active_client_id
-    row = nil
-    loop do
-      row = random_row
-      year = row.elements(:tag_name, 'td')[3].text
-      break if year.to_i >= Time.now.year
+  def self.retrieve_active_client_id_from_DB
+    query = "SELECT TOP 100 client_id FROM dbo.client WHERE status = 'Client Created' ORDER BY status_date desc"
+    data = @sql.exec query
+    client_ids = []
+    data.each do |row|
+      client_ids << row['client_id']
     end
 
-    extract_clientid(row)
+    client_ids.sample
   end
 
-  def self.extract_clientid(client_row)
-    client_name_element = client_row.elements(:tag_name, 'td')[1]
-    url = client_name_element.element(:tag_name, 'a').attribute_value('href')
-    url.gsub(/[^0-9]/, '')
+  def self.payment_table
+    @browser.table(id: 'payment-schedule')
+  end
+
+  def self.table_has_payments
+    rows = payment_table.rows.to_a
+    rows.length > 1 ? true : false
+  end
+
+  def self.goto_payments_page
+    loop do
+      client_id = retrieve_active_client_id_from_DB
+      url = @config['fasttrack']['base_url'] + "recruit/admin/payments/#{client_id}"
+      puts "[INFO] Attempting to test with client id #{client_id} ...\n#{url}"
+      @browser.goto url
+      sleep 2
+
+      payment_table.scroll.to :center
+      break if table_has_payments
+      puts "[INFO] Page has no payment schedules, need to find a different client..."
+    end
   end
 end

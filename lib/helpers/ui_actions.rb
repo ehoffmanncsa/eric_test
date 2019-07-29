@@ -8,12 +8,12 @@ module UIActions
   end
 
   def self.wait_for_spinner
-    Watir::Wait.while(timeout: 120) { @browser.element(:class, 'fa-spinner').present? }
+    Watir::Wait.while(timeout: 120) { @browser.element(class: 'fa-spinner').present? }
     sleep 1
   end
 
   def self.wait_for_modal
-    Watir::Wait.while { @browser.element(:class, 'modal-content').present? }
+    Watir::Wait.while { @browser.element(class: 'modal-content').present? }
     sleep 1
   end
 
@@ -22,9 +22,9 @@ module UIActions
 
     @browser.goto login_page
 
-    @browser.text_field(:id, 'username').set @config['fasttrack']['admin_username']
-    @browser.text_field(:id, 'password').set @config['fasttrack']['admin_password']
-    @browser.button(:name, 'submit').click
+    @browser.text_field(id: 'username').set @config['fasttrack']['admin_username']
+    @browser.text_field(id: 'password').set @config['fasttrack']['admin_password']
+    @browser.button(name: 'submit').click
 
     sleep 3
 
@@ -42,9 +42,9 @@ module UIActions
     password ||= 'ncsa'
 
     @browser.goto(@config['clientrms']['base_url'] + @config['clientrms']['login_page'])
-    @browser.text_field(:id, 'user_account_login').set email_addr
-    @browser.text_field(:id, 'user_account_password').set password
-    @browser.button(:name, 'commit').click; sleep 1
+    @browser.text_field(id: 'user_account_login').set email_addr
+    @browser.text_field(id: 'user_account_password').set password
+    @browser.button(name: 'commit').click; sleep 1
 
     # waiting for the right page title
     begin
@@ -60,14 +60,14 @@ module UIActions
     password = password.nil? ? @config['ted']['prem_password'] : password
 
     @browser.goto(@config['ted']['base_url'] + 'sign_in')
-    @browser.text_field(:id, 'email').set username
-    @browser.text_field(:id, 'password').set password
-    @browser.button(:text, 'Sign In').click; sleep 0.5
+    @browser.text_field(id: 'email').set username
+    @browser.text_field(id: 'password').set password
+    @browser.button(text: 'Sign In').click; sleep 0.5
     wait_for_spinner
   end
 
   def self.get_subfooter
-    @browser.find_element(:class, 'subfooter')
+    @browser.find_element(class: 'subfooter')
   end
 
   def self.check_subfooter_msg(subfooter, viewport_size)
@@ -81,7 +81,7 @@ module UIActions
         cls = 'tablet-show'
     end
 
-    subfooter_msg = subfooter.find_element(:class, cls)
+    subfooter_msg = subfooter.find_element(class: cls)
     raise "#{viewport_size} - subfooter message not found" unless subfooter_msg.displayed?
     raise "#{viewport_size} - wrong subfooter phone number" unless subfooter_msg.text.include? phone_number
   end
@@ -96,18 +96,18 @@ module UIActions
     username = username.nil? ? @config['coach_rms']['username'] : username
     password = password.nil? ? @config['coach_rms']['password'] : password
 
-    @browser.text_field(:id, 'j_username').set username
-    @browser.text_field(:id, 'j_password').set password
+    @browser.text_field(id: 'j_username').set username
+    @browser.text_field(id: 'j_password').set password
 
-    @browser.button(:name, '_submit').click
+    @browser.button(name: '_submit').click
   end
 
   def self.goto_edit_profile
-    @browser.link(:text, 'Edit Profile').click
+    @browser.link(text: 'Edit Profile').click
   end
 
   def self.goto_ncsa_university
-    @browser.link(:text, 'NCSA University').click
+    @browser.link(text: 'NCSA University').click
   end
 
   def self.goto_my_information
