@@ -143,11 +143,6 @@ class AddOrg0DollarContractTest < Common
   def goto_sign_page_via_url_in_email
     url = get_sign_page_url_in_email
     @browser.goto url
-
-    # I do not know why this works before but now
-    # when calls @browser.goto url, browser did attempt to go to the url
-    # but right away got redirected back to login page, clicking back button is the fasted fix atm
-    @browser.back
   end
 
   def check_email(subject = nil)
