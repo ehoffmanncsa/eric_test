@@ -52,6 +52,7 @@ class OpsMessagingServiceRegressTest < Common
     athlete_client_id = @om_config['client_id']
 
     C3PO.setup(@browser)
+    UIActions.fasttrack_login
     C3PO.impersonate(athlete_client_id); sleep 1
 
     failure = []

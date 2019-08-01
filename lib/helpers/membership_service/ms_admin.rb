@@ -12,8 +12,24 @@ module MSAdmin
     @sql.get_connection
   end
 
-  def self.retrieve_active_client_id_from_DB
-    query = "SELECT TOP 100 client_id FROM dbo.client WHERE status = 'Client Created' ORDER BY status_date desc"
+  def self.retrieve_random_active_client_id
+    query = "SELECT TOP 100 client_id
+             FROM dbo.client
+             WHERE status = 'Client Created'
+             ORDER BY status_date DESC"
+    retrive_client_id(query)
+  end
+
+  def self.retrieve_client_id_by_program(program)
+    query = "SELECT TOP 100 client_id
+             FROM dbo.client_info_view
+             WHERE status = 'Client Created'
+             AND program_name = '#{program}'
+             ORDER BY status_date DESC"
+    retrive_client_id(query)
+  end
+
+  def self.retrive_client_id(query)
     data = @sql.exec query
     client_ids = []
     data.each do |row|
@@ -32,17 +48,23 @@ module MSAdmin
     rows.length > 1 ? true : false
   end
 
-  def self.goto_payments_page
+  def self.goto_payments_page(client_id = nil)
     loop do
-      client_id = retrieve_active_client_id_from_DB
+      client_id ||= retrieve_random_active_client_id
       url = @config['fasttrack']['base_url'] + "recruit/admin/payments/#{client_id}"
       puts "[INFO] Attempting to test with client id #{client_id} ...\n#{url}"
       @browser.goto url
-      sleep 2
+      sleep 4
 
       payment_table.scroll.to :center
       break if table_has_payments
-      puts "[INFO] Page has no payment schedules, need to find a different client..."
+      puts "[INFO] Page has no payment schedules, going to try a different client..."
+      client_id = nil
     end
+  end
+
+  def self.goto_recruiting_dashboard
+    url = @config['fasttrack']['base_url'] + @config['fasttrack']['recruiting_dasboard']
+    @browser.goto url
   end
 end

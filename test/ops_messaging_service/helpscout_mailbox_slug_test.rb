@@ -34,6 +34,8 @@ class HelpScoutMailboxSlugTest < Common
   end
 
   def impersonate
+    UIActions.fasttrack_login
+
     athlete_client_id = Default.env_config['ops_messaging']['client_id']
     C3PO.impersonate(athlete_client_id)
     sleep 3 # not sure what's best to wait here yet, wait for gear will just flat out crash
