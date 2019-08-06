@@ -5,7 +5,7 @@ require_relative '../test_helper'
 # TS-443
 # UI Test: Upgrade client membership from Elite to MVP
 
-class UpgradeChampionToEliteTest < Common
+class UpgradeEliteToMVPTest < Common
  def setup
    super
    UIActions.fasttrack_login
