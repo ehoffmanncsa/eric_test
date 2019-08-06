@@ -67,4 +67,20 @@ module MSAdmin
     url = @config['fasttrack']['base_url'] + @config['fasttrack']['recruiting_dasboard']
     @browser.goto url
   end
+
+  def self.upgrade_to(membership_name)
+    @browser.i(class: 'fa-pencil').click
+    modal.select_list(name: 'packageName').select membership_name
+    modal.select_list(name: 'numPayments').select rand(1 .. 18).to_s
+    modal.button(value: 'Preview Membership Change').click
+    sleep 2
+    Watir::Wait.until(timeout: 30) { modal.div(class: %w[js_change_payment change_form]).present? }
+    modal.button(value: 'Change Membership').click
+    sleep 5
+    @browser.refresh
+  end
+
+  def self.modal
+    @browser.div(class: 'modal')
+  end
 end

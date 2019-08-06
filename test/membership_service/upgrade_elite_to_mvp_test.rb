@@ -2,17 +2,17 @@
 require_relative '../test_helper'
 
 # MS Regression
-# TS-439
-# UI Test: Upgrade client membership from Champion to MVP
+# TS-443
+# UI Test: Upgrade client membership from Elite to MVP
 
-class UpgradeChampionToMVPTest < Common
+class UpgradeChampionToEliteTest < Common
  def setup
    super
    UIActions.fasttrack_login
    MSAdmin.setup(@browser)
    C3PO.setup(@browser)
 
-   @client_id = MSAdmin.retrieve_client_id_by_program('Champion')
+   @client_id = MSAdmin.retrieve_client_id_by_program('Elite')
  end
 
  def teardown
@@ -29,9 +29,9 @@ class UpgradeChampionToMVPTest < Common
    C3PO.impersonate(@client_id)
    C3PO.goto_video
 
-   # Champion originally has 1 NCSA video, upgrading to MVP should have 4
-   # But in case 1 was redeemed, 3 is acceptable
-   assert ncsa_video_count >= 3, 'Incorrect video count after upgrading.'
+   # Elite originally has 2 NCSA video, upgrading to MVP should have 4
+   # But in case 2 was redeemed, 2 remaining is acceptable
+   assert ncsa_video_count >= 2, 'Incorrect video count after upgrading.'
  end
 
  def ncsa_video_count
@@ -39,7 +39,7 @@ class UpgradeChampionToMVPTest < Common
    counter_section.divs(class: 'remaining')[0].div(class: 'number').text.to_i
  end
 
- def test_upgrade_champion_to_mvp
+ def test_upgrade_champion_to_elite
    MSAdmin.goto_payments_page(@client_id)
    MSAdmin.upgrade_to('MVP')
    check_package_upgraded

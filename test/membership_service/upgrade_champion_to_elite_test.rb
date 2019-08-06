@@ -19,22 +19,6 @@ class UpgradeChampionToEliteTest < Common
    super
  end
 
- def upgrade_to_elite
-   @browser.i(class: 'fa-pencil').click
-   modal.select_list(name: 'packageName').select 'Elite'
-   modal.select_list(name: 'numPayments').select rand(1 .. 18).to_s
-   modal.button(value: 'Preview Membership Change').click
-   sleep 2
-   Watir::Wait.until(timeout: 30) { modal.div(class: %w[js_change_payment change_form]).present? }
-   modal.button(value: 'Change Membership').click
-   sleep 5
-   @browser.refresh
- end
-
- def modal
-   @browser.div(class: 'modal')
- end
-
  def check_package_upgraded
    account_summary = @browser.div(class: 'account-summary')
    list = account_summary.element(tag_name: 'ul')
@@ -57,8 +41,7 @@ class UpgradeChampionToEliteTest < Common
 
  def test_upgrade_champion_to_elite
    MSAdmin.goto_payments_page(@client_id)
-
-   upgrade_to_elite
+   MSAdmin.upgrade_to('Elite')
    check_package_upgraded
    check_client_video_count
  end
