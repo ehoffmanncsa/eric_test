@@ -8,6 +8,8 @@ def PORT = params.port
 def HELPSCOUT_SECRET_KEY = params.helpscout_secret_key
 def NCSA_HELPSCOUT_API_KEY = params.ncsa_helpscout_api_key
 def NCSA_HELPSCOUT_ACCOUNT = params.ncsa_helpscout_account
+def NCSA_PASS_API_KEY = params.ncsa_pass_api_key
+def NCSA_PASS_ACCOUNT = params.ncsa_pass_account
 
 node {
 
@@ -52,6 +54,8 @@ node {
           -e HELPSCOUT_SECRET_KEY=${HELPSCOUT_SECRET_KEY} \
           -e NCSA_HELPSCOUT_API_KEY=${NCSA_HELPSCOUT_API_KEY} \
           -e NCSA_HELPSCOUT_ACCOUNT=${NCSA_HELPSCOUT_ACCOUNT} \
+          -e NCSA_PASS_API_KEY=${NCSA_PASS_API_KEY} \
+          -e NCSA_PASS_ACCOUNT=${NCSA_PASS_ACCOUNT} \
           --privileged testbox 'gem i bundler -v 1.17.3 && bundle i && rake test ${APPLICATION}'"
     } catch(error) {
         println error
