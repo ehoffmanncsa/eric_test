@@ -39,7 +39,7 @@ class UpgradeEliteToMVPTest < Common
    counter_section.divs(class: 'remaining')[0].div(class: 'number').text.to_i
  end
 
- def test_upgrade_champion_to_elite
+ def test_upgrade_elite_to_mvp
    MSAdmin.goto_payments_page(@client_id)
    MSAdmin.upgrade_to('MVP')
    check_package_upgraded
