@@ -18,17 +18,17 @@ RUN tar -xzf freetds-1.00.21.tar.gz && \
 # Copy repo code into tmp/qa_regression
 RUN mkdir /tmp/qa_regression
 WORKDIR /tmp/qa_regression
-RUN cd /tmp/qa_regression
 
-COPY Gemfile /tmp/qa_regression
-COPY Rakefile /tmp/qa_regression
-COPY lib /tmp/qa_regression/lib
-COPY test /tmp/qa_regression/test
-COPY tasks /tmp/qa_regression/tasks
-COPY calc.rb /tmp/qa_regression/calc.rb
-COPY config /tmp/qa_regression/config
+COPY Gemfile Gemfile
+COPY Rakefile Rakefile
+COPY calc.rb calc.rb
+COPY .ruby-version .ruby-version
 
-COPY .ruby-version /tmp/qa_regression
+ADD lib/ lib/
+ADD test/ test/
+ADD tasks/ task/
+ADD config/ config/
+
 RUN ["/bin/bash", "-l", "-c", "ruby=$(<.ruby-version) && rvm install $ruby && rvm --default use $ruby"]
 
 ENTRYPOINT ["/bin/bash", "-c"]
