@@ -1,4 +1,5 @@
 require_relative '../test_helper'
+require 'pass_client'
 
 =begin
   Partner Athlete Search regression search queries.
@@ -14,18 +15,24 @@ class PartnerAthleteSearchTest < Minitest::Test
   SPECIAL_SPORTS = [MENS_BASKETBALL, WOMENS_BASKETBALL, FOOTBALL]
 
   def setup
-    @auth_adapter = FaradayClient.new(account: account, api_key: api_key).adapter
-    @jwt = get_json_web_token
+    ENV['PASS_CLIENT_ENV'] = "staging"
+
+    PassClient.configure do |config|
+      config.auth_id = account
+      config.secret_key = api_key
+    end
   end
 
   def test_is_ncaa_searchable_universal_criteria
-    response = search_athletes({
+    terms = {
       'size' => 1000,
       'is_ncaa_searchable' => true,
       'sport_id' => BASEBALL
-    })
+    }
 
-    athletes = JSON.parse(response.body)["data"]["attributes"]
+    pass_response = PassClient::Athlete::Search.new(search_terms: terms).get
+
+    athletes = JSON.parse(pass_response.body)["data"]["attributes"]
 
     failures = []
     athletes.each do |athlete|
@@ -40,13 +47,15 @@ class PartnerAthleteSearchTest < Minitest::Test
 
   def test_is_ncaa_searchable_sport_specific_criteria
     SPECIAL_SPORTS.each do |sport_id|
-      response = search_athletes({
+      terms = {
         'size' => 1000,
         'is_ncaa_searchable' => true,
         'sport_id' => sport_id
-      })
+      }
 
-      athletes = JSON.parse(response.body)["data"]["attributes"]
+      pass_response = PassClient::Athlete::Search.new(search_terms: terms).get
+
+      athletes = JSON.parse(pass_response.body)["data"]["attributes"]
 
       failures = []
       athletes.each do |athlete|
@@ -64,39 +73,6 @@ class PartnerAthleteSearchTest < Minitest::Test
   end
 
   private
-
-  def get_json_web_token
-    @_get_json_web_token ||= begin
-      response = @auth_adapter.post do |request|
-        request.headers["Content-Type"] = "application/json"
-        request.url(base_uri + JSON_WEB_TOKEN_PATH)
-        request.body = {auth_id: account}.to_json
-      end
-
-      JSON.parse(response.body)["data"]["attributes"]["token"]
-    end
-  end
-
-  def search_athletes(params)
-    uri = URI(base_uri + ATHLETE_SEARCH_PATH)
-    uri.query = URI.encode_www_form(params)
-
-    req = Net::HTTP::Get.new(uri)
-    req['Content-Type'] = 'application/json'
-    req['Authorization'] = "#{@jwt}"
-
-    Net::HTTP.start(uri.hostname) do |http|
-      http.request(req)
-    end
-  end
-
-  def base_uri
-    credentials['base_uri']
-  end
-
-  def credentials
-    Default.env_config['partner_athlete_search']
-  end
 
   def account
     ENV['NCSA_PASS_ACCOUNT']

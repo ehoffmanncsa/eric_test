@@ -77,7 +77,3 @@ redis:
   hostname: "redis-qa.ncsasports.org"
   port: '6379'
   db: '0'
-
-# Partner Athlete Search
-partner_athlete_search:
-  base_uri: 'https://data-staging.ncsasports.org'

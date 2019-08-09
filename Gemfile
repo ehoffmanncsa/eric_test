@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://gems.ncsasports.org'
 
 gem 'api-auth'
 gem 'csv'
@@ -25,6 +25,7 @@ gem 'watir-scroll'
 gem 'xml-simple'
 gem 'ffaker'
 gem 'redis'
+gem 'pass_client'
 
 gem 'pry'
 
