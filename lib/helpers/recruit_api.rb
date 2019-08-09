@@ -2,8 +2,6 @@
 
 class RecruitAPI
   def initialize(enroll_yr = nil, sport_id = nil, need_google_voice = false)
-    @api = Api.new
-
     @enroll_yr = enroll_yr
     @sport_id = sport_id.nil? ? Default.static_info['sport_ids'].sample : sport_id
     @need_google_voice = need_google_voice
@@ -26,9 +24,13 @@ class RecruitAPI
     }
 
     begin
-      resp_code, resp_body = @api.ppost url, body
-    rescue => e
-      puts e
+      retries ||= 0
+      resp_code, resp_body = api.ppost url, body
+    rescue => error
+      puts error
+      sleep 3
+      puts "Retrying ..."
+      retry if (retries += 1) < 5
     end
 
     sleep 5 # I think taking actions right after often results in weirdness
@@ -44,6 +46,10 @@ class RecruitAPI
   end
 
   private
+
+  def api
+    Api.new
+  end
 
   def url
     clientrms = Default.env_config['clientrms']
