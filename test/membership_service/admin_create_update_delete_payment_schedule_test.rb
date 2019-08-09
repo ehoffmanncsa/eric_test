@@ -36,6 +36,7 @@ class AdminCUDPaymentScheduleTest < Common
     form.text_field(name: 'scheduleDate').set date
     form.text_field(name: 'amount').set amount
     form.text_field(name: 'financeFee').set @given_amount
+    sleep 2
     @browser.div(class: 'add-payment-button-js').click
     sleep 2
   end
