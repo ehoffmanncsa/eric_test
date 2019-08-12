@@ -15,7 +15,7 @@ class PartnerAthleteSearchTest < Minitest::Test
   SPECIAL_SPORTS = [MENS_BASKETBALL, WOMENS_BASKETBALL, FOOTBALL]
 
   def setup
-    ENV['PASS_CLIENT_ENV'] = "staging"
+    ENV['PASS_CLIENT_ENV'] = ENV['ENV_NAME']
 
     PassClient.configure do |config|
       config.auth_id = account
