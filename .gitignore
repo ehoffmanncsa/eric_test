@@ -24,3 +24,4 @@ Gemfile.lock
 config/postgres_databases.yml
 config/sql_databases.yml
 .staging-docker.env
+.env
