@@ -115,6 +115,12 @@ module UIActions
     @browser.goto url
   end
 
+  def self.goto_academics
+    # go to academics
+    url = @config['clientrms']['base_url'] + @config['clientrms']['academic']
+    @browser.goto url
+  end
+
   def self.find_by_test_id(test_id)
     @browser.element("data-test-id" => test_id)
   end

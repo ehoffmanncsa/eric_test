@@ -27,6 +27,6 @@ gem 'ffaker'
 gem 'redis'
 gem 'pass_client'
 
-gem 'pry'
+gem 'pry-coolline'
 
 gem 'eyes_selenium', '3.14.3' # this is only here because of WWW code existence

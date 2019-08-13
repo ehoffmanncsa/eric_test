@@ -9,6 +9,7 @@ clientrms:
   membership_info: 'clientrms/accounts'
   dashboard: 'clientrms/dashboard/show'
   my_information: 'clientrms/profile/my_information/edit'
+  academic: 'clientrms/profile/academic/edit'
 
 # Fasttrack Admin login
 # base UI url is the same with client rms

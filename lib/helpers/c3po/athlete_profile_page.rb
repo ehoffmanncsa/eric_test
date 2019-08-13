@@ -93,6 +93,30 @@ module C3PO
       study_field.text.gsub("Preferred Field of Study\n", '')
     end
 
+    def gpa_section
+      @browser.elements(:class, %w[score half mg-btm-1])[0].text
+    end
+
+    def act_section
+      @browser.elements(:class, %w[score half mg-btm-1])[1].text
+    end
+
+    def sat_section
+      @browser.elements(:class, %w[score half mg-btm-1])[2].text
+    end
+
+    def high_school
+      @browser.elements(:class, %w[half mg-btm-1])[3].text
+    end
+
+    def honors_section
+      @browser.elements(:class, %w[half accomplishments])[0].text
+    end
+
+    def academic_awards_section
+      @browser.elements(:class, %w[half awards])[0].text
+    end
+
     private
 
     def top_section

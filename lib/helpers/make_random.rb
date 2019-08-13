@@ -73,11 +73,38 @@ module MakeRandom
 		"#{start_rand}-#{end_rand}"
 	end
 
+	def self.gpa
+    loop do
+      gpa = rand(1.0 .. 6.0).round(2).to_s
+      return gpa if gpa.chars.last != '0'
+    end
+  end
+
+	def self.act
+		rand(15 .. 32)
+	end
+
+	def self.sat
+		rand = rand(200 .. 800)
+	end
+
+	def self.psat
+		rand = rand(320 .. 1520)
+	end
+
 	def self.lorem(sentence_count = 1)
 		FFaker::Lorem.paragraph(sentence_count)
 	end
 
+	def self.lorem_words(word_count = 8)
+		FFaker::Lorem.sentence(word_count)
+	end
+
 	def self.major
 		FFaker::Education.major
+	end
+
+	def self.conference
+		FFaker::Conference.name
 	end
 end
