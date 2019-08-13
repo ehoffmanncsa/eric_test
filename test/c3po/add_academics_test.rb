@@ -73,7 +73,7 @@ class V2AddAcademicsPremTest < Common
   def compare_academics_data_to_profile_page_data
     failure = []
 
-    failure << 'Incorrect high school selection' unless expect_high_school_section  == @profile_page.high_school
+    failure << 'Incorrect high school selection' unless @profile_page.high_school.include?(expect_high_school_section)
     failure << 'Incorrect gpa section' unless expect_gpa_section == @profile_page.gpa_section
     failure << 'Incorrect sat section' unless expect_sat_section  == @profile_page.sat_section
     failure << 'Incorrect act section' unless expect_act_section  == @profile_page.act_section
