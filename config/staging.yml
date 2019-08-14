@@ -1,15 +1,19 @@
 # Clientrms:
 clientrms:
+  base_url: 'https://qa.ncsasports.org/clientrms/'
+  login_page: 'user_accounts/sign_in'
+  offerings_page: 'membership/offerings'
+  commitment_page: 'membership/commitment'
+  payments_page: 'finances'
+  membership_info: 'accounts'
+  dashboard: 'dashboard/show'
+  my_information: 'profile/my_information/edit'
+  coaching_session: 'coaching_session_requests/new'
+  academic: 'profile/academic/edit'
+
+rss:
   base_url: 'https://qa.ncsasports.org/'
-  rss_endpoint: 'api/submit/v1/new_recruit'
-  login_page: 'clientrms/user_accounts/sign_in'
-  offerings_page: 'clientrms/membership/offerings'
-  commitment_page: 'clientrms/membership/commitment'
-  payments_page: 'clientrms/finances'
-  membership_info: 'clientrms/accounts'
-  dashboard: 'clientrms/dashboard/show'
-  my_information: 'clientrms/profile/my_information/edit'
-  academic: 'clientrms/profile/academic/edit'
+  endpoint: 'api/submit/v1/new_recruit'
 
 # Fasttrack Admin login
 # base UI url is the same with client rms

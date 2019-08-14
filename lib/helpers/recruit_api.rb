@@ -52,8 +52,8 @@ class RecruitAPI
   end
 
   def url
-    clientrms = Default.env_config['clientrms']
-    clientrms['base_url'] + clientrms['rss_endpoint']
+    rss = Default.env_config['rss']
+    rss['base_url'] + rss['endpoint']
   end
 
   def grad_yr

@@ -24,7 +24,7 @@ module MSAdmin
     query = "SELECT TOP 100 client_id
              FROM dbo.client_info_view
              WHERE status = 'Client Created'
-             AND program_name = '#{program}'
+             AND payment_option_name = '#{program}'
              ORDER BY status_date DESC"
     retrive_client_id(query)
   end

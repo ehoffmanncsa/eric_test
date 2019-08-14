@@ -98,17 +98,19 @@ module C3PO
 
     # impersonating opens new tab, hence switch focus onto that one
     @browser.window(index: 1).use
+    sleep 2
   end
 
   def self.open_tracking_note(client_id)
-    url = @config['clientrms']['base_url'] + "clientrms/profile/recruiting_profile/#{client_id}/admin"
+    url = @config['clientrms']['base_url'] + "profile/recruiting_profile/#{client_id}/admin"
     @browser.goto url
     @browser.link(text: 'Tracking Notes').click
   end
 
   def self.goto_video
-    @browser.element(id: 'profile_summary_button').click
-    @browser.element(class: 'subheader').element(id: 'edit_video_link').click
+    url = @config['clientrms']['base_url'] + "profile/video"
+    @browser.goto url
+    sleep 2
   end
 
   def self.goto_publish
@@ -265,5 +267,10 @@ module C3PO
     popup.elements(tag_name: 'h6').each { |e| headers << e.text.downcase }
 
     headers.join(',')
+  end
+
+  def self.goto_coaching_session
+    url = @config['clientrms']['base_url'] + @config['clientrms']['coaching_session']
+    @browser.goto url
   end
 end
