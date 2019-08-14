@@ -68,7 +68,7 @@ module MSAdmin
     @browser.goto url
   end
 
-  def self.upgrade_to(membership_name)
+  def self.upgrade_or_down_grade_to(membership_name)
     @browser.i(class: 'fa-pencil').click
     modal.select_list(name: 'packageName').select membership_name
     modal.select_list(name: 'numPayments').select rand(1 .. 18).to_s

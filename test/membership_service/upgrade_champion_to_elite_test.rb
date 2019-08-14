@@ -65,7 +65,7 @@ class UpgradeChampionToEliteTest < Common
 
  def test_upgrade_champion_to_elite
    MSAdmin.goto_payments_page(@client_id)
-   MSAdmin.upgrade_to('Elite')
+   MSAdmin.upgrade_or_down_grade_to('Elite')
    check_package_upgraded
    check_client_video_count
    check_coaching_and_evaluation_sessions

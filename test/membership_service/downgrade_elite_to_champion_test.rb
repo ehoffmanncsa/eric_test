@@ -2,10 +2,10 @@
 require_relative '../test_helper'
 
 # MS Regression
-# TS-443
-# UI Test: Upgrade client membership from Elite to MVP
+# TS-442
+# UI Test: Downgrade client membership from Elite to Champion
 
-class UpgradeEliteToMVPTest < Common
+class DowngradeEliteToChampionTest < Common
  def setup
    super
    UIActions.fasttrack_login
@@ -19,19 +19,19 @@ class UpgradeEliteToMVPTest < Common
    super
  end
 
- def check_package_upgraded
+ def check_package_downgraded
    account_summary = @browser.div(class: 'account-summary')
    list = account_summary.element(tag_name: 'ul')
-   assert (list.lis[0].text.include? 'MVP'), 'Package is not upgraded to MVP.'
+   assert (list.lis[0].text.include? 'Champion'), 'Package is not downgraded to Champion.'
  end
 
  def check_client_video_count
    C3PO.impersonate(@client_id)
    C3PO.goto_video
 
-   # Elite originally has 2 NCSA video, upgrading to MVP should have 4
-   # But in case 2 was redeemed, 2 remaining is acceptable
-   assert ncsa_video_count >= 2, 'Incorrect video count after upgrading.'
+   # Elite originally has 2 NCSA videos, downgrading to Champion should have 1
+   # But in case 1 or 2 video was redeemed, 1 or 0 remaining is acceptable
+   assert ncsa_video_count <= 1, 'Incorrect video count after upgrading.'
  end
 
  def ncsa_video_count
@@ -46,12 +46,12 @@ class UpgradeEliteToMVPTest < Common
    coaching_session = dropdown.li('data-option-array-index': '2')
    evaluation_session = dropdown.li('data-option-array-index': '3')
 
-   coaching_session_count = coaching_session.text.split('(')[1].gsub(/[^A-Za-z]/, '')
-   evaluation_session_count = evaluation_session.text.split('(')[1].gsub(/[^A-Za-z]/, '')
+   coaching_session_count = coaching_session.text.split('(')[1].gsub(/\D/, '').to_i
+   evaluation_session_count = evaluation_session.text.split('(')[1].gsub(/\D/, '').to_i
 
    failure = []
-   failure << "Does not have any coaching session." unless coaching_session_count == 'Unlimited'
-   failure << "Does not have any evaluation session." unless evaluation_session_count == 'Unlimited'
+   failure << "Has coaching session while not supposed to." unless coaching_session_count == 0
+   failure << "Has evaluation session while not supposed to." unless evaluation_session_count == 0
    assert_empty failure
  end
 
@@ -63,10 +63,10 @@ class UpgradeEliteToMVPTest < Common
    @browser.ul(class: 'chosen-results')
  end
 
- def test_upgrade_elite_to_mvp
+ def test_downgrade_elite_to_champion
    MSAdmin.goto_payments_page(@client_id)
-   MSAdmin.upgrade_or_down_grade_to('MVP')
-   check_package_upgraded
+   MSAdmin.upgrade_or_down_grade_to('Champion')
+   check_package_downgraded
    check_client_video_count
    check_coaching_and_evaluation_sessions
  end
