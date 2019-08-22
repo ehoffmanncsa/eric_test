@@ -140,7 +140,7 @@ class PremCoachAddFreeAthlete < Common
 
     send_invite_email
     check_pending_status
-    TED.check_welcome_email
+    TED.check_invite_email
     check_athlete_membership
 
     check_athlete_accepted_status

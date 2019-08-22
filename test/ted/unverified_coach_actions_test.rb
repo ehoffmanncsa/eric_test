@@ -169,7 +169,7 @@ class UnverifiedCoachActionsTest < Common
     add_ted_athlete_through_ui
 
     TEDAthleteApi.send_invite_email(@athlete_id)
-    TED.check_welcome_email
+    TED.check_invite_email
 
     TEDAthleteApi.delete_athlete(@athlete_id)
   end

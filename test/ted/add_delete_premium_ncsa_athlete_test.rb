@@ -99,7 +99,7 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def athlete_accept_invitation
-    UIActions.user_login(@email); sleep 1
+    UIActions.user_login(@email);
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
@@ -158,7 +158,7 @@ class TEDAddDeletePremiumAthlete < Common
     buy_premium_package
     add_athlete
     send_invite_email
-    TED.check_welcome_email
+    TED.check_invite_email
     athlete_accept_invitation
     check_athlete_premium_profile
     check_athlete_accepted_status

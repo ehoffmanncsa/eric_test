@@ -175,4 +175,10 @@ module TED
 
     @gmail.delete(emails) unless emails.empty?
   end
+
+  def self.check_invite_email
+    @gmail.mail_box = 'TED_Athlete_invite_email'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
+  end
 end
