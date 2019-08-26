@@ -166,6 +166,8 @@ class SignupPublicAthleteTest < Common
   end
 
   def test_public_new_athlete_sign_up
+    skip
+    #skipping this test due to existing bug https://ncsasports.atlassian.net/browse/TED-1613?oldIssueView=true
     fillout_signup_form
     check_redirect_to_clientrms_password_reset
     assign_new_password

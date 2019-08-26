@@ -105,6 +105,8 @@ class CreateNewOrgWithPrepop < Common
   end
 
   def test_create_org_with_existing_athlete
+    skip
+    #skipping this test due to existing bug https://ncsasports.atlassian.net/browse/TED-1597
     create_athlete
     add_coach_reference
 
