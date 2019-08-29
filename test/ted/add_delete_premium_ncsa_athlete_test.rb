@@ -1,6 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
+
 # TS-239: TED Regression
 # UI Test: Add/Invite Previous NCSA Athlete
 
@@ -99,7 +100,8 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def athlete_accept_invitation
-    UIActions.user_login(@email);
+    UIActions.user_login(@email, "ncsa1333");
+
     Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
