@@ -34,7 +34,7 @@ module MSSetup
     @browser.button(name: 'commit').click
     sleep 1
 
-    Watir::Wait.until(timeout: 90) { @browser.url.include? 'custom_drills/free_onboarding' }
+    Watir::Wait.until(timeout: 90) { @browser.div(class: 'profile-thumb').present? }
     sleep 1
   end
 

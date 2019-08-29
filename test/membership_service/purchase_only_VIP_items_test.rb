@@ -12,9 +12,8 @@ class PurchaseOnlyVIPItemsTests < Common
     @clientrms = Default.env_config['clientrms']
 
     UIActions.user_login(recruit_email)
-    MSSetup.setup(@browser)
     MSConvenient.setup(@browser)
-    MSConvenient.buy_alacarte(recruit_email)
+    MSConvenient.buy_alacarte_items(recruit_email)
   end
 
   def teardown

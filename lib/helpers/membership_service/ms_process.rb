@@ -110,4 +110,11 @@ module MSProcess
 
     items_picked
   end
+
+  def self.pick_VIP_item_by_name(name)
+    open_alacarte_table
+    block = alacarte_blocks.detect { |b| b.element(tag_name: 'h3').text == name }
+    block.element(:class, 'button--medium').click
+    sleep 300
+  end
 end

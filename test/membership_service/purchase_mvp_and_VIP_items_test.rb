@@ -3,7 +3,7 @@ require_relative '../test_helper'
 
 # TS-67, TS-465, TS-466, TS-445, TS-464
 # Purchase MVP + VIP Item(s) (any grad year)
-class PurchaseMVPAndVIPItemsTests < Common
+class PurchaseMVPAndVIPItemsTest < Common
   def setup
     super
 

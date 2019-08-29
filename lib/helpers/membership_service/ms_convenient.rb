@@ -27,15 +27,24 @@ module MSConvenient
   end
 
   # to purchase only alacarte items
-  def self.buy_alacarte(email, all = true)
+  def self.buy_alacarte_items(email, items_count = nil)
     MSSetup.set_password(email)
     MSSetup.goto_offerings
 
-    vip_items_picked = MSProcess.pick_VIP_items
+    vip_items_picked = MSProcess.pick_VIP_items(items_count)
     MSProcess.checkout
     MSFinish.setup_billing
 
     vip_items_picked
+  end
+
+  def self.buy_alacarte_item_by_name(email, item_name)
+    MSSetup.set_password(email)
+    MSSetup.goto_offerings
+
+    MSProcess.pick_VIP_item_by_name(item_name)
+    MSProcess.checkout
+    MSFinish.setup_billing
   end
 
   # to purchase both a membership package and some alacarte items
