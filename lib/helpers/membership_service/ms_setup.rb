@@ -29,12 +29,8 @@ module MSSetup
 
     Watir::Wait.until { @browser.text_field(id: 'user_account_username').visible? }
 
-    username = email.split('@')[0].delete('.').delete('+')
-
-    @browser.text_field(id: 'user_account_username').value = username
     @browser.text_field(id: 'user_account_password').set 'ncsa1333'
     @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
-
     @browser.button(name: 'commit').click
     sleep 1
 

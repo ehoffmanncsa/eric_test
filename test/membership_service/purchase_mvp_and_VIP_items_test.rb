@@ -48,6 +48,7 @@ class PurchaseMVPAndVIPItemsTests < Common
     vip_section_items = []
     vip_section.elements(:tag_name, 'li').each { |item| vip_section_items << item.text.split(' ')[1..-1].join(' ') }
     @vip_items_picked.each do |item|
+      item.delete_suffix!('s') if item == 'VIP Coachings'
       failure << "VIP item #{item} not found in summary." unless vip_section_items.include? item
     end
 
