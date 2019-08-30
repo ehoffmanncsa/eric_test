@@ -406,7 +406,7 @@ class AddMyInformationTestFreeEmailInsert < Common
   end
 
   def test_add_my_information
-    email = 'testd522@yopmail.com'
+    @email = 'test2711@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

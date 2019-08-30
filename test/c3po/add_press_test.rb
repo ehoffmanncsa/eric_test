@@ -7,13 +7,8 @@ class AddPressTest < Common
   def setup
     super
 
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
-
     C3PO.setup(@browser)
-    POSSetup.setup(@browser)
 
-    POSSetup.buy_package(@email, 'elite')
 
     @title = 'Press Title'
     @link = 'http://www.google.com/'
@@ -62,7 +57,8 @@ class AddPressTest < Common
   end
 
   def test_add_press
-    UIActions.user_login(@email)
+    email = 'test0d07@yopmail.com'
+    UIActions.user_login(email)
     UIActions.goto_edit_profile
 
     C3PO.goto_athletics

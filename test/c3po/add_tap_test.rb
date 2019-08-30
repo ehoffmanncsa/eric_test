@@ -128,14 +128,14 @@ class AddTAPTest < Common
   end
 
   def test_do_tap
-    email = 'test9286@yopmail.com'
+    email = 'test0d07@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
     C3PO.goto_tapresults
 
-    add_tap
-    add_sport
+    #add_tap
+    #add_sport
     loop_1
     add_tap1
     loop_2
