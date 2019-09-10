@@ -18,11 +18,11 @@ module TED
   end
 
   def self.sidebar
-    @browser.element(:class, 'sidebar')
+    @browser.element(class: 'sidebar')
   end
 
   def self.modal
-    @browser.element(:class, 'modal-content')
+    @browser.element(class: 'modal-content')
   end
 
   def self.goto_activity
@@ -35,7 +35,7 @@ module TED
   def self.goto_roster
     # this shows all the teams
     Watir::Wait.until { navbar.present? }
-    navbar.link(:text, 'Roster').click
+    navbar.link(text: 'Roster').click
     UIActions.wait_for_spinner; sleep 1
   end
 
@@ -48,56 +48,56 @@ module TED
 
   def self.goto_colleges
     # where user perform colleges search
-    navbar.link(:text, 'Colleges').click
+    navbar.link(text: 'Colleges').click
     UIActions.wait_for_spinner
     sleep 1.5
   end
 
   def self.open_college_filters
     # filter will default as open if org has no college data
-    return unless @browser.element(:class, 'filter-results').element(:class, 'fa-chevron-down').present?
+    return unless @browser.element(class: 'filter-results').element(class: 'fa-chevron-down').present?
 
-    @browser.button(:text, 'Define Search').click
+    @browser.button(text: 'Define Search').click
   end
 
   def self.go_to_athlete_tab
     # go to Roster Management -> athlete
     @browser.refresh; sleep 1
     goto_roster
-    @browser.link(:text, 'Athletes').click; sleep 2
+    @browser.link(text: 'Athletes').click; sleep 2
   end
 
   def self.go_to_team_tab
     # go to Roster Management -> athlete
     @browser.refresh; sleep 1
     goto_roster
-    @browser.link(:text, 'Teams').click
+    @browser.link(text: 'Teams').click
   end
 
   def self.go_to_staff_tab
     # go to Roster Management -> staff
     @browser.refresh; sleep 1
     goto_roster
-    @browser.link(:text, 'Staff').click; sleep 1
+    @browser.link(text: 'Staff').click; sleep 1
   end
 
   def self.go_to_payment_method_tab
     # go to Account Settings -> payment methods
     @browser.refresh; sleep 1
     goto_account_settings
-    @browser.link(:text, 'Payment Methods').click
+    @browser.link(text: 'Payment Methods').click
   end
 
   def self.go_to_organization_tab
     # go to Account Settings -> Organization
     @browser.refresh; sleep 1
     goto_account_settings
-    @browser.link(:text, 'Organization').click
+    @browser.link(text: 'Organization').click
   end
 
   def self.go_to_athlete_evaluation(athlete_id)
     go_to_endpoint "athletes/#{athlete_id}"
-    @browser.link(:text, 'Athlete Evaluation').click
+    @browser.link(text: 'Athlete Evaluation').click
   end
 
   def self.go_to_endpoint(endpoint)
@@ -106,12 +106,12 @@ module TED
 
   def self.sign_out
     UIActions.find_by_test_id("user-menu").click; sleep 1
-    @browser.div(:class, 'dropdown-menu__menu').link(:text, 'Sign Out').click
+    @browser.div(class: 'dropdown-menu__menu').link(text: 'Sign Out').click
     sleep 1
   end
 
   def self.end_imperson
-    sidebar.link(:text, 'End Impersonation').click; sleep 1
+    sidebar.link(text: 'End Impersonation').click; sleep 1
   end
 
   def self.get_row_by_name(name)
@@ -121,26 +121,26 @@ module TED
       name = temp.join(' ')
     end
 
-    @browser.element(:text, name).parent
+    @browser.element(text: name).parent
   end
 
   def self.get_athlete_status(name = nil)
     go_to_athlete_tab
 
     row = get_row_by_name(name)
-    row.elements(:tag_name, 'td')[4].text # this is status
+    row.elements(tag_name: 'td')[4].text # this is status
   end
 
   def self.delete_athlete(name)
     row = TED.get_row_by_name(name)
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
+    cog = row.elements(tag_name: 'td').last.element(class: 'fa-cog')
     cog.click
 
     Watir::Wait.until { modal.present? }
 
-    modal.button(:text, 'Delete').click
-    small_modal = modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click
+    modal.button(text: 'Delete').click
+    small_modal = modal.div(class: 'modal-content')
+    small_modal.button(text: 'Delete').click
 
     UIActions.wait_for_modal
   end
@@ -158,7 +158,7 @@ module TED
     @browser.goto url
     UIActions.wait_for_spinner
 
-    @browser.link(:text, 'Enter Org as Coach').click
+    @browser.link(text: 'Enter Org as Coach').click
     UIActions.wait_for_spinner
   end
 

@@ -9,59 +9,59 @@ module MSFinish
   end
 
   def self.accept_summary
-    button = @browser.element(:id, 'summary').element(:class, 'button--next')
+    button = @browser.element(id: 'summary').element(class: 'button--next')
     button.scroll.to :center; sleep 1
-    @browser.element(:id, 'summary').element(:class, 'button--next').click
+    @browser.element(id: 'summary').element(class: 'button--next').click
     sleep 2
   end
 
   def self.fill_out_registration_form
     # guardian email
-    @browser.text_field(:id, 'order_guardian_email').set 'fake@fake.com'
+    @browser.text_field(id: 'order_guardian_email').set 'fake@fake.com'
 
     # select specialist
-    specialists = @browser.select_list(:id, 'order_head_scout_id')
+    specialists = @browser.select_list(id: 'order_head_scout_id')
     names = specialists.options.to_a; names.shift
     specialists.select(names.sample.text)
 
     # select coordinator
-    coordinators = @browser.select_list(:id, 'order_rc_user_id')
+    coordinators = @browser.select_list(id: 'order_rc_user_id')
     names = coordinators.options.to_a; names.shift
     coordinators.select(names.sample.text)
 
     # click next button
-    @browser.element(:class, 'registration-js').click
+    @browser.element(class: 'registration-js').click
   end
 
   def self.fill_out_credit
     Default.static_info['credit_billing'].each do |id, value|
-      @browser.text_field(:id, id).set value
+      @browser.text_field(id: id).set value
     end
   end
 
   def self.fill_out_ACH
-    @browser.element(:class, 'checking-js').click
+    @browser.element(class: 'checking-js').click
     Default.static_info['checking_billing'].each do |id, value|
-      @browser.text_field(:id, id).set value
+      @browser.text_field(id: id).set value
     end
   end
 
   def self.select_billing_state
     # select state for billing address
-    state = @browser.select_list(:id, 'order_billing_state_code')
+    state = @browser.select_list(id: 'order_billing_state_code')
     names = state.options.to_a; names.shift
     state.select(names.sample.text)
 
     # click next button
-    @browser.element(:class, 'billing-js').click
+    @browser.element(class: 'billing-js').click
   end
 
   def self.sign_and_auth
     # sign and authorize
-    Watir::Wait.until { @browser.element(:id, 'order-submit').visible? }
-    @browser.text_field(:id, 'order_authorization_signature').set 'qa automation'
+    Watir::Wait.until { @browser.element(id: 'order-submit').present? }
+    @browser.text_field(id: 'order_authorization_signature').set 'qa automation'
     sleep 1
-    @browser.element(:id, 'order-submit').click; sleep 3
+    @browser.element(id: 'order-submit').click; sleep 3
   end
 
   def self.setup_billing(ach = false)

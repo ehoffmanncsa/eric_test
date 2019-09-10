@@ -35,7 +35,7 @@ module C3PO
     # send in file path and upload
     form.file_field(id: 'profile-video-upload-file-input').set path
     form.button(name: 'commit').click
-    Watir::Wait.until { @browser.div(class: 'js-video-files-container').visible? }
+    Watir::Wait.until { @browser.div(class: 'js-video-files-container').present? }
   end
 
   def self.upload_youtube(admin = true)
@@ -53,7 +53,7 @@ module C3PO
     rescue; end
 
     form.button(name: 'commit').click
-    Watir::Wait.while { form.element(class: 'action-spinner').visible? }
+    Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
 
   def self.upload_hudl(admin = true)
@@ -71,7 +71,7 @@ module C3PO
     rescue; end
 
     form.button(name: 'commit').click
-    Watir::Wait.while { form.element(class: 'action-spinner').visible? }
+    Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
 
   def self.send_to_video_team
@@ -152,7 +152,7 @@ module C3PO
     Timeout::timeout(180) {
       loop do
         begin
-          div.element(class: 'thumbnail').visible?
+          div.element(class: 'thumbnail').present?
           @thumbnail = div.element(class: 'thumbnail')
         rescue => e
           @browser.refresh; retry
@@ -190,9 +190,9 @@ module C3PO
     # click radio button and give jersey number
     # sometimes these 2 dont show up so just ignore them
     begin
-      Watir::Wait.until { form.element(name: 'season_team_info[starter]').visible? }
+      Watir::Wait.until { form.element(name: 'season_team_info[starter]').present? }
       form.element(name: 'season_team_info[starter]').click
-      Watir::Wait.until { form.element(name: 'season_team_info[jersey_number]').visible? }
+      Watir::Wait.until { form.element(name: 'season_team_info[jersey_number]').present? }
       form.element(name: 'season_team_info[jersey_number]').set MakeRandom.number(2)
     rescue; end
 
@@ -233,7 +233,7 @@ module C3PO
 
     # some sport doesnt require jersey number so just ignore
     begin
-      Watir::Wait.until { club_form.text_field(name: 'jersey_number').visible? }
+      Watir::Wait.until { club_form.text_field(name: 'jersey_number').present? }
       club_form.text_field(name: 'jersey_number').set MakeRandom.number(2)
     rescue; end
 
@@ -256,7 +256,7 @@ module C3PO
     history_section = @browser.element(id: 'athletic-section')
     history_section.scroll.to; sleep 1
     stat = history_section.elements(tag_name: 'li').to_a.sample
-    Watir::Wait.until { stat.element(class: 'mg-right-1').visible? }
+    Watir::Wait.until { stat.element(class: 'mg-right-1').present? }
     stat.element(class: 'mg-right-1').click
   end
 

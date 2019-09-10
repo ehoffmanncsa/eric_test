@@ -34,7 +34,7 @@ class MeetYourTeamMilestoneTest < Common
     end
 
     begin
-      Watir::Wait.until { @browser.div(:class, 'mfp-content').visible? }
+      Watir::Wait.until { @browser.div(:class, 'mfp-content').present? }
       popup = @browser.div(:class, 'mfp-content')
       popup.element(:class, 'close-popup').click; sleep 1
     rescue; end

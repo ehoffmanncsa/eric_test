@@ -135,7 +135,7 @@ class SignupExistingOrgTest < Common
   def check_new_coach_can_login
     UIActions.ted_login(@coach_email, get_coach_password)
     Watir::Wait.until(timeout: 40) { TED.modal.present? }
-    assert TED.modal.visible?, 'No change password modal'
+    assert TED.modal.present?, 'No change password modal'
 
     inputs = TED.modal.elements(:tag_name, 'input')
     inputs.each { |i| i.send_keys 'ncsa' }

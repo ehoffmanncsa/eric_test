@@ -41,7 +41,7 @@ class UploadTranscriptMilestoneTest < Minitest::Test
   def check_milestone_complete
     @browser.goto 'https://qa.ncsasports.org/clientrms/dashboard/show'
     begin
-      Watir::Wait.until { @browser.div(:class, 'mfp-content').visible? }
+      Watir::Wait.until { @browser.div(:class, 'mfp-content').present? }
       popup = @browser.div(:class, 'mfp-content')
       popup.element(:class, 'close-popup').click; sleep 1
     rescue; end
@@ -71,7 +71,7 @@ class UploadTranscriptMilestoneTest < Minitest::Test
     content.element(:class, 'button--wide').click
 
     upload_file
-    Watir::Wait.until { content.visible? }
+    Watir::Wait.until { content.present? }
     content.element(:class, 'button--wide').click
 
     check_uploaded_file

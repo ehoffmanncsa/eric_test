@@ -27,7 +27,7 @@ class UnverifiedCoachActionsTest < Common
     TED.modal.button(:text, 'Manually Add Athlete').click
     TED.modal.button(:text, 'Add Athlete').click; sleep 0.5
 
-    Watir::Wait.until { TED.modal.visible? }
+    Watir::Wait.until { TED.modal.present? }
   end
 
   def fill_in_textfields
@@ -99,7 +99,7 @@ class UnverifiedCoachActionsTest < Common
 
   def accept_invitation
     UIActions.user_login(@athlete_email); sleep 2
-    Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
+    Watir::Wait.until { @browser.element(:class, 'mfp-content').present? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
   end

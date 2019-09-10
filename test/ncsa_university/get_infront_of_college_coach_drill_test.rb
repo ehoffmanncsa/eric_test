@@ -63,7 +63,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
 
   def verify_commitment
     msg = 'Drill questions not found on commitment page'
-    assert content_area.element(:class, 'drill-questions').visible?, msg
+    assert content_area.element(:class, 'drill-questions').present?, msg
     questions = content_area.elements(:class, 'button--clear-dark').to_a
     questions.sample.click
     sleep 1
@@ -75,12 +75,12 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Location page has incorrect header'
 
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # fill in form
     form.element(:id, 'zip-code').send_keys MakeRandom.number(5)
     spinner = form.element(:id, 'high-school-select-spinner')
-    Watir::Wait.while { spinner.visible? }
+    Watir::Wait.while { spinner.present? }
     %w(profile_data_high_school_id profile_data_gpa).each do |id|
       select_dropdown(id)
     end
@@ -120,7 +120,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
 
   def verify_position
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # select positions
     %w(profile_data_primary_position_id profile_data_secondary_position_id).each do |id|
@@ -140,7 +140,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Player stats page has incorrect header'
 
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # fill in height and weight
     select_dropdown('profile_data_height')
@@ -180,7 +180,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Key stats page has incorrect header'
 
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # fill in stats
     begin
@@ -205,7 +205,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Familiar page has incorrect header'
 
     msg = 'Drill questions not found on familiar page'
-    assert content_area.element(:class, 'drill-questions').visible?, msg
+    assert content_area.element(:class, 'drill-questions').present?, msg
 
     questions = content_area.elements(:class, 'button--clear-dark').to_a
     questions.sample.click
@@ -218,7 +218,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Customize page has incorrect header'
 
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # pick random programs
     customs = form.elements(:class, 'custom-input').to_a
@@ -238,7 +238,7 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     assert_equal expect_p, actual_p, 'Club information page has incorrect header'
 
     # check next button not enable before fill in info
-    assert (form.element(:class, 'button--disabled-dark').visible?), 'Button enabled before entering data'
+    assert (form.element(:class, 'button--disabled-dark').present?), 'Button enabled before entering data'
 
     # fill out form
     form.radio(:id, 'club_data_club_team_type_club').click

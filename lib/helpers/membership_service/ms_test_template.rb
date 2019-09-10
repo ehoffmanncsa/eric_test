@@ -101,8 +101,8 @@ module MSTestTemplate
     Watir::Wait.until(timeout: 60) { @browser.url.include? 'clientrms/accounts' }
 
     # locate UI elements
-    summary = @browser.element(:class, 'package-features')
-    list_items = summary.elements(:tag_name, 'li').to_a
+    summary = @browser.element(class: 'package-features')
+    list_items = summary.elements(tag_name: 'li').to_a
 
     # get values
     i = 0
@@ -118,12 +118,12 @@ module MSTestTemplate
     Watir::Wait.until(timeout: 60) { @browser.url.include? 'clientrms/finances' }
 
     # locate UI elements
-    boxes = @browser.elements(:css, 'div.column.third').to_a
-    elem = boxes[2].elements(:class, 'text--size-small').to_a
+    boxes = @browser.elements(css: 'div.column.third').to_a
+    elem = boxes[2].elements(class: 'text--size-small').to_a
 
     # get values
     actual_first_pymt = elem[0].text.gsub!(/[^0-9|\.]/, '').to_i
-    actual_remain_balance = boxes[2].element(:class, 'primary').text.gsub!(/[^0-9|\.]/, '').to_i
+    actual_remain_balance = boxes[2].element(class: 'primary').text.gsub!(/[^0-9|\.]/, '').to_i
     actual_package = elem[1].text.split(' ')[1].downcase
 
     [actual_first_pymt, actual_remain_balance, actual_package]

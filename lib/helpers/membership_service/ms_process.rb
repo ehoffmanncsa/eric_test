@@ -9,8 +9,8 @@ module MSProcess
   end
 
   def self.get_cart_count
-    cart = @browser.element(:id, 'shopping-cart')
-    count = cart.element(:class, 'js-cart-count').text
+    cart = @browser.element(id: 'shopping-cart')
+    count = cart.element(class: 'js-cart-count').text
     return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
   end
 
@@ -35,21 +35,21 @@ module MSProcess
   end
 
   def self.checkout
-    @browser.element(:class, 'button--next').click; sleep 3
+    @browser.element(class: 'button--next').click; sleep 3
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
   end
 
 
   def self.apply_discount_offerings(code)
-    @browser.element(:placeholder, 'Enter Discount Code').send_keys code
-    @browser.element(:class, 'apply').click; sleep 2
+    @browser.element(placeholder: 'Enter Discount Code').send_keys code
+    @browser.element(class: 'apply').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
     check_discount_message(code)
   end
 
   def self.discount_message
-    @browser.element(:class, 'discount-message')
+    @browser.element(class: 'discount-message')
   end
 
   def self.check_discount_message(code)
@@ -59,16 +59,16 @@ module MSProcess
   end
 
   def self.remove_discount
-    @browser.link(:text, 'Remove').click
+    @browser.link(text: 'Remove').click
     Watir::Wait.while { discount_message.present? }
   end
 
   def self.open_alacarte_table
-    @browser.element(:class, 'alacarte-features').element(:class, 'vip-toggle-js').click
+    @browser.element(class: 'alacarte-features').element(class: 'vip-toggle-js').click
   end
 
   def self.alacarte_blocks
-    @browser.elements(:class, 'alacarte-block').to_a
+    @browser.elements(class: 'alacarte-block').to_a
   end
 
   def self.pick_VIP_items(items_count = nil)
@@ -84,15 +84,15 @@ module MSProcess
     while i < items_count
       loop do
         block = alacarte_blocks.sample
-        add_button = block.element(:class, 'button--medium')
+        add_button = block.element(class: 'button--medium')
 
         error = nil;
         begin
-          block.element(:class, 'button--medium').click
+          block.element(class: 'button--medium').click
         rescue => error; end
 
         if error.nil?
-          item_text = block.element(:tag_name, 'h3').text
+          item_text = block.element(tag_name: 'h3').text
           sleep 4
           break
         end
