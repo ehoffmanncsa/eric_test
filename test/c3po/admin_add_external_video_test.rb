@@ -7,14 +7,12 @@ class AdminAddExternalVideo < Common
   def setup
     super
 
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
-
-    POSSetup.setup(@browser)
-    POSSetup.buy_package(@email, 'elite')
-
     C3PO.setup(@browser)
-    C3PO.impersonate(@email)
+
+    email = 'testc23a@yopmail.com'
+    UIActions.user_login(email)
+    UIActions.goto_edit_profile
+
   end
 
   def teardown

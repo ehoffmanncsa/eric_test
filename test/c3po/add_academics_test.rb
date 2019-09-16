@@ -24,7 +24,7 @@ class AddAcademicsInfoTest < Common
     options.each do |option|
       option.click if option.text == 'Illinois'
     end
-
+    sleep 1
     # select high school
     dropdown = @browser.element(:id, 'high_school_name')
     options = dropdown.elements(:tag_name, 'option').to_a
@@ -203,7 +203,7 @@ class AddAcademicsInfoTest < Common
   def check_honors
     group_of_hon = @browser.elements(:class, %w[half accomplishments])
 
-    expected_hon = "ACADEMIC ACCOMPLISHMENTS\nHonors Classes\nI am honors classes text.\nAP Classes\nI am AP classes"+
+    expected_hon = "ACADEMIC ACCOMPLISHMENTS\nHonors Classes\nI am honors classes text.\nAP/IB Classes\nI am AP classes"+
     " text.\nPreferred Field of Study\nBusiness\nRegistered with NCAA Eligibility Center\nYes"
     assert_includes group_of_hon.first.text, expected_hon
   end
@@ -217,7 +217,7 @@ class AddAcademicsInfoTest < Common
   end
 
   def test_add_academics
-    email = 'test0d07@yopmail.com'
+    email = 'testc23a@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
