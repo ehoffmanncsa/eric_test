@@ -59,7 +59,7 @@ class AddMyInfoTestFree < Common
     @browser.element(:id, 'last_name').send_keys @recruit_last_name
   end
 
-  def suffix_enter 
+  def suffix_enter
     # fill out suffix not used
     @browser.element(:id, 'suffix').to_subtype.clear
     @browser.element(:id, 'suffix').send_keys @suffix
@@ -377,11 +377,11 @@ class AddMyInfoTestFree < Common
     header_stats = @browser.elements(:class, 'stats')
     expected_header_stats = "2022 Football"
     assert_includes header_stats.last.text, expected_header_stats
-  
+
     header_loc = @browser.elements(:class, 'location')
     expected_header_loc = "Chicago, Illinois"
     assert_includes header_loc.last.text, expected_header_loc
- 
+
     header_con = @browser.elements(:class, 'contact')
     expected_header_con = "#{@recruit_email}"+
     "  #{@athlete_phone_mobile}"

@@ -27,8 +27,8 @@ module POSSetup
 
     username = email.split('@')[0].delete('.').delete('+')
     @browser.text_field(:id, 'user_account_username').value = username
-    @browser.text_field(:id, 'user_account_password').set 'ncsa'
-    @browser.text_field(:id, 'user_account_password_confirmation').set 'ncsa'
+    @browser.text_field(:id, 'user_account_password').set 'eric'
+    @browser.text_field(:id, 'user_account_password_confirmation').set 'eric'
     @browser.button(:name, 'commit').click; sleep 1
     Watir::Wait.until { @browser.url.include? 'custom_drills/free_onboarding' }
   end

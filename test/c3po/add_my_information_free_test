@@ -11,10 +11,12 @@ class AddMyInformationTestFreeEmailInsert < Common
   def setup
     super
 
-    UIActions.user_login(@email)
+    #UIActions.user_login(@email)
 
     MSSetup.setup(@browser)
-    MSSetup.set_password(@email)
+    C3PO.setup(@browser)
+    @email = 'test5c24@yopmail.com'
+
   end
 
   def teardown
@@ -406,8 +408,9 @@ class AddMyInformationTestFreeEmailInsert < Common
   end
 
   def test_add_my_information
-    @email = 'test35ce@yopmail.com'
-    UIActions.user_login(email)
+
+    @email = 'test5c24@yopmail.com'
+    UIActions.user_login(@email)
     UIActions.goto_edit_profile
 
     C3PO.goto_my_information
