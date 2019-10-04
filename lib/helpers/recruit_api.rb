@@ -70,7 +70,7 @@ class RecruitAPI
       when 'senior'
         month > 6 ? grad_yr += 1 : grad_yr
       else
-        grad_yr += rand(1 .. 4)
+        month > 6 ? grad_yr += rand(2 .. 4) : grad_yr += rand(1 .. 4)
     end
 
     grad_yr

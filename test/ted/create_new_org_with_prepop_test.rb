@@ -40,12 +40,10 @@ class CreateNewOrgWithPrepop < Common
     @athlete_name = "#{first_name} #{last_name}"
 
     UIActions.user_login(@athlete_email)
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
   end
 
   def add_coach_reference
-    UIActions.goto_edit_profile
-
     C3PO.goto_athletics
     fill_out_form
   end

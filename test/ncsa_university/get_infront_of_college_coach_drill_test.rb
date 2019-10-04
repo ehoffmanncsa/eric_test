@@ -12,9 +12,8 @@ class GetInFrontOfCollegeCoachDrillTest < Common
     @firstname = post_body[:recruit][:athlete_first_name] # 'Jacquetta'
 
     UIActions.user_login(@email)
-
     MSSetup.setup(@browser)
-    MSSetup.set_password(@email)
+    MSSetup.set_password
   end
 
   def teardown

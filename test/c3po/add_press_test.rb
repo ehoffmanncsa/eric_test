@@ -6,14 +6,9 @@ require_relative '../test_helper'
 class AddPressTest < Common
   def setup
     super
-
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
-
+    email = 'ncsa.automation+e6cc@gmail.com'
+    UIActions.user_login(email, 'ncsa1333')
     C3PO.setup(@browser)
-    MSSetup.setup(@browser)
-
-    MSSetup.buy_package(@email, 'elite')
 
     @title = 'Press Title'
     @link = 'http://www.google.com/'
@@ -21,39 +16,60 @@ class AddPressTest < Common
   end
 
   def teardown
+    delete_press
     super
   end
 
+  def delete_press
+    @browser.window(index: 0).use
+    C3PO.goto_athletics
+    while box
+      break if box.span(class: 'add_icon').present?
+      box.click
+      form.button(class: 'delete').click
+      @browser.alert.ok; sleep 1
+    end
+  end
+
   def press_section
-    @browser.element(:class, 'athletic_presses')
+    @browser.element(class: 'athletic_presses')
   end
 
   def fill_out_form
     # open form
-    press_section.element(:class, 'add_icon').click
-    form = @browser.element(:id, 'athletic_presses_edit')
+    press_section.element(class: 'add_icon').click
 
     # fill out textboxes
-    form.element(:name, 'title').send_keys @title
-    form.element(:name, 'link').send_keys @link
-    form.element(:name, 'notes').send_keys @notes
+    form.element(name: 'title').send_keys @title
+    form.element(name: 'link').send_keys @link
+    form.element(name: 'notes').send_keys @notes
 
     # submit form
-    form.element(:class, 'save').click; sleep 1
+    form.element(class: 'save').click; sleep 1
+  end
+
+  def form
+    @browser.element(id: 'athletic_presses_edit')
+  end
+
+  def boxes
+    press_section.elements(class: 'box_list')
+  end
+
+  def box
+    boxes.first
   end
 
   def check_added_press
-    boxes = press_section.elements(:class, 'box_list')
     refute_empty boxes, 'No box show up after added press'
   end
 
   def check_profile_history
     # go to Preview Profile
-    @browser.element(:class, 'button--primary').click; sleep 1
+    @browser.element(class: 'button--primary').click; sleep 1
 
-    section =  @browser.element(:id, 'athletic-section')
-    press = section.elements(:tag_name, 'a').to_a.sample
-
+    section =  @browser.element(id: 'athletic-section')
+    press = section.elements(tag_name: 'a').to_a.sample
     actual_link = press.attribute('href')
     assert_equal @link, actual_link, 'Incorrect press url'
 
@@ -62,9 +78,6 @@ class AddPressTest < Common
   end
 
   def test_add_press
-    UIActions.user_login(@email)
-    UIActions.goto_edit_profile
-
     C3PO.goto_athletics
 
     # add a few press

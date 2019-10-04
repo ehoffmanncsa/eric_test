@@ -7,14 +7,15 @@ class AdminDeleteExternalVideo < Common
   def setup
     super
 
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
+    # This client is a premium client for video test cases
+    # If he goes stale causing test to fail, find another
+    # replace email address and client id accordingly
+    email = 'ncsa.automation+da42@gmail.com'
+    client_id = '5784854'
 
-    MSSetup.setup(@browser)
     C3PO.setup(@browser)
-
-    MSSetup.buy_package(@email, 'elite')
-    C3PO.impersonate(@email)
+    UIActions.fasttrack_login
+    C3PO.impersonate(client_id)
   end
 
   def teardown
@@ -27,14 +28,14 @@ class AdminDeleteExternalVideo < Common
     C3PO.upload_youtube
 
     # find video and delete it
-    item = @browser.element(:class, 'uploads-item')
-    item.element(:class, 'remove').click
+    item = @browser.element(class: 'uploads-item')
+    item.element(class: 'remove').click
 
-    modal = @browser.element(:class, 'mfp-content')
-    modal.element(:class, 'js-button-confirm').click; sleep 1
+    modal = @browser.element(class: 'mfp-content')
+    modal.element(class: 'js-button-confirm').click; sleep 1
 
     expected_msg = 'Video successfully deleted from your profile.'
-    actual_msg = @browser.element(:class, '_js-success-text').text
+    actual_msg = @browser.element(class: '_js-success-text').text
     msg = "Video delete confirm message: #{actual_msg} not as expected: #{expected_msg}"
     assert_equal expected_msg, actual_msg, msg
   end

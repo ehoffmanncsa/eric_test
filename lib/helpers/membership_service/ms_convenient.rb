@@ -16,7 +16,7 @@ module MSConvenient
   def self.buy_package(email, package)
     MSPricing.setup(@browser, package)
 
-    MSSetup.set_password(email)
+    MSSetup.set_password
     MSSetup.goto_offerings
     MSSetup.open_payment_plan
 
@@ -28,7 +28,7 @@ module MSConvenient
 
   # to purchase only alacarte items
   def self.buy_alacarte(email, all = true)
-    MSSetup.set_password(email)
+    MSSetup.set_password
     MSSetup.goto_offerings
 
     vip_items_picked = MSProcess.pick_VIP_items
@@ -40,7 +40,7 @@ module MSConvenient
 
   # to purchase both a membership package and some alacarte items
   def self.buy_combo(email, package)
-    MSSetup.set_password(email)
+    MSSetup.set_password
     MSSetup.goto_offerings
     MSSetup.open_payment_plan
 
@@ -55,7 +55,7 @@ module MSConvenient
 
   # to make payment using ACH instead of credit card
   def self.buy_with_ACH_payment(email, package)
-    MSSetup.set_password(email)
+    MSSetup.set_password
     MSSetup.goto_offerings
     MSSetup.open_payment_plan
 

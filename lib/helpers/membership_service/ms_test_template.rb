@@ -16,7 +16,7 @@ module MSTestTemplate
   end
 
   def self.goto_offerings
-    MSSetup.set_password(@recruit_email)
+    MSSetup.set_password
     MSSetup.goto_offerings
   end
 

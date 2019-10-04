@@ -95,7 +95,7 @@ class PremCoachAddFreeAthlete < Common
   def check_athlete_membership
     # Giving staging grace period before checking premium status
     UIActions.user_login(@email)
-    MSSetup.set_password(@email)
+    MSSetup.set_password
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')
     navbar.link(:text, 'Membership Info').click

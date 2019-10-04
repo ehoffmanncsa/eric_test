@@ -79,7 +79,7 @@ class FreeCoachAddNewAthleteTest < Common
 
   def check_athlete_free_profile
     UIActions.user_login(@athlete_email)
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')

@@ -103,7 +103,8 @@ module UIActions
   end
 
   def self.goto_edit_profile
-    @browser.link(text: 'Edit Profile').click
+    url = @config['clientrms']['base_url'] + 'profile/profile_summary/edit'
+    @browser.goto url
   end
 
   def self.goto_ncsa_university

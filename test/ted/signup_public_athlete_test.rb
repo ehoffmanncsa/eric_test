@@ -89,14 +89,14 @@ class SignupPublicAthleteTest < Common
   end
 
   def check_redirect_to_clientrms_login
-    Watir::Wait.until { @browser.element(text: 'Student-Athlete Sign In').present? }
+    sleep 3
     url = @c3po_config['base_url'] + 'user_accounts/sign_in'
 
     assert_equal url, @browser.url, 'No redirect to Client RMS login page'
   end
 
   def assign_new_password
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
     Watir::Wait.until { @browser.element(class: 'welcome').present? }
 
@@ -158,7 +158,7 @@ class SignupPublicAthleteTest < Common
 
   def login_to_athlete_profile_with_password_reset
     UIActions.user_login(@athlete_email)
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
     @browser.element(class: 'fa-angle-down').click
     navbar = @browser.element(id: 'secondary-nav-menu')

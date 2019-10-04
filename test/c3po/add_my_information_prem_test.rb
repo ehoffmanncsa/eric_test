@@ -65,7 +65,7 @@ class V2AddMyInformationPremTest < Common
   end
 
   def goto_athlete_profile_page
-    @browser.element(:class, 'button--primary').click
+    @browser.element(class: 'button--primary').click
   end
 
   # do comparision

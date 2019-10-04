@@ -9,13 +9,11 @@ module MSSetup
   end
 
   def self.modal_present?
-    begin
-      # in some cases there will be a popup modal for athlete to accept
-      Watir::Wait.until { @browser.element(class: 'mfp-content').present? }
-      return true
-    rescue
-      return false
-    end
+    # in some cases there will be a popup modal for athlete to accept
+    Watir::Wait.until(timeout: 4) { @browser.element(class: 'mfp-content').present? }
+    return true
+  rescue
+    return false
   end
 
   def self.click_yes
@@ -24,14 +22,9 @@ module MSSetup
     sleep 1
   end
 
-  def self.set_password(email)
+  def self.set_password
     click_yes if modal_present?
 
-    Watir::Wait.until { @browser.text_field(id: 'user_account_username').present? }
-
-    username = email.split('@')[0].delete('.').delete('+')
-
-    @browser.text_field(id: 'user_account_username').value = username
     @browser.text_field(id: 'user_account_password').set 'ncsa1333'
     @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
     @browser.button(name: 'commit').click

@@ -101,7 +101,7 @@ class TEDAddDeleteNewAthleteTest < Common
 
   def check_athlete_profile
     UIActions.user_login(@email)
-    MSSetup.set_password(@email)
+    MSSetup.set_password
     @browser.element(:class, 'fa-angle-down').click
 
     navbar = @browser.element(:id, 'secondary-nav-menu')

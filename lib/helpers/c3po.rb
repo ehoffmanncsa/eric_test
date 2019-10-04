@@ -39,7 +39,7 @@ module C3PO
   end
 
   def self.upload_youtube(admin = true)
-    url = 'https://www.youtube.com/watch?v=YtfZeoFU0J0'
+    url = 'https://www.youtube.com/watch?v=vaEWkjTZsy8'
     @browser.element(class: 'js-upload-options').element(class: 'fa-youtube').click
     form = @browser.form(id: 'profile-youtube-video-upload')
 
@@ -48,10 +48,9 @@ module C3PO
     form.text_field(id: 'external_video_embed_code').set url
 
     # click this checkbox if available (when login as admin)
-    begin
-      form.checkbox(id: 'verified').click if admin
-    rescue; end
-
+    # begin
+    #   form.checkbox(id: 'verified').click if admin
+    # rescue; end
     form.button(name: 'commit').click
     Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
@@ -66,10 +65,9 @@ module C3PO
     form.text_field(id: 'external_video_embed_code').set url
 
     # click this checkbox if available (when login as admin)
-    begin
-      form.checkbox(id: 'verified').click if admin
-    rescue; end
-
+    # begin
+    #   form.checkbox(id: 'verified').click if admin
+    # rescue; end
     form.button(name: 'commit').click
     Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
@@ -166,9 +164,9 @@ module C3PO
   end
 
   def self.goto_athletics
-    # go to Athletics
-    subheader = @browser.element(class: 'subheader')
-    subheader.element(id: 'edit_athletic_link').click
+    url = @config['clientrms']['base_url'] + 'profile/athletic'
+    @browser.goto url
+    sleep 1
   end
 
   def self.add_hs_team
@@ -247,17 +245,15 @@ module C3PO
     dropdown.select(years.sample.text)
 
     # submit form
-    club_form.element(class: 'submit').click; sleep 1
+    club_form.element(class: 'submit').click
+    sleep 3
   end
 
   def self.open_athlete_history_popup
     # go to Preview Profile
-    @browser.element(class: 'button--primary').click; sleep 1
-    history_section = @browser.element(id: 'athletic-section')
-    history_section.scroll.to; sleep 1
-    stat = history_section.elements(tag_name: 'li').to_a.sample
-    Watir::Wait.until { stat.element(class: 'mg-right-1').present? }
-    stat.element(class: 'mg-right-1').click
+    @browser.element(class: 'button--primary').click; sleep 2
+    history_section = @browser.section(id: 'athletic-hist-section')
+    history_section.link(text: 'Stats').click
   end
 
   def self.get_popup_stats_headers

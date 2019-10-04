@@ -65,7 +65,7 @@ module C3PO
     def attach_transcript
      # remove previous transcipt
      @browser.element(class: 'remove').click
-     @browser.element(class: 'button button--red js-confirm-delete').click
+     @browser.element(class: %w[button button--red js-confirm-delete]).click
 
      # add transcipt
      @browser.element(class: 'add').click
@@ -81,7 +81,7 @@ module C3PO
      academic_form.file_field(name: 'academic_file[record]')
      academic_form.file_field(class: 'file').set path
 
-     @browser.element(class: 'submit add button--primary').click
+     @browser.element(class: %w[submit add button--primary]).click
     end
 
     def submit
