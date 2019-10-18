@@ -28,5 +28,6 @@ gem 'redis'
 gem 'pass_client'
 
 gem 'pry-coolline'
+gem 'pry-byebug'
 
 gem 'eyes_selenium', '3.14.3' # this is only here because of WWW code existence
