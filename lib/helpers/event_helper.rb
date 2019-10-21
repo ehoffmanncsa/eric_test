@@ -4,9 +4,6 @@
 # Helps find a usable event
 module EventHelper
   def self.setup(ui_object)
-    @browser = ui_object
-    @config = Default.env_config
-
     app_name = 'fasttrack'
     @sql = SQLConnection.new(app_name)
     @sql.get_connection
@@ -16,8 +13,8 @@ module EventHelper
     query = "
       SELECT e.event_id
       FROM event e tablesample(100)
-      JOIN event_source es ON e.event_source_id = es.event_source_id
-      JOIN partner_pgm pgm ON es.partner_pgm_id = pgm.partner_pgm_id
+      JOIN event_source es ON e.event_source_id = es.event_source_id AND es.deleted = 0
+      JOIN partner_pgm pgm ON es.partner_pgm_id = pgm.partner_pgm_id AND pgm.deleted = 0
       WHERE e.deleted = 0"
 
     data = @sql.exec query
