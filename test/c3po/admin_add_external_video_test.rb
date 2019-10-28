@@ -9,7 +9,7 @@ class AdminAddExternalVideo < Common
 
     C3PO.setup(@browser)
 
-    email = 'testc23a@yopmail.com'
+    email = 'test94a9@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
