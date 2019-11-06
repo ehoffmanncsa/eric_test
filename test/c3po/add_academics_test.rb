@@ -8,7 +8,7 @@ require_relative '../test_helper'
 # username: ncsa.automation+38a2@gmail.com
 # recruitinginfo email address: adriane.boyer@test.recruitinginfo.org
 
-class V2AddAcademicsPremTest < Common
+class AddAcademicsTest < Common
   def setup
     super
 

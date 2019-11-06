@@ -46,12 +46,8 @@ module C3PO
     # fill out the upload form
     form.text_field(id: 'external_video_title').set SecureRandom.hex(4)
     form.text_field(id: 'external_video_embed_code').set url
-
-    # click this checkbox if available (when login as admin)
-    # begin
-    #   form.checkbox(id: 'verified').click if admin
-    # rescue; end
     form.button(name: 'commit').click
+
     Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
 
@@ -63,12 +59,8 @@ module C3PO
     # fill out the upload form
     form.text_field(id: 'external_video_title').set SecureRandom.hex(4)
     form.text_field(id: 'external_video_embed_code').set url
-
-    # click this checkbox if available (when login as admin)
-    # begin
-    #   form.checkbox(id: 'verified').click if admin
-    # rescue; end
     form.button(name: 'commit').click
+
     Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
 
@@ -267,6 +259,11 @@ module C3PO
 
   def self.goto_coaching_session
     url = @config['clientrms']['base_url'] + @config['clientrms']['coaching_session']
+    @browser.goto url
+  end
+
+  def self.goto_tap_results
+    url = @config['clientrms']['base_url'] + 'profile/tap_results'
     @browser.goto url
   end
 end

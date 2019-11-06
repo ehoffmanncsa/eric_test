@@ -16,7 +16,9 @@ rss:
 # Fasttrack Admin login
 # base UI url is the same with client rms
 fasttrack:
+  base_url: 'http://pp.ncsasports.org/'
   login_page: 'fasttrack/Welcome.do'
+  recruiting_dasboard: 'recruit/admin/dashboard'
   recruit_search_form: 'fasttrack/lead/Search.do?method=preSearch'
   admin_username: 'trea'
   admin_password: 'ncsa'
