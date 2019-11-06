@@ -55,7 +55,7 @@ class AthletePlayPublishedVideoTest < Minitest::Test
     # play console pointing to the right url (with right file name)
     video.click; sleep 1
     video_player = @browser.element(:id, 'video-player')
-    assert video_player.visible?, 'Video player not found'
+    assert video_player.present?, 'Video player not found'
 
     mep_1 = video_player.element(:class, 'container')
     player = mep_1.element(:id, '_player').element(:class, 'mejs-video')

@@ -34,7 +34,7 @@ class UploadSingleVideoTest < Minitest::Test
     @browser.element(:class, 'subheader').element(:id, 'edit_video_link').click
 
     @browser.element(:class, 'js-upload-options').element(:class, 'upload-options-text').click
-    assert @browser.element(:id, 'profile-video-upload').visible?, 'Cannot find Video Upload Session'
+    assert @browser.element(:id, 'profile-video-upload').present?, 'Cannot find Video Upload Session'
 
     session = @browser.element(:class, 'action-buttons')
     assert session.element(:class, 'button--cancel').enabled?, 'Upload Session Cancel button not found'
@@ -56,7 +56,7 @@ class UploadSingleVideoTest < Minitest::Test
   end
 
   def check_video_uploaded
-    assert @browser.element(:class, 'progress').visible?, 'Cannot find progress bar'
+    assert @browser.element(:class, 'progress').present?, 'Cannot find progress bar'
 
     container = @browser.element(:class, 'js-video-files-container')
     list = container.element(:class, 'compilation-list')

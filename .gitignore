@@ -17,6 +17,9 @@ package-lock.json
 # Athletes CSV file
 athletes.csv
 
+# Coach Packet Roster CSV file
+rostermatch.csv
+
 # Gemfile.lock #
 Gemfile.lock
 

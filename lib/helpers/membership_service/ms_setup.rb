@@ -9,33 +9,25 @@ module MSSetup
   end
 
   def self.modal_present?
-    begin
-      # in some cases there will be a popup modal for athlete to accept
-      Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
-      return true
-    rescue
-      return false
-    end
+    # in some cases there will be a popup modal for athlete to accept
+    Watir::Wait.until(timeout: 4) { @browser.element(class: 'mfp-content').present? }
+    return true
+  rescue
+    return false
   end
 
   def self.click_yes
-    popup = @browser.element(:class, 'mfp-content')
-    popup.element(:class, 'button--secondary').click
+    popup = @browser.element(class: 'mfp-content')
+    popup.element(class: 'button--secondary').click
     sleep 1
   end
 
-  def self.set_password(email)
+  def self.set_password
     click_yes if modal_present?
 
-    Watir::Wait.until { @browser.text_field(:id, 'user_account_username').visible? }
-
-    username = email.split('@')[0].delete('.').delete('+')
-
-    @browser.text_field(:id, 'user_account_username').value = username
-    @browser.text_field(:id, 'user_account_password').set 'ncsa1333'
-    @browser.text_field(:id, 'user_account_password_confirmation').set 'ncsa1333'
-
-    @browser.button(:name, 'commit').click
+    @browser.text_field(id: 'user_account_password').set 'ncsa1333'
+    @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
+    @browser.button(name: 'commit').click
     sleep 1
 
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'custom_drills/free_onboarding' }
@@ -44,16 +36,16 @@ module MSSetup
 
   def self.find_swoosh
     begin
-      Watir::Wait.until { @browser.element(:class, 'fa-angle-down').visible? }
+      Watir::Wait.until { @browser.element(class: 'fa-angle-down').present? }
     rescue
       @browser.refresh
       retry
     end
 
-    @browser.element(:class, 'fa-angle-down').click
+    @browser.element(class: 'fa-angle-down').click
 
-    dropdown = @browser.element(:class, 'jq-dropdown-panel')
-    swoosh = dropdown.element(:class, 'fa-swoosh')
+    dropdown = @browser.element(class: 'jq-dropdown-panel')
+    swoosh = dropdown.element(class: 'fa-swoosh')
     swoosh.enabled? ? (return swoosh) : (raise '[ERROR] Cannot find swoosh in profile menu')
   end
 
@@ -61,13 +53,13 @@ module MSSetup
     # select all checkboxes
     # I can't seem to find any better option than xpath for the checkbox yet
     ['profile', 'website', 'communication', 'supporting', 'process'].each do |commit|
-      div = @browser.div(:id, commit)
+      div = @browser.div(id: commit)
       div.click
-      div.element(:xpath, "//*[@id=\"#{commit}\"]/div[2]/div/div[2]/div/i").click
+      div.element(xpath: "//*[@id=\"#{commit}\"]/div[2]/div/div[2]/div/i").click
     end
 
     # then get activated
-    get_activate = @browser.div(:class, 'button--next')
+    get_activate = @browser.div(class: 'button--next')
     raise '[ERROR] Cannot find activate button' unless get_activate.enabled?
 
     get_activate.click
@@ -86,7 +78,7 @@ module MSSetup
   end
 
   def self.open_payment_plan
-    payment_plan = @browser.link(:text, 'Choose Payment Plan')
+    payment_plan = @browser.link(text: 'Choose Payment Plan')
     payment_plan.click; sleep 0.5
     payment_plan.scroll.to :center
     sleep 1
@@ -95,7 +87,7 @@ module MSSetup
   def self.reveal_18_mo_plan
     # apparently there are 2 elements with text '12 Easy Payments' in the html :)
     # the 1st one is invisble/hidden, the 2nd one is what we see and want to click on
-    @browser.elements(:text, '12 Easy Payments')[1].click
+    @browser.elements(text: '12 Easy Payments')[1].click
     sleep 1
   end
 end

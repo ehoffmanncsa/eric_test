@@ -70,7 +70,7 @@ class TEDAddDeleteNewAthleteTest < Common
     open_add_athlete_modal
 
     # fill out athlete form
-    Watir::Wait.until { TED.modal.visible? }
+    Watir::Wait.until { TED.modal.present? }
     select_team
     fill_in_textfields
 
@@ -86,7 +86,7 @@ class TEDAddDeleteNewAthleteTest < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = TED.get_row_by_name(@athlete_name)
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
-    assert TED.modal.visible?, 'Edit Athlete modal not found'
+    assert TED.modal.present?, 'Edit Athlete modal not found'
 
     TED.modal.button(:text, 'Save & Invite').click
     UIActions.wait_for_modal
@@ -101,7 +101,7 @@ class TEDAddDeleteNewAthleteTest < Common
 
   def check_athlete_profile
     UIActions.user_login(@email)
-    MSSetup.set_password(@email)
+    MSSetup.set_password
     @browser.element(:class, 'fa-angle-down').click
 
     navbar = @browser.element(:id, 'secondary-nav-menu')
@@ -127,7 +127,7 @@ class TEDAddDeleteNewAthleteTest < Common
   def test_add_delete_new_athlete
     add_athlete
     send_invite_email
-    TED.check_welcome_email
+    TED.check_invite_email
     check_athlete_profile
     check_athlete_accepted_status
     TED.check_accepted_email

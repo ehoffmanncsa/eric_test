@@ -20,8 +20,7 @@ class GetStundentAthleteActivatedTest < Common
 
   def get_activated
     UIActions.user_login(@recruit_email)
-    MSSetup.set_password(@recruit_email)
-
+    MSSetup.set_password
     MSSetup.goto_offerings
   end
 

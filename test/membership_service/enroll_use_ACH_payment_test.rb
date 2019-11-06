@@ -10,6 +10,7 @@ class EnrollUsingACHPaymentTest < Common
     @package = %w(champion elite).sample
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
+    UIActions.user_login(@recruit_email)
   end
 
   def teardown
@@ -18,7 +19,7 @@ class EnrollUsingACHPaymentTest < Common
 
   def add_premium
     MSSetup.setup(@browser)
-    MSSetup.set_password(@recruit_email)
+    MSSetup.set_password
     MSSetup.make_commitment
     MSSetup.choose_a_package(@package)
 

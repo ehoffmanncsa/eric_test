@@ -8,7 +8,7 @@ module C3PO
 
     def fill_out_textfields
       academics_textfields.each do |element_id, value|
-        element = @browser.text_field(:id, element_id.to_s)
+        element = @browser.text_field(id: element_id.to_s)
         element.scroll.to :center
         element.set value
       end
@@ -16,7 +16,7 @@ module C3PO
 
     def fill_out_textareas
       academics_textareas.each do |element_id, value|
-        element = @browser.textarea(:id, element_id.to_s)
+        element = @browser.textarea(id: element_id.to_s)
         element.scroll.to :center
         element.set value
       end
@@ -32,15 +32,15 @@ module C3PO
     end
 
     def select_high_school_state
-      dropdown = @browser.element(:id, 'high_school_state')
-      options = dropdown.elements(:tag_name, 'option').to_a
+      dropdown = @browser.element(id: 'high_school_state')
+      options = dropdown.elements(tag_name: 'option').to_a
       options.shift; options.sample.click
       sleep 1
     end
 
     def select_high_school
-      dropdown = @browser.element(:id, 'high_school_name')
-      options = dropdown.elements(:tag_name, 'option').to_a
+      dropdown = @browser.element(id: 'high_school_name')
+      options = dropdown.elements(tag_name: 'option').to_a
       options.shift
       if options.count == 0
         return false
@@ -57,35 +57,35 @@ module C3PO
     end
 
     def select_high_school_division
-      dropdown = @browser.element(:id, 'high_school_division')
-      options = dropdown.elements(:tag_name, 'option').to_a
+      dropdown = @browser.element(id: 'high_school_division')
+      options = dropdown.elements(tag_name: 'option').to_a
       options.shift; options.sample.click
     end
 
     def attach_transcript
      # remove previous transcipt
-     @browser.element(:class, 'remove').click
-     @browser.element(:class, 'button button--red js-confirm-delete').click
+     @browser.element(class: 'remove').click
+     @browser.element(class: %w[button button--red js-confirm-delete]).click
 
      # add transcipt
-     @browser.element(:class, 'add').click
+     @browser.element(class: 'add').click
      sleep 1
 
-     academic_form = @browser.element(:class, 'academic-file-form')
+     academic_form = @browser.element(class: 'academic-file-form')
      academic_form.scroll.to
-     academic_form.text_field(:name, 'academic_file[notes]').send_keys @transcript
+     academic_form.text_field(name: 'academic_file[notes]').send_keys @transcript
 
      path = File.absolute_path('test/c3po/cat.png')
-     academic_form = @browser.element(:class, 'academic-file-form')
+     academic_form = @browser.element(class: 'academic-file-form')
      academic_form.scroll.to
-     academic_form.file_field(:name, 'academic_file[record]')
-     academic_form.file_field(:class, 'file').set path
+     academic_form.file_field(name: 'academic_file[record]')
+     academic_form.file_field(class: 'file').set path
 
-     @browser.element(:class, 'submit add button--primary').click
+     @browser.element(class: %w[submit add button--primary]).click
     end
 
     def submit
-      @browser.button(:value, 'Save').click
+      @browser.button(value: 'Save').click
     end
   end
 end

@@ -33,7 +33,7 @@ class UploadMultipleVideosTest < Minitest::Test
     %w[avi mp4 mov].each do |extention|
       @browser.goto 'https://qa.ncsasports.org/clientrms/profile/video'
       @browser.element(:class, 'js-upload-options').element(:class, 'upload-options-text').click
-      assert @browser.element(:id, 'profile-video-upload').visible?, 'Cannot find Video Upload Session'
+      assert @browser.element(:id, 'profile-video-upload').present?, 'Cannot find Video Upload Session'
 
       session = @browser.element(:class, 'action-buttons')
       assert session.element(:class, 'button--cancel').enabled?, 'Upload Session Cancel button not found'
@@ -56,7 +56,7 @@ class UploadMultipleVideosTest < Minitest::Test
   end
 
   def check_videos_uploaded
-    assert @browser.element(:class, 'progress').visible?, 'Cannot find progress bar'
+    assert @browser.element(:class, 'progress').present?, 'Cannot find progress bar'
 
     failure = []; loaded_files = []
     container = @browser.element(:class, 'js-video-files-container')

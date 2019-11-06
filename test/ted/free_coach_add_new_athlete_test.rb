@@ -65,7 +65,7 @@ class FreeCoachAddNewAthleteTest < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
-    assert TED.modal.visible?
+    assert TED.modal.present?
 
     TED.modal.button(:text, 'Save & Invite').click
     UIActions.wait_for_modal
@@ -79,7 +79,7 @@ class FreeCoachAddNewAthleteTest < Common
 
   def check_athlete_free_profile
     UIActions.user_login(@athlete_email)
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
     @browser.element(:class, 'fa-angle-down').click
     navbar = @browser.element(:id, 'secondary-nav-menu')

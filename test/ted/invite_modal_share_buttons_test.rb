@@ -15,7 +15,7 @@ class InviteModalShareButtonsTest < Common
   end
 
   def check_if_invite_modal_opens
-    @browser.button(:class, 'add-btn').click
+    UIActions.find_by_test_id("share-invite-button").click
     UIActions.wait_for_spinner
 
     assert TED.modal.present?, 'Modal did not open'
@@ -69,6 +69,7 @@ class InviteModalShareButtonsTest < Common
 
   def test_invite_modal_share_buttons
     UIActions.ted_login
+    TED.go_to_athlete_tab
 
     check_if_invite_modal_opens
     check_copy_button

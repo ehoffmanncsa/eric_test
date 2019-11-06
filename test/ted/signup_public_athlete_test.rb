@@ -9,6 +9,10 @@ class SignupPublicAthleteTest < Common
     super
     TED.setup(@browser)
     MSSetup.setup(@browser)
+
+    config = Default.env_config
+    @ted_config = config['ted']
+    @c3po_config = config['clientrms']
   end
 
   def teardown
@@ -24,23 +28,23 @@ class SignupPublicAthleteTest < Common
   end
 
   def fillout_signup_form
-    @browser.goto 'https://team-staging.ncsasports.org/teams/awesome-sauce/sign_up'
-    @browser.back
-    Watir::Wait.until { @browser.elements(:tag_name, 'input').any? }
+    @browser.goto(@ted_config['base_url'] + 'teams/awesome-sauce/sign_up')
+    sleep 1
+    Watir::Wait.until { @browser.elements(tag_name: 'input').any? }
 
     store_athlete_meta_data
     fill_inputs
 
     # agree with the Terms Of Service
-    @browser.elements(:type, 'radio').first.click
+    @browser.elements(type: 'radio').first.click
 
     # submit
-    @browser.button(:type, 'submit').click
+    @browser.button(type: 'submit').click
     sleep 1
   end
 
   def fill_out_birthday
-    element = @browser.elements(:tag_name, 'input')[3]
+    element = @browser.elements(tag_name: 'input')[3]
 
     year = Time.now.year - rand(15 .. 18)
     date = (Time.now).strftime("%m-%d")
@@ -53,48 +57,48 @@ class SignupPublicAthleteTest < Common
   end
 
   def select_sport
-    sport_list = @browser.select_list(:id, 'sportId')
+    sport_list = @browser.select_list(id: 'sportId')
     sport_list.scroll.to :center; sleep 1
     sport_list.select @sport_id.to_s
     sleep 1
   end
 
   def fill_inputs
-    @browser.text_field(:id, 'firstName').set @athlete_first_name
-    @browser.text_field(:id, 'lastName').set @athlete_last_name
-    @browser.text_field(:id, 'graduationYear').set (Time.now.year + rand(1 .. 3))
+    @browser.text_field(id: 'firstName').set @athlete_first_name
+    @browser.text_field(id: 'lastName').set @athlete_last_name
+    @browser.text_field(id: 'graduationYear').set (Time.now.year + rand(1 .. 3))
 
     fill_out_birthday
 
-    @browser.text_field(:id, 'phone').set (@athlete_phone ||= MakeRandom.phone_number)
-    @browser.text_field(:id, 'zipCode').set (@zip_code ||= MakeRandom.zip_code)
-    @browser.text_field(:id, 'email').set @athlete_email
-    @browser.text_field(:id, 'parentFirstName').set MakeRandom.first_name
-    @browser.text_field(:id, 'parentLastName').set MakeRandom.last_name
-    @browser.text_field(:id, 'parentEmail').set @parent_email
-    @browser.text_field(:id, 'parentPhone').set MakeRandom.phone_number
+    @browser.text_field(id: 'phone').set (@athlete_phone ||= MakeRandom.phone_number)
+    @browser.text_field(id: 'zipCode').set (@zip_code ||= MakeRandom.zip_code)
+    @browser.text_field(id: 'email').set @athlete_email
+    @browser.text_field(id: 'parentFirstName').set MakeRandom.first_name
+    @browser.text_field(id: 'parentLastName').set MakeRandom.last_name
+    @browser.text_field(id: 'parentEmail').set @parent_email
+    @browser.text_field(id: 'parentPhone').set MakeRandom.phone_number
 
     select_sport
   end
 
   def check_redirect_to_clientrms_password_reset
-    Watir::Wait.until { @browser.element(:text, 'Set a Username and Password').present? }
+    Watir::Wait.until { @browser.element(text: 'Set a Username and Password').present? }
+    url = @c3po_config['base_url'] + 'user_accounts/edit'
 
-    assert_equal 'https://qa.ncsasports.org/clientrms/user_accounts/edit',
-      @browser.url, 'No redirect to Client RMS reset password page'
+    assert_equal url, @browser.url, 'No redirect to Client RMS reset password page'
   end
 
   def check_redirect_to_clientrms_login
-    Watir::Wait.until { @browser.element(:text, 'Student-Athlete Sign In').present? }
+    sleep 3
+    url = @c3po_config['base_url'] + 'user_accounts/sign_in'
 
-    assert_equal 'https://qa.ncsasports.org/clientrms/user_accounts/sign_in',
-      @browser.url, 'No redirect to Client RMS login page'
+    assert_equal url, @browser.url, 'No redirect to Client RMS login page'
   end
 
   def assign_new_password
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
-    Watir::Wait.until { @browser.element(:class, 'welcome').present? }
+    Watir::Wait.until { @browser.element(class: 'welcome').present? }
 
     assert_equal "Welcome to NCSA, #{@athlete_first_name.capitalize}!",
       @browser.element(:tag_name, 'h1').text,
@@ -102,16 +106,16 @@ class SignupPublicAthleteTest < Common
   end
 
   def check_athlete_profile_info
-    @browser.goto 'https://qa.ncsasports.org/clientrms/profile/my_information/edit'
-    Watir::Wait.until { @browser.element(:class, 'subhead').present? }
+    @browser.goto( @c3po_config['base_url'] + 'profile/my_information/edit')
+    Watir::Wait.until { @browser.element(class: 'subhead').present? }
 
-    assert_equal @browser.element(:id, 'athlete_email').value,
+    assert_equal @browser.element(:id, 'athlete_email').attribute_value('value'),
       @athlete_email,
       'Athlete email not present on Edit Client page.'
   end
 
   def check_athlete_profile_has_parent_email
-    assert_equal @browser.element(:id, 'parent1_email').value,
+    assert_equal @browser.element(id: 'parent1_email').attribute_value('value'),
       @parent_email,
       'Parent email not present on Edit Client page.'
   end
@@ -119,21 +123,21 @@ class SignupPublicAthleteTest < Common
   def verify_athlete
     UIActions.ted_login
     TED.goto_roster
-    Watir::Wait.until { @browser.element(:tag_name, 'table').present? }
+    Watir::Wait.until { @browser.element(tag_name: 'table').present? }
 
-    athlete_row = @browser.element(:text, @athlete_email).parent
+    athlete_row = @browser.element(text: @athlete_email).parent
     assert athlete_row.present?, 'Athlete not in roster'
 
-    verify_button = athlete_row.button(:text, 'Verify')
+    verify_button = athlete_row.button(text: 'Verify')
     assert verify_button.present?, 'Athlete is not unverified'
 
     verify_button.click
-    TED.modal.button(:text, 'Verify').click
+    TED.modal.button(text: 'Verify').click
     UIActions.wait_for_modal
     sleep 1
 
     assert_equal 'Accepted',
-      athlete_row.elements(:tag_name, 'td')[4].text,
+      athlete_row.elements(tag_name: 'td')[4].text,
       'Athlete is not accepted'
   end
 
@@ -154,18 +158,20 @@ class SignupPublicAthleteTest < Common
 
   def login_to_athlete_profile_with_password_reset
     UIActions.user_login(@athlete_email)
-    MSSetup.set_password(@athlete_email)
+    MSSetup.set_password
 
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Logout').click
+    @browser.element(class: 'fa-angle-down').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
+    navbar.link(text: 'Logout').click
   end
 
   def login_to_athlete_profile
-    UIActions.user_login(@athlete_email)
+    UIActions.user_login(@athlete_email, 'ncsa1333')
   end
 
   def test_public_new_athlete_sign_up
+    skip
+    #skipping this test due to existing bug https://ncsasports.atlassian.net/browse/TED-1613?oldIssueView=true
     fillout_signup_form
     check_redirect_to_clientrms_password_reset
     assign_new_password

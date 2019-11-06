@@ -42,7 +42,7 @@ class AddRecruitToFasttrackTest < Common
       retry if (retries += 1) < 3
     end
 
-    assert @table.visible?, 'Cannot find newly added recruit after 30sec wait'
+    assert @table.present?, 'Cannot find newly added recruit after 30sec wait'
 
     # check if the return data has the correct name
     recruit_name = @table[1][3].text

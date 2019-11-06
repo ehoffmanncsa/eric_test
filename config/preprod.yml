@@ -9,6 +9,10 @@ clientrms:
   membership_info: 'clientrms/accounts'
   dashboard: 'clientrms/dashboard/show'
 
+rss:
+  base_url: 'http://pp.ncsasports.org/'
+  endpoint: 'api/submit/v1/new_recruit'
+
 # Fasttrack Admin login
 # base UI url is the same with client rms
 fasttrack:

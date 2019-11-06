@@ -11,7 +11,7 @@ module MSPricing
   end
 
   def self.gather_all_payment_plan_cells
-    @browser.elements(:class, ['select-plan', 'js-package-button']).to_a
+    @browser.elements(class: ['select-plan', 'js-package-button']).to_a
   end
 
   def self.predict_payment_plans_position
@@ -80,7 +80,7 @@ module MSPricing
     prices = []
 
     # extract 1mo price
-    prices << raw_html_set[0].element(:class, 'full').text.gsub(/\D/, '').to_i
+    prices << raw_html_set[0].element(class: 'full').text.gsub(/\D/, '').to_i
 
     # extract payment plan prices
     #range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
@@ -91,7 +91,7 @@ module MSPricing
                 end
 
     for i in (1 .. range_end) do
-      prices << raw_html_set[i].element(:class, 'small').text.gsub(/\D/, '').to_i
+      prices << raw_html_set[i].element(class: 'small').text.gsub(/\D/, '').to_i
     end
 
     prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo, 6mo, 12mo] or [1mo]
@@ -110,7 +110,7 @@ module MSPricing
     prices = []
 
     price_set.each do |price|
-      prices << price.element(:class, 'full').text.gsub(/\D/, '').to_i
+      prices << price.element(class: 'full').text.gsub(/\D/, '').to_i
     end
 
     prices

@@ -1,6 +1,7 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
+
 # TS-239: TED Regression
 # UI Test: Add/Invite Previous NCSA Athlete
 
@@ -87,7 +88,7 @@ class TEDAddDeletePremiumAthlete < Common
     # make sure Edit Athlete modal shows up before proceeding
     row = table.element(:text, @athlete_name).parent
     row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 2
-    assert TED.modal.visible?
+    assert TED.modal.present?
 
     TED.modal.button(:text, 'Save & Invite').click; sleep 5
 
@@ -99,8 +100,8 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def athlete_accept_invitation
-    UIActions.user_login(@email); sleep 1
-    Watir::Wait.until { @browser.element(:class, 'mfp-content').visible? }
+    UIActions.user_login(@email, "ncsa1333"); sleep 1
+    Watir::Wait.until { @browser.element(:class, 'mfp-content').present? }
     popup = @browser.element(:class, 'mfp-content')
     popup.element(:class, 'button--secondary').click
     sleep 1
@@ -158,7 +159,7 @@ class TEDAddDeletePremiumAthlete < Common
     buy_premium_package
     add_athlete
     send_invite_email
-    TED.check_welcome_email
+    TED.check_invite_email
     athlete_accept_invitation
     check_athlete_premium_profile
     check_athlete_accepted_status
