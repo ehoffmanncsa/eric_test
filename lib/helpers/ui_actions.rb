@@ -17,18 +17,16 @@ module UIActions
     sleep 1
   end
 
-  def self.fasttrack_login
-    login_page = @config['fasttrack']['base_url'] + @config['fasttrack']['login_page']
+  def self.fasttrack_login(username = nil, password = nil)
+    username ||= @config['fasttrack']['admin_username']
+    password ||= @config['fasttrack']['admin_password']
 
-    @browser.goto login_page
-
-    @browser.text_field(id: 'username').set @config['fasttrack']['admin_username']
-    @browser.text_field(id: 'password').set @config['fasttrack']['admin_password']
+    @browser.goto(@config['fasttrack']['base_url'] + @config['fasttrack']['login_page'])
+    @browser.text_field(id: 'username').set username
+    @browser.text_field(id: 'password').set password
     @browser.button(name: 'submit').click
 
     sleep 3
-
-    @browser.goto login_page
 
     #waiting for the right title
     begin

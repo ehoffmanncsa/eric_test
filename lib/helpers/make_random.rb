@@ -67,8 +67,8 @@ module MakeRandom
 	end
 
 	def self.age_range
-		start_rand = rand(12 .. 18)
-		end_rand = rand(start_rand .. 18)
+		start_rand = rand(13 .. 19)
+		end_rand = rand(start_rand .. 19)
 
 		"#{start_rand}-#{end_rand}"
 	end

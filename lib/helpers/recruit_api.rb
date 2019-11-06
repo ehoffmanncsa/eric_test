@@ -1,18 +1,23 @@
 # encoding: utf-8
+require_relative '../../test/test_helper'
+require 'digest'
 
 class RecruitAPI
   def initialize(enroll_yr = nil, sport_id = nil, need_google_voice = false)
     @enroll_yr = enroll_yr
     @sport_id = sport_id.nil? ? Default.static_info['sport_ids'].sample : sport_id
     @need_google_voice = need_google_voice
+    EventHelper.setup(@browser)
   end
 
   def ppost
+    first_name = MakeRandom.first_name
+    last_name = MakeRandom.last_name
     body = {
       recruit: {
-        athlete_email: email,
-        athlete_first_name: MakeRandom.first_name,
-        athlete_last_name: MakeRandom.last_name,
+        athlete_email: email(first_name, last_name),
+        athlete_first_name: first_name,
+        athlete_last_name: last_name,
         athlete_phone: athlete_phone,
         graduation_year: grad_yr,
         state_code: MakeRandom.state,
@@ -27,14 +32,17 @@ class RecruitAPI
       retries ||= 0
       resp_code, resp_body = api.ppost url, body
     rescue => error
-      puts error
-      sleep 3
-      puts "Retrying ..."
-      retry if (retries += 1) < 5
+      # Duplicated Lead, retrying
+      if error.message == "409 Conflict"
+        puts "[INFO] Encountering a duplicate... trying again"
+        return ppost
+      else
+        puts error
+        sleep 3
+        puts "Retrying ..."
+        retry if (retries += 1) < 5
+      end
     end
-
-    sleep 5 # I think taking actions right after often results in weirdness
-
     msg = "[ERROR] #{resp_code} when POST new recruit via API - #{resp_body}"
     raise msg unless resp_code.eql? 200
 
@@ -76,8 +84,11 @@ class RecruitAPI
     grad_yr
   end
 
-  def email
-    "ncsa.automation+#{SecureRandom.hex(2)}@gmail.com"
+  def email(first_name, last_name)
+    dupe_key = "#{first_name[0...3]}#{last_name[0...3]}#{@sport_id}"
+    randomized_string = Digest::MD5.hexdigest(dupe_key)[0...4]  + SecureRandom.hex(2)
+
+    "ncsa.automation+#{randomized_string}@gmail.com"
   end
 
   def athlete_phone
@@ -85,6 +96,6 @@ class RecruitAPI
   end
 
   def event_id
-    rand(16233 .. 18351).to_s # events between 2017-01-01 and 2019-12-31 in Fasttrack events table
+    EventHelper.retreive_random_event_id
   end
 end

@@ -72,6 +72,32 @@ class PartnerAthleteSearchTest < Minitest::Test
     end
   end
 
+  def test_partner_athletic_range_and_scale
+    terms = {
+      'size' => 1000,
+      'partner_athletic_rating' => {
+        'min' => 3.0,
+        'max' => 4.5
+      },
+      'partner_athletic_rating_scale' => 6.0,
+      'partner_name' => 'ncsa'
+    }
+
+    pass_response = PassClient::Athlete::Search.new(search_terms: terms).get
+
+    athletes = JSON.parse(pass_response.body)["data"]["attributes"]
+
+    failures = []
+    athletes.each do |athlete|
+      failures << "athletic rating less than 3.0" if athlete["partner_athletic_rating"] < 3.0
+      failures << "athletic rating greater than 4.5" if athlete["partner_athletic_rating"] > 4.5
+      failures << "athletic rating scale not equal to 6.0" if athlete["partner_athletic_rating_scale"] != 6.0
+      failures << "partner name not equal to 'ncsa'" if athlete["partner_name"] != 'ncsa'
+    end
+
+    assert_empty(failures)
+  end
+
   private
 
   def account
