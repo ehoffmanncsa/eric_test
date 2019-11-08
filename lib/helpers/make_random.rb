@@ -46,6 +46,10 @@ module MakeRandom
 		num
 	end
 
+	def self.high_school
+		FFaker::Education.school
+	end
+
 	def self.company_name
 		FFaker::Company.name
 	end

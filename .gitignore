@@ -20,6 +20,9 @@ athletes.csv
 # Coach Packet Roster CSV file
 rostermatch.csv
 
+# Coach Packet Roster Client RMS CSV file
+roster_create_rms.csv
+
 # Gemfile.lock #
 Gemfile.lock
 

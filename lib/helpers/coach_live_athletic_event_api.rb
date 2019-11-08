@@ -23,6 +23,18 @@ module AthleticEventApi
     date.split('+')[0] + 'Z'
   end
 
+  def self.position
+    position_arr = ['Center', 'Point Guard', 'Power Forward', 'Shooting Guard', 'Small Forward']
+
+    position_arr.sample
+  end
+
+  def self.team_name
+    team_name_arr = ['13U','14U','15U','16U','17U','18U']
+
+    team_name_arr.sample
+  end
+
   def self.logo_urls
     logo_arr = ['https://cdn1.sportngin.com/attachments/text_block/8390/8599/NAT_FINALS_1_medium.jpg',
     'https://cdn3.sportngin.com/attachments/photo/9426/5867/NOR_CAL_SPRING_SHOWCASE_large.png',

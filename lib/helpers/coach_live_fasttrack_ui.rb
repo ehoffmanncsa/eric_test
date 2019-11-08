@@ -30,4 +30,10 @@ module CoachPacket_AdminUI
     path = File.absolute_path('rostermatch.csv')
     @browser.elements(id: 'coach_packet_athletic_event_file')[1].send_keys path
   end
+
+  def self.upload_roster_rms_csv
+    path = File.absolute_path('roster_create_rms.csv')
+    @browser.elements(id: 'coach_packet_athletic_event_file')[1].send_keys path
+  end
+  
 end
