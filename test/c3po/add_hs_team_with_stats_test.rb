@@ -15,33 +15,33 @@ class AddHSTeamWithStatsTest < Common
   end
 
   def open_hs_team
-    teams_section = @browser.element(:class, 'high_school_seasons')
-    team = teams_section.elements(:class, 'box_list').first
+    teams_section = @browser.element(class: 'high_school_seasons')
+    team = teams_section.elements(class: 'box_list').first
     team.click
   end
 
   # add stats hs team and get back stats headers
   def add_stats_hs_team
-    hs_form = @browser.element(:id, 'high_school_season_form_container')
-    edit_btn = hs_form.element(:class, 'edit_stats')
-    hs_form.element(:class, 'edit_stats').click; sleep 1
+    hs_form = @browser.element(id: 'high_school_season_form_container')
+    edit_btn = hs_form.element(class: 'edit_stats')
+    hs_form.element(class: 'edit_stats').click; sleep 1
 
-    stats_form = @browser.element(:id, 'high_school_season_stats_form')
-    content_cards = stats_form.elements(:class, 'm-content-card')
+    stats_form = @browser.element(id: 'high_school_season_stats_form')
+    content_cards = stats_form.elements(class: 'm-content-card')
     stat_headers = []
     content_cards.each do |card|
-      stat_headers << card.element(:tag_name, 'legend').text.downcase
-      card.elements(:tag_name, 'input').to_a.sample.send_keys MakeRandom.name
+      stat_headers << card.element(tag_name: 'legend').text.downcase
+      card.elements(tag_name: 'input').to_a.sample.send_keys MakeRandom.name
     end
 
-    stats_form.element(:class, 'm-button').click
-    hs_form.element(:class, 'submit').click; sleep 0.5
+    stats_form.element(class: 'm-button').click
+    hs_form.element(class: 'submit').click; sleep 0.5
 
     stat_headers.join(',')
   end
 
   def test_add_hs_team_with_stats
-    email = 'testf7ac@yopmail.com'
+    email = 'test1731@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

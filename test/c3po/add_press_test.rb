@@ -20,34 +20,34 @@ class AddPressTest < Common
   end
 
   def press_section
-    @browser.element(:class, 'athletic_presses')
+    @browser.element(class: 'athletic_presses')
   end
 
   def fill_out_form
     # open form
-    press_section.element(:class, 'add_icon').click
-    form = @browser.element(:id, 'athletic_presses_edit')
+    press_section.element(class: 'add_icon').click
+    form = @browser.element(id: 'athletic_presses_edit')
 
     # fill out textboxes
-    form.element(:name, 'title').send_keys @title
-    form.element(:name, 'link').send_keys @link
-    form.element(:name, 'notes').send_keys @notes
+    form.element(name: 'title').send_keys @title
+    form.element(name: 'link').send_keys @link
+    form.element(name: 'notes').send_keys @notes
 
     # submit form
-    form.element(:class, 'save').click; sleep 1
+    form.element(class: 'save').click; sleep 1
   end
 
   def check_added_press
-    boxes = press_section.elements(:class, 'box_list')
+    boxes = press_section.elements(class: 'box_list')
     refute_empty boxes, 'No box show up after added press'
   end
 
   def check_profile_history
     # go to Preview Profile
-    @browser.element(:class, 'button--primary').click; sleep 1
+    @browser.element(class: 'button--primary').click; sleep 1
 
-    section =  @browser.element(:id, 'athletic-section')
-    press = section.elements(:tag_name, 'a').to_a.sample
+    section =  @browser.element(id: 'athletic-section')
+    press = section.elements(tag_name: 'a').to_a.sample
 
     actual_link = press.attribute('href')
     assert_equal @link, actual_link, 'Incorrect press url'
@@ -57,7 +57,7 @@ class AddPressTest < Common
   end
 
   def test_add_press
-    email = 'test94a9@yopmail.com'
+    email = 'test1731@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

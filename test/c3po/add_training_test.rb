@@ -18,38 +18,38 @@ class AddTrainingTest < Common
   end
 
   def training_section
-    @browser.element(:class, 'athletic_trainings_section')
+    @browser.element(class: 'athletic_trainings_section')
   end
 
   def fill_out_form
     # open form
-    training_section.element(:class, 'add_icon').click
-    form = @browser.element(:id, 'athletic_training_edit')
+    training_section.element(class: 'add_icon').click
+    form = @browser.element(id: 'athletic_training_edit')
 
     # fill out textboxes
-    form.element(:name, 'training_type').send_keys @training_type
-    form.element(:name, 'notes').send_keys @training_note
+    form.element(name: 'training_type').send_keys @training_type
+    form.element(name: 'notes').send_keys @training_note
 
     # select random year
-    dropdown = form.element(:name, 'years')
+    dropdown = form.element(name: 'years')
     options = dropdown.elements(:tag_name, 'option').to_a
     options.shift; options.sample.click
 
     # submit form
-    form.element(:class, 'save').click; sleep 1
+    form.element(class: 'save').click; sleep 1
   end
 
   def check_added_training
-    boxes = training_section.elements(:class, 'box_list')
+    boxes = training_section.elements(class: 'box_list')
     refute_empty boxes, 'No box show up after added training'
   end
 
   def check_profile_history
     # go to Preview Profile
-    @browser.element(:class, 'button--primary').click; sleep 1
+    @browser.element(class: 'button--primary').click; sleep 1
 
-    section =  @browser.element(:id, 'about-section')
-    training_section = section.element(:id, 'training-section')
+    section =  @browser.element(id: 'about-section')
+    training_section = section.element(id: 'training-section')
     row = training_section.elements(:tag_name, 'li').to_a.sample
 
     failure = []
@@ -65,7 +65,7 @@ class AddTrainingTest < Common
   end
 
   def test_add_coach_references
-    email = 'test94a9@yopmail.com'
+    email = 'test1731@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
