@@ -125,10 +125,16 @@ e. For more info on git settings/configs, click [here](https://help.github.com/a
 
 f. To learn how to generate SSH key and add the key to your github, click [here](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
-### Some more brew-ing
+### About Database connections
+- In this project, we have the capability of connectings to SQL and POSTGRES DBs to retrieve necessary data for testing. We use 2 gems pg and tiny_tds (they are provided in your Gemfile), but in order for these gems to be installed successfully, you will need to have the DB native apps installed first, to do do, use the below brew commands.
 
     $ brew install postgresql
     $ brew install freetds
+    
+- Also checkout/run `test/small_sample/coachlive-be-access-code.rb` and `test/small_sample/fasttrack-client-info-retrieve.rb` to see how the connection classes are used.
+
+- *VERY IMPOSTANT:* all DB credentials are/should be saved in yaml files, you will see there are example files of `postgres_databases.example.yml` and  `sql_databases.example.yml` within the config/ directory. These files are templates to give you ideas of the correct format. Some Developers like Jeremy Peterson or Eric Hoffman and myself will have correct files saved locally. You can ask any of us to provide you these files, but if not, you can always find and copy them from Jenkins server under `/var/lib/jenkins/deploy_files/qa_regression` - If you don't know how to get there, ask Devops or other Developers for instructions, I cannot/should not provide guidance here. *REMEMBER* ... DO NOT commit changes made to these files to git repo for security purposes. If you do need to make changes (like add new credentials or update old ones) PLEASE do so locally, AND update the files in Jenkins server by yourself. DO communicate with other Developers or Devops so everyone is aware. After all, anything DB related should be treated with care and considerations.
+
 
 ### Clone
 Last but not least, clone this repo (make sure your current directory is where you want to clone this to, if not, go to the desired directory)
