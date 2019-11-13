@@ -128,8 +128,10 @@ f. To learn how to generate SSH key and add the key to your github, click [here]
 ### About Database connections
 - In this project, we have the capability of connectings to SQL and POSTGRES DBs to retrieve necessary data for testing. We use 2 gems pg and tiny_tds (they are provided in your Gemfile), but in order for these gems to be installed successfully, you will need to have the DB native apps installed first, to do do, use the below brew commands.
 
+
     $ brew install postgresql
     $ brew install freetds
+    
     
 - Also checkout/run `test/small_sample/coachlive-be-access-code.rb` and `test/small_sample/fasttrack-client-info-retrieve.rb` to see how the connection classes are used.
 
