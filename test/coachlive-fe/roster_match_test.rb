@@ -40,7 +40,7 @@ class RosterMatchRMSTest < Common
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
+        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,

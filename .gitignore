@@ -26,6 +26,9 @@ roster_create_rms.csv
 # Coach Packet Athletes CSV file
 roster_coach_packet.csv
 
+# Coach Packet Teams/Schedule CSV file
+schedule.csv
+
 # Gemfile.lock #
 Gemfile.lock
 

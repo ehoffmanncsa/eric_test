@@ -26,6 +26,11 @@ module CoachPacket_AdminUI
     sleep 2
   end
 
+  def self.upload_schedule
+    @browser.element(value: 'Import Schedule').click
+    sleep 2
+  end
+
   def self.upload_rostermatch_csv
     path = File.absolute_path('rostermatch.csv')
     @browser.elements(id: 'coach_packet_athletic_event_file')[1].send_keys path
@@ -39,6 +44,11 @@ module CoachPacket_AdminUI
   def self.upload_roster_coach_packet_csv
     path = File.absolute_path('roster_coach_packet.csv')
     @browser.elements(id: 'coach_packet_athletic_event_file')[1].send_keys path
+  end
+
+  def self.upload_schedule_csv
+    path = File.absolute_path('schedule.csv')
+    @browser.elements(id: 'coach_packet_athletic_event_file')[0].send_keys path
   end
 
 end

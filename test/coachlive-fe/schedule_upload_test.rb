@@ -6,7 +6,7 @@ require 'time'
 require 'date'
 
 # UI Test: upload csv that will create new client rms profiles
-class RosterCPCSVTest < Common
+class ScheduleCSVTest < Common
   def setup
     super
 
@@ -14,10 +14,10 @@ class RosterCPCSVTest < Common
     @athletic_event_data = athletic_event_data
     @expected_data = @athletic_event_data[:athletic_event]
     @event_name = @athletic_event_data[:athletic_event][:name]
+    @event_venue_name = @athletic_event_data[:athletic_event][:venues][0][:name]
     @coach_packet_config = Default.env_config['coach_packet']
 
     # generate new data to roster_coach_packet.csv
-    RosterCPCSV.new.make_it
     @gmail = GmailCalls.new
     @gmail.get_connection
 
@@ -60,7 +60,16 @@ class RosterCPCSVTest < Common
             address2: MakeRandom.address2,
             city: MakeRandom.city,
             country: 'USA',
-            name: MakeRandom.name,
+            name: 'testvenue1',
+            state: MakeRandom.state,
+            zip: MakeRandom.zip_code
+          },
+          {
+            address1: MakeRandom.address,
+            address2: MakeRandom.address2,
+            city: MakeRandom.city,
+            country: 'USA',
+            name: 'testvenue2',
             state: MakeRandom.state,
             zip: MakeRandom.zip_code
           }
@@ -107,69 +116,69 @@ class RosterCPCSVTest < Common
     sleep 2
   end
 
+  def select_schedule
+    @browser.goto "https://coachlive-staging.ncsasports.org/events/event/#{@event_id}/schedule"
+    sleep 3
+  end
+
   def my_roster_info
-    athlete_name = []; position = []; jersey_number = []
-    org_team_name = []; state_code = []
-    file = CSV.read('roster_coach_packet.csv'); file.shift
+    time = []; venue = []; location = []
+    team1_name = []; team2_name = []
+    file = CSV.read('schedule.csv'); file.shift
     file.each do |row|
-      position << (row[2]).to_s
-      athlete_name << "#{row[4]} #{row[5]}"
-      jersey_number << (row[10]).to_s
-      org_team_name << "#{row[18]} | #{row[14]} #{row[15]}"
+      location << (row[7]).to_s
+      time << (row[8]).to_s
+      venue << (row[6]).to_s
+      team1_name << "#{row[1]} #{row[0]}"
+      team2_name << "#{row[3]} #{row[2]}"
     end
 
-    @position = position
-    @athlete_name =  athlete_name
-    @jersey_number = jersey_number
-    @org_team_name = org_team_name
+    @time = time
+    @venue =  venue
+    @location = location
+    @team1_name = team1_name
+    @team2_name = team2_name
   end
 
-  def check_name
+  def check_team1_name
     failure = []
-    @athlete_name.each do |athlete_name|
-      failure << "Athlete name #{athlete_name} not found" unless @browser.html.include? athlete_name
+    @team1_name.each do |team1_name|
+      failure << "Team 1 name #{team1_name} not found" unless @browser.html.include? team1_name
     end
     assert_empty failure
   end
 
-  def check_position
+  def check_team2_name
     failure = []
-    @position.each do |position|
-      failure << "Position #{position} not found" unless @browser.html.include? position
+    @team2_name.each do |team2_name|
+      failure << "Team 2 name #{team2_name} not found" unless @browser.html.include? team2_name
     end
     assert_empty failure
   end
 
-  def check_state_org_team_name
+  def check_location
     failure = []
-    @org_team_name.each do |org_team_name|
-      failure << "State and team name #{org_team_name} not found" unless @browser.html.include? org_team_name
+    @location.each do |location|
+      failure << "Location #{location} not found" unless @browser.html.include? location
     end
     assert_empty failure
   end
 
-  def open_athlete_profile
-    @browser.element("data-automation-id": 'AthleteName').click
+  def select_teams
+    @browser.goto "https://coachlive-staging.ncsasports.org/events/event/#{@event_id}/teams"
+    sleep 3
   end
 
-  def open_athlete_rms
-    @browser.element("data-automation-id": 'EventLogo').click
-  end
-
-  def check_rms
-    title = 'Athlete | NCSA Coach Live'
-    assert_equal title, @browser.title, 'Incorrect page title'
-  end
-
-  def coach_packet_admin_upload_roster
+  def coach_packet_admin_upload_schedule
     my_event_created
+    ScheduleCSV.new.make_it
     sleep 2
     CoachPacket_AdminUI.goto_Coach_Packet_admin
     sleep 2
     select_event
     CoachPacket_AdminUI.import_event
-    CoachPacket_AdminUI.upload_roster_coach_packet_csv
-    CoachPacket_AdminUI.upload_athletes
+    CoachPacket_AdminUI.upload_schedule_csv
+    CoachPacket_AdminUI.upload_schedule
   end
 
   def log_into_Coach_Packet
@@ -181,28 +190,26 @@ class RosterCPCSVTest < Common
     AthleticEventUI.delete_email
   end
 
-  def select_event_verify_athletes_upload
+  def select_event_verify_schedule_upload
     AthleticEventUI.display_upcoming_events
     search_for_event
     open_event
+    sleep 3
     my_roster_info
-    sleep 4
-    check_name
-    check_position
-    check_state_org_team_name
-    AthleticEventUI.open_athlete_profile
-    sleep 2
-    AthleticEventUI.open_athlete_rms
-    sleep 2
-    check_rms
-    sleep 2
+    select_schedule
+    check_team1_name
+    check_team2_name
+    check_location
+    select_teams
+    check_team1_name
+    check_team2_name
   end
 
-  def test_roster_rms_csv
+  def test_schedule_csv
     create_athletic_event
-    coach_packet_admin_upload_roster
+    coach_packet_admin_upload_schedule
     sleep 4
     log_into_Coach_Packet
-    select_event_verify_athletes_upload
+    select_event_verify_schedule_upload
   end
 end

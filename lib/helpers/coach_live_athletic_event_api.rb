@@ -23,6 +23,18 @@ module AthleticEventApi
     date.split('+')[0] + 'Z'
   end
 
+  def self.schedule_date(days_from_now = 2)
+    target_day = Date.today + days_from_now
+    date = target_day.strftime("%m/%d/%y")
+  end
+
+  def self.game_time
+    time_arr = ['9:00','10:00','11:00','12:00','13:00','14:00',
+                '15:00','16:00','17:00','18:00','19:00','20:15']
+
+    time_arr.sample
+  end
+
   def self.position
     position_arr = ['Center', 'Point Guard', 'Power Forward', 'Shooting Guard', 'Small Forward']
 
@@ -30,9 +42,23 @@ module AthleticEventApi
   end
 
   def self.team_name
-    team_name_arr = ['13U','14U','15U','16U','17U','18U']
+    team_name_arr = ['14U','15U','16U','17U','18U']
 
     team_name_arr.sample
+  end
+
+  def self.org_name
+    org_name_arr = ['Rebels','All-Stars','Champs','Ballers','Bulls','Hoops','Elite',
+                    'Crusaders','Cats']
+
+    org_name_arr.sample
+  end
+
+  def self.locations
+    locations_arr = ['Location 1','Rec Center','Main Gym','Location 2', 'Park',
+                     'Field House','High School','Grass field']
+
+    locations_arr.sample
   end
 
   def self.logo_urls
