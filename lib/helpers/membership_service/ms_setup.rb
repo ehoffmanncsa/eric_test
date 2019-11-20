@@ -30,7 +30,7 @@ module MSSetup
     @browser.button(name: 'commit').click
     sleep 1
 
-    Watir::Wait.until(timeout: 90) { @browser.url.include? 'custom_drills/free_onboarding' }
+    Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/onboarding' }
     sleep 1
   end
 
