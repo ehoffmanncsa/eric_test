@@ -55,6 +55,20 @@ module C3PO
     Watir::Wait.while { form.element(class: 'action-spinner').present? }
   end
 
+  def self.upload_twitch(admin = true)
+    url = 'https://clips.twitch.tv/DifficultDependableGoshawkSSSsss?tt_medium=clips_api&tt_content=url'
+    @browser.element(class: 'js-upload-options').element(class: 'fa-twitch').click
+    form = @browser.form(id: 'profile-twitch-video-upload')
+
+    # fill out the upload form
+    form.text_field(id: 'external_video_title').set SecureRandom.hex(4)
+    form.text_field(id: 'external_video_embed_code').set url
+    form.button(name: 'commit').click
+    Watir::Wait.while { form.element(class: 'action-spinner').present? }
+  end
+
+
+
   def self.upload_hudl(admin = true)
     url = 'http://www.hudl.com/video/3/8650926/58f3b097bee0b52f8c96bfd5'
     @browser.element(class: 'js-upload-options').element(class: 'fa-custom-hudl').click
@@ -114,6 +128,11 @@ module C3PO
   def self.goto_publish
     goto_video
     @browser.element(class: 'pub').click
+  end
+
+  def self.goto_message_center
+    url = @config['clientrms']['base_url'] + "message_center/inbox"
+    @browser.goto url
   end
 
   def self.activate_first_row_of_new_video
