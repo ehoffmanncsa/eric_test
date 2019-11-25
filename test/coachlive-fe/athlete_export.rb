@@ -15,10 +15,6 @@ class CoachLiveExportTest < Common
     AthleticEventUI.setup(@browser)
   end
 
-  def teardown
-    super
-  end
-
   def click_menu
     @browser.element('data-icon': 'bars').click
     sleep 3

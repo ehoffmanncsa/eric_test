@@ -15,10 +15,6 @@ class CLFEAddAthleticEventTest < Common
     COACHLIVE.setup(@browser)
   end
 
-  def teardown
-    super
-  end
-
   def display_upcoming_events
     # display all upcoming events
     upcoming = @browser.element(:text, 'Upcoming')

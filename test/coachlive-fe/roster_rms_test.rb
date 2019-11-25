@@ -28,10 +28,6 @@ class RosterRMSCSVTest < Common
     AthleticEventUI.setup(@browser)
   end
 
-  def teardown
-    super
-  end
-
   def athletic_event_data
     {
       athletic_event: {
