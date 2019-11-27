@@ -68,10 +68,17 @@ module MSAdmin
     @browser.goto url
   end
 
+  def self.upgrade_downgrade_payment_plan
+    payment_plan_arr = ['1 Month (0%)','6 Month (11%)','12 Month (20%)','18 Month (33.8%)']
+
+    payment_plan_arr.sample
+  end
+
   def self.upgrade_or_down_grade_to(membership_name)
     @browser.i(class: 'fa-pencil').click
     modal.select_list(name: 'packageName').select membership_name
     modal.select_list(name: 'numPayments').select rand(1 .. 18).to_s
+    modal.select_list(name: 'paymentPlan').select upgrade_downgrade_payment_plan
     modal.button(value: 'Preview Membership Change').click
     sleep 3
     Watir::Wait.until(timeout: 30) { modal.div(class: %w[js_change_payment change_form]).present? }
