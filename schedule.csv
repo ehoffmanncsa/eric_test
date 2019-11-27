@@ -1,0 +1,5 @@
+team_one,team_one_org,team_two,team_two_org,name,sport_name,venue,location,time,date,team_one_division,team_two_division
+16U,Hoops,16U,Bulls,Hoops16UvsBulls16U,Men's Basketball,testvenue1,Field House,20:15,11/27/19,16U,16U
+17U,Bulls,18U,Cats,Bulls17UvsCats18U,Men's Basketball,testvenue2,Park,11:00,11/27/19,17U,18U
+16U,Rebels,16U,Cats,Rebels16UvsCats16U,Men's Basketball,testvenue2,Location 1,18:00,11/27/19,16U,16U
+14U,Champs,14U,Crusaders,Champs14UvsCrusaders14U,Men's Basketball,testvenue2,Field House,14:00,11/27/19,14U,14U

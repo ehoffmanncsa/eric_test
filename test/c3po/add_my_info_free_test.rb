@@ -37,7 +37,6 @@ class AddMyInfoTestFree < Common
 
   def add_free
     POSSetup.setup(@browser)
-    POSSetup.set_password(@recruit_email)
     UIActions.clear_cookies
   end
 
@@ -412,7 +411,7 @@ class AddMyInfoTestFree < Common
     group_of_half = @browser.elements(:class, %w[half mg-btm-1])
 
     expected_ath = "#{@recruit_first_name.upcase} J. #{@recruit_last_name.upcase} (Athlete)"+
-    "\n#{@recruit_email}\n#{@athlete_phone_mobile} Athlete Mobile\n#{@athlete_phone_home} Home"
+    "\n#{@recruit_email}\n#{@athlete_phone_mobile} Athlete mobile\n#{@athlete_phone_home} Home"
     assert_includes group_of_half[0].text, expected_ath
 
     expected_g1 = "#{@dad_first_name.upcase} #{@recruit_last_name.upcase} (Father)\n#{@guardian_email2}\n#{@guard_phone_mobile2}\n#{@guard_phone_home2} Home"

@@ -48,7 +48,7 @@ class AddClubSeasonTest < Common
   end
 
   def test_add_club_season
-    email = 'test1731@yopmail.com'
+    email = 'test2702@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
