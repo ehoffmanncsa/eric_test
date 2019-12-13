@@ -30,7 +30,7 @@ module POSSetup
     @browser.text_field(:id, 'user_account_password').set 'eric'
     @browser.text_field(:id, 'user_account_password_confirmation').set 'eric'
     @browser.button(:name, 'commit').click; sleep 1
-    Watir::Wait.until { @browser.url.include? 'custom_drills/free_onboarding' }
+    Watir::Wait.until { @browser.url.include? 'onboarding' }
   end
 
   def self.make_commitment

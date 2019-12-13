@@ -204,7 +204,7 @@ class AddAcademicsInfoTest < Common
     group_of_hon = @browser.elements(:class, %w[half accomplishments])
 
     expected_hon = "ACADEMIC ACCOMPLISHMENTS\nHonors Classes\nI am honors classes text.\nAP/IB Classes\nI am AP classes"+
-    " text.\nPreferred Field of Study\nBusiness\nRegistered with NCAA Eligibility Center\nYes"
+    " text.\nRegistered with NCAA Eligibility Center\nYes"
     assert_includes group_of_hon.first.text, expected_hon
   end
 
@@ -217,7 +217,7 @@ class AddAcademicsInfoTest < Common
   end
 
   def test_add_academics
-    email = 'test2702@yopmail.com'
+    email = 'testf993@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
