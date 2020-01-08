@@ -14,7 +14,6 @@ module AthleticEventApi
     @event_city = @athletic_event_data[:athletic_event][:city]
     @event_state = @athletic_event_data[:athletic_event][:state]
     @event_logo = @athletic_event_data[:athletic_event][:logo_url]
-    @event_venue_name = @athletic_event_data[:athletic_event][:venues][0][:name]
   end
 
   def self.date(days_from_now = 2)

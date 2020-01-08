@@ -18,14 +18,7 @@ Sample Expected Response
    "point_of_contact_email"=>"berna_quigley@cristfadel.ca",
    "name"=>"Weber, Greenholt and Schinner",
    "logo_url"=>"https://demoimages-45r6gc2nv.now.sh/chicago_classic_zg.png",
-   "venues"=>
-      [{"zip"=>"60910",
-        "state"=>"AL",
-        "name"=>"djsxhdgbkl",
-        "country"=>"USA",
-        "city"=>"West Randi",
-        "address2"=>"Suite 322",
-        "address1"=>"55040 Jacques Grove"}],
+   "venues"=> [],
    "id"=>118,
    "event_operator_id"=>16,
    "event_operator"=>
@@ -89,6 +82,7 @@ class AthleticEventCRUTest < Minitest::Test
   def athletic_event_data
     {
       athletic_event: {
+        access_type: "non-purchasable",
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1 .. 4)),
         end_date: date(rand(2 .. 4)),
@@ -107,17 +101,6 @@ class AthleticEventCRUTest < Minitest::Test
         activated_at: date,
         event_operator_id: get_EO_id,
         sports: sport_ids,
-        venues: [
-          {
-            address1: MakeRandom.address,
-            address2: MakeRandom.address2,
-            city: MakeRandom.city,
-            country: 'USA',
-            name: MakeRandom.name,
-            state: MakeRandom.state,
-            zip: MakeRandom.zip_code
-          }
-        ]
       }
     }
   end
@@ -215,20 +198,11 @@ class AthleticEventCRUTest < Minitest::Test
   def check_venues(expected_data, data_from_api)
     errors_array = []
 
-    expected_venue = expected_data[:venues]
-    event_venue = data_from_api['data']['venues']
+    expected_venues = []
+    event_venues = data_from_api['data']['venues']
 
-    i = 0
-    expected_venue.each do |venue|
-      venue.each do |key, value|
-        expected = value
-        actual = event_venue[i][key.to_s]
-
-        msg = "Expected #{key.to_s} #{expected}, returned #{actual}."
-        errors_array << msg unless expected == actual
-      end
-
-      i += 1
+    if expected_venues != event_venues
+      errors_array << "expected venues to be empty, but #{event_venues} is present"
     end
 
     errors_array

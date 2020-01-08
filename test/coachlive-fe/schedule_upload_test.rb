@@ -14,7 +14,6 @@ class ScheduleCSVTest < Common
     @athletic_event_data = athletic_event_data
     @expected_data = @athletic_event_data[:athletic_event]
     @event_name = @athletic_event_data[:athletic_event][:name]
-    @event_venue_name = @athletic_event_data[:athletic_event][:venues][0][:name]
     @coach_packet_config = Default.env_config['coach_packet']
 
     # generate new data to roster_coach_packet.csv
@@ -31,6 +30,7 @@ class ScheduleCSVTest < Common
   def athletic_event_data
     {
       athletic_event: {
+        access_type: "non-purchasable",
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1..4)),
         end_date: AthleticEventApi.date(rand(2..4)),
@@ -50,26 +50,6 @@ class ScheduleCSVTest < Common
         sports: [
           { ncsa_id: 17638 }
         ],
-        venues: [
-          {
-            address1: MakeRandom.address,
-            address2: MakeRandom.address2,
-            city: MakeRandom.city,
-            country: 'USA',
-            name: 'testvenue1',
-            state: MakeRandom.state,
-            zip: MakeRandom.zip_code
-          },
-          {
-            address1: MakeRandom.address,
-            address2: MakeRandom.address2,
-            city: MakeRandom.city,
-            country: 'USA',
-            name: 'testvenue2',
-            state: MakeRandom.state,
-            zip: MakeRandom.zip_code
-          }
-        ]
       }
     }
   end
@@ -86,6 +66,47 @@ class ScheduleCSVTest < Common
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
+
+    add_venues(@new_athletic_event["data"]["id"])
+  end
+
+  def add_venues(athletic_event_id)
+    venues = [
+      {
+        athletic_event_id: athletic_event_id,
+        address1: MakeRandom.address,
+        address2: MakeRandom.address2,
+        city: MakeRandom.city,
+        country: 'USA',
+        name: 'testvenue1',
+        state: MakeRandom.state,
+        zip: MakeRandom.zip_code
+      },
+      {
+        athletic_event_id: athletic_event_id,
+        address1: MakeRandom.address,
+        address2: MakeRandom.address2,
+        city: MakeRandom.city,
+        country: 'USA',
+        name: 'testvenue2',
+        state: MakeRandom.state,
+        zip: MakeRandom.zip_code
+      },
+    ]
+
+    venues.each do |venue|
+      begin
+        retries ||= 0
+        @connection_client.post(
+          url: '/api/athletic_events/v1/venues',
+          json_body: venue.to_json
+        )
+      rescue StandardError => e
+        msg = "#{e} \nPOST body \n#{venue} \nGoing to retry"
+        puts msg; sleep 2
+        retry if (retries += 1) < 2
+      end
+    end
   end
 
   def my_event_created

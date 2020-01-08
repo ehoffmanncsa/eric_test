@@ -30,6 +30,7 @@ class RosterMatchRMSTest < Common
   def athletic_event_data
     {
       athletic_event: {
+        access_type: "non-purchasable",
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1 .. 4)),
         end_date: AthleticEventApi.date(rand(2 .. 4)),
@@ -49,17 +50,6 @@ class RosterMatchRMSTest < Common
         sports: [
           {ncsa_id: 17638}
         ],
-        venues: [
-          {
-            address1: MakeRandom.address,
-            address2: MakeRandom.address2,
-            city: MakeRandom.city,
-            country: 'USA',
-            name: MakeRandom.name,
-            state: MakeRandom.state,
-            zip: MakeRandom.zip_code
-          }
-        ]
       }
     }
   end
@@ -75,9 +65,34 @@ class RosterMatchRMSTest < Common
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
+
+    add_venue(@new_athletic_event["data"]["id"])
   end
 
+  def add_venue(athletic_event_id)
+    venue = {
+        athletic_event_id: athletic_event_id,
+        address1: MakeRandom.address,
+        address2: MakeRandom.address2,
+        city: MakeRandom.city,
+        country: 'USA',
+        name: MakeRandom.name,
+        state: MakeRandom.state,
+        zip: MakeRandom.zip_code
+    }
 
+    begin
+      retries ||= 0
+      @connection_client.post(
+        url: '/api/athletic_events/v1/venues',
+        json_body: venue.to_json
+      )
+    rescue StandardError => e
+      msg = "#{e} \nPOST body \n#{venue} \nGoing to retry"
+      puts msg; sleep 2
+      retry if (retries += 1) < 2
+    end
+  end
 
   def get_my_event
     url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"

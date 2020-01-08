@@ -41,6 +41,19 @@ class AthleticEventServiceClient
     JSON.parse(response.body)
   end
 
+  def delete(url:)
+    #response does not return a body, therefore this method just returns the response
+    response = client.delete do |req|
+      req.url(base_uri + url)
+      req.headers['Content-Type'] = 'application/json'
+    end
+
+    msg = "[ERROR] - Receive response #{response.status} when try to PUT to #{url}"
+    raise msg unless response.status.eql? 200
+
+    response
+  end
+
   private
 
   attr_reader :client
