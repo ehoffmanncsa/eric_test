@@ -15,40 +15,40 @@ class AddClubSeasonTest < Common
   end
 
   def club_section
-    @browser.element(:class, 'club_seasons')
+    @browser.element(class: 'club_seasons')
   end
 
   def form
-    @browser.element(:id, 'club_season_form_container')
+    @browser.element(id: 'club_season_form_container')
   end
 
   def check_incomplete_form_error_msg
     # open and submit blank form
-    club_section.element(:class, 'add_icon').click
-    form.button(:class, 'submit').click
-    assert form.element(:class, 'errors'), 'Error banner not found'
+    club_section.element(class: 'add_icon').click
+    form.button(class: 'submit').click
+    assert form.element(class: 'errors'), 'Error banner not found'
 
-    error_msg = form.element(:class, 'errors').text
+    error_msg = form.element(class: 'errors').text
     expected_msg = "Club Name cannot be blank.\n" + 'Year must be selected.'
     assert_equal expected_msg, error_msg, "Incorrect error message"
 
     # close form
-    form.element(:class, 'cancel_form').click
+    form.element(class: 'cancel_form').click
   end
 
   def check_added_club
-    boxes = club_section.elements(:tag_name, 'li').to_a
+    boxes = club_section.elements(tag_name: 'li').to_a
     refute_empty boxes, 'No box show up after added club'
   end
 
   def check_profile_history
     C3PO.open_athlete_history_popup
     msg = 'No popup after clicking club Stats'
-    assert @browser.element(:class, 'mfp-content'), msg
+    assert @browser.element(class: 'mfp-content'), msg
   end
 
   def test_add_club_season
-    email = 'testf993@yopmail.com'
+    email = 'test99d5@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

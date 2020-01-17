@@ -32,7 +32,7 @@ class AddTrainingTest < Common
 
     # select random year
     dropdown = form.element(name: 'years')
-    options = dropdown.elements(:tag_name, 'option').to_a
+    options = dropdown.elements(tag_name: 'option').to_a
     options.shift; options.sample.click
 
     # submit form
@@ -50,14 +50,14 @@ class AddTrainingTest < Common
 
     section =  @browser.element(id: 'about-section')
     training_section = section.element(id: 'training-section')
-    row = training_section.elements(:tag_name, 'li').to_a.sample
+    row = training_section.elements(tag_name: 'li').to_a.sample
 
     failure = []
-    actual_type = row.element(:css, 'div.col.th').text.downcase
+    actual_type = row.element(css: 'div.col.th').text.downcase
     msg = "Expected type: #{@training_type} - Actual type: #{actual_type}"
     failure << msg unless actual_type.eql? @training_type
 
-    actual_note = row.elements(:css, 'div.col.td').last.text
+    actual_note = row.elements(css: 'div.col.td').last.text
     msg = "Expected note: #{@training_note} - Actual note: #{actual_note}"
     failure << msg unless actual_note.eql? @training_note
 
@@ -65,7 +65,7 @@ class AddTrainingTest < Common
   end
 
   def test_add_coach_references
-    email = 'testf993@yopmail.com'
+    email = 'test99d5@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

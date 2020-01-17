@@ -27,7 +27,7 @@ class AddEventTest < Common
       option.click if option.text == 'Camp'
     end
     # fill out textboxes
-    form = @browser.element(:id, 'athletic_event_edit')
+    form = @browser.element(id: 'athletic_event_edit')
 
     form.element(name: 'name').send_keys "Event Name"
     form.element(name: 'location').send_keys "Event Location"
@@ -56,7 +56,7 @@ class AddEventTest < Common
   end
 
   def test_add_event
-    email = 'testf993@yopmail.com'
+    email = 'test99d5@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
