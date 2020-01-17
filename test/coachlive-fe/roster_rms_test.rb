@@ -38,7 +38,7 @@ class RosterRMSCSVTest < Common
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name} " + "#{MakeRandom.last_name}",
+        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -47,12 +47,13 @@ class RosterRMSCSVTest < Common
         coach_live_approved: true,
         status: 'Activated',
         activated_at: AthleticEventApi.date,
-        event_operator_id: 9,
-        sports: [
-          {ncsa_id: 17638}
-        ],
-      }
+        event_operator_id: 9
+      },
+      sports: [
+        {ncsa_id: 17638}
+      ]
     }
+
   end
 
   def create_athletic_event

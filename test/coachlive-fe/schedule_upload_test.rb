@@ -32,12 +32,12 @@ class ScheduleCSVTest < Common
       athletic_event: {
         access_type: "non-purchasable",
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1..4)),
-        end_date: AthleticEventApi.date(rand(2..4)),
+        description: MakeRandom.lorem(rand(1 .. 4)),
+        end_date: AthleticEventApi.date(rand(2 .. 4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name} " + MakeRandom.last_name.to_s,
+        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -46,12 +46,13 @@ class ScheduleCSVTest < Common
         coach_live_approved: true,
         status: 'Activated',
         activated_at: AthleticEventApi.date,
-        event_operator_id: 9,
-        sports: [
-          { ncsa_id: 17638 }
-        ],
-      }
+        event_operator_id: 9
+      },
+      sports: [
+        {ncsa_id: 17638}
+      ]
     }
+
   end
 
   def create_athletic_event

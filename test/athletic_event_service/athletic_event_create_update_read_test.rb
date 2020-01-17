@@ -82,7 +82,6 @@ class AthleticEventCRUTest < Minitest::Test
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
         age_range: MakeRandom.age_range,
         description: MakeRandom.lorem(rand(1 .. 4)),
         end_date: date(rand(2 .. 4)),
@@ -99,9 +98,9 @@ class AthleticEventCRUTest < Minitest::Test
         status: 'Activated',
         coach_live_approved: true,
         activated_at: date,
-        event_operator_id: get_EO_id,
-        sports: sport_ids,
-      }
+        event_operator_id: get_EO_id
+      },
+      sports: sport_ids,
     }
   end
 
@@ -149,15 +148,17 @@ class AthleticEventCRUTest < Minitest::Test
   def read_athletic_event(expected_data, data_from_api)
     errors_array = []
 
+    expected_sports = expected_data[:sports]
     expected_data = expected_data[:athletic_event]
+
     expected_data.each do |key, value|
-      next if key == :venues || key == :sports
+      next if key == :venues
 
       msg = "Expected #{key.to_s} #{value}, returned #{data_from_api.dig("data", "#{key}")}."
       errors_array << msg unless expected_data[:"#{key}"].eql? data_from_api.dig("data", "#{key}")
     end
 
-    check_sports_result = check_sports(expected_data, data_from_api)
+    check_sports_result = check_sports(expected_sports, data_from_api)
     errors_array << check_sports_result unless check_sports_result.empty?
     errors_array.flatten!
 
@@ -172,8 +173,7 @@ class AthleticEventCRUTest < Minitest::Test
     assert_empty errors_array
   end
 
-  def check_sports(expected_data, data_from_api)
-    expected_sports = expected_data[:sports]
+  def check_sports(expected_sports, data_from_api)
     expected_sport_ids = []
 
     expected_sports.each do |_key, value|
@@ -210,6 +210,7 @@ class AthleticEventCRUTest < Minitest::Test
 
   def test_create_read_update_athletic_event
     @original_data = athletic_event_data
+    
     new_athletic_event = create_athletic_event
     check_creation(new_athletic_event)
 

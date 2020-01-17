@@ -46,12 +46,13 @@ class RosterMatchRMSTest < Common
         coach_live_approved: true,
         status: 'Activated',
         activated_at: AthleticEventApi.date,
-        event_operator_id: 9,
-        sports: [
-          {ncsa_id: 17638}
-        ],
-      }
+        event_operator_id: 9
+      },
+      sports: [
+        {ncsa_id: 17638}
+      ]
     }
+
   end
 
   def create_athletic_event
