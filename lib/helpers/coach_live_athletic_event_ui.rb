@@ -74,7 +74,13 @@ module AthleticEventUI
   end
 
   def self.athlete_name
+    #athlete name on the event page
     display_athlete_name = @browser.element("data-automation-id": 'AthleteName').text
+  end
+
+  def self.athlete_name_profile
+    #athlete name on the athlete profile page
+    display_athlete_name = @browser.element("data-automation-id": 'EventName').text
   end
 
   def self.grad_year_position
@@ -103,6 +109,16 @@ module AthleticEventUI
 
   def self.open_athlete_rms
     @browser.element("data-automation-id": 'EventLogo').click
+  end
+
+  def self.select_hamburger_menu
+    @browser.element(data_icon: 'bars').click
+    sleep 3
+  end
+
+  def self.select_tracked_athlete_page
+    @browser.element(text: 'Athletes').click
+    sleep 8
   end
 
 end
