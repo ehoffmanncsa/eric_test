@@ -56,6 +56,11 @@ module AthleticEventUI
     sleep 1
   end
 
+  def self.display_past_events
+    @browser.element("data-automation-id": 'ViewAllPast').click
+    sleep 1
+  end
+
   def self.search_for_event
     search = @browser.element("data-automation-id": 'SearchBox')
     search.scroll.to
@@ -121,4 +126,14 @@ module AthleticEventUI
     sleep 8
   end
 
+  def self.select_events_page
+    @browser.element(text: 'Events').click
+    sleep 8
+  end
+
+  def self.tag
+   tag_arr = ['tag1','tag2','tag3','tag4','tag5','tag6']
+
+   tag_arr.sample
+  end
 end
