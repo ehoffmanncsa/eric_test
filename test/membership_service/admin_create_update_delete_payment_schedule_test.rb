@@ -4,6 +4,8 @@ require_relative '../test_helper'
 # MS Regression
 # TS-485, TS-486, TS-487
 # UI Test: Create/Update/Delete A Payment Schedule Test (Admin Payments Page)
+# OPS-711 user enter total due and the process fee is calculated from payment
+# interest, amount due + fee = total due
 
 class AdminCUDPaymentScheduleTest < Common
   def setup
@@ -34,8 +36,8 @@ class AdminCUDPaymentScheduleTest < Common
 
   def fill_out_create_schedule_form
     form.text_field(name: 'scheduleDate').set date
-    form.text_field(name: 'amount').set amount
-    form.text_field(name: 'financeFee').set @given_amount
+    form.text_field(name: 'totalDue').set amount
+    #form.text_field(name: 'financeFee').set @given_amount
     sleep 2
     @browser.div(class: 'add-payment-button-js').click
     sleep 2
@@ -65,7 +67,7 @@ class AdminCUDPaymentScheduleTest < Common
     #[id, account, date, amount, finance, total, status, payment_id]
     @schedule_id = @schedule[0].text
     @schedule_date = @schedule[2].text
-    @schedule_amount = @schedule[3].text.gsub('$', '').to_f
+    @schedule_amount = @schedule[5].text.gsub('$', '').to_f
   end
 
   def check_schedule_created
