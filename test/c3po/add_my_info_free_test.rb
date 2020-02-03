@@ -501,6 +501,6 @@ class AddMyInfoTestFree < Common
     check_street_address
     check_city
     check_social_links
-    check_field_of_study
+    #check_field_of_study
   end
 end

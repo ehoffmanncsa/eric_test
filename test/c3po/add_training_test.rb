@@ -65,7 +65,7 @@ class AddTrainingTest < Common
   end
 
   def test_add_coach_references
-    email = 'test99d5@yopmail.com'
+    email = 'test8340@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 
