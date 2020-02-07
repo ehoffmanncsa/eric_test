@@ -18,6 +18,8 @@ require 'time'
 require 'ffaker'
 require 'faraday'
 require 'ey-hmac/faraday'
+require 'pry-byebug'
+require 'pry-coolline'
 require_relative 'common'
 require_relative 'visual_common'
 

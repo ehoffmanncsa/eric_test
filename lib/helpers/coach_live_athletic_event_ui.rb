@@ -39,8 +39,8 @@ module AthleticEventUI
   def self.get_login_url
     @email = get_new_coachlive_email
 
-    keyword = '/wf/click?'
-
+    keyword = '/click?'
+    
     msg = @gmail.parse_body(@email, keyword).strip!
     msg = "http" + msg.split('http')[1]
 
