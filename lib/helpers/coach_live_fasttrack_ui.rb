@@ -14,6 +14,10 @@ module CoachPacket_AdminUI
     @browser.element(text: 'Coach Packet').click
   end
 
+  def self.select_college_coach_page
+    @browser.element(text: 'College Coaches').click
+  end
+
   def self.import_event
     @browser.element(text: 'Import Event CSVs').click
     sleep 2

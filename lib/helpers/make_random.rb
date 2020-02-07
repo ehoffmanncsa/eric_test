@@ -11,6 +11,12 @@ module MakeRandom
     Array.new(length) { charset.sample }.join
   end
 
+	def self.alpha(length = nil)
+		length ||= 1
+    charset = Array('a'..'z')
+    Array.new(length) { charset.sample }.join
+  end
+
   def self.grad_yr
   	year = Time.now.year
     (year .. (year + 5)).to_a.sample

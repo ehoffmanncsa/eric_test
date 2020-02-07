@@ -16,7 +16,6 @@ class ScheduleCSVTest < Common
     @event_name = @athletic_event_data[:athletic_event][:name]
     @coach_packet_config = Default.env_config['coach_packet']
 
-    # generate new data to roster_coach_packet.csv
     @gmail = GmailCalls.new
     @gmail.get_connection
 

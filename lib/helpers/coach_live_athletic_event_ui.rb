@@ -131,9 +131,21 @@ module AthleticEventUI
     sleep 8
   end
 
+  def self.signup_message
+    @browser.element(role: 'alertdialog').text
+  end
+
   def self.tag
    tag_arr = ['tag1','tag2','tag3','tag4','tag5','tag6']
 
    tag_arr.sample
+  end
+
+  def self.sports
+   sports_arr = ['Softball', 'Men''s Basketball', 'Women''s Basketball', 'Men''s Ice Hockey',
+     'Women''s Ice Hockey', 'Men''s Soccer', 'Women''s Soccer', 'Men''s Water Polo',
+      'Women''s Water Polo', 'Baseball', 'Men''s Lacrosse','Women''s Lacrosse']
+
+   sports_arr.sample
   end
 end
