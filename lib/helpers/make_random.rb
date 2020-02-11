@@ -19,7 +19,7 @@ module MakeRandom
 
   def self.grad_yr
   	year = Time.now.year
-    (year .. (year + 5)).to_a.sample
+    (year .. (year + 4)).to_a.sample
   end
 
   def self.email
