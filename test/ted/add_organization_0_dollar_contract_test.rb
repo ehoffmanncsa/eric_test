@@ -128,7 +128,7 @@ class AddOrg0DollarContractTest < Common
   end
 
   def get_sign_page_url_in_email
-    keyword = 'sendgrid.net/wf/click?'
+    keyword = '/click?'
 
     @gmail.mail_box = 'TED_Contract'
     emails = @gmail.get_unread_emails

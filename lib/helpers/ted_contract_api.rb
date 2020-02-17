@@ -198,7 +198,7 @@ module TEDContractApi
 
   def self.get_sign_page_url_in_email
     @gmail.mail_box = 'TED_Contract'
-    keyword = 'sendgrid.net/wf/click?'
+    keyword = 'sendgrid.net/ls/click?'
 
     emails = @gmail.get_unread_emails
     email_body = @gmail.parse_body(emails.last, keyword).strip!
