@@ -65,7 +65,7 @@ class CoachSignUpTest < Common
   end
 
   def select_sport
-    @browser.element(id: 'select-sport').click
+    @browser.element(id: 'mui-component-select-sport').click
     sleep 3
     list = @browser.elements(tag_name: 'li').to_a
     list.sample.click
