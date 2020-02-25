@@ -30,7 +30,6 @@ module MSTestTemplate
 
   def self.check_on_prices
     @prices = MSPricing.collect_prices # respectively [1mo, 6mo, 12mo, 18mo]
-
     months = []
     failure = []
 

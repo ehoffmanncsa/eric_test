@@ -40,20 +40,20 @@ module MSProcess
   end
 
 
-  def self.apply_discount_offerings(code)
+  def self.apply_discount_offerings(code, rate)
     @browser.element(placeholder: 'Enter Discount Code').send_keys code
     @browser.element(class: 'apply').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
-    check_discount_message(code)
+    check_discount_message(code, rate)
   end
 
   def self.discount_message
-    @browser.element(class: 'discount-message')
+    @browser.element(class: 'discount-message-control')
   end
 
-  def self.check_discount_message(code)
-    expect_msg = "Discount code #{code.upcase} successfully applied"
+  def self.check_discount_message(code, rate)
+    expect_msg = "#{(rate.to_f * 100).to_i}% discount code, #{code.upcase} successfully applied"
     actual_msg = discount_message.text.split('!').first
     raise "[Incorrect Message] Expect: #{expect_msg} - Actual: #{actual_msg}" unless actual_msg.eql? expect_msg
   end

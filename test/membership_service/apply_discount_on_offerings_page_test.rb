@@ -68,8 +68,8 @@ class ApplyDiscountOnOfferingsPage < Common
     failure = []
     original_prices = MSPricing.one_month_plan_prices
 
-    @discount_codes.each do |discount_code, _rate|
-      MSProcess.apply_discount_offerings(discount_code)
+    @discount_codes.each do |discount_code, rate|
+      MSProcess.apply_discount_offerings(discount_code, rate)
       MSSetup.reveal_18_mo_plan; sleep 2
       fail_message = check_on_prices(original_prices, discount_code)
       failure << fail_message unless fail_message.empty?
