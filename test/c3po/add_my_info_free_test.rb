@@ -354,8 +354,8 @@ class AddMyInfoTestFree < Common
   def pers
     # fill out Personal Statement
 
-    @browser.element(class: 'froala-view froala-element not-msie f-basic').wd.clear
-    @browser.element(class: 'froala-view froala-element not-msie f-basic').send_keys 'A personal statement is a '+
+    @browser.element(class: 'fr-element fr-view').wd.clear
+    @browser.element(class: 'fr-element fr-view').send_keys 'A personal statement is a '+
     'chance for admissions committees to get to know you. I am open to different types of schools, although'+
     ' I would prefer one with a stable hierarchy of coaches. '
   end
