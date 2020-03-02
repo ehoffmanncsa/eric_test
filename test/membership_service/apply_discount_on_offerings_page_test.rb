@@ -24,6 +24,7 @@ class ApplyDiscountOnOfferingsPage < Common
   end
 
   def open_discount
+    @browser.element(class: ['financing', 'financing-js']).click; sleep 1
     @browser.div(:class, ['fa-swoosh', 'show-discount-js']).click
   end
 
