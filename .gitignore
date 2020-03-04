@@ -29,9 +29,6 @@ roster_coach_packet.csv
 # Coach Packet Teams/Schedule CSV file
 schedule.csv
 
-# Gemfile.lock #
-Gemfile.lock
-
 # Top secret stuff #
 config/postgres_databases.yml
 config/sql_databases.yml

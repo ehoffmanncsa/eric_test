@@ -68,7 +68,7 @@ class OpsMessagingApiPostGetTest < Minitest::Test
   end
 
   def base_uri
-    credentials['base_uri']
+    Default.env_config['aws']['base_uri']
   end
 
   def help_scout_coach_email

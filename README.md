@@ -149,8 +149,8 @@ There is a Gemfile with a collection of gems I have added on the go (of course w
     $ cd qa_regression
     $ rvm gemset create qa (or whichever name you like it to be)
     $ rvm --default use ruby-2.5.0@qa
-    $ gem install bundler
-    $ bundle install
+    $ gem install bundler -v "2.0.2"
+    $ bundle _2.0.2_
 
 ### Set Environment
 There are yml files designed to hold environment specific information (e.g.: staging.yml, dev.yml). Add these lines to your bash_profile

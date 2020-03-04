@@ -90,3 +90,7 @@ redis:
   hostname: "redis-qa.ncsasports.org"
   port: '6379'
   db: '0'
+
+# AWS
+aws:
+  base_uri: 'http://data-staging.ncsasports.org'
