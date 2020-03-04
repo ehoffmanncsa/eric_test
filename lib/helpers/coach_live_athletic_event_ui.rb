@@ -40,7 +40,7 @@ module AthleticEventUI
     @email = get_new_coachlive_email
 
     keyword = '/click?'
-    
+
     msg = @gmail.parse_body(@email, keyword).strip!
     msg = "http" + msg.split('http')[1]
 
@@ -49,6 +49,17 @@ module AthleticEventUI
 
   def self.delete_email
     @email.delete!
+  end
+
+  def self.login_with_password
+    @browser.goto 'http://coachlive-staging.ncsasports.org/login'
+    sleep 3
+
+    @browser.text_field(name: 'email').set 'ncsa.automation+coachlive@gmail.com'
+    @browser.text_field(name: 'password').set 'coachlive'
+    submit_button = @browser.button(text: 'LOGIN')
+    submit_button.click
+    sleep 3
   end
 
   def self.display_upcoming_events

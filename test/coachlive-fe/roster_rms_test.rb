@@ -189,11 +189,7 @@ class RosterRMSCSVTest < Common
 
   def log_into_Coach_Packet
     AthleticEventUI.adjust_window
-    AthleticEventUI.request_login
-    login_url = AthleticEventUI.get_login_url
-    @browser.goto login_url
-    sleep 1
-    AthleticEventUI.delete_email
+    AthleticEventUI.login_with_password
   end
 
   def select_event_verify_athletes_upload

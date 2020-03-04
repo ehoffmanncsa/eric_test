@@ -11,11 +11,8 @@ class AddAthleteTagTest < Common
     super
     AthleticEventUI.setup(@browser)
     AthleticEventUI.adjust_window
-    AthleticEventUI.request_login
-    login_url = AthleticEventUI.get_login_url
-    @browser.goto login_url
-    sleep 1
-    AthleticEventUI.delete_email
+    AthleticEventUI.login_with_password
+
   end
 
   def search_for_event
