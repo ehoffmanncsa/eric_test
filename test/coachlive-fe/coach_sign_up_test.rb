@@ -41,15 +41,12 @@ class CoachSignUpTest < Common
   end
 
   def enter_coach_email
-    email = @browser.text_field(name: 'email')
-    email.set @CoachEmail
-
-    submit_button = @browser.button(text: 'NEXT')
-    submit_button.click
+    @browser.text_field(name: 'email').set @CoachEmail
     sleep 3
   end
 
   def enter_coach_info
+    @browser.text_field(name: 'email').set @CoachEmail
     @browser.text_field(name: 'firstName').set @CoachFirst
     @browser.text_field(name: 'lastName').set @CoachLast
     @browser.text_field(name: 'phone').set @CoachPhone
@@ -75,7 +72,7 @@ class CoachSignUpTest < Common
     @browser.send_keys(:escape)
   end
 
-  def submit_data
+  def click_sign_up
     submit_button = @browser.button(text: 'SIGN UP')
     submit_button.click
   end
@@ -115,6 +112,7 @@ class CoachSignUpTest < Common
     sleep 5
     adjust_window
     enter_coach_email
+    click_sign_up
     select_college
     sleep 2
     select_sport
@@ -123,7 +121,7 @@ class CoachSignUpTest < Common
     sleep 2
     enter_coach_info
     sleep 5
-    submit_data
+    click_sign_up
     sleep 2
   end
 
