@@ -55,8 +55,8 @@ module AthleticEventUI
     @browser.goto 'http://coachlive-staging.ncsasports.org/login'
     sleep 3
 
-    @browser.text_field(name: 'email').set 'ncsa.automation+coachlive@gmail.com'
-    @browser.text_field(name: 'password').set 'coachlive'
+    @browser.text_field(name: 'email').set 'cp2autocoach@gmail.com'
+    @browser.text_field(name: 'password').set 'ncsa1333'
     submit_button = @browser.button(text: 'LOGIN')
     submit_button.click
     sleep 3
