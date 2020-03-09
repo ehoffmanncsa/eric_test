@@ -39,28 +39,28 @@ class TEDAddDeleteNewAthleteTest < Common
   end
 
   def table
-    @browser.table(:class, 'table--administration')
+    @browser.table(class: 'table--administration')
   end
 
   def open_add_athlete_modal
-    @browser.button(:text, 'Invite Athletes').click
-    TED.modal.button(:text, 'Manually Add Athlete').click
-    TED.modal.button(:text, 'Add Athlete').click; sleep 0.5
+    @browser.button(text: 'Invite Athletes').click
+    TED.modal.button(text: 'Manually Add Athlete').click
+    TED.modal.button(text: 'Add Athlete').click; sleep 0.5
   end
 
   def fill_in_textfields
     form = TED.modal
 
-    form.text_field(:id, 'firstName').set @first_name
-    form.text_field(:id, 'lastName').set @last_name
-    form.text_field(:id, 'graduationYear').set MakeRandom.grad_yr
-    form.text_field(:id, 'zipCode').set MakeRandom.zip_code
-    form.text_field(:id, 'email').set @email
-    form.text_field(:id, 'phone').set MakeRandom.phone_number
+    form.text_field(id: 'firstName').set @first_name
+    form.text_field(id: 'lastName').set @last_name
+    form.text_field(id: 'graduationYear').set MakeRandom.grad_yr
+    form.text_field(id: 'zipCode').set MakeRandom.zip_code
+    form.text_field(id: 'email').set @email
+    form.text_field(id: 'phone').set MakeRandom.phone_number
   end
 
   def select_team
-    teams_list = TED.modal.select_list(:id, 'teamId')
+    teams_list = TED.modal.select_list(id: 'teamId')
     teams_list.options.to_a.sample.click
   end
 
@@ -74,21 +74,21 @@ class TEDAddDeleteNewAthleteTest < Common
     select_team
     fill_in_textfields
 
-    TED.modal.button(:text, 'Add Athlete').click
+    TED.modal.button(text: 'Add Athlete').click
     UIActions.wait_for_modal
 
     # make sure athlete name shows up after added
-    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
+    assert (@browser.element(text: @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def send_invite_email
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
     row = TED.get_row_by_name(@athlete_name)
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
+    row.elements(tag_name: 'td')[4].element(class: 'btn-primary').click; sleep 1
     assert TED.modal.present?, 'Edit Athlete modal not found'
 
-    TED.modal.button(:text, 'Save & Invite').click
+    TED.modal.button(text: 'Save & Invite').click
     UIActions.wait_for_modal
 
     # refresh the page and go back to athlete tab
@@ -102,13 +102,15 @@ class TEDAddDeleteNewAthleteTest < Common
   def check_athlete_profile
     UIActions.user_login(@email)
     MSSetup.set_password
-    @browser.element(:class, 'fa-angle-down').click
+    @browser.element(class: 'mfp-close').click
+    sleep 1
+    @browser.element(class: 'fa-angle-down').click
 
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Membership Info').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
+    navbar.link(text: 'Membership Info').click
 
-    purchase_summary = @browser.element(:class, 'purchase-summary-js')
-    title = purchase_summary.element(:class, 'title-js').text
+    purchase_summary = @browser.element(class: 'purchase-summary-js')
+    title = purchase_summary.element(class: 'title-js').text
     expect_str = 'CLUB ATHLETE MEMBERSHIP FEATURES'
     assert_equal expect_str, title, "#{title} not match expected #{expect_str}"
   end

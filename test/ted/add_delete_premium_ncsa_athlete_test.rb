@@ -77,7 +77,7 @@ class TEDAddDeletePremiumAthlete < Common
   end
 
   def table
-    @browser.table(:class, 'table--administration')
+    @browser.table(class: 'table--administration')
   end
 
   def send_invite_email
@@ -86,14 +86,14 @@ class TEDAddDeletePremiumAthlete < Common
 
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = table.element(:text, @athlete_name).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 2
+    row = table.element(text: @athlete_name).parent
+    row.elements(tag_name: 'td')[4].element(class: 'btn-primary').click; sleep 2
     assert TED.modal.present?
 
-    TED.modal.button(:text, 'Save & Invite').click; sleep 5
+    TED.modal.button(text: 'Save & Invite').click; sleep 5
 
     # make sure athlete status is now pending after email sent
-    status = row.elements(:tag_name, 'td')[4].text
+    status = row.elements(tag_name: 'td')[4].text
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
     TED.sign_out
@@ -101,9 +101,9 @@ class TEDAddDeletePremiumAthlete < Common
 
   def athlete_accept_invitation
     UIActions.user_login(@email, "ncsa1333"); sleep 1
-    Watir::Wait.until { @browser.element(:class, 'mfp-content').present? }
-    popup = @browser.element(:class, 'mfp-content')
-    popup.element(:class, 'button--secondary').click
+    Watir::Wait.until { @browser.element(class: 'mfp-content').present? }
+    popup = @browser.element(class: 'mfp-content')
+    popup.element(class: 'button--secondary').click
     sleep 1
 
     @browser.refresh
@@ -122,8 +122,8 @@ class TEDAddDeletePremiumAthlete < Common
     begin
       Timeout::timeout(30) {
         loop do
-          container = @browser.element(:class, 'purchase-summary-js')
-          @title = container.element(:class, 'title-js').text
+          container = @browser.element(class: 'purchase-summary-js')
+          @title = container.element(class: 'title-js').text
           break unless @title.include? 'CHAMPION'
           @browser.refresh
         end

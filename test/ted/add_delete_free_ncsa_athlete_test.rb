@@ -77,7 +77,7 @@ class PremCoachAddFreeAthlete < Common
   def check_athlete_added
     UIActions.ted_login
     TED.go_to_athlete_tab
-    assert (@browser.element(:text, @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
+    assert (@browser.element(text: @athlete_name).present?), "Cannot find newly added Athlete #{@athlete_name}"
   end
 
   def send_invite_email
@@ -96,15 +96,17 @@ class PremCoachAddFreeAthlete < Common
     # Giving staging grace period before checking premium status
     UIActions.user_login(@email)
     MSSetup.set_password
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Membership Info').click
+    @browser.element(class: 'mfp-close').click
+    sleep 1
+    @browser.element(class: 'fa-angle-down').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
+    navbar.link(text: 'Membership Info').click
     expect_str = 'CLUB ATHLETE MEMBERSHIP FEATURES'
     begin
       Timeout::timeout(30) {
         loop do
-          container = @browser.element(:class, 'purchase-summary-js')
-          @title = container.element(:class, 'title-js').text
+          container = @browser.element(class: 'purchase-summary-js')
+          @title = container.element(class: 'title-js').text
           break unless @title.include? 'CHAMPION'
           @browser.refresh
         end
@@ -117,9 +119,9 @@ class PremCoachAddFreeAthlete < Common
   end
 
   def clientrms_sign_out
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Logout').click
+    @browser.element(class: 'fa-angle-down').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
+    navbar.link(text: 'Logout').click
   end
 
   def check_athlete_accepted_status
