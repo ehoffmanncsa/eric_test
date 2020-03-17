@@ -217,7 +217,7 @@ class AddAcademicsInfoTest < Common
   end
 
   def test_add_academics
-    email = 'test8340@yopmail.com'
+    email = 'testde12@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

@@ -35,7 +35,7 @@ module UIActions
   end
 
   def self.user_login(email_addr, password = nil)
-    password ||= 'eric' #set this to ncsa to create and eric to run the scripts
+    password ||= 'ncsa' #set this to ncsa to create and eric to run the scripts
 
     @browser.goto @config['clientrms']['login_page']
     @browser.text_field(:id, 'user_account_login').set email_addr

@@ -357,7 +357,7 @@ class AddMyInfoTestFree < Common
     @browser.element(class: 'fr-element fr-view').wd.clear
     @browser.element(class: 'fr-element fr-view').send_keys 'A personal statement is a '+
     'chance for admissions committees to get to know you. I am open to different types of schools, although'+
-    ' I would prefer one with a stable hierarchy of coaches. '
+    ' I would prefer one with a stable hierarchy of coaches.'
   end
 
   def save_record
