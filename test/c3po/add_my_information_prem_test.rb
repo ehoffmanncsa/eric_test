@@ -58,8 +58,8 @@ class V2AddMyInformationPremTest < Common
     @parent2_secondary_phone = @filler.parent2_secondary_phone
     @parent2_email = @filler.parent2_email
     @address = @filler.address
-    @city = @filler.city
     @zip = @filler.zip
+    @city = @filler.city
     @preferred_major = @filler.preferred_major
     @personal_statement = @filler.personal_statement
   end
@@ -91,7 +91,8 @@ class V2AddMyInformationPremTest < Common
     failure << 'Incorrect address' unless @address == @profile_page.athlete_address
     failure << 'Incorrect city' unless @city == @profile_page.athlete_bottom_city
     failure << 'Incorrect zip' unless @zip == @profile_page.athlete_zipcode
-    failure << 'Incorrect major' unless @preferred_major == @profile_page.athlete_major
+    #failure << 'Incorrect major' unless @preferred_major == @profile_page.athlete_major
+    # --this comes from preferences page
     failure << 'Incorrect personal statement' unless @personal_statement == @profile_page.personal_statement
     assert_empty failure
   end

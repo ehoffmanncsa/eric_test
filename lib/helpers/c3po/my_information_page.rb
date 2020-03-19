@@ -68,8 +68,8 @@ module C3PO
       @parent2_secondary_phone = MakeRandom.phone_number
       @parent2_email = MakeRandom.fake_email
       @address = MakeRandom.address
-      @city = MakeRandom.city
-      @zip = MakeRandom.zip_code
+      @city = 'Chicago'
+      @zip = '60618'
       @preferred_major = MakeRandom.major
       @personal_statement = MakeRandom.lorem
     end

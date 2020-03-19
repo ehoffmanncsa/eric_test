@@ -22,7 +22,7 @@ module C3PO
     end
 
     def fill_out_personal_statement
-      personal_statement_elem = @browser.element(class: %w(froala-view froala-element not-msie f-basic))
+      personal_statement_elem = @browser.element(class: %w(fr-element fr-view))
       personal_statement_elem.wd.clear
       personal_statement_elem.send_keys @personal_statement
     end
