@@ -16,6 +16,7 @@ class AdminDeleteExternalVideo < Common
     C3PO.setup(@browser)
     UIActions.fasttrack_login
     C3PO.impersonate(client_id)
+
   end
 
   def teardown
@@ -27,12 +28,18 @@ class AdminDeleteExternalVideo < Common
     C3PO.goto_video
     C3PO.upload_youtube
 
+    sleep 1
+    C3PO.goto_video # need to refresh ux or will get an error deleting
+
     # find video and delete it
     item = @browser.element(class: 'uploads-item')
     item.element(class: 'remove').click
 
+    sleep 3
+
+
     modal = @browser.element(class: 'mfp-content')
-    modal.element(class: 'js-button-confirm').click; sleep 1
+    modal.element(text: 'Delete').click; sleep 2
 
     expected_msg = 'Video successfully deleted from your profile.'
     actual_msg = @browser.element(class: '_js-success-text').text
