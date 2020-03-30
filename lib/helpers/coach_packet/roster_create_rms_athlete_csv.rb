@@ -26,14 +26,14 @@ class RosterRMSCSV
     @zip = MakeRandom.zip_code
     @athlete_phone = MakeRandom.phone_number
     @athlete_email = MakeRandom.fake_email
-    @org_name = MakeRandom.name
+    @org_name = AthleticEventApi.org_name
     @team_name = AthleticEventApi.team_name
     @state_code = MakeRandom.state
   end
 
   def make_it
   	CSV.open('roster_create_rms.csv', 'w', write_headers: true, headers: @headers) do |csv|
-      rand(2 .. 4).times do |i|
+      rand(10 .. 16).times do |i|
       	generate_data
         csv << [@sport_name, @role, @position_primary, @high_school_name, @athlete_first_name, @athlete_last_name,
                 @parent_first_name, @parent_last_name, @parent_email, @parent_phone,

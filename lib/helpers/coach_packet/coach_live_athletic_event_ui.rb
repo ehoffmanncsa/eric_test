@@ -1,4 +1,3 @@
-require_relative '../../test/test_helper'
 # encoding: utf-8
 #
 # commom UI actions for Coach Live
@@ -83,6 +82,23 @@ module AthleticEventUI
     open_event = @browser.element(text: @event_name)
     open_event.click
     sleep 2
+  end
+
+  def self.open_admin_event
+    @browser.element("data-automation-id": 'EventDetails').click
+    sleep 5
+  end
+
+  def self.select_teams_tab
+    @browser.element(text: 'Teams').click
+  end
+
+  def self.select_schedule_tab
+    @browser.element(text: 'Schedule').click
+  end
+
+  def self.select_athletes_tab
+    @browser.element(text: 'Athletes').click
   end
 
   def self.athlete_jersey_number

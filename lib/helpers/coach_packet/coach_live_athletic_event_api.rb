@@ -27,6 +27,11 @@ module AthleticEventApi
     date = target_day.strftime("%m/%d/%y")
   end
 
+  def self.admin_event_date(days_from_now = 2)
+    target_day = Date.today + days_from_now
+    #calendar field on admin event only takes day
+  end
+
   def self.game_time
     time_arr = ['9:00','10:00','11:00','12:00','13:00','14:00',
                 '15:00','16:00','17:00','18:00','19:00','20:15']
@@ -58,6 +63,12 @@ module AthleticEventApi
                      'Field House','High School','Grass field']
 
     locations_arr.sample
+  end
+
+  def self.venue
+    venue_arr = ['testvenue1','testvenue2']
+
+    venue_arr.sample
   end
 
   def self.logo_urls
