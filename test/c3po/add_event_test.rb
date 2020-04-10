@@ -56,8 +56,9 @@ class AddEventTest < Common
   end
 
   def test_add_event
-    email = 'testde12@yopmail.com'
+    email = 'test7abb@yopmail.com'
     UIActions.user_login(email)
+    sleep 5
     UIActions.goto_edit_profile
 
     C3PO.goto_events
