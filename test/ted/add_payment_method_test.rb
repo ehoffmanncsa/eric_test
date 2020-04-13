@@ -58,35 +58,35 @@ class AddPaymentMethodTest < Common
   end
 
   def give_password
-    modal = @browser.divs(:class, 'modal-content')[1]
-    modal.elements(:tag_name, 'input').each do |i|
+    modal = @browser.divs(class: 'modal-content')[1]
+    modal.elements(tag_name: 'input').each do |i|
       i.send_keys 'ncsa'
     end
 
-    modal.button(:text, 'Change Password').click; sleep 1
+    modal.button(text: 'Change Password').click; sleep 1
   end
 
   def sign_TOS
-    TED.modal.text_field(:placeholder, 'Signature').set MakeRandom.first_name
+    TED.modal.text_field(placeholder: 'Signature').set MakeRandom.first_name
     sleep 2
-    TED.modal.button(:text, 'I Accept').click
+    TED.modal.button(text: 'I Accept').click
     sleep 3
   end
 
   def add_payment
     # open add payment method modal
-    @browser.button(:text, 'Add Payment Method').click
+    @browser.button(text: 'Add Payment Method').click
 
     fill_out_form
     select_dropdowns; sleep 2
-    TED.modal.button(:text, 'Submit').click; sleep 3
+    TED.modal.button(text: 'Submit').click; sleep 3
   end
 
   def fill_out_form
     first_name = MakeRandom.first_name
     last_name = MakeRandom.last_name
 
-    inputs = TED.modal.elements(:tag_name, 'input')
+    inputs = TED.modal.elements(tag_name: 'input')
     inputs[0].send_keys first_name
     inputs[1].send_keys last_name
     inputs[2].send_keys '4242424242424242'
@@ -99,7 +99,7 @@ class AddPaymentMethodTest < Common
   end
 
   def select_dropdowns
-    lists = TED.modal.select_lists(:class, 'form-control')
+    lists = TED.modal.select_lists(class: 'form-control')
     lists.each do |list|
       options = list.options.to_a
       options.shift

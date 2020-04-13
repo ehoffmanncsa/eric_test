@@ -50,24 +50,24 @@ class CreateNewOrgWithPrepop < Common
 
   def fill_out_form
     # open form
-    coach_section = @browser.element(:class, 'coach_references_section')
-    coach_section.element(:class, 'add_icon').click
+    coach_section = @browser.element(class: 'coach_references_section')
+    coach_section.element(class: 'add_icon').click
     form = @browser.element(:id, 'coach_reference_edit')
 
     # fill out text fields
-    form.element(:name, 'name').send_keys @coach_name
-    form.element(:name, 'phone').send_keys @phone_number
-    form.element(:name, 'email').send_keys @coach_email
+    form.element(name: 'name').send_keys @coach_name
+    form.element(name: 'phone').send_keys @phone_number
+    form.element(name: 'email').send_keys @coach_email
 
     # select club coach type
-    dropdown = form.select_list(:name, 'coach_type')
+    dropdown = form.select_list(name: 'coach_type')
     dropdown.select 'Club Coach'
 
     # select radio button yes
     form.radio(:value, 'true').set
 
     # submit form
-    form.element(:class, 'submit').click; sleep 0.5
+    form.element(class: 'submit').click; sleep 0.5
   end
 
   def org_body

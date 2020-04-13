@@ -34,16 +34,16 @@ class DashboardNotShowCanceledContractTest < Common
   end
 
   def search_for_org
-    @browser.input(:type, 'search').send_keys @org_name
-    @browser.button(:text, 'Search').click
+    @browser.input(type: 'search').send_keys @org_name
+    @browser.button(text: 'Search').click
     UIActions.wait_for_spinner
   end
 
   def get_contract_count
     search_for_org
 
-    org = @browser.element(:text, @org_name).parent
-    text = org.element(:class, 'subtitle').text
+    org = @browser.element(text: @org_name).parent
+    text = org.element(class: 'subtitle').text
     arr = text.split(' ')
     arr.pop
 

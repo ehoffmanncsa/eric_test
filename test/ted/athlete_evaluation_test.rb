@@ -41,15 +41,15 @@ class AthleteEvaluationTest < Common
 
   def goto_athlete_evaluation
     @browser.goto "https://team-staging.ncsasports.org/athletes/#{@athlete_id}"
-    @browser.link(:text, 'Athlete Evaluation').click
+    @browser.link(text: 'Athlete Evaluation').click
   end
 
   def pick_star(star)
-    rating_area = @browser.element(:class, 'star-rating').element(:class, 'rating')
-    rating_area.element(:for, star).hover; sleep 1
-    rating_area.element(:for, star).click; sleep 1
+    rating_area = @browser.element(class: 'star-rating').element(class: 'rating')
+    rating_area.element(for: star).hover; sleep 1
+    rating_area.element(for: star).click; sleep 1
     Watir::Wait.until { TED.modal.present? }
-    TED.modal.button(:text, 'Confirm').click; sleep 3
+    TED.modal.button(text: 'Confirm').click; sleep 3
   end
 
   def reset_rating
@@ -62,8 +62,8 @@ class AthleteEvaluationTest < Common
 
   def check_2star_rating
     stars = []; failure = []
-    stat_area = @browser.element(:class, 'stats').element(:class, 'rating')
-    ratings = stat_area.elements(:class, 'fa')
+    stat_area = @browser.element(class: 'stats').element(class: 'rating')
+    ratings = stat_area.elements(class: 'fa')
     ratings.each { |r| stars << r.attribute_value('class') }
 
     # Check the class names of the star icons.
@@ -76,7 +76,7 @@ class AthleteEvaluationTest < Common
   end
 
   def check_rating_fail
-    alert = @browser.element(:class, 'star-rating').element(:class, 'alert')
+    alert = @browser.element(class: 'star-rating').element(class: 'alert')
     assert alert.present?, 'No alert found'
 
     expect_msg = 'Failed to update athlete rating. Please try again later.'

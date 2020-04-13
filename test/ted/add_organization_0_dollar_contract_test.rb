@@ -36,34 +36,34 @@ class AddOrg0DollarContractTest < Common
   end
 
   def open_form
-    @browser.button(:text, 'Add Organization').click
+    @browser.button(text: 'Add Organization').click
     assert TED.modal, 'Add modal not found'
 
     # select club
     sleep 2 # or else the UI is wiped blank :"(
-    list = TED.modal.select_list(:class, 'form-control')
+    list = TED.modal.select_list(class: 'form-control')
     list.select 'Club'; sleep 1
   end
 
   def fill_out_textfields
-    TED.modal.text_field(:id, 'name').set @org_name
-    TED.modal.text_field(:id, 'address').set MakeRandom.address
-    TED.modal.text_field(:id, 'city').set MakeRandom.city
-    TED.modal.text_field(:id, 'state').set MakeRandom.state
-    TED.modal.text_field(:id, 'zipCode').set MakeRandom.zip_code
-    TED.modal.text_field(:id, 'primaryContactFirstName').set MakeRandom.first_name
-    TED.modal.text_field(:id, 'primaryContactLastName').set MakeRandom.last_name
-    TED.modal.text_field(:id, 'email').set MakeRandom.email
-    TED.modal.text_field(:id, 'phone').set MakeRandom.phone_number
+    TED.modal.text_field(id: 'name').set @org_name
+    TED.modal.text_field(id: 'address').set MakeRandom.address
+    TED.modal.text_field(id: 'city').set MakeRandom.city
+    TED.modal.text_field(id: 'state').set MakeRandom.state
+    TED.modal.text_field(id: 'zipCode').set MakeRandom.zip_code
+    TED.modal.text_field(id: 'primaryContactFirstName').set MakeRandom.first_name
+    TED.modal.text_field(id: 'primaryContactLastName').set MakeRandom.last_name
+    TED.modal.text_field(id: 'email').set MakeRandom.email
+    TED.modal.text_field(id: 'phone').set MakeRandom.phone_number
   end
 
   def select_sports
-    TED.modal.select_list(:id, 'sportIds').options.to_a.sample.select
+    TED.modal.select_list(id: 'sportIds').options.to_a.sample.select
   end
 
   def select_other_dropdowns
     %w[primaryPartnerId country].each do |list_id|
-      options = TED.modal.select_list(:id, list_id).options.to_a
+      options = TED.modal.select_list(id: list_id).options.to_a
       options.shift
       options.sample.select; sleep 1
     end
@@ -79,25 +79,25 @@ class AddOrg0DollarContractTest < Common
     select_sports
     select_other_dropdowns
 
-    TED.modal.button(:text, 'Add').click; sleep 1
+    TED.modal.button(text: 'Add').click; sleep 1
   end
 
   def add_contract
     # open add contract modal
-    @browser.button(:text, 'Create New Contract').click
+    @browser.button(text: 'Create New Contract').click
     sleep 1
 
     # fill out form
-    sports = TED.modal.select_list(:name, 'sportType').options.to_a
-    pay_counts = TED.modal.select_list(:name, 'numberOfPayments').options.to_a
+    sports = TED.modal.select_list(name: 'sportType').options.to_a
+    pay_counts = TED.modal.select_list(name: 'numberOfPayments').options.to_a
     sports.shift; sports.sample.select
     pay_counts.shift; pay_counts.sample.select
 
-    team_counts = TED.modal.text_field(:name, 'numberOfTeams')
-    start_date = TED.modal.element(:name, 'startDate')
-    first_pay = TED.modal.element(:name, 'firstPaymentDate')
-    discount = TED.modal.text_field(:name, 'discount')
-    discount_note = TED.modal.text_field(:name, 'discountNote')
+    team_counts = TED.modal.text_field(name: 'numberOfTeams')
+    start_date = TED.modal.element(name: 'startDate')
+    first_pay = TED.modal.element(name: 'firstPaymentDate')
+    discount = TED.modal.text_field(name: 'discount')
+    discount_note = TED.modal.text_field(name: 'discountNote')
     team_counts.set rand(1 .. 99)
 
     date = Time.now.strftime("%Y-%m-%d")
@@ -111,7 +111,7 @@ class AddOrg0DollarContractTest < Common
     discount_note.set '0 Dollar Contract'
 
     # make sure all payments are 0
-    table = TED.modal.table(:class, 'table')
+    table = TED.modal.table(class: 'table')
     rows = table.rows.to_a; rows.shift
 
     failure = []
@@ -124,7 +124,7 @@ class AddOrg0DollarContractTest < Common
     end
     assert_empty failure
 
-    TED.modal.button(:text, 'Submit').click; sleep 0.5
+    TED.modal.button(text: 'Submit').click; sleep 0.5
   end
 
   def get_sign_page_url_in_email
@@ -156,31 +156,31 @@ class AddOrg0DollarContractTest < Common
   def test_add_organization_0_dollar_contract
     add_organization
 
-    org = @browser.element(:text, @org_name).parent
+    org = @browser.element(text: @org_name).parent
     org.click
 
     # make sure show page has right org name
-    Watir::Wait.until { @browser.div(:class, 'college-details').present? }
-    details = @browser.div(:class, 'college-details')
+    Watir::Wait.until { @browser.div(class: 'college-details').present? }
+    details = @browser.div(class: 'college-details')
     assert (details.html.include? @org_name), 'Show page doesnt have right org name'
 
     add_contract
     @browser.refresh; sleep 1
 
     # make sure contract shows up after added
-    exist_contracts = @browser.div(:class, 'existing-contract')
+    exist_contracts = @browser.div(class: 'existing-contract')
     contracts = exist_contracts.elements(:tag_name, 'li')
     refute_empty contracts, 'No contracts found'
 
     # send invoice email and signout of PA
-    contracts[0].element(:class, 'drawer-toggle').click
-    contracts[0].element(:class, 'fa-envelope').click
+    contracts[0].element(class: 'drawer-toggle').click
+    contracts[0].element(class: 'fa-envelope').click
     TED.sign_out
 
     goto_sign_page_via_url_in_email
     @browser.text_field(:placeholder, 'Signature').set @org_name; sleep 0.5
-    @browser.button(:text, 'I Accept').click
-    @browser.button(:text, 'Accept').click
+    @browser.button(text: 'I Accept').click
+    @browser.button(text: 'Accept').click
 
     # make sure coach is in dashboard page and change password modal prompts
     Watir::Wait.until { TED.modal.present? }

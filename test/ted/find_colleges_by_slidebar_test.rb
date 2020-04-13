@@ -31,12 +31,12 @@ class FindCollegesBySlideBarTest < Common
   end
 
   def apply_filters
-    @browser.button(:text, 'Search').click
+    @browser.button(text: 'Search').click
     UIActions.wait_for_spinner
   end
 
   def colleges
-    @browser.elements(:class, 'card-college').to_a
+    @browser.elements(class: 'card-college').to_a
   end
 
   def select_filter(element_id)
@@ -44,21 +44,21 @@ class FindCollegesBySlideBarTest < Common
     # where aria-value indicates:
     # 0 for <1K, 1 for >= 5K, 2 for >= 10K, etc...
     # select 10k filter in this case
-    section = @browser.div(:id, element_id)
-    slide_bar = section.element(:class, 'rc-slider-with-marks')
-    left_handle = slide_bar.element(:class, 'rc-slider-handle-1')
-    option_10k = slide_bar.elements(:class, 'rc-slider-mark-text')[2]
+    section = @browser.div(id: element_id)
+    slide_bar = section.element(class: 'rc-slider-with-marks')
+    left_handle = slide_bar.element(class: 'rc-slider-handle-1')
+    option_10k = slide_bar.elements(class: 'rc-slider-mark-text')[2]
     left_handle.drag_and_drop_on(option_10k)
   end
 
   def random_college
     # pick a random college, go to showpage
     college = colleges.sample
-    college_name = college.element(:tag_name, 'h4').text
+    college_name = college.element(tag_name: 'h4').text
     college.click
     UIActions.wait_for_spinner
 
-    if @browser.element(:class, 'alert-warning').present?
+    if @browser.element(class: 'alert-warning').present?
       @browser.refresh
       UIActions.wait_for_spinner
     end
@@ -69,8 +69,8 @@ class FindCollegesBySlideBarTest < Common
   def check_enrollment_size
     failure = []
     colleges.each do |c|
-      school = c.element(:tag_name, 'h4').text
-      subtitle = c.element(:class, 'card-details').element(:class, 'subtitle').text
+      school = c.element(tag_name: 'h4').text
+      subtitle = c.element(class: 'card-details').element(class: 'subtitle').text
       enrollments = subtitle.split(' ').last.gsub(',', '').to_i
       msg = "#{school} has #{enrollments} enrollments, expected >= 10k"
       failure << msg unless (enrollments >= 10000)
