@@ -28,10 +28,10 @@ module MSSetup
     @browser.text_field(id: 'user_account_password').set 'ncsa1333'
     @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
     @browser.button(name: 'commit').click
-    sleep 1
+    sleep 3
 
     Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-hsqkTv').present? }
-    sleep 1
+    sleep 3
   end
 
   def self.find_swoosh

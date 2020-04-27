@@ -61,7 +61,7 @@ module MSFinish
     Watir::Wait.until { @browser.element(id: 'order-submit').present? }
     @browser.text_field(id: 'order_authorization_signature').set 'qa automation'
     sleep 1
-    @browser.element(id: 'order-submit').click; sleep 3
+    @browser.element(id: 'order-submit').click; sleep 5
   end
 
   def self.setup_billing(ach = false)
