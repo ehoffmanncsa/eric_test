@@ -16,6 +16,7 @@ module MSTestTemplate
   end
 
   def self.goto_offerings
+    sleep 2
     MSSetup.set_password
     MSSetup.goto_offerings
   end
