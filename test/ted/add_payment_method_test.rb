@@ -123,6 +123,11 @@ class AddPaymentMethodTest < Common
     @gmail.delete(emails)
   end
 
+  def add_payment_button_disabled
+    #no contract org should not allow coach to add a payment method
+    assert (@browser.button(text: 'Add Payment Method').disabled?), 'Add Payment Method button is enabled'
+  end
+
   def test_coach_add_payment_method
     send_free_invite_email
     coach_password = get_coach_password
@@ -133,9 +138,7 @@ class AddPaymentMethodTest < Common
     sign_TOS
 
     TED.go_to_payment_method_tab
-    add_payment
-
-    assert_includes @browser.html, @full_name, 'New payment method not found'
+    add_payment_button_disabled
 
     clear_activity_emails
   end

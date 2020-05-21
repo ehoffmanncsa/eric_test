@@ -143,6 +143,11 @@ class UnverifiedCoachActionsTest < Common
     TED.modal.element(:class, 'fa-times').click
   end
 
+  def add_payment_button_disabled
+    #org has contract, unverified coach cannot add a payment method
+    assert (@browser.button(text: 'Add Payment Method').disabled?), 'Add Payment Method button is enabled'
+  end
+
   def test_unverified_coach_add_new_athlete
     UIActions.ted_login(@coach_email, @coach_password)
 
@@ -178,6 +183,8 @@ class UnverifiedCoachActionsTest < Common
     UIActions.ted_login(@coach_email, @coach_password)
     college_coach_emails_hidden
 
+    TED.go_to_payment_method_tab
+    add_payment_button_disabled
     TED.go_to_staff_tab
     add_other_staff_blocked
     verify_other_staff_blocked

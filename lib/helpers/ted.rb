@@ -162,6 +162,43 @@ module TED
     UIActions.wait_for_spinner
   end
 
+  def self.impersonate
+    @browser.link(text: 'Enter Org as Coach').click
+    UIActions.wait_for_spinner
+  end
+
+  def self.add_payment
+    # open add payment method modal
+    @browser.button(text: 'Add Payment Method').click
+  end
+
+  def self.fill_out_form
+    first_name = MakeRandom.first_name
+    last_name = MakeRandom.last_name
+
+    inputs = TED.modal.elements(tag_name: 'input')
+    inputs[0].send_keys first_name
+    inputs[1].send_keys last_name
+    inputs[2].send_keys '4242424242424242'
+    inputs[3].send_keys '123'
+    inputs[4].send_keys MakeRandom.number(5)
+    inputs[5].send_keys MakeRandom.email
+
+    # also return name for assertion
+    @full_name = "#{first_name} #{last_name}"
+  end
+
+  def self.select_dropdowns
+    lists = TED.modal.select_lists(class: 'form-control')
+    lists.each do |list|
+      options = list.options.to_a
+      options.shift
+      list.select options.sample.text
+    end
+
+    TED.modal.button(text: 'Submit').click; sleep 3
+  end
+
   def self.check_accepted_email
     @gmail.mail_box = 'TED_Accepted_Request'
     emails = @gmail.get_unread_emails
@@ -180,5 +217,17 @@ module TED
     @gmail.mail_box = 'TED_Athlete_invite_email'
     emails = @gmail.get_unread_emails
     @gmail.delete(emails) unless emails.empty?
+  end
+
+  def self.set_new_password_coach
+    Watir::Wait.until {  TED.modal.present? }
+    assert TED.modal, 'Set new password modal not found'
+
+    inputs = TED.modal.elements(:tag_name, 'input').to_a
+    inputs[0].send_keys 'ncsa'
+    inputs[1].send_keys 'ncsa'
+    TED.modal.element(:tag_name, 'button').click
+
+    UIActions.wait_for_modal
   end
 end
