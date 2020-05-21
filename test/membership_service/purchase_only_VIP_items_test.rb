@@ -24,7 +24,7 @@ class PurchaseOnlyVIPItemsTests < Common
   def check_redirected_to_dashboard
     # this check is for new recruit VIP only purchase - SALES-1427
     current_url = @browser.url
-    expected_url = @clientrms['base_url'].delete_suffix('/')
+    expected_url = @clientrms['base_url'].delete_suffix('/') + "/dashboard_onboarding/welcome"
     failure_msg = "User is not redirected to coaching session - current url is #{current_url}"
 
     assert_equal expected_url, current_url, failure_msg
