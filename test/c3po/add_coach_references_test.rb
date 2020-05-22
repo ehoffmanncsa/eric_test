@@ -9,8 +9,8 @@ class AddCoachReferencesTest < Common
 
     C3PO.setup(@browser)
 
-    @coach_name = MakeRandom.name
-    @coach_email = "#{@coach_name}@fake.com"
+    @coach_name = "Coach Eric"
+    @coach_email = "coacheric.ted@gmail.com"
   end
 
   def teardown
@@ -28,9 +28,7 @@ class AddCoachReferencesTest < Common
 
     # fill out text fields
     form.element(:name, 'name').send_keys @coach_name
-    form.element(:name, 'phone_1').send_keys MakeRandom.number(3)
-    form.element(:name, 'phone_2').send_keys MakeRandom.number(3)
-    form.element(:name, 'phone_3').send_keys MakeRandom.number(4)
+    form.element(:name, 'phone').send_keys '773.123.4567'
     form.element(:name, 'email').send_keys @coach_email
 
     # select random type
@@ -70,7 +68,7 @@ class AddCoachReferencesTest < Common
   end
 
   def test_add_coach_references
-    email = 'test7abb@yopmail.com'
+    email = 'test0b73@yopmail.com'
     UIActions.user_login(email)
     sleep 5
     UIActions.goto_edit_profile

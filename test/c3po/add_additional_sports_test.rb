@@ -100,7 +100,7 @@ class AddAdditionalSportsTest < Common
   end
 
   def test_add_additional_sports
-    email = 'test7abb@yopmail.com'
+    email = 'test0b73@yopmail.com'
     UIActions.user_login(email)
     sleep 5
     UIActions.goto_edit_profile
