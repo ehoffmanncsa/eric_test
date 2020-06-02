@@ -117,4 +117,30 @@ module MakeRandom
 	def self.conference
 		FFaker::Conference.name
 	end
+
+	def self.fourty_yard_dash
+		rand(4.9 .. 9.5).round(2)
+	end
+
+	def self.three_cone
+		rand(4.9 .. 9.5).round(2)
+	end
+
+	def self.bench_squat
+		rand(225 .. 500)
+	end
+
+	def self.vertical
+		rand(28.1 .. 40.5).round(2)
+	end
+
+	def self.broad_jump
+		rand(100 .. 150).round(2)
+	end
+
+	def self.key_stats_date
+    target_day = Date.today
+    date = target_day.strftime("%m/%d/%Y")
+  end
+
 end

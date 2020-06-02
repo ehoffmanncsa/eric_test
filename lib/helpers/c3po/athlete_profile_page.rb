@@ -116,6 +116,115 @@ module C3PO
     def academic_awards_section
       @browser.elements(class: %w[half awards])[0].text
     end
+    def header_info_position
+      top_section.div(class: 'stats').text.split(' ')[1]
+    end
+
+    def header_info_stats
+      @browser.element(class: 'key-stats')
+    end
+
+    def keystats_40_yard_dash_time
+      key_stats_section.div(class: 'stat-val').text.split(' ')[0]
+    end
+
+    def keystats_40_yard_dash_verified_by
+      key_stats_section.div(class: 'event').text.split(' ')[2]
+    end
+
+    def keystats_40_yard_dash_verified_date
+      key_stats_section.div(class: 'date').text.split(' ')[2]
+    end
+
+    def keystats_shuttle_time
+      shuttle_time  = @browser.elements(class: 'stat-val')
+      shuttle_time[1].text.split(' ')[0]
+    end
+
+    def keystats_shuttle_time_verified_by
+      shuttle_time_verified_by = @browser.elements(class: 'event')
+      shuttle_time_verified_by[1].text.split(' ')[2]
+    end
+
+    def keystats_shuttle_time_verified_date
+      shuttle_time_verified_date = @browser.elements(class: 'date')
+      shuttle_time_verified_date[1].text.split(' ')[2]
+    end
+
+    def keystats_bench_press_weight
+      bench_press_weight  = @browser.elements(class: 'stat-val')
+      bench_press_weight[2].text.split(' ')[0]
+    end
+
+    def keystats_bench_press_verified_by
+      bench_press_verified_by = @browser.elements(class: 'event')
+      bench_press_verified_by[2].text.split(' ')[2]
+    end
+
+    def keystats_bench_press_verified_date
+      bench_press_verified_date = @browser.elements(class: 'date')
+      bench_press_verified_date[2].text.split(' ')[2]
+    end
+
+    def keystats_squat_weight
+      squat_weight  = @browser.elements(class: 'stat-val')
+      squat_weight[3].text.split(' ')[0]
+    end
+
+    def keystats_squat_verified_by
+      squat_verified_by = @browser.elements(class: 'event')
+      squat_verified_by[3].text.split(' ')[2]
+    end
+
+    def keystats_squat_verified_date
+      squat_verified_date = @browser.elements(class: 'date')
+      squat_verified_date[3].text.split(' ')[2]
+    end
+
+    def keystats_vertical
+      vertical  = @browser.elements(class: 'stat-val')
+      vertical[4].text.split(' ')[0]
+    end
+
+    def keystats_vertical_verified_by
+      vertical_verified_by = @browser.elements(class: 'event')
+      vertical_verified_by[4].text.split(' ')[2]
+    end
+
+    def keystats_vertical_verified_date
+      vertical_verified_date = @browser.elements(class: 'date')
+      vertical_verified_date[4].text.split(' ')[2]
+    end
+
+    def keystats_three_cone
+      three_cone  = @browser.elements(class: 'stat-val')
+      three_cone[5].text.split(' ')[0]
+    end
+
+    def keystats_three_cone_verified_by
+      three_cone_verified_by = @browser.elements(class: 'event')
+      three_cone_verified_by[5].text.split(' ')[2]
+    end
+
+    def keystats_three_cone_verified_date
+      three_cone_verified_date = @browser.elements(class: 'date')
+      three_cone_verified_date[5].text.split(' ')[2]
+    end
+
+    def keystats_broad_jump
+      broad_jump  = @browser.elements(class: 'stat-val')
+      broad_jump[6].text.split(' ')[0]
+    end
+
+    def keystats_broad_jump_verified_by
+      broad_jump_verified_by = @browser.elements(class: 'event')
+      broad_jump_verified_by[6].text.split(' ')[2]
+    end
+
+    def keystats_broad_jump_verified_date
+      broad_jump_verified_date = @browser.elements(class: 'date')
+      broad_jump_verified_date[6].text.split(' ')[2]
+    end
 
     private
 
@@ -137,6 +246,10 @@ module C3PO
 
     def contact_section
       @browser.section(id: 'contact-section')
+    end
+
+    def key_stats_section
+      @browser.div(class: %w[key-stats-hist mg-top-1])
     end
 
     def athlete_contact

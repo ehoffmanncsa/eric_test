@@ -10,6 +10,7 @@ clientrms:
   my_information: 'profile/my_information/edit'
   coaching_session: 'coaching_session_requests/new'
   academic: 'profile/academic/edit'
+  physical_measurables: 'profile/physical_measurables/edit'
 
 rss:
   base_url: 'https://qa.ncsasports.org/'
