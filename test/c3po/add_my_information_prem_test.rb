@@ -25,6 +25,7 @@ class V2AddMyInformationPremTest < Common
   def test_my_information_shows_on_profile_page
     do_preps
     gather_person_expected_information
+    wait_for_page_save
     goto_athlete_profile_page
     compare_my_info_data_to_profile_page_data
   end
@@ -66,6 +67,10 @@ class V2AddMyInformationPremTest < Common
 
   def goto_athlete_profile_page
     @browser.element(class: 'button--primary').click
+  end
+
+  def wait_for_page_save
+    Watir::Wait.until(timeout: 90) { @browser.div(class: ["success", "flash", "flash_msg"]).present? }
   end
 
   # do comparision
