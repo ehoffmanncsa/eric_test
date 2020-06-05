@@ -30,7 +30,7 @@ class AddAcademicsInfoTest < Common
     options = dropdown.elements(tag_name: 'option').to_a
 
     options.each do |option|
-      option.click if option.text == 'Lane Tech High School'
+      option.click if option.text == 'Palatine High School'
     end
 
     # select division
@@ -217,7 +217,7 @@ class AddAcademicsInfoTest < Common
   end
 
   def test_add_academics
-    email = 'test0b73@yopmail.com'
+    email = 'test386e@yopmail.com'
     UIActions.user_login(email)
     UIActions.goto_edit_profile
 

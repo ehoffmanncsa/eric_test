@@ -363,7 +363,7 @@ class AddMyInfoTestFree < Common
   def save_record
     # save my information
     @browser.element(:name, 'commit').click;
-    sleep 1
+    sleep 100
   end
 
   def verify_header_info
