@@ -30,7 +30,7 @@ module MSSetup
     @browser.button(name: 'commit').click
     sleep 3
 
-    Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-hsqkTv').present? }
+    Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-cHmkDT').present? }
     sleep 3
   end
 
