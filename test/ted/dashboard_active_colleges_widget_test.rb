@@ -4,6 +4,7 @@ require_relative '../test_helper'
 class DashboardActiveCollegesWidgetTest < Common
   def setup
     super
+    skip
     TED.setup(@browser)
   end
 
@@ -40,6 +41,7 @@ class DashboardActiveCollegesWidgetTest < Common
   def test_active_college_card
     UIActions.ted_login "coacheric.ted@gmail.com", "ncsa"
     Watir::Wait.until { @browser.element(class: "dashboard-page").present? }
+
 
     active_college_card = @browser.element(class: "active-college-card")
     college_name = active_college_card.element(class: "active-college-card__name").text
