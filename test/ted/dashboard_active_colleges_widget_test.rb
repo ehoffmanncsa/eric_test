@@ -4,7 +4,6 @@ require_relative '../test_helper'
 class DashboardActiveCollegesWidgetTest < Common
   def setup
     super
-    skip
     TED.setup(@browser)
   end
 
