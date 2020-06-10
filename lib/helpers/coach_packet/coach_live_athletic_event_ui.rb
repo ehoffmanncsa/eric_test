@@ -55,7 +55,7 @@ module AthleticEventUI
     sleep 3
 
     @browser.text_field(name: 'email').set 'ncsa.automation+coachlive@gmail.com'
-    @browser.text_field(name: 'password').set 'ncsa1333'
+    @browser.text_field(name: 'password').set 'Ncsa@1333'
     submit_button = @browser.button(text: 'LOGIN')
     submit_button.click
     sleep 3
