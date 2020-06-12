@@ -42,18 +42,18 @@ class InviteCSVAthletesTest < Common
 
   def upload_athletes
     # find add multiple athletes button and click
-    @browser.button(:text, 'Upload Roster').click
+    @browser.button(text: 'Upload Roster').click
     Watir::Wait.until { TED.modal.present? }
 
     # send in csv file path and upload it
     path = File.absolute_path('athletes.csv')
-    TED.modal.element(:tag_name, 'input').send_keys path
-    TED.modal.button(:text, 'Upload').click; sleep 4
+    TED.modal.element(tag_name: 'input').send_keys path
+    TED.modal.button(text: 'Upload').click; sleep 4
 
     # make sure all records are uploaded
     failure = []
     Watir::Wait.until { TED.modal.present? }
-    messages = TED.modal.elements(:class, 'csv-message')
+    messages = TED.modal.elements(class: 'csv-message')
     msg = "Not all athletes got uploaded. Expect #{@names.length}, See #{messages.length}"
     assert_equal @names.length, messages.length, msg
 
@@ -64,12 +64,12 @@ class InviteCSVAthletesTest < Common
     assert_empty failure
 
     # finish the job
-    TED.modal.button(:text, 'Finished').click
+    TED.modal.button(text: 'Finished').click
   end
 
   def check_not_sent_status(name)
     row = TED.get_row_by_name(name)
-    status = row.elements(:tag_name, 'td')[4].text
+    status = row.elements(tag_name: 'td')[4].text
     assert_equal status, 'Not Sent', "Expected status #{status} to be Not Sent"
   end
 

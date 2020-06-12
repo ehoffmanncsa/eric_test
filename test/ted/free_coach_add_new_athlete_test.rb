@@ -54,7 +54,7 @@ class FreeCoachAddNewAthleteTest < Common
   end
 
   def table
-    @browser.table(:class, 'table--administration')
+    @browser.table(class: 'table--administration')
   end
 
   def send_invite_email
@@ -63,15 +63,15 @@ class FreeCoachAddNewAthleteTest < Common
 
     # find and click the not sent button for the newly added athlete
     # make sure Edit Athlete modal shows up before proceeding
-    row = table.element(:text, @athlete_name).parent
-    row.elements(:tag_name, 'td')[4].element(:class, 'btn-primary').click; sleep 1
+    row = table.element(text: @athlete_name).parent
+    row.elements(tag_name: 'td')[4].element(class: 'btn-primary').click; sleep 1
     assert TED.modal.present?
 
-    TED.modal.button(:text, 'Save & Invite').click
+    TED.modal.button(text: 'Save & Invite').click
     UIActions.wait_for_modal
 
     # make sure athlete status is now pending after email sent
-    status = row.elements(:tag_name, 'td')[4].text
+    status = row.elements(tag_name: 'td')[4].text
     assert_equal status, 'Pending', "Expected status #{status} to be Pending"
 
     UIActions.clear_cookies
@@ -81,8 +81,8 @@ class FreeCoachAddNewAthleteTest < Common
     UIActions.user_login(@athlete_email)
     MSSetup.set_password
 
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
+    @browser.element(class: 'fa-angle-down').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
 
     refute (navbar.html.include? 'Membership Info'), 'Found membership option in menu'
   end
@@ -92,19 +92,19 @@ class FreeCoachAddNewAthleteTest < Common
     TED.go_to_athlete_tab
 
     row = TED.get_row_by_name(@athlete_name)
-    status = row.elements(:tag_name, 'td')[4].text
+    status = row.elements(tag_name: 'td')[4].text
 
     assert_equal 'Accepted', status, "Expected status #{status} to be Accepted"
   end
 
   def delete_athlete
     row = TED.get_row_by_name(@athlete_name)
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
+    cog = row.elements(tag_name: 'td').last.element(class: 'fa-cog')
     cog.click; sleep 1
 
-    TED.modal.button(:text, 'Delete').click
-    small_modal = TED.modal.div(:class, 'modal-content')
-    small_modal.button(:text, 'Delete').click
+    TED.modal.button(text: 'Delete').click
+    small_modal = TED.modal.div(class: 'modal-content')
+    small_modal.button(text: 'Delete').click
     UIActions.wait_for_modal
 
     refute (@browser.html.include? @athlete_name), "Found deleted athlete #{@athlete_name}"

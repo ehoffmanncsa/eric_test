@@ -36,28 +36,28 @@ class SignupSelfProvisionOrgTest < Common
 
   def open_club_form
     @browser.goto 'https://team-staging.ncsasports.org/sign_in'
-    @browser.elements(:text, 'Sign Up')[1].click
+    @browser.elements(text: 'Sign Up')[1].click
     assert TED.modal, 'Add Organization modal not found'
 
     # select club
-    list = TED.modal.select_list(:class, 'form-control')
+    list = TED.modal.select_list(class: 'form-control')
     list.select 'Club'; sleep 0.5
 
     # Make sure name is unique
     # Retry if name found
     loop do
       @org_name = MakeRandom.company_name
-      TED.modal.text_field(:class, 'resizable-input').set @org_name; sleep 0.5
-      break if (TED.modal.div(:class, 'alert').present? &&
-        TED.modal.div(:class, 'alert').text == 'No Clubs Found with that name.')
+      TED.modal.text_field(class: 'resizable-input').set @org_name; sleep 0.5
+      break if (TED.modal.div(class: 'alert').present? &&
+        TED.modal.div(class: 'alert').text == 'No Clubs Found with that name.')
     end
 
-    TED.modal.button(:text, 'Create a New Club').click
+    TED.modal.button(text: 'Create a New Club').click
   end
 
   def fill_out_form
     # fill out club info
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
+    inputs = TED.modal.elements(tag_name: 'input').to_a
     inputs[0].send_keys @org_name
     inputs[3].send_keys 'IL'
     inputs[4].send_keys MakeRandom.zip_code
@@ -67,82 +67,82 @@ class SignupSelfProvisionOrgTest < Common
     inputs[8].send_keys MakeRandom.phone_number
 
     # select info from dropdowns in modal
-    lists = TED.modal.select_lists(:class, 'form-control')
+    lists = TED.modal.select_lists(class: 'form-control')
     lists[0].select 'US'
     lists[2].options.to_a.sample.select
-    TED.modal.button(:text, 'Add').click; sleep 3
+    TED.modal.button(text: 'Add').click; sleep 3
   end
 
   def give_password
-    modal = @browser.divs(:class, 'modal-content')[1]
-    modal.elements(:tag_name, 'input').each do |i|
+    modal = @browser.divs(class: 'modal-content')[1]
+    modal.elements(tag_name: 'input').each do |i|
       i.send_keys 'ncsa'
     end
 
-    modal.button(:text, 'Change Password').click; sleep 1
+    modal.button(text: 'Change Password').click; sleep 1
   end
 
   def sign_TOS
-    TED.modal.text_field(:placeholder, 'Signature').set @org_name
-    TED.modal.button(:text, 'I Accept').click
+    TED.modal.text_field(placeholder: 'Signature').set @org_name
+    TED.modal.button(text: 'I Accept').click
     UIActions.wait_for_modal
     Watir::Wait.until { TED.navbar.present? }
   end
 
   def verify_coach_unverified
     TED.go_to_staff_tab
-    assert @browser.button(:text, 'Unverified').enabled?, 'Button Unverified not found'
+    assert @browser.button(text: 'Unverified').enabled?, 'Button Unverified not found'
   end
 
   def verify_coach_cannot_self_verify
-    @browser.button(:text, 'Unverified').click
+    @browser.button(text: 'Unverified').click
     assert TED.modal, 'No Alert modal found'
 
     text = 'You do not have permission to verify coaches.'
     assert_includes TED.modal.text, text, 'Wrong alert message'
 
     # close modal and sign out
-    TED.modal.element(:class, 'fa-times').click
+    TED.modal.element(class: 'fa-times').click
     TED.sign_out
   end
 
   def find_org_in_UI(status)
-    list = @browser.select_list(:class, 'form-control')
+    list = @browser.select_list(class: 'form-control')
     list.select status
 
-    @browser.text_field(:class, 'form-control').set @org_name
+    @browser.text_field(class: 'form-control').set @org_name
 
-    @browser.button(:text, 'Search').click
+    @browser.button(text: 'Search').click
     UIActions.wait_for_spinner; sleep 2
   end
 
   def verify_org_unverfied
     UIActions.ted_login(@partner_username, @partner_password)
-    Watir::Wait.while { @browser.element(:class, 'alert').present? }
+    Watir::Wait.while { @browser.element(class: 'alert').present? }
 
     find_org_in_UI('Unverified')
 
-    Watir::Wait.while { @browser.element(:class, 'alert').present? }
+    Watir::Wait.while { @browser.element(class: 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Unverified'
   end
 
   def verify_org_self_provisoned
-    org = @browser.element(:text, @org_name).parent.parent
+    org = @browser.element(text: @org_name).parent.parent
     assert_includes org.html, 'Self Provisioned', 'Self Provisioned label not found'
   end
 
   def admin_verify_coach
-    org = @browser.element(:text, @org_name).parent
+    org = @browser.element(text: @org_name).parent
     org.click
 
     @org_id = @browser.url.split('/').last.to_s
 
-    @browser.link(:text, 'Enter Org as Coach').click
+    @browser.link(text: 'Enter Org as Coach').click
     TED.go_to_staff_tab
-    @browser.button(:text, 'Unverified').click
+    @browser.button(text: 'Unverified').click
     assert TED.modal, 'Coach Verification modal not found'
 
-    TED.modal.button(:text, 'Verify').click; sleep 1
+    TED.modal.button(text: 'Verify').click; sleep 1
     assert (@browser.text.include? 'Verified'), 'Status Verified not found'
 
     TED.sign_out
@@ -150,11 +150,11 @@ class SignupSelfProvisionOrgTest < Common
 
   def verify_org_free_signed
     UIActions.ted_login(@partner_username, @partner_password)
-    Watir::Wait.while { @browser.element(:class, 'alert').present? }
+    Watir::Wait.while { @browser.element(class: 'alert').present? }
 
     find_org_in_UI('Accepted')
 
-    Watir::Wait.while { @browser.element(:class, 'alert').present? }
+    Watir::Wait.while { @browser.element(class: 'alert').present? }
     assert_includes @browser.html, @org_name, 'Org not found in Free Signed'
   end
 

@@ -44,7 +44,7 @@ class FindCollegesButtonGroupTest < Common
   end
 
   def select_filter(element_id)
-    btn_group = @browser.element(:id, element_id)
+    btn_group = @browser.element(id: element_id)
     button = btn_group.elements(class: 'btn').to_a.sample
     button.click
 
@@ -107,7 +107,7 @@ class FindCollegesButtonGroupTest < Common
     profile = @browser.element(class: 'college-profile')
     col = profile.div(class: 'col-lg-7')
     table = col.tables(class: 'box')[0]
-    selectivity = table.trs[2].td(:index, 0).text.downcase
+    selectivity = table.trs[2].td(index: 0).text.downcase
     msg = "#{college_name} selectivity is #{selectivity}, expected #{strength}"
     assert_equal strength, selectivity, msg
   end

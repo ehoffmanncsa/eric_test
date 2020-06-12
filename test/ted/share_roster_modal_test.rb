@@ -15,23 +15,23 @@ class ShareRosterModalTest < Common
   end
 
   def select_sport
-    list = @browser.select_list(:class, 'form-control')
+    list = @browser.select_list(class: 'form-control')
     list.select "Women's Basketball"
   end
 
   def check_if_share_roster_modal_opens
-    @browser.button(:text, 'Share Roster').click
+    @browser.button(text: 'Share Roster').click
     UIActions.wait_for_spinner
 
     assert TED.modal.present?, 'Modal did not open'
     modal_title = 'Share Roster'
     assert_equal modal_title,
-      TED.modal.element(:id, 'myModalLabel').text,
+      TED.modal.element(id: 'myModalLabel').text,
       "Expected #{modal_title} modal to open"
   end
 
   def check_copy_button
-    copy_input = @browser.element(:class, 'input-group').element(:tag_name, 'input')
+    copy_input = @browser.element(class: 'input-group').element(tag_name: 'input')
 
     assert_equal "https://team-staging.ncsasports.org/teams/womens-basketball/CA/awesome-sauce",
       copy_input.attribute('value'),
@@ -39,14 +39,14 @@ class ShareRosterModalTest < Common
   end
 
   def check_mail_button
-    mail_to_link = @browser.element(:class, 'share-buttons').element(:class, 'fa-envelope').parent
+    mail_to_link = @browser.element(class: 'share-buttons').element(class: 'fa-envelope').parent
 
     mail_to_text = "mailto:?subject=See Awesome Sauce"
     assert_includes mail_to_link.attribute('href'), mail_to_text, 'Incorrect URL for mailto link'
   end
 
   def check_fb_button
-    fb_link = @browser.element(:class, 'share-buttons').elements(:tag_name, 'a')[1]
+    fb_link = @browser.element(class: 'share-buttons').elements(tag_name: 'a')[1]
 
     assert_match /^https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=https:\/\/team-staging\.ncsasports\.org\/teams\/womens-basketball\/CA\/awesome-sauce/,
       fb_link.attribute('href'),
@@ -54,7 +54,7 @@ class ShareRosterModalTest < Common
   end
 
   def check_twitter_button
-    twitter_link = @browser.element(:class, 'share-buttons').elements(:tag_name, 'a')[2]
+    twitter_link = @browser.element(class: 'share-buttons').elements(tag_name: 'a')[2]
 
     assert_match /https:\/\/twitter\.com\/intent\/tweet\?url=https:\/\/team-staging\.ncsasports\.org\/teams\/womens-basketball\/CA\/awesome-sauce/,
       twitter_link.attribute('href'),
@@ -62,13 +62,13 @@ class ShareRosterModalTest < Common
   end
 
   def check_go_to_button
-    go_to_link = @browser.element(:class, 'share-go-link')
+    go_to_link = @browser.element(class: 'share-go-link')
     go_to_link.click
     sleep 1
     @browser.windows.last.use
 
-    assert_equal 'Awesome Sauce', @browser.element(:tag_name, 'h2').text, 'Go To page has incorrect header'
-    assert_match /Women's Basketball/, @browser.element(:class, 'stats').text, 'Go To page has incorrect sport'
+    assert_equal 'Awesome Sauce', @browser.element(tag_name: 'h2').text, 'Go To page has incorrect header'
+    assert_match /Women's Basketball/, @browser.element(class: 'stats').text, 'Go To page has incorrect sport'
   end
 
   def employ_share_roster_modal

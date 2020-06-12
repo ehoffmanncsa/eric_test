@@ -67,25 +67,25 @@ class UpdateContractPaymentMethodTest < Common
 
     # open contract details
     contract = find_contract_in_ui
-    contract.button(:text, 'Details').click
+    contract.button(text: 'Details').click
 
     # in contract details change payment method
-    TED.modal.link(:text, 'Change payment method').click
-    list = TED.modal.select_list(:class, 'form-control')
+    TED.modal.link(text: 'Change payment method').click
+    list = TED.modal.select_list(class: 'form-control')
     list.select new_id
   end
 
   def find_contract_in_ui
-    column = @browser.element(:text, 'Signed Contracts').parent.parent
-    table = column.element(:class, 'table')
+    column = @browser.element(text: 'Signed Contracts').parent.parent
+    table = column.element(class: 'table')
 
-    table.element(:text, 'qa').parent # find contract Accepted By 'qa'
+    table.element(text: 'qa').parent # find contract Accepted By 'qa'
   end
 
   def check_success_message
-    Watir::Wait.until { TED.modal.div(:class, 'alert').present? }
+    Watir::Wait.until { TED.modal.div(class: 'alert').present? }
     expected = 'Payment change was successful.'
-    actual = TED.modal.div(:class, 'alert').text
+    actual = TED.modal.div(class: 'alert').text
     assert_equal expected, actual, 'Unexpected message'
   end
 

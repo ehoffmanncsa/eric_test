@@ -73,27 +73,27 @@ class RestoredAthleteRequestTest < Common
 
   def check_for_athlete_pop_up
     UIActions.user_login(athlete_email); sleep 30
-    assert @browser.element(:class, 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
+    assert @browser.element(class: 'club-popup-js').present?, 'TED Invite Request Modal not appearing.'
   end
 
   def grant_access
-    @browser.element(:id, 'club-yes').click
+    @browser.element(id: 'club-yes').click
     athlete_sign_out
   end
 
   def athlete_sign_out
-    @browser.element(:class, 'fa-angle-down').click
-    navbar = @browser.element(:id, 'secondary-nav-menu')
-    navbar.link(:text, 'Logout').click
+    @browser.element(class: 'fa-angle-down').click
+    navbar = @browser.element(id: 'secondary-nav-menu')
+    navbar.link(text: 'Logout').click
   end
 
   def check_athlete_has_status(status)
     UIActions.ted_login
     TED.go_to_athlete_tab
 
-    athlete_row = @browser.element(:id, "athlete#{@athlete['id']}")
-    assert (athlete_row.element(:text, athlete_email).present?), "Cannot find athlete: #{athlete_email}."
-    assert (athlete_row.element(:text, status).present?), "Athlete #{athlete_email} is not listed as #{status}."
+    athlete_row = @browser.element(id: "athlete#{@athlete['id']}")
+    assert (athlete_row.element(text: athlete_email).present?), "Cannot find athlete: #{athlete_email}."
+    assert (athlete_row.element(text: status).present?), "Athlete #{athlete_email} is not listed as #{status}."
     TED.sign_out
   end
 

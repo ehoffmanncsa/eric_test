@@ -27,14 +27,14 @@ class TEDUpdateCoachDetailsTest < Common
     UIActions.wait_for_spinner
 
     TED.goto_account_settings; sleep 1
-    Watir::Wait.until { @browser.div(:class, 'page-content').present? }
+    Watir::Wait.until { @browser.div(class: 'page-content').present? }
 
     # check info loading correctly
-    firstname = @browser.text_field(:id, 'firstName')
-    lastname = @browser.text_field(:id, 'lastName')
-    email = @browser.text_field(:id, 'email')
-    phone = @browser.text_field(:id, 'phone')
-    position = @browser.text_field(:id, 'positionTitle')
+    firstname = @browser.text_field(id: 'firstName')
+    lastname = @browser.text_field(id: 'lastName')
+    email = @browser.text_field(id: 'email')
+    phone = @browser.text_field(id: 'phone')
+    position = @browser.text_field(id: 'positionTitle')
 
     failure = []
 
@@ -56,13 +56,13 @@ class TEDUpdateCoachDetailsTest < Common
     phone.set new_phone
     position.set new_position
 
-    @browser.button(:text, 'Update').click
+    @browser.button(text: 'Update').click
 
-    alert = @browser.div(:class, 'alert-success') # TODO: Update this with something that has less potential conflicts
+    alert = @browser.div(class: 'alert-success') # TODO: Update this with something that has less potential conflicts
     assert_equal 'User information successfully updated.', alert.text, 'Incorrect success alert'
 
     @browser.refresh
-    Watir::Wait.until { @browser.div(:class, 'page-content').present? }
+    Watir::Wait.until { @browser.div(class: 'page-content').present? }
 
     failure = []
     msg = "Incorrect phone number expected #{new_phone} vs #{phone}"

@@ -28,7 +28,7 @@ class FindCollegesSearchBarTest < Common
   end
 
   def search_for(key)
-    search_bar = @browser.text_field(:class, 'form-control')
+    search_bar = @browser.text_field(class: 'form-control')
     search_key = key
     search_bar.set search_key
     search_bar.send_keys :enter
@@ -37,24 +37,24 @@ class FindCollegesSearchBarTest < Common
   end
 
   def colleges
-    @browser.elements(:class, 'card-college').to_a
+    @browser.elements(class: 'card-college').to_a
   end
 
   def test_find_by_college_name
     search_key = 'Northern Illinois University'
     search_for(search_key)
-    assert @browser.element(:class, 'card-college').present?, 'No college card found'
+    assert @browser.element(class: 'card-college').present?, 'No college card found'
 
-    college_name = colleges[0].element(:tag_name, 'h4').text
+    college_name = colleges[0].element(tag_name: 'h4').text
     assert_equal search_key, college_name, 'Incorrect college shows up'
   end
 
   def test_find_by_location
     search_for('Texas')
-    assert @browser.element(:class, 'card-college').present?, 'No college card found'
+    assert @browser.element(class: 'card-college').present?, 'No college card found'
 
     college = colleges.sample
-    college_info = college.element(:class, 'subtitle').text
+    college_info = college.element(class: 'subtitle').text
     assert_includes college_info, 'TX', 'College not from Texas'
   end
 end

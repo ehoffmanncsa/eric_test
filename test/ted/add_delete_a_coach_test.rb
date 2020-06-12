@@ -49,15 +49,15 @@ class TEDAddDeleteACoachTest < Common
 
     # find add staff button and click to open modal
     # fill out staff info in modal
-    @browser.button(:text, 'Add Staff').click
+    @browser.button(text: 'Add Staff').click
     Watir::Wait.until { TED.modal.present? }; sleep 0.5
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
+    inputs = TED.modal.elements(tag_name: 'input').to_a
     inputs[0].send_keys firstname
     inputs[1].send_keys lastname
     inputs[2].send_keys @coach_email
     inputs[3].send_keys phone
     inputs[4].send_keys position
-    TED.modal.button(:text, 'Add Coach').click
+    TED.modal.button(text: 'Add Coach').click
     UIActions.wait_for_modal
   end
 
@@ -75,10 +75,10 @@ class TEDAddDeleteACoachTest < Common
     Watir::Wait.until {  TED.modal.present? }
     assert TED.modal, 'Set new password modal not found'
 
-    inputs = TED.modal.elements(:tag_name, 'input').to_a
+    inputs = TED.modal.elements(tag_name: 'input').to_a
     inputs[0].send_keys 'ncsa'
     inputs[1].send_keys 'ncsa'
-    TED.modal.element(:tag_name, 'button').click
+    TED.modal.element(tag_name: 'button').click
 
     UIActions.wait_for_modal
   end
@@ -95,15 +95,15 @@ class TEDAddDeleteACoachTest < Common
     TED.go_to_staff_tab; sleep 0.5
 
     row = TED.get_row_by_name(@coach_name)
-    cog = row.elements(:tag_name, 'td').last.element(:class, 'fa-cog')
+    cog = row.elements(tag_name: 'td').last.element(class: 'fa-cog')
     cog.click; sleep 1
-    TED.modal.button(:text, 'Delete Staff Member').click; sleep 1
+    TED.modal.button(text: 'Delete Staff Member').click; sleep 1
   end
 
   def test_add_delete_coach
     add_a_coach
     msg = "Cannot find newly added Coach #{@coach_name}"
-    assert (@browser.element(:text, @coach_name).present?), msg
+    assert (@browser.element(text: @coach_name).present?), msg
 
     check_new_coach_can_login
     delete_coach
