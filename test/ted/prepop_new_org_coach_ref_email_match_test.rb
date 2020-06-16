@@ -1,16 +1,16 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 require_relative '../test_helper'
 
-# TS-351: TED Regression
-# UI Test: Adding an Organization With a $0 Contract
+# SALES-1653: TED Regression
+# UI Test: Prepop org with client has a coach_references record with the coach’s email
 
-=begin
-  Create new NCSA athlete via api
-  Login as new athlete, set password and add coach reference
-  Create a new org in TED with primary contact is the above coach
-  Make sure when login as coach (or impersonate?) the above athete
-    shows up on coach dashboard (pre-populated)
-=end
+#   Create new NCSA athlete via api
+#   Login as new athlete, set password and add coach reference
+#   Coach_references record with the coach’s email will match, name and phone will not
+#   Create a new org in TED with primary contact is the above coach
+#   Make sure when login as admin(or coach but not testing that) the above athete
+#   shows up on Roster -  Athletes page(pre-populated)
 
 class CreateNewOrgWithPrepop < Common
   def setup
@@ -37,6 +37,7 @@ class CreateNewOrgWithPrepop < Common
     @athlete_email = post_body[:recruit][:athlete_email]
     first_name = post_body[:recruit][:athlete_first_name]
     last_name = post_body[:recruit][:athlete_last_name]
+    @sport = post_body[:recruit][:sport_id]
     @athlete_name = "#{first_name} #{last_name}"
 
     UIActions.user_login(@athlete_email)
@@ -54,9 +55,9 @@ class CreateNewOrgWithPrepop < Common
     coach_section.element(class: 'add_icon').click
     form = @browser.element(id: 'coach_reference_edit')
 
-    # fill out text fields
-    form.element(name: 'name').send_keys @coach_name
-    form.element(name: 'phone').send_keys @phone_number
+    # fill out text fields, matching on coach email only
+    form.element(name: 'name').send_keys "#{MakeRandom.first_name} #{MakeRandom.last_name}"
+    form.element(name: 'phone').send_keys MakeRandom.phone_number
     form.element(name: 'email').send_keys @coach_email
 
     # select club coach type
@@ -64,7 +65,7 @@ class CreateNewOrgWithPrepop < Common
     dropdown.select 'Club Coach'
 
     # select radio button yes
-    form.radio(:value, 'true').set
+    form.radio(value: 'true').set
 
     # submit form
     form.element(class: 'submit').click; sleep 0.5
@@ -85,11 +86,11 @@ class CreateNewOrgWithPrepop < Common
           state: 'IL',
           type: 'Organization',
           website: '',
-          zip_code: MakeRandom.number(5)
+          zip_code: '90210'
         },
         relationships: {
           partner: { data: { type: 'partners' } },
-          sport: { data: [{ type: 'sports', id: sport_id }] }
+          sport: { data: [{ type: 'sports', id: @sport }] }
         },
         type: 'organizations'
       }
@@ -98,33 +99,34 @@ class CreateNewOrgWithPrepop < Common
 
   def name_cap(name)
     temp = name.split(' ')
-    temp.each { |word| word.capitalize! }
+    temp.each(&:capitalize!)
     name = temp.join(' ')
   end
 
   def test_create_org_with_existing_athlete
-    skip
-    #skipping this test due to existing bug https://ncsasports.atlassian.net/browse/TED-1597
     create_athlete
     add_coach_reference
+    sleep 5 # system needs a little time before creating org
 
     TEDOrgApi.setup
     pp "[INFO] Creating Org - #{@org_name}"
     new_org = TEDOrgApi.create_org(org_body)
     TED.impersonate_org(new_org['id'])
+    TED.go_to_athlete_tab
 
     failure = []
     begin
       five_minutes = 300 # seconds
-      Timeout::timeout(five_minutes) {
+      Timeout.timeout(five_minutes) do
         loop do
           html = @browser.html
-          break if html.include? name_cap(@athlete_name)
+          break if html.include? @athlete_name
+
           @browser.refresh
         end
-      }
-    rescue => e
-      failure << "Athlete not pre-populated after 2 minutes wait"
+      end
+    rescue StandardError => e
+      failure << 'Athlete not pre-populated after 2 minutes wait'
     end
     assert_empty failure
 
