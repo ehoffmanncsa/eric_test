@@ -85,6 +85,7 @@ class AdminEventRMSTest < Common
 
   def fill_out_venues
     #add venue 1
+    filter_event
     open_event
     CoachPacket_AdminUI.venue_page
     @filler.venue_data
@@ -92,6 +93,7 @@ class AdminEventRMSTest < Common
     CoachPacket_AdminUI.save_venue
     CoachPacket_AdminUI.event_page
     sleep 4
+    filter_event
     open_event
     #add venue 2
     CoachPacket_AdminUI.venue_page
@@ -99,6 +101,7 @@ class AdminEventRMSTest < Common
     @filler.select_state
     CoachPacket_AdminUI.save_venue
     CoachPacket_AdminUI.event_page
+    filter_event
     open_event
   end
 
@@ -112,6 +115,11 @@ class AdminEventRMSTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_rms_csv
     CoachPacket_AdminUI.upload_athletes
+  end
+
+  def filter_event
+    @browser.element(id: 'q_name_contains').send_keys @name
+    @browser.button(name: 'commit').click
   end
 
   def open_event
