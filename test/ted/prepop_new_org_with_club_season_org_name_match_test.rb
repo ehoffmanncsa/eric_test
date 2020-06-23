@@ -15,7 +15,7 @@ require_relative '../test_helper'
 class CreateNewOrgWithPrepop < Common
   def setup
     super
-    skip
+
     C3PO.setup(@browser)
     MSSetup.setup(@browser)
     TED.setup(@browser)
@@ -36,6 +36,7 @@ class CreateNewOrgWithPrepop < Common
     # add a new freshman recruit, get back his email address and username
     _post, post_body = RecruitAPI.new.ppost
     @athlete_email = post_body[:recruit][:athlete_email]
+    @athlete_zip = post_body[:recruit][:zip]
     first_name = post_body[:recruit][:athlete_first_name]
     last_name = post_body[:recruit][:athlete_last_name]
     @sport = post_body[:recruit][:sport_id]
@@ -85,7 +86,7 @@ class CreateNewOrgWithPrepop < Common
           state: 'IL',
           type: 'Organization',
           website: '',
-          zip_code: '90210'
+          zip_code: @athlete_zip
         },
         relationships: {
           partner: { data: { type: 'partners' } },
