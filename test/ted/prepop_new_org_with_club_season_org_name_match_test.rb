@@ -12,7 +12,7 @@ require_relative '../test_helper'
 #   Make sure when login as admin(or coach but not testing that) the above athete
 #   shows up on Roster -  Athletes page(pre-populated)
 
-class CreateNewOrgWithPrepop < Common
+class CreateNewOrgWithPrepopOrgName < Common
   def setup
     super
 
@@ -103,7 +103,7 @@ class CreateNewOrgWithPrepop < Common
     name = temp.join(' ')
   end
 
-  def test_create_org_with_existing_athlete
+  def test_prepop_org_name
     create_athlete
     add_coach_reference
     sleep 5 # system needs a little time before creating org

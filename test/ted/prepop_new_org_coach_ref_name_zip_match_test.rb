@@ -13,10 +13,9 @@ require_relative '../test_helper'
 #   Make sure when login as admin(or coach but not testing that) the above athete
 #   shows up on Roster -  Athletes page(pre-populated)
 
-class CreateNewOrgWithPrepop < Common
+class CreateNewOrgWithPrepopCoachName < Common
   def setup
     super
-    skip
     C3PO.setup(@browser)
     MSSetup.setup(@browser)
     TED.setup(@browser)
@@ -106,7 +105,7 @@ class CreateNewOrgWithPrepop < Common
     name = temp.join(' ')
   end
 
-  def test_create_org_with_existing_athlete
+  def test_prepop_coach_name
     create_athlete
     add_coach_reference
     sleep 10 # system needs a little time before creating org
