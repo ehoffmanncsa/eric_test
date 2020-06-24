@@ -15,7 +15,6 @@ require_relative '../test_helper'
 class CreateNewOrgWithPrepopOrgName < Common
   def setup
     super
-
     C3PO.setup(@browser)
     MSSetup.setup(@browser)
     TED.setup(@browser)
