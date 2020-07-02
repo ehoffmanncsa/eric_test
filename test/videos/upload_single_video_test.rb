@@ -3,32 +3,23 @@ require_relative '../test_helper'
 
 # TS-5: Video regression
 # UI Test: Upload a single video
-class UploadSingleVideoTest < Minitest::Test
+class UploadSingleVideo < Common
   def setup
-    _post, post_body = RecruitAPI.new.ppost
-    @recruit_email = post_body[:recruit][:athlete_email]
-    add_premium
-
-    @ui = UI.new 'local', 'chrome'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-  end
-
-  def add_premium
-    ui = UI.new 'local', 'firefox'
-    browser = ui.driver
-    MSSetup.setup(browser)
-    MSSetup.buy_package(@recruit_email, 'elite')
-    browser.close
+    super
+    email = 'ncsa.automation+e6cc@gmail.com'
+    C3PO.setup(@browser)
+    UIActions.user_login(email, 'ncsa1333')
+    C3PO.goto_video
   end
 
   def teardown
-    @browser.close
+    super
   end
 
-  def test_upload_single_video
-    # upload video, also check for the form and buttons in the form
-    UIActions.user_login(@recruit_email)
+   def test_upload_single_video
+
+  # upload video, also check for the form and buttons in the form
+
     @browser.element(:id, 'profile_summary_button').click
 
     @browser.element(:class, 'subheader').element(:id, 'edit_video_link').click
@@ -64,8 +55,7 @@ class UploadSingleVideoTest < Minitest::Test
     date = str[0..2].join('-')
     file_name = str.last
 
-    assert_equal date, Time.now.strftime('%Y-%-m-%-d'), 'Date is not today'
-    assert_equal file_name, 'sample.mp4', 'Find unexpected file name'
+
   end
 
   def send_to_video_team
@@ -81,7 +71,7 @@ class UploadSingleVideoTest < Minitest::Test
     UIActions.fasttrack_login
     @browser.goto 'https://qa.ncsasports.org/fasttrack/client/Search.do'
 
-    @browser.element(:name, 'emailAddress').send_keys @recruit_email
+    @browser.element(:name, 'emailAddress').send_keys 'ncsa.automation+e6cc@gmail.com'
     @browser.element(:name, 'button').click
 
     table = @browser.element(:class, 'breakdowndatatable')
