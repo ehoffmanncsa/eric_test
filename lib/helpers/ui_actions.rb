@@ -51,6 +51,9 @@ module UIActions
     rescue => e
       puts e; @browser.close
     end
+
+    privacy_modal_button = @browser.element(class: 'privacy-policy-modal__cta-button')
+    privacy_modal_button.click if privacy_modal_button.exists?
   end
 
   def self.ted_login(username = nil, password = nil)
