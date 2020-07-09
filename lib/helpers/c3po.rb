@@ -288,4 +288,8 @@ module C3PO
     url = @config['clientrms']['base_url'] + @config['clientrms']['coaching_session']
     @browser.goto url
   end
+
+  def self.goto_onboarding(page = "")
+    @browser.goto @config['clientrms']['base_url'] + "onboarding/#{page}"
+  end
 end
