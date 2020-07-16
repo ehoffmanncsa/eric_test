@@ -35,19 +35,12 @@ module UIActions
   end
 
   def self.user_login(email_addr, password = nil)
-    password ||= 'ncsa' #set this to ncsa to create and eric to run the scripts
+    password ||= 'ncsa1333' #set this to ncsa to create and eric to run the scripts
 
     @browser.goto @config['clientrms']['login_page']
     @browser.text_field(:id, 'user_account_login').set email_addr
     @browser.text_field(:id, 'user_account_password').set password
-    @browser.button(:name, 'commit').click; sleep 1
-
-    # waiting for the right page title
-    begin
-      Watir::Wait.until(timeout: 120) { !@browser.title.match(/Student-Athlete Sign In/) }
-    rescue => e
-      puts e; @browser.close
-    end
+    @browser.button(:name, 'commit').click; sleep 15
   end
 
   def self.ted_login(username = nil, password = nil)
