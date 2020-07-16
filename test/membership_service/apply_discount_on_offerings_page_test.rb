@@ -11,7 +11,7 @@ class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
 
-    UIActions.user_login('turkeytom@yopmail.com')
+    UIActions.user_login('test07d6@yopmail.com')
     @discount_codes = Default.static_info['ncsa_discount_code']
 
     MSSetup.setup(@browser)
