@@ -101,6 +101,7 @@ class TEDAddDeleteNewAthleteTest < Common
 
   def check_athlete_profile
     UIActions.user_login(@email)
+    sleep 4
     MSSetup.set_password
     @browser.element(class: 'mfp-close').click
     sleep 1
