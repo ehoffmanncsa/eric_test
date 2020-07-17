@@ -36,8 +36,19 @@ class AddMyInfoTestFree < Common
   end
 
   def add_free
-    POSSetup.setup(@browser)
+    #POSSetup.setup(@browser)
     UIActions.clear_cookies
+  end
+
+  def set_password
+
+    @browser.text_field(id: 'user_account_password').set 'ncsa1333'
+    @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
+    @browser.button(name: 'commit').click
+    sleep 3
+
+    Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-cHmkDT').present? }
+    sleep 3
   end
 
   def firstname_enter
@@ -457,6 +468,7 @@ class AddMyInfoTestFree < Common
     #email = 'testd522@yopmail.com'
 
     UIActions.user_login(@recruit_email)
+    set_password
     UIActions.goto_edit_profile
 
     C3PO.goto_my_information

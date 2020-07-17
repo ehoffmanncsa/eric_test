@@ -24,22 +24,16 @@ module MSSetup
     sleep 1
   end
 
-  def self.set_password(email)
+  def self.set_password
     click_yes if modal_present?
 
-    Watir::Wait.until { @browser.text_field(:id, 'user_account_username').visible? }
+    @browser.text_field(id: 'user_account_password').set 'ncsa1333'
+    @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
+    @browser.button(name: 'commit').click
+    sleep 3
 
-    username = email.split('@')[0].delete('.').delete('+')
-
-    @browser.text_field(:id, 'user_account_username').value = username
-    @browser.text_field(:id, 'user_account_password').set 'eric'
-    @browser.text_field(:id, 'user_account_password_confirmation').set 'eric'
-
-    @browser.button(:name, 'commit').click
-    sleep 1
-
-    Watir::Wait.until(timeout: 90) { @browser.url.include? 'custom_drills/free_onboarding' }
-    sleep 1
+    Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-cHmkDT').present? }
+    sleep 3
   end
 
   def self.find_swoosh
