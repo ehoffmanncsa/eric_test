@@ -405,7 +405,7 @@ class AddMyInfoTestFree < Common
 
     expected_ps = "A personal statement is a chance for admissions committees"+
     " to get to know you. I am open to different types of schools, although I would prefer one with"+
-    " a stable hierarchy of coaches. "
+    " a stable hierarchy of coaches."
     assert_includes personal.first.text, expected_ps
   end
 

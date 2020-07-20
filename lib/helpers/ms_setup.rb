@@ -25,6 +25,9 @@ module MSSetup
   end
 
   def self.set_password
+    privacy_modal_button = @browser.element(class: 'privacy-policy-modal__cta-button')
+    privacy_modal_button.click if privacy_modal_button.exists?
+
     click_yes if modal_present?
 
     @browser.text_field(id: 'user_account_password').set 'ncsa1333'
