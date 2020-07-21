@@ -53,5 +53,7 @@ class BulkImportTedCoachName < Common
     assert_empty failure
 
     delete_athlete
+    sleep 8
+    TED.check_bulk_import_email
   end
 end

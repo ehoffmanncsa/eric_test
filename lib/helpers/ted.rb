@@ -219,6 +219,12 @@ module TED
     @gmail.delete(emails) unless emails.empty?
   end
 
+  def self.check_bulk_import_email
+    @gmail.mail_box = 'TED_Bulk_Import'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
+  end
+
   def self.set_new_password_coach
     Watir::Wait.until {  TED.modal.present? }
     assert TED.modal, 'Set new password modal not found'
