@@ -218,9 +218,8 @@ class AddAcademicsInfoTest < Common
 
   def test_add_academics
     email = 'testa14d@yopmail.com'
-    UIActions.user_login(email)
+    UIActions.user_login_2(email)
     UIActions.goto_edit_profile
-
     C3PO.goto_academics
 
     select_high_school
