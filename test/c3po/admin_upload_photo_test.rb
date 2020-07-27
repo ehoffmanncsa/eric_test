@@ -70,7 +70,7 @@ class AdminUploadPhotoTest < Common
     open_photo_edit
     path = File.absolute_path('test/c3po/cat.png')
     form.element(name: "client_photo[image]").send_keys path
-    sleep 2
+    sleep 5
     Watir::Wait.until { flash_msg.present? }
   end
 

@@ -47,7 +47,7 @@ class ClientUploadPhotoTest < Common
     open_photo_edit
 
     form.element(id: 'upload').send_keys path
-    sleep 1
+    sleep 5
     Watir::Wait.until(timeout: 30) { photo.present? }
 
     # verify photo src is now from s3.amazonaws.com
