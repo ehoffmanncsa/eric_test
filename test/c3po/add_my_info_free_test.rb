@@ -42,6 +42,9 @@ class AddMyInfoTestFree < Common
 
   def set_password
 
+    privacy_modal_button = @browser.element(class: 'privacy-policy-modal__cta-button')
+    privacy_modal_button.click if privacy_modal_button.exists?
+
     @browser.text_field(id: 'user_account_password').set 'ncsa1333'
     @browser.text_field(id: 'user_account_password_confirmation').set 'ncsa1333'
     @browser.button(name: 'commit').click
