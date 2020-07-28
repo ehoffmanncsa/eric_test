@@ -62,7 +62,7 @@ class EnrollEliteSophmoreACHPaymentTest < Common
     check_redirected_to_coachsession
 
     goto_membership_info
-    check_membership_features
+    #check_membership_features
 
     goto_payments
     check_displayed_payment_info
