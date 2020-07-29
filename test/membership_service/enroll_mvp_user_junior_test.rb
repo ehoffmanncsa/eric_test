@@ -41,7 +41,7 @@ class EnrollMVPJuniorTest < Common
     membership_service = Default.static_info['membership_service']
     expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
 
-    assert_equal expected_list, ui_list, 'Membership features NOT matching what is expected'
+    assert_equal expected_list.sort, ui_list.sort, 'Membership features NOT matching what is expected'
   end
 
   def check_displayed_payment_info
@@ -67,7 +67,7 @@ class EnrollMVPJuniorTest < Common
     check_redirected_to_coachsession
 
     goto_membership_info
-    #check_membership_features
+    check_membership_features
 
     goto_payments
     check_displayed_payment_info

@@ -66,7 +66,7 @@ class PurchaseChampionAndVIPItemsTests < Common
     check_redirected_to_coachsession
 
     goto_membership_info
-    #check_membership_features
+    check_membership_features
     check_vip_features
   end
 end
