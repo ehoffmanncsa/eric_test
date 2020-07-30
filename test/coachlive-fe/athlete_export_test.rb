@@ -41,7 +41,7 @@ class CoachLiveExportTest < Common
   end
 
   def select_export
-    @browser.element(role: 'menuitem').click
+    @browser.element('data_automation_id': 'Export').click
     sleep 3
   end
 
