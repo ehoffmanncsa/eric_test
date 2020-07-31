@@ -9,6 +9,7 @@ require_relative '../test_helper'
 #   In the TED with primary contact is the above coach, click Bulk Import
 #   Athlete will display as pre-populated)
 #   Athlete will be deleted from Ted
+#   Bulk Import email can be slow, check Bulk Import folder in gmail to see if script worked
 
 class BulkImportTedCoachName < Common
   def setup

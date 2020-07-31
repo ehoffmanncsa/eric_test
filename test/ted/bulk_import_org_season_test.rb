@@ -8,6 +8,7 @@ require_relative '../test_helper'
 #   organization season for athlete will match Ted org name
 #   Athlete will display as pre-populated)
 #   Athlete will be deleted from Ted
+#   Bulk Import email can be slow, check Bulk Import folder in gmail to see if script worked
 
 class BulkImportTedOrgSeason < Common
   def setup
