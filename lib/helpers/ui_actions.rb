@@ -56,9 +56,6 @@ module UIActions
     @browser.text_field(id: 'user_account_password').set password
     @browser.button(name: 'commit').click; sleep 5
 
-
-    privacy_modal_button = @browser.element(class: 'privacy-policy-modal__cta-button')
-    privacy_modal_button.click if privacy_modal_button.exists?
   end
 
   def self.ted_login(username = nil, password = nil)
