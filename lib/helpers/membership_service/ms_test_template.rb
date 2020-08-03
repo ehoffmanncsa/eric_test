@@ -83,18 +83,18 @@ module MSTestTemplate
     MSPricing.membership_prices
   end
 
-  def self.enroll(ach: false)
+  def self.enroll(ach: false, checkout_cart: false)
     MSProcess.choose_the_package(raw_html_price_set, @eighteen_mo)
-    MSProcess.checkout
+    (checkout_cart.eql? true) ? MSProcess.checkout_cart : MSProcess.checkout
     MSFinish.setup_billing(ach)
   end
 
-  def self.get_enrolled(ach: false)
+  def self.get_enrolled(ach: false, checkout_cart: false)
     goto_offerings
     open_payment_plan
     check_on_prices
     define_expectations
-    enroll(ach: ach)
+    enroll(ach: ach, checkout_cart: checkout_cart)
   end
 
   def self.get_UI_features_list

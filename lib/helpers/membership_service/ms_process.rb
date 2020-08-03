@@ -40,6 +40,12 @@ module MSProcess
   end
 
 
+  def self.checkout_cart
+    @browser.element(id: 'shopping-cart').click; sleep 1
+    @browser.element(class: 'button--checkout').click; sleep 3
+    Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
+  end
+
   def self.apply_discount_offerings(code, rate)
     @browser.element(placeholder: 'Enter Discount Code').send_keys code
     @browser.element(class: 'apply').click; sleep 2
