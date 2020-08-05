@@ -56,6 +56,10 @@ module UIActions
     @browser.text_field(id: 'user_account_password').set password
     @browser.button(name: 'commit').click; sleep 5
 
+    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
+    supercharge_button.click if supercharge_button.exists?
+    sleep 3
+
   end
 
   def self.ted_login(username = nil, password = nil)
