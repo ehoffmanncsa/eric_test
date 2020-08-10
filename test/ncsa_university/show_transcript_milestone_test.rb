@@ -3,27 +3,25 @@ require_relative '../test_helper'
 
 # TS-206: NCSA University Regression
 # UI Test: Show Coaches Your Transcript Milestone
-class UploadTranscriptMilestoneTest < Minitest::Test
+class UploadTranscriptMilestoneTest < Common
   def setup
-    _post, post_body = RecruitAPI.new.ppost
-    @email = post_body[:recruit][:athlete_email]
+    super
 
-    @ui = UI.new 'local', 'firefox'
-    @browser = @ui.driver
-    UIActions.setup(@browser)
-    MSSetup.setup(@browser)
+    enroll_yr = 'senior'
+    @package = 'champion'
+    @clientrms = Default.env_config['clientrms']
 
-    MSSetup.buy_package(@email, 'elite')
-    UIActions.clear_cookies
-    UIActions.user_login(@email)
+    _post, post_body = RecruitAPI.new(enroll_yr).ppost
+    recruit_email = post_body[:recruit][:athlete_email]
 
-    @file_name = 'sample_transcript.pdf'
-    @path = File.absolute_path("test/ncsa_university/#{@file_name}")
+    UIActions.user_login(recruit_email)
+    MSTestTemplate.setup(@browser, recruit_email, @package)
   end
 
   def teardown
-    @browser.close
+    super
   end
+
 
   def check_uploaded_file
     @browser.link(:text, 'Official Transcript').click; sleep 2
@@ -66,7 +64,9 @@ class UploadTranscriptMilestoneTest < Minitest::Test
   end
 
   def test_upload_transcript_milestone
-    UIActions.goto_ncsa_university
+      MSTestTemplate.get_enrolled
+      UIActions.goto_ncsa_university
+
     @browser.link(:text, 'Upload your transcript').click
     content.element(:class, 'button--wide').click
 
