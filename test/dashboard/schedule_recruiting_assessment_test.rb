@@ -165,6 +165,7 @@ class ScheduleAssessmentTest < Common
     schedule_close
     clientrms_sign_out
     UIActions.user_login(@recruit_email, 'ncsa1333')
+    sleep 5
     check_dashboard
     check_accepted_email
   end
