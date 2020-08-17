@@ -102,6 +102,12 @@ class RosterCPCSVTest < Common
     @event_id = @new_athletic_event['data']['id']
   end
 
+  def get_rss_email
+    @gmail.mail_box = 'RSS'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
+  end
+
   def select_event
     @browser.goto "https://qa.ncsasports.org/recruit/admin/coach_packet_athletic_events/#{@event_id}"
     sleep 3
@@ -183,6 +189,7 @@ class RosterCPCSVTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_coach_packet_csv
     CoachPacket_AdminUI.upload_athletes
+    get_rss_email
   end
 
   def log_into_Coach_Packet

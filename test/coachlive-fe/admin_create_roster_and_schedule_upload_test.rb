@@ -115,6 +115,7 @@ class AdminEventRMSTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_rms_csv
     CoachPacket_AdminUI.upload_athletes
+    get_rss_email
   end
 
   def filter_event
@@ -183,6 +184,12 @@ class AdminEventRMSTest < Common
     @location = location
     @team1_name = team1_name
     @team2_name = team2_name
+  end
+
+  def get_rss_email
+    @gmail.mail_box = 'RSS'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
   end
 
   def check_name
