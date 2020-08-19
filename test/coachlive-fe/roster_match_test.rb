@@ -4,7 +4,8 @@ require_relative '../test_helper'
 require 'time'
 require 'date'
 
-# UI Test: upload csv that will match a client rms profile
+# UI Test: coach will run rss to match the athlete client-rms profile
+
 class RosterMatchRMSTest < Common
   def setup
     super

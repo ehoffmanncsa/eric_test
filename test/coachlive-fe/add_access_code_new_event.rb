@@ -5,40 +5,45 @@ require_relative '../test_helper'
 require 'time'
 require 'date'
 
-# UI Test: upload csv that will create coach packet only athletes(an dnot in client-rms)
-class RosterCPCSVTest < Common
+# UI Test: In this test a new event is created in fastrack UI and any random access_code is entered under "Access_type".
+# Test verifies that coach is able to access the event in coachpacket app  by entering the same acees code entered in fasttrack.
+
+
+class AddAcesscodeNewEvent < Common
   def setup
     super
 
+    @access_code = 12345
     @connection_client = AthleticEventServiceClient.new
     @athletic_event_data = athletic_event_data
     @expected_data = @athletic_event_data[:athletic_event]
     @event_name = @athletic_event_data[:athletic_event][:name]
     @coach_packet_config = Default.env_config['coach_packet']
+    @email = @coach_packet_config['admin_username']
+    @password = @coach_packet_config['admin_password']
+    @notes = MakeRandom.lorem_words
 
-    # generate new data to roster_coach_packet.csv
-    RosterCPCSV.new.make_it
+    # generate new data to roster_create_rms.csv
+    RosterRMSCSV.new.make_it
     @gmail = GmailCalls.new
     @gmail.get_connection
 
     CoachPacket_AdminUI.setup(@browser)
-    UIActions.fasttrack_login(username = @coach_packet_config['admin_username'],
-                              password = @coach_packet_config['admin_password'])
-
+    UIActions.fasttrack_login(@email, @password)
     AthleticEventUI.setup(@browser)
   end
 
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
+        access_type: 'access_code',
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1 .. 4)),
-        end_date: AthleticEventApi.date(rand(2 .. 4)),
+        description: MakeRandom.lorem(rand(1..4)),
+        end_date: AthleticEventApi.date(rand(2..4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
+        point_of_contact_name: MakeRandom.first_name.to_s + MakeRandom.last_name.to_s,
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -50,10 +55,9 @@ class RosterCPCSVTest < Common
         event_operator_id: 9
       },
       sports: [
-        {ncsa_id: 17638}
+        { ncsa_id: 17_638 }
       ]
     }
-
   end
 
   def create_athletic_event
@@ -68,19 +72,21 @@ class RosterCPCSVTest < Common
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
-    add_venue(@new_athletic_event["data"]["id"])
+
+    add_venue(@new_athletic_event['data']['id'])
   end
+
 
   def add_venue(athletic_event_id)
     venue = {
-        athletic_event_id: athletic_event_id,
-        address1: MakeRandom.address,
-        address2: MakeRandom.address2,
-        city: MakeRandom.city,
-        country: 'USA',
-        name: MakeRandom.name,
-        state: MakeRandom.state,
-        zip: MakeRandom.zip_code
+      athletic_event_id: athletic_event_id,
+      address1: MakeRandom.address,
+      address2: MakeRandom.address2,
+      city: MakeRandom.city,
+      country: 'USA',
+      name: MakeRandom.name,
+      state: MakeRandom.state,
+      zip: MakeRandom.zip_code
     }
 
     begin
@@ -96,7 +102,7 @@ class RosterCPCSVTest < Common
     end
   end
 
-  def my_event_created
+  def my_event_data
     url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
     @connection_client.get(url: url)
     @event_id = @new_athletic_event['data']['id']
@@ -120,69 +126,47 @@ class RosterCPCSVTest < Common
     sleep 2
   end
 
-  def my_roster_info
-    athlete_name = []; position = []; jersey_number = []
-    org_team_name = []; state_code = []
-    file = CSV.read('roster_coach_packet.csv'); file.shift
-    file.each do |row|
-      position << (row[2]).to_s
-      athlete_name << "#{row[4]} #{row[5]}"
-      jersey_number << (row[10]).to_s
-      org_team_name << "#{row[18]} | #{row[14]} #{row[15]}"
-    end
-
-    @position = position
-    @athlete_name =  athlete_name
-    @jersey_number = jersey_number
-    @org_team_name = org_team_name
+  def open_note
+    @browser.element("data-icon": 'plus').click
   end
 
-  def check_name
+  def add_note
+    notes = @browser.element(id: 'notes-widget')
+    notes.send_keys @notes
+    sleep 2
+  end
+
+  def close_notes
+    close_notes = @browser.element(text: 'Done')
+    close_notes.click
+  end
+
+  def check_notes
     failure = []
-    @athlete_name.each do |athlete_name|
-      failure << "Athlete name #{athlete_name} not found" unless @browser.html.include? athlete_name
-    end
+    failure << "Notes #{@notes} not found" unless @browser.html.include? @notes
     assert_empty failure
   end
 
-  def check_position
+  def athlete_name_profile
+    # gets the athlete name on the athlete profile page
+    @display_athlete_name = @browser.element("data-automation-id": 'EventName').text
+  end
+
+  def search_athlete
+    # verify that the athlete with the note displays on Tracked Athlete page
     failure = []
-    @position.each do |position|
-      failure << "Position #{position} not found" unless @browser.html.include? position
-    end
+    failure << "Athlete #{@display_athlete_name} not found" unless @browser.html.include? @display_athlete_name
     assert_empty failure
-  end
-
-  def check_state_org_team_name
-    failure = []
-    @org_team_name.each do |org_team_name|
-      failure << "State and team name #{org_team_name} not found" unless @browser.html.include? org_team_name
-    end
-    assert_empty failure
-  end
-
-  def open_athlete_profile
-    @browser.element("data-automation-id": 'AthleteName').click
-  end
-
-  def open_athlete_rms
-    @browser.element("data-automation-id": 'EventLogo').click
-  end
-
-  def check_rms
-    title = 'Athlete | NCSA Coach Live'
-    assert_equal title, @browser.title, 'Incorrect page title'
   end
 
   def coach_packet_admin_upload_roster
-    my_event_created
+    my_event_data
     sleep 2
     CoachPacket_AdminUI.goto_Coach_Packet_admin
     sleep 2
     select_event
-    CoachPacket_AdminUI.import_event
-    CoachPacket_AdminUI.upload_roster_coach_packet_csv
-    CoachPacket_AdminUI.upload_athletes
+    sleep 2
+    CoachPacket_AdminUI.enter_access_code
   end
 
   def log_into_Coach_Packet
@@ -190,28 +174,50 @@ class RosterCPCSVTest < Common
     AthleticEventUI.login_with_password
   end
 
-  def select_event_verify_athletes_upload
+  def open_new_created_event
     AthleticEventUI.display_upcoming_events
     search_for_event
     open_event
-    my_roster_info
-    sleep 4
-    check_name
-    check_position
-    check_state_org_team_name
-    AthleticEventUI.open_athlete_profile
-    sleep 2
-    AthleticEventUI.open_athlete_rms
-    sleep 2
-    check_rms
-    sleep 2
+    sleep 1
   end
 
-  def test_roster_rms_csv
+  def check_access_code_dialogbox_display
+    failures = []
+    failures << "error message doesn't display" unless access_code_dialogbox_displayed
+    assert_empty failures
+  end
+
+
+  def access_code_dialogbox_displayed
+    error_msg = @browser.element(class:"MuiDialogContent-root")
+    error_msg .text.include? "Enter Access code dialog box is displayed"
+    sleep 1
+  end
+
+  def enter_access_code_cp
+      @access_code_cp = 12345
+      access_code_input_cp = @browser.element(class:'MuiInputBase-input', placeholder:"Access code")
+      access_code_input_cp.send_keys @access_code_cp
+      @browser.element(type:'submit').click
+      sleep 2
+      failures = []
+      failures << "coach is unable to get in the event" unless event_displayed
+      assert_empty failures
+    end
+
+    def event_displayed
+      @browser.url.include? "/events/event/"
+    end
+
+
+  def test_add_access_code_new_event
     create_athletic_event
+    sleep 7
     coach_packet_admin_upload_roster
-    sleep 4
+    sleep 2
     log_into_Coach_Packet
-    select_event_verify_athletes_upload
+    open_new_created_event
+    check_access_code_dialogbox_display
+    enter_access_code_cp
   end
 end

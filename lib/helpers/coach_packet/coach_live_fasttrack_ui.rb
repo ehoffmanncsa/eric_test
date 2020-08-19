@@ -39,6 +39,16 @@ module CoachPacket_AdminUI
     end
   end
 
+  def self.enter_access_code
+      @browser.element(text: 'Edit Event').click
+      access_code_input = @browser.element(name:"access_code")
+      access_code_input.send_keys '12345'
+
+      sleep 2
+      @browser.element(type: 'submit').click
+  end
+
+
   def select_sport
     dropdown = @browser.element(name: 'sports[]')
     options = dropdown.elements(tag_name: 'option').to_a
