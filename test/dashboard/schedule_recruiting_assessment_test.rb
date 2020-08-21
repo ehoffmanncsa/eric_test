@@ -17,7 +17,6 @@ class ScheduleAssessmentTest < Common
     @recruit_email = post_body[:recruit][:athlete_email]
     @recruit_name = post_body[:recruit][:athlete_first_name]
 
-    # email = 'test2e33@yopmail.com'
     UIActions.user_login(@recruit_email)
     MSSetup.set_password
 
