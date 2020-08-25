@@ -43,7 +43,7 @@ class AddAthleteTagTest < Common
   end
 
   def search_athlete
-    # verify that the athlete with the note displays on Tracked Athlete page
+    # verify that the athlete with the tag displays on Tracked Athlete page
     failure = []
     failure << "Athlete #{@display_athlete_name} not found" unless @browser.html.include? @display_athlete_name
     assert_empty failure
