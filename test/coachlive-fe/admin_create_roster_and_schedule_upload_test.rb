@@ -56,7 +56,7 @@ class AdminEventRMSTest < Common
     check_team1_name
     check_team2_name
     AthleticEventUI.select_schedule_tab
-    sleep 20
+    sleep 5
     check_team1_name
     check_team2_name
     AthleticEventUI.select_athletes_tab
