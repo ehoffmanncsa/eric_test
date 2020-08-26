@@ -18,6 +18,9 @@ class AdminEventRMSTest < Common
    RosterRMSCSV.new.make_it
    ScheduleCSV.new.make_it
 
+   @gmail = GmailCalls.new
+   @gmail.get_connection
+
    CoachPacket_AdminUI.setup(@browser)
    UIActions.fasttrack_login(@email, @password)
    CoachPacket_AdminUI.adjust_window_fasttrack
@@ -53,7 +56,7 @@ class AdminEventRMSTest < Common
     check_team1_name
     check_team2_name
     AthleticEventUI.select_schedule_tab
-    sleep 5
+    sleep 20
     check_team1_name
     check_team2_name
     AthleticEventUI.select_athletes_tab
