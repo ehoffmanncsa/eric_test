@@ -6,6 +6,7 @@ require 'time'
 require 'date'
 
 # UI Test: upload csv and verify a note can be added to athlete
+# submit to rss two times because server is slow
 class AddAthleteNotesTest < Common
   def setup
     super
@@ -21,8 +22,6 @@ class AddAthleteNotesTest < Common
 
     # generate new data to roster_create_rms.csv
     RosterRMSCSV.new.make_it
-    @gmail = GmailCalls.new
-    @gmail.get_connection
 
     CoachPacket_AdminUI.setup(@browser)
     UIActions.fasttrack_login(@email, @password)
@@ -163,6 +162,12 @@ class AddAthleteNotesTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_rms_csv
     CoachPacket_AdminUI.upload_athletes
+    AthleticEventUI.get_roster_upload_email
+    CoachPacket_AdminUI.submit_athletes_rss
+    AthleticEventUI.get_rss_email
+    sleep 10
+    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    AthleticEventUI.get_rss_email
   end
 
   def log_into_Coach_Packet

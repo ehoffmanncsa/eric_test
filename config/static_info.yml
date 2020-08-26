@@ -133,13 +133,13 @@ membership_service:
   champion_features: [ 'NCSA University', 'Online Recruiting classes', 'Online support via email',
                        'Unlock match level', 'Roster openings', 'Improved search ranking',
                        'College coach directory', 'Coach Activity Report', 'Highlight/skills video(s)' ,
-                       'Email coaches from an exclusive address they recognize'
+                       'Email coaches from an exclusive address they recognize' ,'Covid 19 Bonus Skills Video'
                      ]
   elite_features: [ 'NCSA University', 'Online Recruiting classes', 'Online support via email',
                     'Unlock match level', 'Roster openings', 'Evaluation Session - Custom Scouting Report',
                     'Improved search ranking', 'College coach directory', 'Coach Activity Report',
                     'Direct promotion to college coaches', 'Highlight/skills video(s)', 'Recruiting Coach Session' ,
-                    'Email coaches from an exclusive address they recognize'
+                    'Email coaches from an exclusive address they recognize','Covid 19 Bonus Skills Video'
                   ]
   mvp_features: [ 'NCSA University', 'Online Recruiting classes', 'Online support via email',
                   'Unlock match level', 'Roster openings', 'Evaluation Session - Custom Scouting Report',
@@ -147,6 +147,7 @@ membership_service:
                   'Coach Activity Report', 'Direct promotion to college coaches',
                   'College funding consultation with SmartTrack', 'Highlight/skills video(s)',
                   'Recruiting Coach Session', 'Method ACT/SAT Test Prep' , 'Email coaches from an exclusive address they recognize'
+                  ,'Covid 19 Bonus Skills Video'
                 ]
   mvp_baseball_features: [ 'NCSA University', 'Online Recruiting classes', 'Online support via email',
                            'Unlock match level', 'Roster openings',
@@ -155,4 +156,5 @@ membership_service:
                            'Direct promotion to college coaches', 'College funding consultation with SmartTrack',
                            'Highlight/skills video(s)', 'Recruiting Coach Session',
                            'Baseball Factory College Prep', 'Method ACT/SAT Test Prep' , 'Email coaches from an exclusive address they recognize'
+                           ,'Covid 19 Bonus Skills Video'
                          ]

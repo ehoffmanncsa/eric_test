@@ -29,8 +29,8 @@ class DowngradeMVPToChampionTest < Common
    C3PO.impersonate(@client_id)
    C3PO.goto_video
 
-   # MVP originally has 4 NCSA videos, downgrading to Champion should have at most 1
-   assert ncsa_video_count <= 1, 'Incorrect video count after upgrading.'
+   # MVP originally has 4 NCSA videos + 1 Covid,, downgrading to Champion should have at most 2
+   assert ncsa_video_count <= 2, 'Incorrect video count after upgrading.'
  end
 
  def ncsa_video_count

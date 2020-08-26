@@ -30,6 +30,18 @@ module AthleticEventUI
     sleep 3
   end
 
+  def self.get_rss_email
+    @gmail.mail_box = 'RSS'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
+  end
+
+  def self.get_roster_upload_email
+    @gmail.mail_box = 'coach_live_roster_upload'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
+  end
+
   def self.get_new_coachlive_email
     @gmail.mail_box = 'CoachLive'
     @gmail.get_unread_emails.last

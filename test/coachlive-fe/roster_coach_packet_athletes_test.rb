@@ -5,7 +5,12 @@ require_relative '../test_helper'
 require 'time'
 require 'date'
 
+<<<<<<< HEAD
 # UI Test: upload csv that will create coach packet only athletes(an dnot in client-rms)
+=======
+# UI Test: upload csv that will create new client rms profiles
+# submit to rss two times because server is slow
+>>>>>>> 1056e40d805a68db8f2fe110028949245338a137
 class RosterCPCSVTest < Common
   def setup
     super
@@ -18,8 +23,6 @@ class RosterCPCSVTest < Common
 
     # generate new data to roster_coach_packet.csv
     RosterCPCSV.new.make_it
-    @gmail = GmailCalls.new
-    @gmail.get_connection
 
     CoachPacket_AdminUI.setup(@browser)
     UIActions.fasttrack_login(username = @coach_packet_config['admin_username'],
@@ -100,6 +103,12 @@ class RosterCPCSVTest < Common
     url = "/api/athletic_events/v1/athletic_events/#{@new_athletic_event['data']['id']}"
     @connection_client.get(url: url)
     @event_id = @new_athletic_event['data']['id']
+  end
+
+  def get_rss_email
+    @gmail.mail_box = 'RSS'
+    emails = @gmail.get_unread_emails
+    @gmail.delete(emails) unless emails.empty?
   end
 
   def select_event
@@ -183,6 +192,12 @@ class RosterCPCSVTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_coach_packet_csv
     CoachPacket_AdminUI.upload_athletes
+    AthleticEventUI.get_roster_upload_email
+    CoachPacket_AdminUI.submit_athletes_rss
+    AthleticEventUI.get_rss_email
+    sleep 10
+    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    AthleticEventUI.get_rss_email
   end
 
   def log_into_Coach_Packet

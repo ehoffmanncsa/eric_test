@@ -17,7 +17,6 @@ class ScheduleAssessmentTest < Common
     @recruit_email = post_body[:recruit][:athlete_email]
     @recruit_name = post_body[:recruit][:athlete_first_name]
 
-    # email = 'test2e33@yopmail.com'
     UIActions.user_login(@recruit_email)
     MSSetup.set_password
 
@@ -135,8 +134,37 @@ class ScheduleAssessmentTest < Common
 
   def check_dashboard
     failure = []
+    begin
+      five_minutes = 300 # seconds
+      Timeout.timeout(five_minutes) do
+        loop do
+          html = @browser.html
+          break if html.include? 'Upcoming Recruiting Assessment'
 
-    failure << 'Appointment does not display' unless @browser.html.include? 'Upcoming Recruiting Assessment'
+          @browser.refresh
+        end
+      end
+    rescue StandardError => e
+      failure << 'Appointment does not display after 2 minutes wait'
+    end
+    assert_empty failure
+  end
+
+  def check_meeting_prep_drill
+    failure = []
+    begin
+      five_minutes = 300 # seconds
+      Timeout.timeout(five_minutes) do
+        loop do
+          html = @browser.html
+          break if html.include? 'Meeting Prep'
+
+          @browser.refresh
+        end
+      end
+    rescue StandardError => e
+      failure << 'Meeting Prep Drill does not display after 2 minutes wait'
+    end
     assert_empty failure
   end
 
@@ -164,8 +192,12 @@ class ScheduleAssessmentTest < Common
     schedule_event
     schedule_close
     clientrms_sign_out
+    sleep 5
+    check_accepted_email
+    sleep 5
     UIActions.user_login(@recruit_email, 'ncsa1333')
     check_dashboard
-    check_accepted_email
+    UIActions.goto_ncsa_university
+    check_meeting_prep_drill
   end
 end

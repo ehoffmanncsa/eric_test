@@ -4,8 +4,13 @@ require_relative '../test_helper'
 require 'time'
 require 'date'
 
+<<<<<<< HEAD
 # UI Test: coach will run rss to match the athlete client-rms profile
 
+=======
+# UI Test: upload csv that will match a client rms profile
+# submit to rss two times because server is slow
+>>>>>>> 1056e40d805a68db8f2fe110028949245338a137
 class RosterMatchRMSTest < Common
   def setup
     super
@@ -20,8 +25,6 @@ class RosterMatchRMSTest < Common
 
     # generate new data to rostermatch.csv
     RosterMatchCSV.new.make_it
-    @gmail = GmailCalls.new
-    @gmail.get_connection
 
     CoachPacket_AdminUI.setup(@browser)
     UIActions.fasttrack_login(@email, @password)
@@ -165,6 +168,12 @@ class RosterMatchRMSTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_rostermatch_csv
     CoachPacket_AdminUI.upload_athletes
+    AthleticEventUI.get_roster_upload_email
+    CoachPacket_AdminUI.submit_athletes_rss
+    AthleticEventUI.get_rss_email
+    sleep 10
+    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    AthleticEventUI.get_rss_email
   end
 
   def log_into_Coach_Packet

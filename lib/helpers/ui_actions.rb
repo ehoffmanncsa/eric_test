@@ -104,6 +104,11 @@ module UIActions
     @browser.button(name: '_submit').click
   end
 
+  def self.goto_dashboard
+    url = @config['clientrms']['base_url'] + 'dashboard/show'
+    @browser.goto url
+  end
+
   def self.goto_edit_profile
     url = @config['clientrms']['base_url'] + 'profile/profile_summary/edit'
     @browser.goto url

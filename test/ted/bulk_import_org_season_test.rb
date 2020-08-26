@@ -35,6 +35,7 @@ class BulkImportTedOrgSeason < Common
     TED.impersonate_org(org_id = 632)
     TED.go_to_athlete_tab
     bulk_import
+    sleep 10
 
     failure = []
     begin

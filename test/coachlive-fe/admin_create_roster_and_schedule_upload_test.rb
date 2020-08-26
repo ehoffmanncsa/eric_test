@@ -6,6 +6,7 @@ require 'time'
 require 'date'
 
 # UI Test: upload csv that will create new client rms profiles
+# submit to rss two times because server is slow
 class AdminEventRMSTest < Common
   def setup
     super
@@ -17,6 +18,9 @@ class AdminEventRMSTest < Common
    # generate new data
    RosterRMSCSV.new.make_it
    ScheduleCSV.new.make_it
+
+   @gmail = GmailCalls.new
+   @gmail.get_connection
 
    CoachPacket_AdminUI.setup(@browser)
    UIActions.fasttrack_login(@email, @password)
@@ -115,6 +119,12 @@ class AdminEventRMSTest < Common
     CoachPacket_AdminUI.import_event
     CoachPacket_AdminUI.upload_roster_rms_csv
     CoachPacket_AdminUI.upload_athletes
+    AthleticEventUI.get_roster_upload_email
+    CoachPacket_AdminUI.submit_athletes_rss
+    AthleticEventUI.get_rss_email
+    sleep 10
+    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    AthleticEventUI.get_rss_email
   end
 
   def filter_event

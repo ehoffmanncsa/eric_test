@@ -91,7 +91,10 @@ module CoachPacket_AdminUI
 
   def self.upload_athletes
     @browser.element(value: 'Import Roster').click
-    sleep 2
+    sleep 10
+  end
+
+  def self.submit_athletes_rss
     @browser.element(text: 'Submit to RSS').click
     sleep 2
   end
