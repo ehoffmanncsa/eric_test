@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 require_relative '../test_helper'
-<<<<<<< HEAD
-
-require 'time'
-require 'date'
-
-# UI Test: In this test a new event is created in fastrack UI and any random access_code is entered under "Access_type".
-# Test verifies that coach is able to access the event in coachpacket app  by entering the same acees code entered in fasttrack.
-
-
-class AddAcesscodeNewEvent < Common
-  def setup
-    super
-
-    @access_code = 12345
-    @connection_client = AthleticEventServiceClient.new
-    @athletic_event_data = athletic_event_data
-    @expected_data = @athletic_event_data[:athletic_event]
-=======
 require 'time'
 require 'date'
 # UI Test: In this test a new event is created in fastrack UI and any random access_code is entered under "Access_type".
@@ -28,24 +10,15 @@ class AddAcesscodeNewEvent < Common
     super
     @connection_client = AthleticEventServiceClient.new
     @athletic_event_data = athletic_event_data
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
     @event_name = @athletic_event_data[:athletic_event][:name]
     @coach_packet_config = Default.env_config['coach_packet']
     @email = @coach_packet_config['admin_username']
     @password = @coach_packet_config['admin_password']
-<<<<<<< HEAD
-    @notes = MakeRandom.lorem_words
-=======
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
 
     # generate new data to roster_create_rms.csv
     RosterRMSCSV.new.make_it
     @gmail = GmailCalls.new
     @gmail.get_connection
-<<<<<<< HEAD
-
-=======
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
     CoachPacket_AdminUI.setup(@browser)
     UIActions.fasttrack_login(@email, @password)
     AthleticEventUI.setup(@browser)
@@ -73,11 +46,7 @@ class AddAcesscodeNewEvent < Common
         event_operator_id: 9
       },
       sports: [
-<<<<<<< HEAD
-        { ncsa_id: 17_638 }
-=======
         { ncsa_id: 17638 }
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
       ]
     }
   end
@@ -94,17 +63,9 @@ class AddAcesscodeNewEvent < Common
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
-<<<<<<< HEAD
-
     add_venue(@new_athletic_event['data']['id'])
   end
 
-
-=======
-    add_venue(@new_athletic_event['data']['id'])
-  end
-
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
   def add_venue(athletic_event_id)
     venue = {
       athletic_event_id: athletic_event_id,
@@ -116,10 +77,6 @@ class AddAcesscodeNewEvent < Common
       state: MakeRandom.state,
       zip: MakeRandom.zip_code
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
     begin
       retries ||= 0
       @connection_client.post(
@@ -157,42 +114,6 @@ class AddAcesscodeNewEvent < Common
     sleep 2
   end
 
-<<<<<<< HEAD
-  def open_note
-    @browser.element("data-icon": 'plus').click
-  end
-
-  def add_note
-    notes = @browser.element(id: 'notes-widget')
-    notes.send_keys @notes
-    sleep 2
-  end
-
-  def close_notes
-    close_notes = @browser.element(text: 'Done')
-    close_notes.click
-  end
-
-  def check_notes
-    failure = []
-    failure << "Notes #{@notes} not found" unless @browser.html.include? @notes
-    assert_empty failure
-  end
-
-  def athlete_name_profile
-    # gets the athlete name on the athlete profile page
-    @display_athlete_name = @browser.element("data-automation-id": 'EventName').text
-  end
-
-  def search_athlete
-    # verify that the athlete with the note displays on Tracked Athlete page
-    failure = []
-    failure << "Athlete #{@display_athlete_name} not found" unless @browser.html.include? @display_athlete_name
-    assert_empty failure
-  end
-
-=======
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
   def coach_packet_admin_upload_roster
     my_event_data
     sleep 2
@@ -221,40 +142,13 @@ class AddAcesscodeNewEvent < Common
     assert_empty failures
   end
 
-<<<<<<< HEAD
-
-  def access_code_dialogbox_displayed
-    error_msg = @browser.element(class:"MuiDialogContent-root")
-    error_msg .text.include? "Enter Access code dialog box is displayed"
-=======
   def access_code_dialogbox_displayed
     error_msg = @browser.element(class: 'MuiDialogContent-root')
     error_msg .text.include? 'Enter Access code dialog box is displayed'
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
     sleep 1
   end
 
   def enter_access_code_cp
-<<<<<<< HEAD
-      @access_code_cp = 12345
-      access_code_input_cp = @browser.element(class:'MuiInputBase-input', placeholder:"Access code")
-      access_code_input_cp.send_keys @access_code_cp
-      @browser.element(type:'submit').click
-      sleep 2
-      failures = []
-      failures << "coach is unable to get in the event" unless event_displayed
-      assert_empty failures
-    end
-
-    def event_displayed
-      @browser.url.include? "/events/event/"
-    end
-
-
-  def test_add_access_code_new_event
-    create_athletic_event
-    sleep 7
-=======
     @access_code_cp = 12345
     access_code_input_cp = @browser.element(class: 'MuiInputBase-input', placeholder: 'Access code')
     access_code_input_cp.send_keys @access_code_cp
@@ -272,7 +166,6 @@ class AddAcesscodeNewEvent < Common
   def test_add_access_code_new_event
     create_athletic_event
     sleep 5
->>>>>>> 378b579bab9b777e53281b8e6c65053f60e9fd23
     coach_packet_admin_upload_roster
     sleep 2
     log_into_Coach_Packet
