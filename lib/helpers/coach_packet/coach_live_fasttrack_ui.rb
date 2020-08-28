@@ -124,4 +124,13 @@ module CoachPacket_AdminUI
     @browser.elements(id: 'coach_packet_athletic_event_file')[0].send_keys path
   end
 
+  def self.enter_access_code
+      @browser.element(text: 'Edit Event').click
+      sleep 2
+      @access_code = '12345'
+      access_code_input = @browser.element(name:'access_code')
+      access_code_input.send_keys @access_code
+      @browser.element(value:'Submit').click
+      sleep 2
+  end
 end
