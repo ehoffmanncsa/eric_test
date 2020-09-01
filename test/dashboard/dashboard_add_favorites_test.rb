@@ -25,18 +25,6 @@ class DashboardAddFavoritesTest < Common
     super
   end
 
-  def close_supercharge
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
-    supercharge_button.click if supercharge_button.exists?
-    sleep 1
-    yes_exit_button = @browser.element(text: 'Yes, Exit for Now')
-    yes_exit_button.click if yes_exit_button.exists?
-    sleep 1
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
-    supercharge_button.click if supercharge_button.exists?
-    sleep 2
-  end
-
   def click_add_favorites
     @browser.element('data-test-id': 'add-new-favorite-link').click
     sleep 1
@@ -71,7 +59,7 @@ class DashboardAddFavoritesTest < Common
   end
 
   def test_dashboard_add_favorites
-    close_supercharge
+    UIActions.close_supercharge
     click_add_favorites
     click_college_search
     select_colleges

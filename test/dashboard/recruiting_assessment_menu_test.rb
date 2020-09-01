@@ -24,18 +24,6 @@ class RecruitAssessmentMenuTest < Common
     super
   end
 
-  def close_supercharge
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
-    supercharge_button.click if supercharge_button.exists?
-    sleep 1
-    yes_exit_button = @browser.element(text: 'Yes, Exit for Now')
-    yes_exit_button.click if yes_exit_button.exists?
-    sleep 1
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
-    supercharge_button.click if supercharge_button.exists?
-    sleep 2
-  end
-
   def select_from_menu
     @browser.element(class: 'fa-angle-down').click
     navbar = @browser.element(id: 'secondary-nav-menu')
@@ -65,7 +53,7 @@ class RecruitAssessmentMenuTest < Common
   end
 
   def test_recruit_assessment_from_menu
-    close_supercharge
+    UIActions.close_supercharge
     select_from_menu
     select_parent
     schedule_close

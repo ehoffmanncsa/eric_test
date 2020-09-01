@@ -104,6 +104,18 @@ module UIActions
     @browser.button(name: '_submit').click
   end
 
+  def self.close_supercharge
+    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
+    supercharge_button.click if supercharge_button.exists?
+    sleep 1
+    yes_exit_button = @browser.element(text: 'Yes, Exit for Now')
+    yes_exit_button.click if yes_exit_button.exists?
+    sleep 1
+    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
+    supercharge_button.click if supercharge_button.exists?
+    sleep 2
+  end
+
   def self.goto_dashboard
     url = @config['clientrms']['base_url'] + 'dashboard/show'
     @browser.goto url
@@ -111,6 +123,16 @@ module UIActions
 
   def self.goto_edit_profile
     url = @config['clientrms']['base_url'] + 'profile/profile_summary/edit'
+    @browser.goto url
+  end
+
+  def self.goto_my_colleges
+    url = @config['clientrms']['base_url'] + 'coach_communications/views'
+    @browser.goto url
+  end
+
+  def self.goto_top_matches
+    url = @config['clientrms']['base_url'] + 'coach_communications/top_matches'
     @browser.goto url
   end
 
