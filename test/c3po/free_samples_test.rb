@@ -3,7 +3,7 @@
 require_relative '../test_helper'
 
 # Regression
-# UI Test will verify free user samples for Coach Activity Report, Top Matches and Message Center
+# UI Test will verify free user samples for Coach Activity Report, Top Matches, Message Center and Snapshot
 class FreeSampleTest < Common
   def setup
     super
@@ -21,17 +21,15 @@ class FreeSampleTest < Common
     sleep 4
   end
 
-  def check_sample_report_car
+  def verify_sample_report_car
     failure = []
-    unless @browser.html.include? 'Dartmouth College'
-      failure << 'Sample Report for Coach Activity report is not displaying'
-    end
+    failure << 'Coach Activity Report sample is not displaying' unless @browser.html.include? 'Dartmouth College'
     assert_empty failure
   end
 
-  def check_sample_report_top_matches
+  def verify_sample_top_matches
     failure = []
-    failure << 'Sample Report for Top Matches is not displaying' unless @browser.html.include? 'Sample Top Matches'
+    failure << 'Top Matches sample is not displaying' unless @browser.html.include? 'Sample Top Matches'
     assert_empty failure
   end
 
@@ -40,10 +38,28 @@ class FreeSampleTest < Common
     sleep 3
   end
 
-  def check_sample_report_message_center
+  def verify_sample_report_message_center
     failure = []
     unless @browser.html.include? 'Hi Student, can you send me your 40yrd dash timing.'
-      failure << 'Sample Report for Message Center is not displaying'
+      failure << 'Message Center sample is not displaying'
+    end
+    assert_empty failure
+  end
+
+  def click_college_search
+    @browser.element(id: 'csm_submit_button_top').click
+    sleep 3
+  end
+
+  def click_snapshot_question_mark
+    @browser.element(class: %w[free snapshot_link tool]).click
+    sleep 5
+  end
+
+  def verify_sample_snapshot
+    failure = []
+    unless @browser.html.include? 'Discover Your Top Schools as a Premium NCSA Member!'
+      failure << 'Snapshot Sample is not displaying'
     end
     assert_empty failure
   end
@@ -60,12 +76,16 @@ class FreeSampleTest < Common
     UIActions.close_supercharge
     UIActions.goto_my_colleges
     open_sample_report_car
-    check_sample_report_car
+    verify_sample_report_car
     UIActions.goto_top_matches
-    check_sample_report_top_matches
+    verify_sample_top_matches
     C3PO.goto_message_center
     view_message_center_sample
-    check_sample_report_message_center
+    verify_sample_report_message_center
+    UIActions.goto_find_colleges
+    click_college_search
+    click_snapshot_question_mark
+    verify_sample_snapshot
     sign_out
   end
 end
