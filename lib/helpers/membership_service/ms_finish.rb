@@ -5,7 +5,6 @@
 # that way we can test for remaining balance and first payment made
 module MSFinish
   def self.setup(ui_object)
-    @guardian_email1 = "test#{SecureRandom.hex(2)}@yopmail.com"
     @browser = ui_object
   end
 
@@ -18,7 +17,8 @@ module MSFinish
 
   def self.fill_out_registration_form
     # guardian email
-    @browser.text_field(id: 'order_guardian_email').set @guardian_email1 
+    @guardian_email1 = "test#{SecureRandom.hex(2)}@yopmail.com"
+    @browser.text_field(id: 'order_guardian_email').set @guardian_email1
 
     # select specialist
     specialists = @browser.select_list(id: 'order_head_scout_id')
