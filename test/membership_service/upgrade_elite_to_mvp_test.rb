@@ -50,8 +50,8 @@ class UpgradeEliteToMVPTest < Common
    evaluation_session_count = evaluation_session.text.split('(')[1].gsub(/[^A-Za-z]/, '')
 
    failure = []
-   failure << "Does not have any coaching session." unless coaching_session_count == 'Unlimited'
-   failure << "Does not have any evaluation session." unless evaluation_session_count == 'Unlimited'
+   failure << "Does not have any coaching session." unless coaching_session_count == 'AsNeeded'
+   failure << "Does not have any evaluation session." unless evaluation_session_count == 'AsNeeded'
    assert_empty failure
  end
 
