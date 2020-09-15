@@ -38,6 +38,14 @@ class FreeSampleTest < Common
     sleep 3
   end
 
+  def verify_view_sample_message_center_button
+    failure = []
+    unless @browser.html.include? 'View Sample Message Center'
+      failure << 'Message Center Sample button is not displaying'
+    end
+    assert_empty failure
+  end
+
   def verify_sample_report_message_center
     failure = []
     unless @browser.html.include? 'Hi Student, can you send me your 40yrd dash timing.'
@@ -81,6 +89,9 @@ class FreeSampleTest < Common
     verify_sample_top_matches
     C3PO.goto_message_center
     view_message_center_sample
+    sleep 2
+    verify_view_sample_message_center_button
+    sleep 2
     verify_sample_report_message_center
     UIActions.goto_find_colleges
     click_college_search
