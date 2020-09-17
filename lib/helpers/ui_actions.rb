@@ -141,19 +141,19 @@ module UIActions
   end
 
   def self.goto_my_information
-    url = @config['clientrms']['base_url'] + 'my_information'
+    url = @config['clientrms']['base_url'] + 'profile/my_information/edit'
     @browser.goto url
   end
 
   def self.goto_academics
     # go to academics
-    url = @config['clientrms']['base_url'] + 'academic'
+    url = @config['clientrms']['base_url'] + 'profile/academic/edit'
     @browser.goto url
   end
 
   def self.goto_key_stats
     # go to key stats
-    url = @config['clientrms']['base_url'] + 'physical_measurables'
+    url = @config['clientrms']['base_url'] + 'profile/physical_measurables/edit'
     @browser.goto url
   end
 
