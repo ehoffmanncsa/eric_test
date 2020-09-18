@@ -47,7 +47,7 @@ module MSProcess
   end
 
   def self.apply_discount_offerings(code, rate)
-    @browser.element(placeholder: 'Enter Discount Code').send_keys code
+    @browser.element(class: 'enroll-now-discount-form__input').send_keys code
     @browser.element(class: 'apply').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
@@ -65,7 +65,7 @@ module MSProcess
   end
 
   def self.remove_discount
-    @browser.link(text: 'Remove').click
+    @browser.element(class: 'remove-discount-js').click
     Watir::Wait.while { discount_message.present? }
   end
 
