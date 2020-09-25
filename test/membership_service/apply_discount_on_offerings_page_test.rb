@@ -4,7 +4,7 @@ require_relative '../test_helper'
 # TS-421: MS Regression
 # UI Test
 # This script is to apply all exisiting discount codes
-# in offerings page using a static athlete turkeytom@yopmail.com
+# in offerings page using a static athlete test07d6@yopmail.com
 # i.e. this athlete needs to exist in any environment this test runs in
 
 class ApplyDiscountOnOfferingsPage < Common
@@ -30,6 +30,7 @@ class ApplyDiscountOnOfferingsPage < Common
 
   def base_steps
     MSSetup.goto_offerings
+    MSSetup.switch_to_premium_membership
     MSSetup.open_payment_plan
     open_discount
   end

@@ -77,6 +77,11 @@ module MSSetup
     sleep 1
   end
 
+  def self.switch_to_premium_membership
+    @browser.link(text: 'Premium Memberships').click
+    sleep 1
+  end
+
   def self.open_payment_plan
     payment_plan = @browser.link(text: 'Choose Payment Plan')
     payment_plan.click; sleep 0.5
