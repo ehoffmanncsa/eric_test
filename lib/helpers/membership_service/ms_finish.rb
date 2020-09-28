@@ -79,4 +79,19 @@ module MSFinish
     # need to chill a bit here or else lightning bolt when view Payments immediately after
     sleep 10
   end
+
+  def self.setup_billing_enroll_now(ach = false)
+    #for the new Enroll Now ux
+    fill_out_registration_form
+    sleep 1
+
+    # fill in payment info depends on which way was chosen
+    (ach.eql? true) ? fill_out_ACH : fill_out_credit
+    select_billing_state
+
+    sign_and_auth
+
+    # need to chill a bit here or else lightning bolt when view Payments immediately after
+    sleep 10
+  end
 end

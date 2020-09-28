@@ -10,6 +10,10 @@ module MSAdmin
     app_name = 'fasttrack'
     @sql = SQLConnection.new(app_name)
     @sql.get_connection
+
+    app_name = 'features_service'
+    @psql = PostgresConnection.new(app_name)
+    @psql.get_connection
   end
 
   def self.retrieve_random_active_client_id
@@ -37,6 +41,15 @@ module MSAdmin
     end
 
     client_ids.sample
+  end
+
+  def self.update_point_of_sale_event(posclient_id)
+    query =  "UPDATE point_of_sale_events
+              SET updated_at = current_timestamp - INTERVAL '3' HOUR  ,
+              created_at = current_timestamp - INTERVAL '3' HOUR
+              WHERE CLIENT_ID = '#{posclient_id}'
+              and type = 'PointOfSale::NewClientActivated'"
+    @psql.exec query
   end
 
   def self.payment_table
