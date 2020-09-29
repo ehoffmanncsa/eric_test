@@ -1,8 +1,8 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# TS-56: MS Regression
-# UI Test: Enroll as a Elite User - Junior
+# MS Regression
+# UI Test: Enroll Now as a Elite User - Junior
 class EnrollNowEliteJuniorTest < Common
   def setup
     super
@@ -22,6 +22,20 @@ class EnrollNowEliteJuniorTest < Common
 
   def teardown
     super
+  end
+
+ def check_membership_cost
+    total = @browser.elements(class: ["enroll-now-card__price", "enroll-now-card__price--total"])[4].text
+    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
+  end
+
+  def define_payments
+    @expect_first_pymt = (@membership_cost / 12)
+    @expect_remain_balance = @membership_cost - @expect_first_pymt
+  end
+
+  def get_expectations
+    [@expect_first_pymt, @expect_remain_balance]
   end
 
   def select_12mo_elite
@@ -49,7 +63,7 @@ class EnrollNowEliteJuniorTest < Common
 
   def check_displayed_payment_info
     actual_first_pymt, actual_remain_balance, actual_package = MSTestTemplate.get_ui_payments
-    expect_first_pymt, expect_remain_balance = MSTestTemplate.get_expectations
+    expect_first_pymt, expect_remain_balance = get_expectations
 
     # compare
     assert_equal expect_first_pymt, actual_first_pymt, 'Incorrect first payment shown'
@@ -73,6 +87,9 @@ class EnrollNowEliteJuniorTest < Common
     sleep 1
     MSSetup.goto_offerings
 
+    check_membership_cost
+    define_payments
+    get_expectations
     select_12mo_elite
     accept_agreement
 
@@ -83,7 +100,7 @@ class EnrollNowEliteJuniorTest < Common
     goto_membership_info
     check_membership_features
 
-    #goto_payments
-    #check_displayed_payment_info
+    goto_payments
+    check_displayed_payment_info
   end
 end
