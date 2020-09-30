@@ -1,8 +1,9 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 require_relative '../test_helper'
 
 # MS Regression
-# UI Test: Enroll Now as a Elite User - Junior
+# UI Test: Enroll Now as a Elite User - Junior, 12 month payment plan
 class EnrollNowEliteJuniorTest < Common
   def setup
     super
@@ -13,7 +14,7 @@ class EnrollNowEliteJuniorTest < Common
 
     post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
-    @posclient_id = post["client_id"]
+    @posclient_id = post['client_id']
     MSAdmin.setup(@browser)
 
     UIActions.user_login(recruit_email)
@@ -24,10 +25,10 @@ class EnrollNowEliteJuniorTest < Common
     super
   end
 
- def check_membership_cost
-    total = @browser.elements(class: ["enroll-now-card__price", "enroll-now-card__price--total"])[4].text
+  def check_membership_cost
+    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[4].text
     @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
-  end
+   end
 
   def define_payments
     @expect_first_pymt = (@membership_cost / 12)
@@ -47,11 +48,11 @@ class EnrollNowEliteJuniorTest < Common
   end
 
   def goto_membership_info
-    @browser.goto(@clientrms['base_url']+ @clientrms['membership_info'])
+    @browser.goto(@clientrms['base_url'] + @clientrms['membership_info'])
   end
 
   def goto_payments
-    @browser.goto(@clientrms['base_url']+ @clientrms['payments_page'])
+    @browser.goto(@clientrms['base_url'] + @clientrms['payments_page'])
   end
 
   def check_membership_features
@@ -79,7 +80,6 @@ class EnrollNowEliteJuniorTest < Common
   end
 
   def test_enroll_now_elite_junior
-
     MSSetup.set_password
     MSSetup.goto_offerings
 
