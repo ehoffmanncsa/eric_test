@@ -4,7 +4,7 @@ require_relative '../test_helper'
 
 # MS Regression
 # UI Test: Enroll Now as a Elite User - Junior, 12 month payment plan
-class EnrollNowEliteJuniorTest < Common
+class EnrollNowTwelveMonthEliteJuniorTest < Common
   def setup
     super
 
@@ -79,7 +79,7 @@ class EnrollNowEliteJuniorTest < Common
     assert_includes current_url, 'coaching_session_requests/new', failure_msg
   end
 
-  def test_enroll_now_elite_junior
+  def test_enroll_now_twelve_month_elite_junior
     MSSetup.set_password
     MSSetup.goto_offerings
 
