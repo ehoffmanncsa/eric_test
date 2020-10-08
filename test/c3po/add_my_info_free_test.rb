@@ -344,10 +344,10 @@ class AddMyInfoTestFree < Common
     @browser.element(id: 'facebook').send_keys 'https://www.facebook.com/NCSAsports/'
   end
 
-  def google_enter
+  def instagram_enter
     # fill out google
-    @browser.element(id: 'googleplus').to_subtype.clear
-    @browser.element(id: 'googleplus').send_keys 'https://plus.google.com/102753321987437062065'
+    @browser.element(id: 'instagram').to_subtype.clear
+    @browser.element(id: 'instagram').send_keys '@ncsa_sports'
   end
 
   def twitter_enter
@@ -452,7 +452,7 @@ class AddMyInfoTestFree < Common
     # go to Preview Profile and check socail links
     social = @browser.elements(class: %w[list--inline])
 
-    expected_social = "Facebook\n@ncsa\nGoogle+"
+    expected_social = "Facebook\n@ncsa\n@ncsa_sports"
     assert_includes social.first.text, expected_social
   end
 
@@ -502,7 +502,7 @@ class AddMyInfoTestFree < Common
     country_enter
     state_enter
     facebook_enter
-    google_enter
+    instagram_enter
     twitter_enter
     fieldofstudy_enter
     pers
