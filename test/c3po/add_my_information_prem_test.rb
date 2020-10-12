@@ -26,6 +26,7 @@ class V2AddMyInformationPremTest < Common
     do_preps
     gather_person_expected_information
     wait_for_page_save
+    sleep 3
     goto_athlete_profile_page
     compare_my_info_data_to_profile_page_data
   end
