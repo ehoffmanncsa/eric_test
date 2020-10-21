@@ -67,8 +67,8 @@ video_user:
 # Coach RMS
 coach_rms:
   login_page: 'http://coach-qa.ncsasports.org/coach/coachrms/login'
-  username: 'Test27217nh@gmail.com'
-  password: 'ncsa1333'
+  username: 'coachqa@yopmail.com'
+  password: 'Ncsa123$'
 
 # Ops Messaging Service
 ops_messaging:

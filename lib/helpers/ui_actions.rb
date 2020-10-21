@@ -102,6 +102,20 @@ module UIActions
     @browser.text_field(id: 'j_password').set password
 
     @browser.button(name: '_submit').click
+
+    #waiting for the right title
+    begin
+      sleep 2
+      Watir::Wait.until { @browser.title.match(/Recruiting Needs | NCSA Coach Recruiting Management System/) }
+    rescue => e
+      puts e; @browser.close
+    end
+  end
+
+  def self.coach_rms_logout
+    user_info = @browser.element(class: 'header__user-info')
+  	menu = user_info.element(class: 'header__user-info__menu-button').click
+    @browser.element(text: 'Log Out').click
   end
 
   def self.close_supercharge
@@ -160,6 +174,12 @@ module UIActions
   def self.goto_find_colleges
     # go to key stats
     url = @config['clientrms']['base_url'] + 'college_searches/new'
+    @browser.goto url
+  end
+
+  def self.goto_roster_openings
+    # go to key stats
+    url = @config['clientrms']['base_url'] + 'roster_openings'
     @browser.goto url
   end
 
