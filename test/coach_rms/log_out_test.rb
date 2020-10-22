@@ -6,6 +6,7 @@ require_relative '../test_helper'
 class CoachRMSLogoutTest < Common
 
   def test_coach_rms_logout
+    skip
   	UIActions.coach_rms_login
   	user_info = @browser.element(:class, 'header__user-info')
   	menu = user_info.element(:class, 'header__user-info__menu-button')

@@ -6,6 +6,7 @@ require_relative '../test_helper'
 class CoachRMSLoginTest < Common
 
   def test_coach_rms_login
+    skip
   	UIActions.coach_rms_login
 
   	expected_title = "Search Athletes | NCSA Coach Recruiting Management System"
