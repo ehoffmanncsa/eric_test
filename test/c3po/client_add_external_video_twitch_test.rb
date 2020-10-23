@@ -3,11 +3,12 @@ require_relative '../test_helper'
 
 # TS-247: C3PO Regression
 # UI Test: Add External Video (As Client)
-class ClientAddExternalVideo < Common
+class ClientAddExternalTwitchVideo < Common
   def setup
     super
+    skip
+    # OPS-709 twitch videos upload not working
 
-    # This test case is specifically for Football premium
     # Attempt to use a static MVP client
     email = 'esport@yopmail.com'
 
@@ -64,7 +65,7 @@ class ClientAddExternalVideo < Common
     counter -= 1
     msg = "Video count is #{get_video_count} after adding Twitch video"
     bad_count << msg unless counter == get_video_count
-  
+
 
     failure = bad_msg + bad_count
     assert_empty failure
