@@ -56,7 +56,7 @@ class AddCoachReferencesTest < Common
     coach_ref = about_section.element(:id, 'coach-references-section')
 
     failure = []
-    actual_name = coach_ref.element(:css, 'div.col.th').text.downcase
+    actual_name = coach_ref.element(:css, 'div.col.th').text
     msg = "Expected name: #{@coach_name} - Actual name: #{actual_name}"
     failure << msg unless actual_name.eql? @coach_name
 
@@ -68,7 +68,7 @@ class AddCoachReferencesTest < Common
   end
 
   def test_add_coach_references
-    email = 'testbf09@yopmail.com'
+    email = 'testd3c8@yopmail.com'
     UIActions.user_login_2(email)
     sleep 5
     UIActions.goto_edit_profile

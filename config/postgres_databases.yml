@@ -1,0 +1,18 @@
+staging:
+  coachlive-be:
+    host: 'awspgdb-qa.ncsasports.org'
+    dbname: 'coachlive-be_staging'
+    username: 'aws_app_user'
+    password: 'Os0Z6PmZnTl7y5wa'
+
+  athletic_event_service:
+    host: 'awspgdb-qa.ncsasports.org'
+    dbname: 'athletic_event_service_staging'
+    username: 'aws_app_user'
+    password: 'Os0Z6PmZnTl7y5wa'
+
+  features_service:
+    host: 'PGDB-QA.ncsasports.org'
+    dbname: 'features_service_staging'
+    username: 'dev'
+    password: 'dev'
