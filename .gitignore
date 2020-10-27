@@ -7,6 +7,7 @@
 # Test Reports #
 ################
 test/reports/*
+reports/*.xml
 first_run_failed_tests
 
 # Selenium Grid files #

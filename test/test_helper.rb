@@ -2,6 +2,7 @@
 #!/usr/bin/ruby
 
 require 'minitest/autorun'
+require "minitest/reporters"
 require 'pp'
 require 'yaml'
 require 'minitest-ci'
@@ -24,6 +25,7 @@ require_relative 'common'
 require_relative 'visual_common'
 
 Minitest::Ci.clean = false
+Minitest::Reporters.use! [Minitest::Reporters::SpecReporter.new, Minitest::Reporters::JUnitReporter.new("./reports/")]
 
 Dir.glob(File.expand_path('../../lib/*.rb', __FILE__)) { |f| require_relative f }
 Dir.glob(File.expand_path('../../lib/helpers/*.rb', __FILE__)) { |f| require_relative f }

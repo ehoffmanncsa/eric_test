@@ -52,6 +52,7 @@ node {
         println error
         currentBuild.result = 'FAILURE'
     }
+    junit allowEmptyResults: true, testResults: '**/reports/*.xml'
   }
 
   stage('Clean up') {

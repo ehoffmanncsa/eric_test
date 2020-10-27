@@ -3,8 +3,10 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ansi (1.5.0)
     api-auth (2.3.1)
     ast (2.4.0)
+    builder (3.2.4)
     byebug (11.1.1)
     capybara (3.31.0)
       addressable
@@ -67,6 +69,11 @@ GEM
     minitest (5.14.0)
     minitest-ci (3.4.0)
       minitest (>= 5.0.6)
+    minitest-reporters (1.4.2)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     multipart-post (2.1.1)
     net-http-digest_auth (1.4.1)
     net-http-persistent (3.1.0)
@@ -153,6 +160,7 @@ DEPENDENCIES
   mechanize
   minitest
   minitest-ci
+  minitest-reporters
   net-ssh
   nokogiri
   oj
@@ -173,4 +181,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
