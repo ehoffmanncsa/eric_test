@@ -12,11 +12,11 @@ class CoachAcceptTosModal < Common
     @sql = SQLConnection.new('fasttrack')
     begin
       @sql.get_connection
-      delete_record = @sql.exec 'DELETE FROM coach_terms_of_service_acceptances where coach_id = 112713'
+      delete_record = @sql.exec 'DELETE FROM coach_terms_of_service_acceptances where coach_id = 264464'
     rescue StandardError => e
       raise 'Could not connect to fasttrack or delete existing terms of service acceptance records'
     end
-    UIActions.coach_rms_login
+    UIActions.coach_rms_login('spt16@yopmail.com')
 end
 
   def check_modal_is_displayed
