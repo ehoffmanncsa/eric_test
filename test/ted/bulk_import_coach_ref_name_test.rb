@@ -19,6 +19,7 @@ class BulkImportTedCoachName < Common
 
   def teardown
     super
+    skip
   end
 
   def bulk_import
@@ -47,6 +48,7 @@ class BulkImportTedCoachName < Common
           break if html.include? @athlete_name
 
           @browser.refresh
+          sleep 1
         end
       end
     rescue StandardError => e

@@ -18,6 +18,7 @@ class BulkImportTedOrgSeason < Common
 
   def teardown
     super
+    skip
   end
 
   def bulk_import

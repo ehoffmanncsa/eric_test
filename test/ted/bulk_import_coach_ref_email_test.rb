@@ -47,6 +47,7 @@ class BulkImportTedCoachEmail < Common
           break if html.include? @athlete_name
 
           @browser.refresh
+          sleep 1
         end
       end
     rescue StandardError => e
