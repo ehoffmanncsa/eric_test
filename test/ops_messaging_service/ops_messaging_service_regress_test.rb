@@ -78,8 +78,8 @@ class OpsMessagingServiceRegressTest < Common
   end
 
   def test_complete_email_tracking_cycle
-    athlete_send_email_to_coach
-    check_help_scout_most_recent_email
+    #athlete_send_email_to_coach
+    #check_help_scout_most_recent_email
     check_new_tracking_note_created
   end
 end

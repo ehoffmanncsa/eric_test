@@ -119,6 +119,21 @@ module C3PO
     @browser.link(text: 'Tracking Notes').click
   end
 
+  def self.open_evaluation_section
+    url = @config['clientrms']['base_url'] + "profile/recruiting_profile/5795323/admin"
+    @browser.goto url
+    @browser.span(text: 'Evaluation').click
+  end
+
+  def self.open_evaluation_report
+    @browser.element(text: 'Open VIP Evaluation').click
+  end
+
+  def self.open_scouting_report
+    report = @browser.element(class: %w[report-link tablet-show])
+    report.element(text: 'View Scouting Report').click
+  end
+
   def self.goto_video
     url = @config['clientrms']['base_url'] + "profile/video"
     @browser.goto url
@@ -291,5 +306,11 @@ module C3PO
 
   def self.goto_onboarding(page = "")
     @browser.goto @config['clientrms']['base_url'] + "onboarding/#{page}"
+  end
+
+  def self.goto_top_matches
+    url = @config['clientrms']['base_url'] + 'coach_communications/top_matches'
+    @browser.goto url
+    sleep 1
   end
 end
