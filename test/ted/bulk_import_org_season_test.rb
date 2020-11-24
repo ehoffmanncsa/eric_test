@@ -13,12 +13,12 @@ require_relative '../test_helper'
 class BulkImportTedOrgSeason < Common
   def setup
     super
+    skip
     TED.setup(@browser)
   end
 
   def teardown
     super
-    skip
   end
 
   def bulk_import
