@@ -148,6 +148,7 @@ class ScheduleAssessmentTest < Common
           break if html.include? 'Meeting Prep'
 
           @browser.refresh
+          sleep 1
         end
       end
     rescue StandardError => e

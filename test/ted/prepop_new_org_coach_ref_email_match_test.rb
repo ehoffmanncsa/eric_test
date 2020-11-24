@@ -11,6 +11,7 @@ require_relative '../test_helper'
 #   Create a new org in TED with primary contact is the above coach
 #   Make sure when login as admin(or coach but not testing that) the above athete
 #   shows up on Roster -  Athletes page(pre-populated)
+#   NOTE the searching for athletes process can be very slow, you may have to test manually if the script fails
 
 class CreateNewOrgWithPrepopCoachEmail < Common
   def setup
