@@ -17,6 +17,7 @@ class CoachAcceptTosModal < Common
       raise 'Could not connect to fasttrack or delete existing terms of service acceptance records'
     end
     UIActions.coach_rms_login('spt16@yopmail.com')
+    sleep 3
 end
 
   def check_modal_is_displayed
