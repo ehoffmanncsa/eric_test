@@ -31,7 +31,7 @@ class OnboardingHighSchoolTest < Common
   end
 
   def choose_height
-    select_button = @browser.element(id: "select-height")
+    select_button = @browser.element(id: "mui-component-select-height")
     select_button.click
 
     menu_popover = @browser.element(id: "menu-height")

@@ -24,7 +24,7 @@ class OnboardingPositionTest < Common
 
 
   def choose_primary_position
-    select_button = @browser.element(id: "select-primaryPositionId")
+    select_button = @browser.element(id: "mui-component-select-primaryPositionId")
     select_button.click
 
     menu_popover = @browser.element(id: "menu-primaryPositionId")
@@ -40,7 +40,7 @@ class OnboardingPositionTest < Common
   end
 
   def choose_secondary_position
-    select_button = @browser.element(id: "select-secondaryPositionId")
+    select_button = @browser.element(id: "mui-component-select-secondaryPositionId")
     select_button.click
 
     menu_popover = @browser.element(id: "menu-secondaryPositionId")

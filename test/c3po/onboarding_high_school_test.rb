@@ -29,7 +29,7 @@ class OnboardingHighSchoolTest < Common
   end
 
   def choose_high_school
-    select_button = @browser.element(id: "select-highSchoolId")
+    select_button = @browser.element(id: "mui-component-select-highSchoolId")
     select_button.click
 
     menu_popover = @browser.element(id: "menu-highSchoolId")

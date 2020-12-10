@@ -40,7 +40,7 @@ class OnboardingGPATest < Common
     end
 
    def select_gpa_scale(scale)
-      select_value = @browser.element(id: "select-gpaScale").click
+      select_value = @browser.element(id: "mui-component-select-gpaScale").click
       menu_popover = @browser.element(id: "menu-gpaScale")
       options = menu_popover.element("data-value" => "#{scale}").click!
    end
