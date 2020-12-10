@@ -118,13 +118,13 @@ module UIActions
   end
 
   def self.close_supercharge
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
+    supercharge_button = @browser.element('data-icon': 'times')
     supercharge_button.click if supercharge_button.exists?
     sleep 1
     yes_exit_button = @browser.element(text: 'Yes, Exit for Now')
     yes_exit_button.click if yes_exit_button.exists?
     sleep 1
-    supercharge_button = @browser.element(class: 'CloseIcon-lmXKkg')
+    supercharge_button = @browser.element('data-icon': 'times')
     supercharge_button.click if supercharge_button.exists?
     sleep 2
   end
