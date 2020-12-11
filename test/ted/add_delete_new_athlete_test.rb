@@ -103,8 +103,9 @@ class TEDAddDeleteNewAthleteTest < Common
     UIActions.user_login(@email)
     sleep 4
     MSSetup.set_password
+    sleep 8
     @browser.element(class: 'mfp-close').click
-    sleep 1
+    sleep 2
     @browser.element(class: 'fa-angle-down').click
 
     navbar = @browser.element(id: 'secondary-nav-menu')
