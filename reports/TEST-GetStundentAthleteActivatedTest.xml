@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="GetStundentAthleteActivatedTest" filepath="test/membership_service/get_student_athlete_activated_test.rb" skipped="0" failures="0" errors="1" tests="1" assertions="0" time="38.281966000038665">
+    <testcase name="test_get_student_athlete_activated" lineno="59" classname="GetStundentAthleteActivatedTest" assertions="0" time="38.281966000038665">
+    <error type="Selenium::WebDriver::Error::ElementClickInterceptedError" message="Selenium::WebDriver::Error::ElementClickInterceptedError: Element &lt;i class=&quot;fa fa-angle-down icon&quot;&gt; is not clickable at point (1152,47) because another element &lt;div&gt; obscures it...">
+Failure:
+test_get_student_athlete_activated(Minitest::Result) [/Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/response.rb:34]:
+Selenium::WebDriver::Error::ElementClickInterceptedError: Element &lt;i class="fa fa-angle-down icon"&gt; is not clickable at point (1152,47) because another element &lt;div&gt; obscures it
+    WebDriverError@chrome://marionette/content/error.js:175:5
+    ElementClickInterceptedError@chrome://marionette/content/error.js:274:5
+    webdriverClickElement@chrome://marionette/content/interaction.js:169:11
+    interaction.clickElement@chrome://marionette/content/interaction.js:131:11
+    clickElement/&lt;@chrome://marionette/content/listener.js:1341:28
+    navigate/&lt;@chrome://marionette/content/listener.js:446:13
+    navigate@chrome://marionette/content/listener.js:447:7
+    clickElement@chrome://marionette/content/listener.js:1339:18
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/response.rb:72:in `assert_ok'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/response.rb:34:in `initialize'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/http/common.rb:88:in `new'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/http/common.rb:88:in `create_response'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/http/default.rb:114:in `request'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/http/common.rb:64:in `call'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/bridge.rb:167:in `execute'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/w3c/bridge.rb:567:in `execute'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/remote/w3c/bridge.rb:371:in `click_element'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/selenium-webdriver-3.142.7/lib/selenium/webdriver/common/element.rb:74:in `click'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/watir-6.16.5/lib/watir/elements/element.rb:154:in `block in click'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/watir-6.16.5/lib/watir/elements/element.rb:789:in `element_call'
+    /Users/ehoffman/.rvm/gems/ruby-2.5.3/gems/watir-6.16.5/lib/watir/elements/element.rb:145:in `click'
+    /Users/ehoffman/qa_regression/lib/helpers/c3po.rb:16:in `sign_out'
+    test/membership_service/get_student_athlete_activated_test.rb:32:in `sign_out'
+    test/membership_service/get_student_athlete_activated_test.rb:61:in `test_get_student_athlete_activated'
+    </error>
+    </testcase>
+  </testsuite>
+</testsuites>
