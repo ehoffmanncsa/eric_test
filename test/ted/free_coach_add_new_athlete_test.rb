@@ -113,7 +113,7 @@ class FreeCoachAddNewAthleteTest < Common
   def test_add_delete_new_athlete_as_free_coach
     add_athlete
     send_invite_email
-    TED.check_welcome_email
+    TED.check_invite_email
     check_athlete_free_profile
     check_athlete_accepted_status
     delete_athlete
