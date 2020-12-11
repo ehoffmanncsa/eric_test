@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="ScheduleAssessmentTest" filepath="test/dashboard/schedule_recruiting_assessment_test.rb" skipped="0" failures="1" errors="0" tests="1" assertions="2" time="468.9181840000092">
+    <testcase name="test_schedule_assessment" lineno="167" classname="ScheduleAssessmentTest" assertions="2" time="468.9181840000092">
+    <failure type="Minitest::Assertion" message="Expected [&quot;Appointment does not display after 2 minutes wait&quot;] to be empty.">
+Failure:
+test_schedule_assessment(Minitest::Result) [test/dashboard/schedule_recruiting_assessment_test.rb:138]:
+Expected ["Appointment does not display after 2 minutes wait"] to be empty.
+    </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

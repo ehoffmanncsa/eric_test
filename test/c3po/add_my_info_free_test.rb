@@ -47,8 +47,20 @@ class AddMyInfoTestFree < Common
     @browser.button(name: 'commit').click
     sleep 3
 
-    Watir::Wait.until(timeout: 90) { @browser.div(class: 'OnboardingWrapper-cHmkDT').present? }
-    sleep 3
+    #Watir::Wait.until(timeout: 90) { @browser.div('data-icon': 'times').present? }
+    #sleep 3
+  end
+
+  def close_supercharge
+    supercharge_button = @browser.element('data-icon': 'times')
+    supercharge_button.click if supercharge_button.exists?
+    sleep 1
+    yes_exit_button = @browser.element(text: 'Yes, Exit for Now')
+    yes_exit_button.click if yes_exit_button.exists?
+    sleep 1
+    supercharge_button = @browser.element('data-icon': 'times')
+    supercharge_button.click if supercharge_button.exists?
+    sleep 2
   end
 
   def firstname_enter
