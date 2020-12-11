@@ -117,13 +117,14 @@ class CreateNewOrgWithPrepopCoachEmail < Common
 
     failure = []
     begin
-      five_minutes = 300 # seconds
+      ten_minutes = 600 # seconds
       Timeout.timeout(five_minutes) do
         loop do
           html = @browser.html
           break if html.include? @athlete_name
 
           @browser.refresh
+          sleep 2
         end
       end
     rescue StandardError => e
