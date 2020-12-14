@@ -18,26 +18,18 @@ class ClientAddExternalVideo < Common
 
   def teardown
     delete_video
+    delete_video
     super
   end
 
   def delete_video
-    begin
-      while delete_video_btn
-        delete_video_btn.click
-        popup = @browser.div(class: %w[video-confirm-modal white-popup])
-        popup.div(class: 'button--red').click
-      end
-    rescue
-      # break out of loop
-    end
-  end
+  item = @browser.element(class: 'uploads-item')
+  item.element(class: 'remove').click
 
-  def delete_video_btn
-    video_list = @browser.div(class: 'video-uploads').ul(class: 'uploads').lis("data-video-type": 'external')
-    video_list.first.span(class: 'js-delete-external-video')
-  rescue
-    # Do nothing here
+  sleep 3
+
+  modal = @browser.element(class: 'mfp-content')
+  modal.element(text: 'Delete').click; sleep 2
   end
 
   def get_video_count
@@ -78,6 +70,7 @@ class ClientAddExternalVideo < Common
     bad_count << msg unless counter == get_video_count
 
     failure = bad_msg + bad_count
+    @browser.refresh
     assert_empty failure
   end
 end

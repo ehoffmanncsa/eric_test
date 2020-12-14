@@ -20,6 +20,7 @@ class AdminAddExternalVideo < Common
 
   def teardown
     delete_video
+    delete_video
     super
   end
 
@@ -73,5 +74,6 @@ class AdminAddExternalVideo < Common
 
     failure = bad_msg + bad_count
     assert_empty failure
+    C3PO.goto_video
   end
 end
