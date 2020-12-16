@@ -19,9 +19,6 @@ class ScheduleAssessmentTest < Common
 
     UIActions.user_login(@recruit_email)
     MSSetup.set_password
-
-    @gmail = GmailCalls.new
-    @gmail.get_connection
   end
 
   def teardown
@@ -158,6 +155,9 @@ class ScheduleAssessmentTest < Common
   end
 
   def check_accepted_email
+    @gmail = GmailCalls.new
+    @gmail.get_connection
+    
     @gmail.mail_box = 'Calendly'
     emails = @gmail.get_unread_emails
 

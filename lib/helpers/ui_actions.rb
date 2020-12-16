@@ -150,7 +150,10 @@ module UIActions
   end
 
   def self.goto_ncsa_university
-    @browser.link(text: 'NCSA University').click
+    #https://qa.ncsasports.org/clientrms/education/resources/recruiting_drills
+    #@browser.link(text: 'NCSA University').click
+    url = @config['clientrms']['base_url'] + 'education/resources/recruiting_drills'
+    @browser.goto url
   end
 
   def self.goto_my_information
