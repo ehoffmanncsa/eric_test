@@ -5,12 +5,8 @@ require_relative '../test_helper'
 require 'time'
 require 'date'
 
-<<<<<<< HEAD
-# UI Test: upload csv that will create coach packet only athletes(an dnot in client-rms)
-=======
-# UI Test: upload csv that will create new client rms profiles
+# UI Test: upload csv that will create coach packet only athletes(not in client-rms)
 # submit to rss two times because server is slow
->>>>>>> 1056e40d805a68db8f2fe110028949245338a137
 class RosterCPCSVTest < Common
   def setup
     super
@@ -29,19 +25,19 @@ class RosterCPCSVTest < Common
                               password = @coach_packet_config['admin_password'])
 
     AthleticEventUI.setup(@browser)
-  end
+end
 
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
+        access_type: 'non-purchasable',
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1 .. 4)),
-        end_date: AthleticEventApi.date(rand(2 .. 4)),
+        description: MakeRandom.lorem(rand(1..4)),
+        end_date: AthleticEventApi.date(rand(2..4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
+        point_of_contact_name: MakeRandom.first_name.to_s + MakeRandom.last_name.to_s,
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -53,10 +49,9 @@ class RosterCPCSVTest < Common
         event_operator_id: 9
       },
       sports: [
-        {ncsa_id: 17638}
+        { ncsa_id: 17_638 }
       ]
     }
-
   end
 
   def create_athletic_event
@@ -71,19 +66,19 @@ class RosterCPCSVTest < Common
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
-    add_venue(@new_athletic_event["data"]["id"])
+    add_venue(@new_athletic_event['data']['id'])
   end
 
   def add_venue(athletic_event_id)
     venue = {
-        athletic_event_id: athletic_event_id,
-        address1: MakeRandom.address,
-        address2: MakeRandom.address2,
-        city: MakeRandom.city,
-        country: 'USA',
-        name: MakeRandom.name,
-        state: MakeRandom.state,
-        zip: MakeRandom.zip_code
+      athletic_event_id: athletic_event_id,
+      address1: MakeRandom.address,
+      address2: MakeRandom.address2,
+      city: MakeRandom.city,
+      country: 'USA',
+      name: MakeRandom.name,
+      state: MakeRandom.state,
+      zip: MakeRandom.zip_code
     }
 
     begin
@@ -130,42 +125,83 @@ class RosterCPCSVTest < Common
   end
 
   def my_roster_info
-    athlete_name = []; position = []; jersey_number = []
-    org_team_name = []; state_code = []
+    athlete_names = []; positions = []; jersey_numbers = []
+    org_team_names = []; state_codes = []
     file = CSV.read('roster_coach_packet.csv'); file.shift
     file.each do |row|
-      position << (row[2]).to_s
-      athlete_name << "#{row[4]} #{row[5]}"
-      jersey_number << (row[10]).to_s
-      org_team_name << "#{row[18]} | #{row[14]} #{row[15]}"
+      positions << (row[2]).to_s
+      athlete_names << "#{row[4]} #{row[5]}"
+      jersey_numbers << (row[10]).to_s
+      org_team_names << "#{row[18]} | #{row[14]} #{row[15]}"
     end
 
-    @position = position
-    @athlete_name =  athlete_name
-    @jersey_number = jersey_number
-    @org_team_name = org_team_name
+    @positions = positions
+    @athlete_names =  athlete_names
+    @jersey_numbers = jersey_numbers
+    @org_team_names = org_team_names
   end
 
   def check_name
     failure = []
-    @athlete_name.each do |athlete_name|
-      failure << "Athlete name #{athlete_name} not found" unless @browser.html.include? athlete_name
+    current_athlete_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @athlete_names.each do |athlete_name|
+        current_athlete_name = athlete_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? athlete_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Athlete name #{current_athlete_name} not found" unless @browser.html.include? current_athlete_name
     end
     assert_empty failure
   end
 
   def check_position
     failure = []
-    @position.each do |position|
-      failure << "Position #{position} not found" unless @browser.html.include? position
+    current_position = ""
+    begin
+      five_minutes = 300 # seconds
+      @positions.each do |position|
+        current_position = position
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? position
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Position #{current_position} not found" unless @browser.html.include? current_position
     end
     assert_empty failure
   end
 
   def check_state_org_team_name
     failure = []
-    @org_team_name.each do |org_team_name|
-      failure << "State and team name #{org_team_name} not found" unless @browser.html.include? org_team_name
+    current_org_team_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @org_team_names.each do |org_team_name|
+        current_org_team_name = org_team_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? org_team_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      unless @browser.html.include? current_org_team_name
+        failure << "Organization Team name #{current_org_team_name} not found"
+      end
     end
     assert_empty failure
   end
@@ -196,7 +232,7 @@ class RosterCPCSVTest < Common
     CoachPacket_AdminUI.submit_athletes_rss
     AthleticEventUI.get_rss_email
     sleep 10
-    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    CoachPacket_AdminUI.submit_athletes_rss # making sure submit to rss works
     AthleticEventUI.get_rss_email
   end
 

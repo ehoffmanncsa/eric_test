@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require_relative '../test_helper'
 
@@ -30,14 +30,14 @@ class RosterRMSCSVTest < Common
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
+        access_type: 'non-purchasable',
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1 .. 4)),
-        end_date: AthleticEventApi.date(rand(2 .. 4)),
+        description: MakeRandom.lorem(rand(1..4)),
+        end_date: AthleticEventApi.date(rand(2..4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
+        point_of_contact_name: MakeRandom.first_name.to_s + MakeRandom.last_name.to_s,
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -49,10 +49,9 @@ class RosterRMSCSVTest < Common
         event_operator_id: 9
       },
       sports: [
-        {ncsa_id: 17638}
+        { ncsa_id: 17_638 }
       ]
     }
-
   end
 
   def create_athletic_event
@@ -60,26 +59,27 @@ class RosterRMSCSVTest < Common
                             retries ||= 0
                             @connection_client.post(
                               url: '/api/athletic_events/v1/athletic_events',
-                              json_body: @athletic_event_data.to_json)
-                          rescue => e
+                              json_body: @athletic_event_data.to_json
+                            )
+                          rescue StandardError => e
                             msg = "#{e} \nPOST body \n#{@athletic_event_data} \nGoing to retry"
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
 
-    add_venue(@new_athletic_event["data"]["id"])
+    add_venue(@new_athletic_event['data']['id'])
   end
 
   def add_venue(athletic_event_id)
     venue = {
-        athletic_event_id: athletic_event_id,
-        address1: MakeRandom.address,
-        address2: MakeRandom.address2,
-        city: MakeRandom.city,
-        country: 'USA',
-        name: MakeRandom.name,
-        state: MakeRandom.state,
-        zip: MakeRandom.zip_code
+      athletic_event_id: athletic_event_id,
+      address1: MakeRandom.address,
+      address2: MakeRandom.address2,
+      city: MakeRandom.city,
+      country: 'USA',
+      name: MakeRandom.name,
+      state: MakeRandom.state,
+      zip: MakeRandom.zip_code
     }
 
     begin
@@ -120,22 +120,22 @@ class RosterRMSCSVTest < Common
   end
 
   def roster_info
-    athlete_name = []; grad_year_position = []; jersey_number = [];
-    org_team_name = []; state_code = [];
+    athlete_names = []; grad_year_positions = []; jersey_numbers = []
+    org_team_names = []; state_codes = []
     file = CSV.read('roster_create_rms.csv'); file.shift
     file.each do |row|
-      grad_year_position << "#{row[10]} #{row[2]}"
-      athlete_name << "#{row[4]} #{row[5]}"
-      jersey_number << "#{row[11]}"
-      org_team_name << "#{row[17]} | #{row[15]} #{row[16]}"
-      state_code << "#{row[17]}"
+      grad_year_positions << "#{row[10]} #{row[2]}"
+      athlete_names << "#{row[4]} #{row[5]}"
+      jersey_numbers << (row[11]).to_s
+      org_team_names << "#{row[17]} | #{row[15]} #{row[16]}"
+      state_codes << (row[17]).to_s
     end
 
-    @grad_year_position = grad_year_position
-    @athlete_name =  athlete_name
-    @jersey_number = jersey_number
-    @org_team_name = org_team_name
-    @state_code = state_code
+    @grad_year_positions = grad_year_positions
+    @athlete_names =  athlete_names
+    @jersey_numbers = jersey_numbers
+    @org_team_names = org_team_names
+    @state_codes = state_codes
   end
 
   def get_rss_email
@@ -146,24 +146,67 @@ class RosterRMSCSVTest < Common
 
   def check_name
     failure = []
-    @athlete_name.each do |athlete_name|
-      failure << "Athlete name #{athlete_name} not found" unless @browser.html.include? athlete_name
+    current_athlete_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @athlete_names.each do |athlete_name|
+        current_athlete_name = athlete_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? athlete_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Athlete name #{current_athlete_name} not found" unless @browser.html.include? current_athlete_name
     end
     assert_empty failure
   end
 
   def check_grad_year_position
     failure = []
-    @grad_year_position.each do |grad_year_position|
-      failure << "Grad year and position #{grad_year_position} not found" unless @browser.html.include? grad_year_position
+    current_grad_year_position = ""
+    begin
+      five_minutes = 300 # seconds
+      @grad_year_positions.each do |grad_year_position|
+        current_grad_year_position = grad_year_position
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? grad_year_position
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      unless @browser.html.include? grad_year_position
+        failure << "Grad year and position #{grad_year_position} not found"
+      end
     end
     assert_empty failure
   end
 
   def check_state_org_team_name
     failure = []
-    @org_team_name.each do |org_team_name|
-      failure << "State, org and team name #{org_team_name} not found" unless @browser.html.include? org_team_name
+    current_org_team_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @org_team_names.each do |org_team_name|
+        current_org_team_name = org_team_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? org_team_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      unless @browser.html.include? current_org_team_name
+        failure << "Organization Team name #{current_org_team_name} not found"
+      end
     end
     assert_empty failure
   end
@@ -194,7 +237,7 @@ class RosterRMSCSVTest < Common
     CoachPacket_AdminUI.submit_athletes_rss
     AthleticEventUI.get_rss_email
     sleep 10
-    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    CoachPacket_AdminUI.submit_athletes_rss # making sure submit to rss works
     AthleticEventUI.get_rss_email
   end
 

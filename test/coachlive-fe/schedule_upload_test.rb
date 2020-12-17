@@ -16,9 +16,6 @@ class ScheduleCSVTest < Common
     @event_name = @athletic_event_data[:athletic_event][:name]
     @coach_packet_config = Default.env_config['coach_packet']
 
-    @gmail = GmailCalls.new
-    @gmail.get_connection
-
     CoachPacket_AdminUI.setup(@browser)
     UIActions.fasttrack_login(username = @coach_packet_config['admin_username'],
                               password = @coach_packet_config['admin_password'])
@@ -29,14 +26,14 @@ class ScheduleCSVTest < Common
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
+        access_type: 'non-purchasable',
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1 .. 4)),
-        end_date: AthleticEventApi.date(rand(2 .. 4)),
+        description: MakeRandom.lorem(rand(1..4)),
+        end_date: AthleticEventApi.date(rand(2..4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
+        point_of_contact_name: MakeRandom.first_name.to_s + MakeRandom.last_name.to_s,
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -48,10 +45,9 @@ class ScheduleCSVTest < Common
         event_operator_id: 9
       },
       sports: [
-        {ncsa_id: 17638}
+        { ncsa_id: 17_638 }
       ]
     }
-
   end
 
   def create_athletic_event
@@ -67,7 +63,7 @@ class ScheduleCSVTest < Common
                             retry if (retries += 1) < 2
                           end
 
-    add_venues(@new_athletic_event["data"]["id"])
+    add_venues(@new_athletic_event['data']['id'])
   end
 
   def add_venues(athletic_event_id)
@@ -91,21 +87,19 @@ class ScheduleCSVTest < Common
         name: 'testvenue2',
         state: MakeRandom.state,
         zip: MakeRandom.zip_code
-      },
+      }
     ]
 
     venues.each do |venue|
-      begin
-        retries ||= 0
-        @connection_client.post(
-          url: '/api/athletic_events/v1/venues',
-          json_body: venue.to_json
-        )
-      rescue StandardError => e
-        msg = "#{e} \nPOST body \n#{venue} \nGoing to retry"
-        puts msg; sleep 2
-        retry if (retries += 1) < 2
-      end
+      retries ||= 0
+      @connection_client.post(
+        url: '/api/athletic_events/v1/venues',
+        json_body: venue.to_json
+      )
+    rescue StandardError => e
+      msg = "#{e} \nPOST body \n#{venue} \nGoing to retry"
+      puts msg; sleep 2
+      retry if (retries += 1) < 2
     end
   end
 
@@ -139,44 +133,83 @@ class ScheduleCSVTest < Common
   end
 
   def my_roster_info
-    time = []; venue = []; location = []
-    team1_name = []; team2_name = []
+    times = []; venues = []; locations = []
+    team1_names = []; team2_names = []
     file = CSV.read('schedule.csv'); file.shift
     file.each do |row|
-      location << (row[7]).to_s
-      time << (row[8]).to_s
-      venue << (row[6]).to_s
-      team1_name << "#{row[1]} #{row[0]}"
-      team2_name << "#{row[3]} #{row[2]}"
+      locations << (row[7]).to_s
+      times << (row[8]).to_s
+      venues << (row[6]).to_s
+      team1_names << "#{row[1]} #{row[0]}"
+      team2_names << "#{row[3]} #{row[2]}"
     end
 
-    @time = time
-    @venue =  venue
-    @location = location
-    @team1_name = team1_name
-    @team2_name = team2_name
+    @times = times
+    @venues =  venues
+    @locations = locations
+    @team1_names = team1_names
+    @team2_names = team2_names
   end
 
   def check_team1_name
     failure = []
-    @team1_name.each do |team1_name|
-      failure << "Team 1 name #{team1_name} not found" unless @browser.html.include? team1_name
+    current_team1_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @team1_names.each do |team1_name|
+        current_team1_name = team1_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? team1_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Team 1 name  #{current_team1_name} not found" unless @browser.html.include? current_team1_name
     end
     assert_empty failure
   end
 
   def check_team2_name
     failure = []
-    @team2_name.each do |team2_name|
-      failure << "Team 2 name #{team2_name} not found" unless @browser.html.include? team2_name
+    current_team2_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @team2_names.each do |team2_name|
+        current_team2_name = team2_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? team2_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Team 2 name  #{current_team2_name} not found" unless @browser.html.include? current_team2_name
     end
     assert_empty failure
   end
 
   def check_location
     failure = []
-    @location.each do |location|
-      failure << "Location #{location} not found" unless @browser.html.include? location
+    current_location = ""
+    begin
+      five_minutes = 300 # seconds
+      @locations.each do |location|
+        current_location = location
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? location
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Location name  #{current_location} not found" unless @browser.html.include? current_location
     end
     assert_empty failure
   end

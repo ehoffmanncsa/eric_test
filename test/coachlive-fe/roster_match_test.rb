@@ -1,16 +1,13 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 require_relative '../test_helper'
 
 require 'time'
 require 'date'
 
-<<<<<<< HEAD
 # UI Test: coach will run rss to match the athlete client-rms profile
-
-=======
 # UI Test: upload csv that will match a client rms profile
 # submit to rss two times because server is slow
->>>>>>> 1056e40d805a68db8f2fe110028949245338a137
 class RosterMatchRMSTest < Common
   def setup
     super
@@ -34,14 +31,14 @@ class RosterMatchRMSTest < Common
   def athletic_event_data
     {
       athletic_event: {
-        access_type: "non-purchasable",
+        access_type: 'non-purchasable',
         age_range: MakeRandom.age_range,
-        description: MakeRandom.lorem(rand(1 .. 4)),
-        end_date: AthleticEventApi.date(rand(2 .. 4)),
+        description: MakeRandom.lorem(rand(1..4)),
+        end_date: AthleticEventApi.date(rand(2..4)),
         start_date: AthleticEventApi.date,
         name: MakeRandom.company_name,
         point_of_contact_email: MakeRandom.fake_email,
-        point_of_contact_name: "#{MakeRandom.first_name}" + "#{MakeRandom.last_name}",
+        point_of_contact_name: MakeRandom.first_name.to_s + MakeRandom.last_name.to_s,
         registration_link: MakeRandom.url,
         website: MakeRandom.url,
         city: MakeRandom.city,
@@ -53,10 +50,9 @@ class RosterMatchRMSTest < Common
         event_operator_id: 9
       },
       sports: [
-        {ncsa_id: 17638}
+        { ncsa_id: 17_638 }
       ]
     }
-
   end
 
   def create_athletic_event
@@ -64,26 +60,27 @@ class RosterMatchRMSTest < Common
                             retries ||= 0
                             @connection_client.post(
                               url: '/api/athletic_events/v1/athletic_events',
-                              json_body: @athletic_event_data.to_json)
-                          rescue => e
+                              json_body: @athletic_event_data.to_json
+                            )
+                          rescue StandardError => e
                             msg = "#{e} \nPOST body \n#{@athletic_event_data} \nGoing to retry"
                             puts msg; sleep 2
                             retry if (retries += 1) < 2
                           end
 
-    add_venue(@new_athletic_event["data"]["id"])
+    add_venue(@new_athletic_event['data']['id'])
   end
 
   def add_venue(athletic_event_id)
     venue = {
-        athletic_event_id: athletic_event_id,
-        address1: MakeRandom.address,
-        address2: MakeRandom.address2,
-        city: MakeRandom.city,
-        country: 'USA',
-        name: MakeRandom.name,
-        state: MakeRandom.state,
-        zip: MakeRandom.zip_code
+      athletic_event_id: athletic_event_id,
+      address1: MakeRandom.address,
+      address2: MakeRandom.address2,
+      city: MakeRandom.city,
+      country: 'USA',
+      name: MakeRandom.name,
+      state: MakeRandom.state,
+      zip: MakeRandom.zip_code
     }
 
     begin
@@ -124,13 +121,13 @@ class RosterMatchRMSTest < Common
   end
 
   def get_roster_info
-    athlete_name = []; grad_year_position = []; jersey_number = [];
-    org_team_name = [];
+    athlete_name = []; grad_year_position = []; jersey_number = []
+    org_team_name = []
     file = CSV.read('rostermatch.csv'); file.shift
     file.each do |row|
       grad_year_position << "#{row[5]} #{row[2]}"
       athlete_name << "#{row[3]} #{row[4]}"
-      jersey_number << "#{row[6]}"
+      jersey_number << (row[6]).to_s
       org_team_name << "#{row[8]} #{row[9]}"
     end
 
@@ -145,17 +142,23 @@ class RosterMatchRMSTest < Common
   # do comparision
   def compare_my_info_data_to_athlete_profile_data
     failure = []
-    failure << 'Incorrect jersey number' unless "#" + @jersey_number.shift.strip == AthleticEventUI.athlete_jersey_number
+    unless '#' + @jersey_number.shift.strip == AthleticEventUI.athlete_jersey_number
+      failure << 'Incorrect jersey number'
+    end
     failure << 'Incorrect athlete name' unless @athlete_name.shift.strip == AthleticEventUI.athlete_name
-    failure << 'Incorrect grad year and postition' unless @grad_year_position.shift.strip == AthleticEventUI.grad_year_position
+    unless @grad_year_position.shift.strip == AthleticEventUI.grad_year_position
+      failure << 'Incorrect grad year and postition'
+    end
     failure << "Incorrect height/weight #{@height}" unless @browser.html.include? @height
     failure << "Incorrect GPA #{@gpa}" unless @browser.html.include? @gpa
-    failure << 'Incorrect team and organization' unless "CA | " + @org_team_name.shift.strip == AthleticEventUI.team_org_info
+    unless 'CA | ' + @org_team_name.shift.strip == AthleticEventUI.team_org_info
+      failure << 'Incorrect team and organization'
+    end
     assert_empty failure
   end
 
   def check_rms
-    title = " NCSA Client Recruiting Management System"
+    title = ' NCSA Client Recruiting Management System'
     assert_equal title, @browser.title, 'Incorrect page title'
   end
 
@@ -172,7 +175,7 @@ class RosterMatchRMSTest < Common
     CoachPacket_AdminUI.submit_athletes_rss
     AthleticEventUI.get_rss_email
     sleep 10
-    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    CoachPacket_AdminUI.submit_athletes_rss # making sure submit to rss works
     AthleticEventUI.get_rss_email
   end
 

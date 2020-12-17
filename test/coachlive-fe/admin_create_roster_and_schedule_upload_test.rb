@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require_relative '../test_helper'
 
@@ -11,27 +11,24 @@ class AdminEventRMSTest < Common
   def setup
     super
 
-   @coach_packet_config = Default.env_config['coach_packet']
-   @email = @coach_packet_config['admin_username']
-   @password = @coach_packet_config['admin_password']
+    @coach_packet_config = Default.env_config['coach_packet']
+    @email = @coach_packet_config['admin_username']
+    @password = @coach_packet_config['admin_password']
 
-   # generate new data
-   RosterRMSCSV.new.make_it
-   ScheduleCSV.new.make_it
+    # generate new data
+    RosterRMSCSV.new.make_it
+    ScheduleCSV.new.make_it
 
-   @gmail = GmailCalls.new
-   @gmail.get_connection
+    CoachPacket_AdminUI.setup(@browser)
+    UIActions.fasttrack_login(@email, @password)
+    CoachPacket_AdminUI.adjust_window_fasttrack
+    CoachPacket_AdminUI.goto_Coach_Packet_admin
+    CoachPacket_AdminUI.event_page
+    CoachPacket_AdminUI.new_event
 
-   CoachPacket_AdminUI.setup(@browser)
-   UIActions.fasttrack_login(@email, @password)
-   CoachPacket_AdminUI.adjust_window_fasttrack
-   CoachPacket_AdminUI.goto_Coach_Packet_admin
-   CoachPacket_AdminUI.event_page
-   CoachPacket_AdminUI.new_event
+    @filler = CP::CoachPacketFiller.new(@browser)
 
-   @filler = CP::CoachPacketFiller.new(@browser)
-
-   AthleticEventUI.setup(@browser)
+    AthleticEventUI.setup(@browser)
   end
 
   def teardown
@@ -84,11 +81,10 @@ class AdminEventRMSTest < Common
     @filler.select_event_operator
     @filler.submit
     CoachPacket_AdminUI.event_page
-
   end
 
   def fill_out_venues
-    #add venue 1
+    # add venue 1
     filter_event
     open_event
     CoachPacket_AdminUI.venue_page
@@ -99,7 +95,7 @@ class AdminEventRMSTest < Common
     sleep 4
     filter_event
     open_event
-    #add venue 2
+    # add venue 2
     CoachPacket_AdminUI.venue_page
     @filler.venue_data2
     @filler.select_state
@@ -123,7 +119,7 @@ class AdminEventRMSTest < Common
     CoachPacket_AdminUI.submit_athletes_rss
     AthleticEventUI.get_rss_email
     sleep 10
-    CoachPacket_AdminUI.submit_athletes_rss #making sure submit to rss works
+    CoachPacket_AdminUI.submit_athletes_rss # making sure submit to rss works
     AthleticEventUI.get_rss_email
   end
 
@@ -158,63 +154,102 @@ class AdminEventRMSTest < Common
   end
 
   def roster_info
-    athlete_name = []; grad_year_position = []; jersey_number = [];
-    org_team_name = []; state_code = [];
+    athlete_names = []; grad_year_positions = []; jersey_numbers = []
+    org_team_names = []; state_codes = []
     file = CSV.read('roster_create_rms.csv'); file.shift
     file.each do |row|
-      grad_year_position << "#{row[10]} #{row[2]}"
-      athlete_name << "#{row[4]} #{row[5]}"
-      jersey_number << "#{row[11]}"
-      org_team_name << "#{row[17]} | #{row[15]} #{row[16]}"
-      state_code << "#{row[17]}"
+      grad_year_positions << "#{row[10]} #{row[2]}"
+      athlete_names << "#{row[4]} #{row[5]}"
+      jersey_numbers << (row[11]).to_s
+      org_team_names << "#{row[17]} | #{row[15]} #{row[16]}"
+      state_codes << (row[17]).to_s
     end
 
-    @grad_year_position = grad_year_position
-    @athlete_name =  athlete_name
-    @jersey_number = jersey_number
-    @org_team_name = org_team_name
-    @state_code = state_code
+    @grad_year_positions = grad_year_positions
+    @athlete_names =  athlete_names
+    @jersey_numbers = jersey_numbers
+    @org_team_names = org_team_names
+    @state_codes = state_codes
   end
 
   def my_schedule_info
-    time = []; venue = []; location = []
-    team1_name = []; team2_name = []
+    times = []; venues = []; locations = []
+    team1_names = []; team2_names = []
     file = CSV.read('schedule.csv'); file.shift
     file.each do |row|
-      location << (row[7]).to_s
-      time << (row[8]).to_s
-      venue << (row[6]).to_s
-      team1_name << "#{row[1]} #{row[0]}"
-      team2_name << "#{row[3]} #{row[2]}"
+      locations << (row[7]).to_s
+      times << (row[8]).to_s
+      venues << (row[6]).to_s
+      team1_names << "#{row[1]} #{row[0]}"
+      team2_names << "#{row[3]} #{row[2]}"
     end
 
-    @time = time
-    @venue =  venue
-    @location = location
-    @team1_name = team1_name
-    @team2_name = team2_name
+    @times = times
+    @venue = venues
+    @locations = locations
+    @team1_names = team1_names
+    @team2_names = team2_names
   end
 
   def check_name
     failure = []
-    @athlete_name.each do |athlete_name|
-      failure << "Athlete name #{athlete_name} not found" unless @browser.html.include? athlete_name
+    current_athlete_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @athlete_names.each do |athlete_name|
+        current_athlete_name = athlete_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? athlete_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Athlete name #{current_athlete_name} not found" unless @browser.html.include? current_athlete_name
     end
     assert_empty failure
   end
 
   def check_team1_name
     failure = []
-    @team1_name.each do |team1_name|
-      failure << "Team 1 name #{team1_name} not found" unless @browser.html.include? team1_name
+    current_team1_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @team1_names.each do |team1_name|
+        current_team1_name = team1_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? team1_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Team 1 name  #{current_team1_name} not found" unless @browser.html.include? current_team1_name
     end
     assert_empty failure
   end
 
   def check_team2_name
     failure = []
-    @team2_name.each do |team2_name|
-      failure << "Team 2 name #{team2_name} not found" unless @browser.html.include? team2_name
+    current_team2_name = ""
+    begin
+      five_minutes = 300 # seconds
+      @team2_names.each do |team2_name|
+        current_team2_name = team2_name
+        Timeout.timeout(five_minutes) do
+          html = @browser.html
+          break if html.include? team2_name
+
+          @browser.refresh
+          sleep 2
+        end
+      end
+    rescue StandardError => e
+      failure << "Team 2 name  #{current_team2_name} not found" unless @browser.html.include? current_team2_name
     end
     assert_empty failure
   end
