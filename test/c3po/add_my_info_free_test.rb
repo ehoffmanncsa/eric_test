@@ -456,7 +456,7 @@ class AddMyInfoTestFree < Common
     # go to Preview Profile and check Mailing city, state and zip
     city = @browser.elements(class: %w[city])
 
-    expected_city = 'CHICAGO, Illinois 60618'
+    expected_city = 'Chicago, Illinois 60618'
     assert_includes city[1].text, expected_city
   end
 

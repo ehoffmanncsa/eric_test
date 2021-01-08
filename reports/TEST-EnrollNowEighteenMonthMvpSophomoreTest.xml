@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="EnrollNowEighteenMonthMvpSophomoreTest" filepath="test/membership_service/enroll_now_eighteen_month_mvp_sophomore_test.rb" skipped="0" failures="0" errors="0" tests="1" assertions="6" time="88.7452419999754">
+    <testcase name="test_enroll_now_eighteen_month_mvp_sophomore" lineno="92" classname="EnrollNowEighteenMonthMvpSophomoreTest" assertions="6" time="88.7452419999754">
+    </testcase>
+  </testsuite>
+</testsuites>
