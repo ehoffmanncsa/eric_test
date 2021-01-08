@@ -77,7 +77,8 @@ module MSSetup
   end
 
   def self.switch_to_premium_membership
-    @browser.link(text: 'Premium Memberships').click
+    premium_memberships_button = @browser.link(text: 'Premium Memberships')
+    premium_memberships_button.click if premium_memberships_button.exists?
     sleep 1
   end
 
