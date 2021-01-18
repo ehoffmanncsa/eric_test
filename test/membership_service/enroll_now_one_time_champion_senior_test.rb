@@ -26,16 +26,16 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     super
   end
 
-  def check_membership_cost
-    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[6].text
-    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
-  end
-
   def select_one_time_payment
     @browser.element(id: '1').click
   end
 
-  def select_elite
+  def check_membership_cost
+    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[3].text
+    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
+  end
+
+  def select_champion
     @browser.element('data-offering-id': '9', 'data-payment-plan-id': '1').click
   end
 
@@ -80,7 +80,7 @@ class EnrollNowOneTimeChampionSeniorTest < Common
 
     select_one_time_payment
     check_membership_cost
-    select_elite
+    select_champion
     accept_agreement
 
     MSFinish.setup_billing_enroll_now
