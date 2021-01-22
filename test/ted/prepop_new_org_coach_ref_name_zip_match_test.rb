@@ -119,7 +119,7 @@ class CreateNewOrgWithPrepopCoachName < Common
 
     failure = []
     begin
-      five_minutes = 300 # seconds
+      five_minutes = 600 # seconds
       Timeout.timeout(five_minutes) do
         loop do
           html = @browser.html

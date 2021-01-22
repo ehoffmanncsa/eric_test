@@ -21,6 +21,8 @@ class CoachAcceptTosModal < Common
 end
 
   def check_modal_is_displayed
+    Watir::Wait.until(timeout: 30) { @browser.element(class: 'modal__content').present? }
+
     tos_modal = @browser.element(class: 'modal__content')
     failures = []
     failures << "modal doesn't display" unless tos_modal.present?

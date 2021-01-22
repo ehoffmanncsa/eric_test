@@ -19,7 +19,7 @@ module MSSetup
   def self.click_yes
     popup = @browser.element(class: 'mfp-content')
     popup.element(class: 'button--secondary').click
-    sleep 1
+    sleep 3
   end
 
   def self.set_password
