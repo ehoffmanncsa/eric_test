@@ -6,6 +6,7 @@ require_relative '../test_helper'
 class UploadSingleVideo < Common
   def setup
     super
+    skip
     email = 'ncsa.automation+e6cc@gmail.com'
     C3PO.setup(@browser)
     UIActions.user_login(email, 'ncsa1333')

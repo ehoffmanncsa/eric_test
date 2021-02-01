@@ -6,6 +6,7 @@ require_relative '../test_helper'
 #          from the “MY VIDEO FILES” section of video page
 class DeleteUploadedVideoTest < Minitest::Test
   def setup
+    skip
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
     add_premium

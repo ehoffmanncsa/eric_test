@@ -5,6 +5,7 @@ require_relative '../test_helper'
 # UI Test: Upload a multiple videos
 class UploadMultipleVideosTest < Minitest::Test
   def setup
+    skip
     _post, post_body = RecruitAPI.new.ppost
     @recruit_email = post_body[:recruit][:athlete_email]
     add_premium

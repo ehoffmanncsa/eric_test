@@ -88,7 +88,7 @@ class RecruitAPI
     dupe_key = "#{first_name[0...3]}#{last_name[0...3]}#{@sport_id}"
     randomized_string = Digest::MD5.hexdigest(dupe_key)[0...4]  + SecureRandom.hex(2)
 
-    "ncsa.automation+#{randomized_string}@gmail.com"
+    "ncsa.automation+#{randomized_string}@yopmail.com"
   end
 
   def athlete_phone

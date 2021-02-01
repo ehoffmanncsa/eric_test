@@ -94,7 +94,7 @@ module C3PO
 
   def self.search_client_in_recruiting_dashboard(client_id)
     url = @config['fasttrack']['base_url'] + @config['fasttrack']['recruiting_dasboard']
-    @browser.goto "#{url}/search?q=#{client_id}"
+    @browser.goto "#{url}/search?q=#{client_id}&showFree=on&showInactive=on"
     sleep 3
     Watir::Wait.until(timeout: 30) { recruit_dashboard_search_result_table.present? }
   end
@@ -153,6 +153,22 @@ module C3PO
   def self.activate_first_row_of_new_video
     new_video_btn = @browser.elements(class: 'm-button-gray').first
     new_video_btn.click
+    sleep 5
+  end
+
+  def self.open_edit_new_video
+    @browser.element(class: ["fa", "fa-edit"]).click
+  end
+
+  def self.enter_title_new_video
+    title = @browser.element(value: 'New Video')
+    title.to_subtype.clear
+    title.send_keys 'Athlete Highlight Video'
+  end
+
+  def self.save_video_edits
+    @browser.element(class: 'm-button').click
+    sleep 5
   end
 
   def self.publish_video(file = nil)
@@ -162,14 +178,14 @@ module C3PO
     row = @browser.element(id: 'cvt-videos').elements(tag_name: 'tr')[0]
     video_id = row.attribute('id').split('-').last
 
-    # Execute javascript to inject associate id for video
-    assoc_id = @browser.element(id: 'assoc_id')
-    inject_id = "return arguments[0].value = #{video_id}"
-    @browser.execute_script(inject_id: assoc_id)
+    #inject the video id into the post payload or video will not upload
+    @browser.execute_script("document.getElementById('assoc_id').value = '#{video_id}'")
 
     @browser.form(id: 'direct-upload').file_field(id: 'file').send_keys path
-    @browser.element(id: 'email_subject').send_keys SecureRandom.hex(4); sleep 2
+    sleep 5
+    @browser.element(id: 'email_subject').send_keys SecureRandom.hex(4); sleep 5
     @browser.button(value: 'Send Email').click
+    sleep 5
   end
 
   def self.wait_for_video_thumbnail
@@ -181,7 +197,7 @@ module C3PO
     section = @browser.element(id: 'video-section')
     div = section.div(class: 'video-link')
     # keep refresh browser for 180s or until thumbnail shows up
-    Timeout::timeout(180) {
+    Timeout::timeout(500) {
       loop do
         begin
           div.element(class: 'thumbnail').present?
