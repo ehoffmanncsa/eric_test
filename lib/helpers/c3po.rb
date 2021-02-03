@@ -38,6 +38,21 @@ module C3PO
     Watir::Wait.until { @browser.div(class: 'js-video-files-container').present? }
   end
 
+  def self.upload_video_log(log_file = nil)
+    log_file ||= "#{log_file}"
+    path = File.absolute_path("test/videos/#{log_file}")
+
+    # send in file path and upload
+    @browser.element(class: 'js-video-log-button').click
+    @browser.file_field(id: 'profile-log-upload-file-input').set path
+    sleep 1
+
+    upload = @browser.element(class: ["tab-column", "third", "no-pad"])
+    upload.button(name: 'commit').click
+    sleep 1
+    @browser.refresh
+  end
+
   def self.upload_youtube(admin = true)
     url = 'https://www.youtube.com/watch?v=vaEWkjTZsy8'
     @browser.element(class: 'js-upload-options').element(class: 'fa-youtube').click
