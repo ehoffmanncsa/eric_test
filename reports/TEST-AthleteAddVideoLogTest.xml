@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="AthleteAddVideoLogTest" filepath="test/videos/athlete_upload_video_log_test.rb" skipped="0" failures="0" errors="0" tests="1" assertions="2" time="126.15181099998881">
+    <testcase name="test_athlete_play_published_video" lineno="38" classname="AthleteAddVideoLogTest" assertions="2" time="126.15181099998881">
+    </testcase>
+  </testsuite>
+</testsuites>
