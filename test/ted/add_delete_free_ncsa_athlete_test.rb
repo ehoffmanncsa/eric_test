@@ -96,12 +96,13 @@ class PremCoachAddFreeAthlete < Common
     # Giving staging grace period before checking premium status
     UIActions.user_login(@email)
     sleep 5
+    MSSetup.set_password
+    sleep 5
     @browser.element(class: 'mfp-close').click
     sleep 5
     @browser.element(class: 'fa-angle-down').click
     sleep 5
-    MSSetup.set_password
-    sleep 5
+    
     navbar = @browser.element(id: 'secondary-nav-menu')
     navbar.link(text: 'Membership Info').click
     sleep 5
