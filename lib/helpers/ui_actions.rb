@@ -149,6 +149,11 @@ module UIActions
     @browser.goto url
   end
 
+  def self.goto_favorites
+    url = @config['clientrms']['base_url'] + 'coach_communications/favorites'
+    @browser.goto url
+  end
+
   def self.goto_ncsa_university
     #https://qa.ncsasports.org/clientrms/education/resources/recruiting_drills
     #@browser.link(text: 'NCSA University').click
