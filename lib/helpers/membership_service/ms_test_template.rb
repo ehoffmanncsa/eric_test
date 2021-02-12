@@ -52,13 +52,14 @@ module MSTestTemplate
       msg = "Expected #{month} months price: #{calculated_price} - UI shows: #{actual_price}"
       failure << msg unless actual_price == calculated_price
     end
-
     puts failure unless failure.empty?
   end
 
   def self.define_expectations
     months = 0
     membership_cost = 0
+
+    pp membership_cost
 
     # default all tests to select 6 mo payment plan
     # unless there is eigteen months enabled

@@ -11,7 +11,7 @@ class ApplyDiscountOnOfferingsPage < Common
   def setup
     super
 
-    UIActions.user_login('test07d6@yopmail.com')
+    UIActions.user_login('ncsa.automation+4a8055e5@yopmail.com', 'ncsa1333')
     @discount_codes = Default.static_info['ncsa_discount_code']
 
     MSSetup.setup(@browser)
@@ -24,12 +24,12 @@ class ApplyDiscountOnOfferingsPage < Common
   end
 
   def open_discount
-    @browser.element(class: ['financing', 'financing-js']).click; sleep 1
-    @browser.div(class: ['fa-swoosh', 'show-discount-js']).click
+    @browser.element('data-test-id': 'toggle-discount-code').click; sleep 1
   end
 
   def base_steps
     MSSetup.goto_offerings
+    sleep 3
     MSSetup.switch_to_premium_membership
     MSSetup.open_payment_plan
     open_discount
@@ -57,7 +57,6 @@ class ApplyDiscountOnOfferingsPage < Common
 
       i += 1
     end
-
     MSProcess.remove_discount
 
     failure
@@ -72,7 +71,7 @@ class ApplyDiscountOnOfferingsPage < Common
 
     @discount_codes.each do |discount_code, rate|
       MSProcess.apply_discount_offerings(discount_code, rate)
-      MSSetup.reveal_18_mo_plan; sleep 2
+      #MSSetup.reveal_18_mo_plan; sleep 2
       fail_message = check_on_prices(original_prices, discount_code)
       failure << fail_message unless fail_message.empty?
       failure.flatten!

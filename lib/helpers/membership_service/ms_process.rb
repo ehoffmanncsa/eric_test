@@ -9,8 +9,8 @@ module MSProcess
   end
 
   def self.get_cart_count
-    cart = @browser.element(id: 'shopping-cart')
-    count = cart.element(class: 'js-cart-count').text
+    #cart = @browser.element('data-test-id': 'cart-button')
+    count = @browser.element('data-test-id': 'cart-button').text
     return count.gsub!(/[^0-9]/, '').to_i unless count.nil?
   end
 
@@ -35,46 +35,47 @@ module MSProcess
   end
 
   def self.checkout
-    @browser.element(class: 'button--next').click; sleep 3
+    @browser.element('data-test-id': 'next-button').click; sleep 3
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
   end
 
 
   def self.checkout_cart
-    @browser.element(id: 'shopping-cart').click; sleep 1
-    @browser.element(class: 'button--checkout').click; sleep 3
+    @browser.element('data-test-id': 'cart-button').click; sleep 1
+    @browser.element('data-test-id': 'cart-checkout-button').click; sleep 3
     Watir::Wait.until(timeout: 90) { @browser.url.include? 'clientrms/membership/enrollment' }
   end
 
   def self.apply_discount_offerings(code, rate)
-    @browser.element(class: 'enroll-now-discount-form__input').send_keys code
-    @browser.element(class: 'apply').click; sleep 2
+    @browser.element(name: 'discountCode').send_keys code
+    @browser.element('data-test-id': 'apply-discount-code-button').click; sleep 2
     Watir::Wait.until { discount_message.present? }
 
     check_discount_message(code, rate)
   end
 
   def self.discount_message
-    @browser.element(class: 'discount-message-control')
+    @browser.element('data-test-id': 'discount-code-form-success')
   end
 
   def self.check_discount_message(code, rate)
     expect_msg = "#{(rate.to_f * 100).to_i}% discount code, #{code.upcase} successfully applied"
     actual_msg = discount_message.text.split('!').first
+    sleep 5
     raise "[Incorrect Message] Expect: #{expect_msg} - Actual: #{actual_msg}" unless actual_msg.eql? expect_msg
   end
 
   def self.remove_discount
-    @browser.element(class: 'remove-discount-js').click
+    @browser.element('data-test-id': 'remove-discount-code-button').click; sleep 5
     Watir::Wait.while { discount_message.present? }
   end
 
   def self.open_alacarte_table
-    @browser.element(class: 'alacarte-features').element(class: 'vip-toggle-js').click
+    @browser.element('data-test-id': 'a-la-cart-toggle-button').click
   end
 
   def self.alacarte_blocks
-    @browser.elements(class: 'alacarte-block').to_a
+    @browser.elements('data-test-id': 'a-la-carte-option').to_a
   end
 
   def self.pick_VIP_items(items_count = nil)
@@ -90,11 +91,11 @@ module MSProcess
     while i < items_count
       loop do
         block = alacarte_blocks.sample
-        add_button = block.element(class: 'button--medium')
+        add_button = block.element(text: 'ADD TO CART')
 
         error = nil;
         begin
-          block.element(class: 'button--medium').click
+          block.element(text: 'ADD TO CART').click
         rescue => error; end
 
         if error.nil?

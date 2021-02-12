@@ -1,10 +1,9 @@
-# frozen_string_literal: true
-
+# encoding: utf-8
 require_relative '../test_helper'
 
 # TS-41: MS Regression
 # UI Test: Enroll as a Champion User - Senior
-class EnrollSixMonthChampionSeniorTest < Common
+class EnrollSixmonthChampionSeniorTest < Common
   def setup
     super
 
@@ -15,6 +14,8 @@ class EnrollSixMonthChampionSeniorTest < Common
     _post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
 
+    MSAdmin.setup(@browser)
+
     UIActions.user_login(recruit_email)
     MSTestTemplate.setup(@browser, recruit_email, @package)
   end
@@ -23,12 +24,13 @@ class EnrollSixMonthChampionSeniorTest < Common
     super
   end
 
-  def select_six_month_champion
-    @browser.element('data-offering-id': '9', 'data-payment-plan-id': '2').click
+  def select_six_month_payment
+    @browser.element('data-payment-plan': 'Champion:6').click
+    sleep 2
   end
 
   def check_membership_cost
-    @membership_cost = @browser.elements(class: 'pricing-information-row__text__digits--small-digits')[0].text.to_i
+    @membership_cost = @browser.elements('data-test-id': 'payment-plan-cell__total-payment')[0].text.to_i
   end
 
   def define_payments
@@ -45,11 +47,11 @@ class EnrollSixMonthChampionSeniorTest < Common
   end
 
   def goto_membership_info
-    @browser.goto(@clientrms['base_url'] + @clientrms['membership_info'])
+    @browser.goto(@clientrms['base_url']+ @clientrms['membership_info'])
   end
 
   def goto_payments
-    @browser.goto(@clientrms['base_url'] + @clientrms['payments_page'])
+    @browser.goto(@clientrms['base_url']+ @clientrms['payments_page'])
   end
 
   def check_membership_features
@@ -79,9 +81,11 @@ class EnrollSixMonthChampionSeniorTest < Common
   def test_enroll_six_month_champion_senior
     MSSetup.set_password
     MSSetup.goto_offerings
+    sleep 2
+    MSSetup.goto_offerings
     MSSetup.open_payment_plan
 
-    select_six_month_champion
+    select_six_month_payment
     check_membership_cost
     define_payments
     get_expectations

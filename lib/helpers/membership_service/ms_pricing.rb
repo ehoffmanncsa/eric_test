@@ -11,7 +11,7 @@ module MSPricing
   end
 
   def self.gather_all_payment_plan_cells
-    @browser.elements(class: ['pricing-row__cell', 'select-plan', 'js-package-button']).to_a
+    @browser.elements(class: 'payment-plan-cell').to_a
   end
 
   def self.predict_payment_plans_position
@@ -27,27 +27,27 @@ module MSPricing
 
   def self.pricing_set1(cells)
     #            1 mo       6 mo      12 mo     18 mo
-    champion = [cells[9], cells[6], cells[3], cells[0]]
-    elite = [cells[10], cells[7], cells[4], cells[1]]
-    mvp = [cells[11], cells[8], cells[5], cells[2]]
+    champion = [cells[3], cells[2], cells[1], cells[0]]
+    elite = [cells[7], cells[6], cells[5], cells[4]]
+    mvp = [cells[11], cells[10], cells[9], cells[8]]
 
     [champion, elite, mvp]
   end
 
   def self.pricing_set2(cells)
     #            1 mo       6 mo      12 mo
-    champion = [cells[6], cells[3], cells[0]]
-    elite = [cells[7], cells[4], cells[1]]
-    mvp = [cells[8], cells[5], cells[2]]
+    champion = [cells[2], cells[1], cells[0]]
+    elite = [cells[5], cells[4], cells[3]]
+    mvp = [cells[8], cells[7], cells[6]]
 
     [champion, elite, mvp]
   end
 
   def self.pricing_set3(cells)
     #             1 mo      6 mo
-    champion = [cells[3], cells[0]]
-    elite = [cells[4], cells[1]]
-    mvp = [cells[5], cells[2]]
+    champion = [cells[1], cells[0]]
+    elite = [cells[3], cells[2]]
+    mvp = [cells[5], cells[4]]
 
     [champion, elite, mvp]
   end
@@ -80,7 +80,7 @@ module MSPricing
     prices = []
 
     # extract 1mo price
-    prices << raw_html_set[0].element(class: 'pricing-information-row__text__digits').text.to_i
+    prices << raw_html_set[0].element('data-test-id': 'payment-plan-cell__total-payment').text.to_i
 
     # extract payment plan prices
     #range_end = @eighteen_mo ? raw_html_set.length - 1 : raw_html_set.length - 2
@@ -89,9 +89,9 @@ module MSPricing
                 else
                   raw_html_set.length - 2
                 end
-
     for i in (1 .. range_end) do
-      prices << raw_html_set[i].element(class: 'pricing-information-row__text__digits--small-digits').text.to_i
+      price_cell = raw_html_set[i].element('data-test-id':  'payment-plan-cell__total-payment')
+      prices << price_cell.text.to_i
     end
 
     prices # respectively [1mo, 6mo, 12mo, 18mo] or [1mo, 6mo, 12mo] or [1mo]
@@ -110,7 +110,7 @@ module MSPricing
     prices = []
 
     price_set.each do |price|
-      prices << price.element(class: 'pricing-information-row__text__digits').text.to_i
+      prices << price.element('data-test-id':  'payment-plan-cell__total-payment').text.to_i
     end
 
     prices

@@ -19,7 +19,7 @@ module MSSetup
   def self.click_yes
     popup = @browser.element(class: 'mfp-content')
     popup.element(class: 'button--secondary').click
-    sleep 3
+    sleep 1
   end
 
   def self.set_password
@@ -77,22 +77,18 @@ module MSSetup
   end
 
   def self.switch_to_premium_membership
-    premium_memberships_button = @browser.link(text: 'Premium Memberships')
-    premium_memberships_button.click if premium_memberships_button.exists?
+    premium_membership = @browser.link(text: 'Premium Memberships')
+    premium_membership.click if premium_membership.present?
     sleep 1
   end
 
   def self.open_payment_plan
-    payment_plan = @browser.link(text: 'Choose Payment Plan')
-    payment_plan.click; sleep 0.5
-    payment_plan.scroll.to :center
-    sleep 1
+    @browser.element('data-test-id': 'toggle-payment-plans').click
+    sleep 5
   end
 
   def self.reveal_18_mo_plan
-    # apparently there are 2 elements with text '12 Easy Payments' in the html :)
-    # the 1st one is invisble/hidden, the 2nd one is what we see and want to click on
-    @browser.elements(text: '12 Easy Payments')[1].click
+    @browser.element(text: '12 easy payments').click
     sleep 1
   end
 end

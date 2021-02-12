@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# encoding: utf-8
 require_relative '../test_helper'
 
 # TS-436: MS Regression
@@ -16,6 +15,8 @@ class EnrollSixMonthMVPSeniorTest < Common
     recruit_email = post_body[:recruit][:athlete_email]
     @sport_id = post_body[:recruit][:sport_id]
 
+    MSAdmin.setup(@browser)
+
     UIActions.user_login(recruit_email)
     MSTestTemplate.setup(@browser, recruit_email, @package)
   end
@@ -28,12 +29,17 @@ class EnrollSixMonthMVPSeniorTest < Common
     @sport_id == '17706'
   end
 
-  def select_six_month_mvp
-    @browser.element('data-offering-id': '4', 'data-payment-plan-id': '2').click
+  def select_six_month_payment
+    @browser.element('data-payment-plan': 'MVP:6').click
+    sleep 2
   end
 
   def check_membership_cost
-    @membership_cost = @browser.elements(class: 'pricing-information-row__text__digits--small-digits')[2].text.to_i
+    @membership_cost = @browser.elements('data-test-id': 'payment-plan-cell__total-payment')[4].text.to_i
+  end
+
+  def accept_agreement
+    @browser.element(text: 'I Accept').click
   end
 
   def define_payments
@@ -45,16 +51,12 @@ class EnrollSixMonthMVPSeniorTest < Common
     [@expect_first_pymt, @expect_remain_balance]
   end
 
-  def accept_agreement
-    @browser.element(text: 'I Accept').click
-  end
-
   def goto_membership_info
-    @browser.goto(@clientrms['base_url'] + @clientrms['membership_info'])
+    @browser.goto(@clientrms['base_url']+ @clientrms['membership_info'])
   end
 
   def goto_payments
-    @browser.goto(@clientrms['base_url'] + @clientrms['payments_page'])
+    @browser.goto(@clientrms['base_url']+ @clientrms['payments_page'])
   end
 
   def check_membership_features
@@ -64,12 +66,11 @@ class EnrollSixMonthMVPSeniorTest < Common
     expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
 
     assert_equal expected_list.sort, ui_list.sort, 'Membership features NOT matching what is expected'
-   end
+  end
 
   def check_displayed_payment_info
     actual_first_pymt, actual_remain_balance, actual_package = MSTestTemplate.get_ui_payments
     expect_first_pymt, expect_remain_balance = get_expectations
-
     # compare
     assert_equal expect_first_pymt, actual_first_pymt, 'Incorrect first payment shown'
     assert_equal expect_remain_balance, actual_remain_balance, 'Incorrect remaining balance shown'
@@ -86,9 +87,12 @@ class EnrollSixMonthMVPSeniorTest < Common
   def test_enroll_six_month_mvp_senior
     MSSetup.set_password
     MSSetup.goto_offerings
+
+    sleep 2
+    MSSetup.goto_offerings
     MSSetup.open_payment_plan
 
-    select_six_month_mvp
+    select_six_month_payment
     check_membership_cost
     define_payments
     get_expectations

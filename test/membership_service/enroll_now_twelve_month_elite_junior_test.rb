@@ -12,9 +12,9 @@ class EnrollNowTwelveMonthEliteJuniorTest < Common
     @package = 'elite'
     @clientrms = Default.env_config['clientrms']
 
-    post, post_body = RecruitAPI.new(enroll_yr).ppost
+    _post, post_body = RecruitAPI.new(enroll_yr).ppost
     recruit_email = post_body[:recruit][:athlete_email]
-    @posclient_id = post['client_id']
+    @posclient_id = _post['client_id']
     MSAdmin.setup(@browser)
 
     UIActions.user_login(recruit_email)
@@ -25,22 +25,27 @@ class EnrollNowTwelveMonthEliteJuniorTest < Common
     super
   end
 
+  def select_twelve_month_payment
+    @browser.element('data-test-id': 'plan-month-button-12').click
+    sleep 2
+  end
+
   def check_membership_cost
-    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[4].text
-    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
-   end
+    @membership_cost = @browser.element('data-test-id': 'package-card-total-Elite').text
+    return @membership_cost.gsub!(/[^0-9]/, '').to_i unless @membership_cost.nil?
+  end
 
   def define_payments
-    @expect_first_pymt = (@membership_cost / 12)
-    @expect_remain_balance = @membership_cost - @expect_first_pymt
+    @expect_first_pymt = (@membership_cost.to_i / 12)
+    @expect_remain_balance = @membership_cost.to_i - @expect_first_pymt
   end
 
   def get_expectations
     [@expect_first_pymt, @expect_remain_balance]
   end
 
-  def select_12mo_elite
-    @browser.element('data-offering-id': '3', 'data-payment-plan-id': '3').click
+  def select_elite
+    @browser.element('data-test-id': 'package-card-select-Elite').click
   end
 
   def accept_agreement
@@ -84,13 +89,15 @@ class EnrollNowTwelveMonthEliteJuniorTest < Common
     MSSetup.goto_offerings
 
     MSAdmin.update_point_of_sale_event(@posclient_id)
-    sleep 1
+    sleep 2
     MSSetup.goto_offerings
 
+    select_twelve_month_payment
     check_membership_cost
     define_payments
     get_expectations
-    select_12mo_elite
+    select_elite
+    sleep 3
     accept_agreement
 
     MSFinish.setup_billing_enroll_now

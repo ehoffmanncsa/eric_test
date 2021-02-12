@@ -25,26 +25,31 @@ class EnrollNowEighteenMonthMvpSophomoreTest < Common
     super
   end
 
+  def select_eighteen_month_payment
+    @browser.element('data-test-id': 'plan-month-button-18').click
+    sleep 2
+  end
+
   def check_membership_cost
-    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[2].text
-    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
-   end
+    @membership_cost = @browser.element('data-test-id': 'package-card-total-MVP').text
+    if @membership_cost.nil?
+       @membership_cost = 0
+    else
+      @membership_cost.gsub!(/[^0-9]/, '').to_i
+    end
+  end
 
   def define_payments
-    @expect_first_pymt = (@membership_cost / 18)
-    @expect_remain_balance = @membership_cost - @expect_first_pymt
+    @expect_first_pymt = (@membership_cost.to_i / 18)
+    @expect_remain_balance = @membership_cost.to_i - @expect_first_pymt
   end
 
   def get_expectations
     [@expect_first_pymt, @expect_remain_balance]
   end
 
-  def select_18_payments
-    @browser.element(id: '18').click
-  end
-
-  def select_champion
-    @browser.element('data-offering-id': '4', 'data-payment-plan-id': '4').click
+  def select_mvp
+    @browser.element('data-test-id': 'package-card-select-MVP').click
   end
 
   def accept_agreement
@@ -90,12 +95,14 @@ class EnrollNowEighteenMonthMvpSophomoreTest < Common
     MSAdmin.update_point_of_sale_event(@posclient_id)
     sleep 1
     MSSetup.goto_offerings
-
-    select_18_payments
+  
+    sleep 3
+    select_eighteen_month_payment
     check_membership_cost
     define_payments
     get_expectations
-    select_champion
+    select_mvp
+    sleep 2
     accept_agreement
 
     MSFinish.setup_billing_enroll_now

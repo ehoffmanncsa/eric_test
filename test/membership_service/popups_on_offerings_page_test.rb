@@ -15,20 +15,27 @@ class PopupsOfferingsPage < Common
     MSSetup.setup(@browser)
 
     @covid19_popup = 'How to Approach Recruiting During Covid-19'
-    @digital_recruiting_resources = 'Every membership includes:'
+    @digital_recruiting_resources = 'Every Membership Includes'
     @test_prep = 'Improve your score - Increase ACT by an average of 3 points and SAT by 120 points.'
+    @sample_report = 'https://qa.ncsasports.org/clientrms/membership/packs/media/src/images/sample-scouting-report-1cd2e0908eb126ed263e62f7fa006d35.jpg'
+    @baseball_factory = 'https://qa.ncsasports.org/clientrms/membership/packs/media/src/images/baseball_factory_college_prep-d39750253bd3d8c69d35509f6e3868ad.png'
   end
 
   def teardown
     super
   end
 
+  def open_payment_plan
+    @browser.element('data-test-id': 'toggle-payment-plans').click
+    sleep 1
+  end
+
   def select_digital_recruiting_resources
-    @browser.element(class: 'er-drawer-js').click; sleep 1
+    @browser.element('data-icon': 'chevron-down').click; sleep 1
   end
 
   def open_covid19_video
-    @browser.element(text: 'COVID-19: Bonus Skills Video Package').click; sleep 1
+    @browser.element('data-test-id': 'covid-description').click; sleep 1
   end
 
   def open_custom_evaluation_session
@@ -36,11 +43,15 @@ class PopupsOfferingsPage < Common
   end
 
   def open_test_prep
-    @browser.element('data-slug': 'package/method-test-prep').click; sleep 1
+    @browser.element('data-test-id': 'sat-act-test-prep-description').click; sleep 1
+  end
+
+  def open_baseball_factory
+    @browser.element('data-test-id': 'baseball-factory-description').click; sleep 1
   end
 
   def close_pop_up
-    @browser.element(class: 'mfp-close').click; sleep 2
+    @browser.element('data-test-id': 'close-modal-button').click; sleep 2
   end
 
   def verify_digital_recruiting_resources_popup
@@ -59,7 +70,7 @@ class PopupsOfferingsPage < Common
 
   def verify_custom_evaluation_session_popup
     failure = []
-    failure << 'Sample Report not displaying' unless @browser.html.include? 'Sample Scouting Report'
+    failure << 'Sample Report not displaying' unless @browser.html.include? @sample_report
     assert_empty failure
   end
 
@@ -69,9 +80,17 @@ class PopupsOfferingsPage < Common
     assert_empty failure
   end
 
+  def verify_baseball_factory_popup
+    failure = []
+    failure << 'Baseball Factory pop-up not displaying' unless @browser.html.include? @baseball_factory
+    assert_empty failure
+  end
+
   def test_popups_on_offerings_page
     MSSetup.goto_offerings
+    sleep 2
     MSSetup.switch_to_premium_membership
+    open_payment_plan
     select_digital_recruiting_resources
     verify_digital_recruiting_resources_popup
     select_digital_recruiting_resources # closes pop-up
@@ -83,6 +102,9 @@ class PopupsOfferingsPage < Common
     close_pop_up
     open_test_prep
     verify_test_prep_popup
+    close_pop_up
+    open_baseball_factory
+    verify_baseball_factory_popup
     close_pop_up
   end
 end

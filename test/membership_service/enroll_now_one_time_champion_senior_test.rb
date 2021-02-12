@@ -19,6 +19,7 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     MSAdmin.setup(@browser)
 
     UIActions.user_login(recruit_email)
+    sleep 20
     MSTestTemplate.setup(@browser, recruit_email, @package)
   end
 
@@ -26,17 +27,19 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     super
   end
 
-  def select_one_time_payment
-    @browser.element(id: '1').click
+  def check_membership_cost
+    @membership_cost = @browser.element('data-test-id': 'package-card-total-Champion').text
+    return @membership_cost.gsub!(/[^0-9]/, '').to_i unless @membership_cost.nil?
   end
 
-  def check_membership_cost
-    total = @browser.elements(class: ['enroll-now-card__price', 'enroll-now-card__price--total'])[3].text
-    @membership_cost = total.gsub!(/[^0-9|\.]/, '').to_i
+  def select_one_month_payment
+    @browser.element('data-test-id': 'plan-month-button-1').click
+    sleep 2
   end
 
   def select_champion
-    @browser.element('data-offering-id': '9', 'data-payment-plan-id': '1').click
+    @browser.element('data-test-id': 'package-card-select-Champion').click
+    sleep 2
   end
 
   def accept_agreement
@@ -75,10 +78,10 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     MSSetup.goto_offerings
 
     MSAdmin.update_point_of_sale_event(@posclient_id)
-    sleep 1
+    sleep 2
     MSSetup.goto_offerings
 
-    select_one_time_payment
+    select_one_month_payment
     check_membership_cost
     select_champion
     accept_agreement
