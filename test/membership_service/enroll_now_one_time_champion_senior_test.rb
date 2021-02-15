@@ -76,7 +76,7 @@ class EnrollNowOneTimeChampionSeniorTest < Common
   def test_enroll_now_one_time_champion_senior
     MSSetup.set_password
     MSSetup.goto_offerings
-
+    sleep 2
     MSAdmin.update_point_of_sale_event(@posclient_id)
     sleep 2
     MSSetup.goto_offerings

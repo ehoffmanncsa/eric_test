@@ -92,7 +92,7 @@ class EnrollNowSixMonthChampionFreshmanTest < Common
   def test_enroll_now_six_month_champion_freshman
     MSSetup.set_password
     MSSetup.goto_offerings
-
+    sleep 2
     MSAdmin.update_point_of_sale_event(@posclient_id)
     sleep 2
     MSSetup.goto_offerings

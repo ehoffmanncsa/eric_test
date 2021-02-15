@@ -91,11 +91,11 @@ class EnrollNowEighteenMonthMvpSophomoreTest < Common
   def test_enroll_now_eighteen_month_mvp_sophomore
     MSSetup.set_password
     MSSetup.goto_offerings
-
+    sleep 2
     MSAdmin.update_point_of_sale_event(@posclient_id)
-    sleep 1
+    sleep 2
     MSSetup.goto_offerings
-  
+
     sleep 3
     select_eighteen_month_payment
     check_membership_cost
