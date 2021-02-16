@@ -73,7 +73,7 @@ module MSSetup
       make_commitment
     end
 
-    sleep 1
+    Watir::Wait.until { @browser.element('data-test-id': 'cart-button').present? }
   end
 
   def self.switch_to_premium_membership
