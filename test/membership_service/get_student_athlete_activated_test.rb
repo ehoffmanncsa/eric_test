@@ -35,21 +35,21 @@ class GetStundentAthleteActivatedTest < Common
   def find_the_new_client
     UIActions.fasttrack_login
 
-    header = @browser.div(:id, 'header')
-    update = header.elements(:tag_name, 'li').detect { |e| e.text == 'Update' }
+    header = @browser.div(id: 'header')
+    update = header.elements(tag_name: 'li').detect { |e| e.text == 'Update' }
 
     update.hover; sleep 1
-    header.link(:id, 'updateClient').click; sleep 1
+    header.link(id: 'updateClient').click; sleep 1
 
-    @browser.text_field(:name, 'emailAddress').set @recruit_email
-    @browser.checkbox(:name, 'freePartnerMembership').set
+    @browser.text_field(name: 'emailAddress').set @recruit_email
+    @browser.checkbox(name: 'freePartnerMembership').set
 
-    @browser.button(:text, 'Search').click; sleep 1
+    @browser.button(text: 'Search').click; sleep 1
   end
 
   def check_for_activation
-    wrapper = @browser.element(:class, 'dataTables_wrapper')
-    table = wrapper.table(:class, 'breakdowndatatable')
+    wrapper = @browser.element(class: 'dataTables_wrapper')
+    table = wrapper.table(class: 'breakdowndatatable')
 
     #         table[row][collumn]
     program = table[1][8].text
