@@ -27,6 +27,7 @@ gem 'xml-simple'
 gem 'ffaker'
 gem 'redis'
 gem 'pass_client'
+gem 'dotenv'
 
 gem 'pry-coolline'
 gem 'pry-byebug'
