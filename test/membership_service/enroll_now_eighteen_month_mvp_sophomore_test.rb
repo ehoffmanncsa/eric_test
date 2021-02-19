@@ -25,6 +25,10 @@ class EnrollNowEighteenMonthMvpSophomoreTest < Common
     super
   end
 
+  def is_baseball
+    @sport_id == '17706'
+  end
+
   def select_eighteen_month_payment
     @browser.element('data-test-id': 'plan-month-button-18').click
     sleep 2
@@ -66,10 +70,12 @@ class EnrollNowEighteenMonthMvpSophomoreTest < Common
 
   def check_membership_features
     ui_list = MSTestTemplate.get_UI_features_list
-    expected_list = Default.static_info['membership_service']['mvp_features']
+
+    membership_service = Default.static_info['membership_service']
+    expected_list = is_baseball ? membership_service['mvp_baseball_features'] : membership_service['mvp_features']
 
     assert_equal expected_list.sort, ui_list.sort, 'Membership features NOT matching what is expected'
-  end
+  ends
 
   def check_displayed_payment_info
     actual_first_pymt, actual_remain_balance, actual_package = MSTestTemplate.get_ui_payments

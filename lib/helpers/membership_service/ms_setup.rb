@@ -73,7 +73,7 @@ module MSSetup
       make_commitment
     end
 
-    Watir::Wait.until { @browser.element('data-test-id': 'cart-button').present? }
+    Watir::Wait.until { @browser.element(id: 'start-cobrowse-random-key').present? }
   end
 
   def self.switch_to_premium_membership
