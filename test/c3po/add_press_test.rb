@@ -57,7 +57,7 @@ class AddPressTest < Common
   end
 
   def test_add_press
-    email = 'test4b93@yopmail.com'
+    email = 'test431f@yopmail.com'
     UIActions.user_login_2(email)
     sleep 5
     UIActions.goto_edit_profile
