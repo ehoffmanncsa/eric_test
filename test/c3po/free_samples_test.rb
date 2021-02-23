@@ -23,7 +23,7 @@ class FreeSampleTest < Common
 
   def verify_sample_report_car
     failure = []
-    failure << 'Coach Activity Report sample is not displaying' unless @browser.html.include? 'Dartmouth College'
+    failure << 'Coach Activity Report sample is not displaying' unless @browser.html.include? 'Sample report'
     assert_empty failure
   end
 
