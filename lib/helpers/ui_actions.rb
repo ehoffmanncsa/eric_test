@@ -117,6 +117,27 @@ module UIActions
     @browser.element(text: 'Log Out').click
   end
 
+  def self.salesforce_login(username = nil, password = nil)
+    # your local ip address must be added to sf  98.227.110.16
+    @browser.goto @config['salesforce']['login_page']
+
+    username = username.nil? ? @config['salesforce']['username'] : username
+    password = password.nil? ? @config['salesforce']['password'] : password
+
+    @browser.text_field(id: 'username').set username
+    @browser.text_field(id: 'password').set password
+
+    @browser.button(name: 'Login').click
+
+    #waiting for the right title
+    begin
+      sleep 2
+      Watir::Wait.until { @browser.title.match(/Home | Salesforce/) }
+    rescue => e
+      puts e; @browser.close
+    end
+  end
+
   def self.close_supercharge
     supercharge_button = @browser.element('data-icon': 'times')
     supercharge_button.click if supercharge_button.exists?

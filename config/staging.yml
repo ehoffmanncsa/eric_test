@@ -95,3 +95,9 @@ redis:
 # AWS
 aws:
   base_uri: 'http://data-staging.ncsasports.org'
+
+# Salesforce FullSB
+salesforce:
+  login_page: 'https://ncsa--fullsb.my.salesforce.com/'
+  username: 'developers@ncsasports.org.fullsb'
+  password: 'rZVMzVVoWPZEDNfzZCkttFn2'
