@@ -48,7 +48,7 @@ module MSProcess
 
   def self.apply_discount_offerings(code, rate)
     @browser.element(name: 'discountCode').send_keys code
-    @browser.element('data-test-id': 'apply-discount-code-button').click; sleep 2
+    @browser.element('data-test-id': 'apply-discount-code-button').click; sleep 5
     Watir::Wait.until { discount_message.present? }
 
     check_discount_message(code, rate)
