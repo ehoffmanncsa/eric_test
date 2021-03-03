@@ -44,6 +44,7 @@ module MSAdmin
   end
 
   def self.update_point_of_sale_event(posclient_id)
+    # not used anymore, this puts user in react experiment 
     query =  "UPDATE point_of_sale_events
               SET updated_at = current_timestamp - INTERVAL '3' HOUR  ,
               created_at = current_timestamp - INTERVAL '3' HOUR
