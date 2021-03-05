@@ -58,7 +58,7 @@ class GetStundentAthleteActivatedTest < Common
 
   def test_get_student_athlete_activated
     get_activated
-    sign_out
+    #sign_out
     find_the_new_client
     check_for_activation
   end
