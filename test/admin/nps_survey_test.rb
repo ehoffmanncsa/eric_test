@@ -12,7 +12,7 @@ class NPSSurveyTest < Common
     ScoutReport.setup(@browser)
     MSAdmin.setup(@browser)
     C3PO.setup(@browser)
-    @client_id = 5_800_068
+    @client_id = 5800068
     @comments = MakeRandom.lorem
   end
 
