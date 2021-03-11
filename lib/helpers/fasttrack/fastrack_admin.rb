@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 # This module helps with common behaviors
 # Performed by an NCSA Admin around fasttrack
@@ -20,29 +20,29 @@ module Fasttrack
     @sql = SQLConnection.new('fasttrack')
     begin
       @sql.get_connection
-      @sql.exec "delete from scouting_reports where client_id = 5795323"
-      @sql.exec "delete from scouting_report_key_skills where scouting_report_id not in (select id from scouting_reports)"
-      @sql.exec "delete from scouting_report_marketing_plans where scouting_report_id not in (select id from scouting_reports)"
-      @sql.exec "delete from scouting_report_communication_quarters where scouting_report_id not in (select id from scouting_reports)"
-      @sql.exec "delete from scouting_report_communications where scouting_report_communication_quarter_id not in (select id from scouting_report_communication_quarters)"
-      @sql.exec "delete from scouting_report_intro_email_notes where scouting_report_id not in (select id from scouting_reports)"
-      @sql.exec "delete from scouting_report_video_clips where scouting_report_id not in (select id from scouting_reports)"
-      @sql.exec "delete from scouting_report_target_schools where scouting_report_id not in (select id from scouting_reports)"
+      @sql.exec 'delete from scouting_reports where client_id = 5795323'
+      @sql.exec 'delete from scouting_report_key_skills where scouting_report_id not in (select id from scouting_reports)'
+      @sql.exec 'delete from scouting_report_marketing_plans where scouting_report_id not in (select id from scouting_reports)'
+      @sql.exec 'delete from scouting_report_communication_quarters where scouting_report_id not in (select id from scouting_reports)'
+      @sql.exec 'delete from scouting_report_communications where scouting_report_communication_quarter_id not in (select id from scouting_report_communication_quarters)'
+      @sql.exec 'delete from scouting_report_intro_email_notes where scouting_report_id not in (select id from scouting_reports)'
+      @sql.exec 'delete from scouting_report_video_clips where scouting_report_id not in (select id from scouting_reports)'
+      @sql.exec 'delete from scouting_report_target_schools where scouting_report_id not in (select id from scouting_reports)'
     rescue StandardError => e
       raise 'Could not connect to fasttrack or delete existing scouting report records'
     end
   end
 
   def self.retrieve_current_scouting_report_id
+    ids = []
     begin
       query = "select id from dbo.scouting_reports
              where client_id = 5795323"
-
+      ids = retrieve_scouting_report_id(query)
     rescue StandardError => e
       raise 'Could not connect to fasttrack or fetch scouting report id'
     end
-  ids = retrieve_scouting_report_id(query)
-  ids.first["id"]
+    ids.first['id']
   end
 
   def self.retrieve_target_school_ids_for(scouting_report_id)
@@ -53,7 +53,7 @@ module Fasttrack
       raise 'Could not connect to fasttrack or fetch scouting report target school ids'
     end
     ids = retrieve_scouting_report_id(query)
-    ids.map{|row| row["id"]}
+    ids.map { |row| row['id'] }
   end
 
   def self.retrieve_marketing_plans_ids_for(scouting_report_id)
@@ -64,14 +64,38 @@ module Fasttrack
       raise 'Could not connect to fasttrack or fetch scouting report marketing plan ids'
     end
     ids = retrieve_scouting_report_id(query)
-    ids.map{|row| row["id"]}
+    ids.map { |row| row['id'] }
   end
 
   def self.retrieve_scouting_report_id(query)
     data = @sql.exec query
     id = []
     data.each do |row|
-    id << row['id']
+      id << row['id']
+    end
+  end
+
+  def self.delete_nps_tracking_note
+    @sql = SQLConnection.new('fasttrack')
+    begin
+      @sql.get_connection
+      @sql.exec "delete from dbo.client_tracking
+                 where entry_user = 5800068
+                 and tracking_type = 'NPS Report Submission'"
+    rescue StandardError => e
+      raise 'Could not connect to fasttrack or delete existing NPS tracking note'
+    end
+  end
+
+  def self.soft_delete_nps_survey
+    @sql = SQLConnection.new('fasttrack')
+    begin
+      @sql.get_connection
+      @sql.exec "update dbo.client_survey_mapping
+                 set deleted = 1
+                 where client_id = 5800068"
+    rescue StandardError => e
+      raise 'Could not connect to fasttrack or soft delete existing NPS survey'
     end
   end
 end

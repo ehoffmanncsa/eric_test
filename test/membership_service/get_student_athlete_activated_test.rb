@@ -3,7 +3,7 @@ require_relative '../test_helper'
 
 # TS-434: MS Regression
 # UI Test: How student-athlete becomes Activation
-class GetStundentAthleteActivatedTest < Common
+class GetStudentAthleteActivatedTest < Common
   def setup
     super
 
