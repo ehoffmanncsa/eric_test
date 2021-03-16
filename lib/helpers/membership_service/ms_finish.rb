@@ -16,7 +16,6 @@ module MSFinish
   end
 
   def self.fill_out_registration_form
-    # guardian email
     @guardian_email1 = "test#{SecureRandom.hex(2)}@yopmail.com"
     @browser.text_field(id: 'order_guardian_email').set @guardian_email1
 

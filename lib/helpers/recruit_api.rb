@@ -20,6 +20,8 @@ class RecruitAPI
         athlete_last_name: last_name,
         athlete_phone: athlete_phone,
         graduation_year: grad_yr,
+        parent_first: MakeRandom.first_name,
+        parent_last: last_name,
         state_code: MakeRandom.state,
         zip: MakeRandom.zip_code,
         sport_id: @sport_id.to_s,

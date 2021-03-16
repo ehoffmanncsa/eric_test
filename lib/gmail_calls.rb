@@ -50,7 +50,29 @@ class GmailCalls
   end
 
   def delete(emails)
-    emails.each { |e| e.read!; e.delete! }
+    emails.each { |e| e.read!; e.unread!; e.delete! }
+  end
+
+  def remove_unread_emails
+    mails = []
+
+    # get unread mails from specific mail box and subject if any
+    # clears inbox from other membership scripts
+    subject ? (pp "[INFO] Deleting emails #{subject}") : (pp "[INFO] Deleting emails in #{mail_box}")
+
+    seconds = 2
+    begin
+      Timeout::timeout(seconds) {
+        loop do
+          mails = @conn.mailbox(mail_box).emails(:unread, :subject => subject)
+          break unless mails.empty?
+        end
+      }
+    rescue; end
+
+    mails.empty? ? (pp '[ALERT] No email found...') : (pp '[INFO] Email found!')
+
+    mails
   end
 
   def send_email(to: nil, from: nil, subject:nil, content:nil)
