@@ -17,8 +17,8 @@ class PopupsOfferingsPage < Common
     @covid19_popup = 'How to Approach Recruiting During Covid-19'
     @digital_recruiting_resources = 'Every Membership Includes'
     @test_prep = 'Improve your score - Increase ACT by an average of 3 points and SAT by 120 points.'
-    @sample_report = 'https://qa.ncsasports.org/clientrms/membership/packs/media/src/images/sample-scouting-report-1cd2e0908eb126ed263e62f7fa006d35.jpg'
-    @baseball_factory = 'https://qa.ncsasports.org/clientrms/membership/packs/media/src/images/baseball_factory_college_prep-d39750253bd3d8c69d35509f6e3868ad.png'
+    @sample_report = '/clientrms/membership/packs/media/src/images/sample-scouting-report-1cd2e0908eb126ed263e62f7fa006d35.jpg'
+    @baseball_factory = '/clientrms/membership/packs/media/src/images/baseball_factory_college_prep-d39750253bd3d8c69d35509f6e3868ad.png'
   end
 
   def teardown
@@ -90,10 +90,10 @@ class PopupsOfferingsPage < Common
     MSSetup.goto_offerings
     sleep 2
     MSSetup.switch_to_premium_membership
-    open_payment_plan
     select_digital_recruiting_resources
     verify_digital_recruiting_resources_popup
     select_digital_recruiting_resources # closes pop-up
+    open_payment_plan
     open_covid19_video
     verify_covid19_popup
     close_pop_up
