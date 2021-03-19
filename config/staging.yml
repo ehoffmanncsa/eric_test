@@ -2,6 +2,7 @@
 clientrms:
   base_url: 'https://qa.ncsasports.org/clientrms/'
   login_page: 'user_accounts/sign_in'
+  logout_page: 'user_accounts/sign_out'
   offerings_page: 'membership/offerings'
   commitment_page: 'membership/commitment'
   payments_page: 'finances'
