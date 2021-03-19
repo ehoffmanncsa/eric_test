@@ -48,7 +48,7 @@ class PurchaseChampionAndVIPItemsTests < Common
     vip_section_items = []
     vip_section.elements(:tag_name, 'li').each do |item|
       formatted_package_name = item.text.split(' ')[1..-1].join(' ')
-      formatted_package_name.delete_suffix!('s') if formatted_package_name == 'VIP Coachings'
+      formatted_package_name.delete_suffix!('s') if ['VIP Evaluations', 'VIP Coachings'].include? formatted_package_name
 
       vip_section_items << formatted_package_name
     end
