@@ -93,7 +93,6 @@ class PopupsOfferingsPage < Common
     select_digital_recruiting_resources
     verify_digital_recruiting_resources_popup
     select_digital_recruiting_resources # closes pop-up
-    open_payment_plan
     open_covid19_video
     verify_covid19_popup
     close_pop_up
@@ -106,5 +105,6 @@ class PopupsOfferingsPage < Common
     open_baseball_factory
     verify_baseball_factory_popup
     close_pop_up
+    open_payment_plan
   end
 end

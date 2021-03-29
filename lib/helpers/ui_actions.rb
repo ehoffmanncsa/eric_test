@@ -56,6 +56,12 @@ module UIActions
     privacy_modal_button.click if privacy_modal_button.exists?
   end
 
+  def self.clientrms_sign_out
+    clientrms = Default.env_config['clientrms']
+    @browser.goto(clientrms['base_url'] + clientrms['logout_page'])
+    Watir::Wait.until { @browser.element(id: 'user_account_login').present? }
+  end
+
   def self.ted_login(username = nil, password = nil)
     username = username.nil? ? @config['ted']['prem_username'] : username
     password = password.nil? ? @config['ted']['prem_password'] : password
