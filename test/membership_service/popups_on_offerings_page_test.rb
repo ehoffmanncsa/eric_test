@@ -39,7 +39,7 @@ class PopupsOfferingsPage < Common
   end
 
   def open_custom_evaluation_session
-    @browser.element(text: 'Custom Evaluation Session').click; sleep 1
+    @browser.element(text: 'Custom Evaluation Session').click; sleep 2
   end
 
   def open_test_prep
@@ -97,6 +97,7 @@ class PopupsOfferingsPage < Common
     verify_covid19_popup
     close_pop_up
     open_custom_evaluation_session
+    sleep 1
     verify_custom_evaluation_session_popup
     close_pop_up
     open_test_prep
