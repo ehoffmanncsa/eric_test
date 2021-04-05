@@ -91,19 +91,23 @@ class PopupsOfferingsPage < Common
     sleep 2
     MSSetup.switch_to_premium_membership
     select_digital_recruiting_resources
+    sleep 2
     verify_digital_recruiting_resources_popup
     select_digital_recruiting_resources # closes pop-up
     open_covid19_video
+    sleep 2
     verify_covid19_popup
     close_pop_up
     open_custom_evaluation_session
-    sleep 1
+    sleep 2
     verify_custom_evaluation_session_popup
     close_pop_up
     open_test_prep
+    sleep 2
     verify_test_prep_popup
     close_pop_up
     open_baseball_factory
+    sleep 2
     verify_baseball_factory_popup
     close_pop_up
     open_payment_plan
