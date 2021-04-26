@@ -60,7 +60,8 @@ class MessageCenter < Common
     puts email.from, email.to, email.message_id
     from = 'ncsa.automation@gmail.com'
     to = 'bud.wilkinson@test.recruitinginfo.org'
-    @gmail.send_email(to: to, from: from, in_reply_to: email.message_id, subject: "Re: #{email.subject}", content: 'Thank you')
+    #@gmail.send_email(to: to, from: from, in_reply_to:email.message_id, subject: "Re: #{email.subject}", content: 'Thank you')
+    @gmail.send_email(to: to, from: from, subject: "Re: #{email.subject}", content: 'Thank you')
   end
 
   def delete_received_email
