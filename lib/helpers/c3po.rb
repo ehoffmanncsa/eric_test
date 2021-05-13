@@ -124,7 +124,8 @@ module C3PO
     name_column.element(tag_name: 'a').click
 
     # impersonating opens new tab, hence switch focus onto that one
-    #@browser.window(index: 1).use
+    #@browser.windows.last.use
+    @browser.window(index: 1).use
     sleep 2
   end
 
