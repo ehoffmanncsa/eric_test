@@ -125,8 +125,8 @@ module C3PO
 
     # impersonating opens new tab, hence switch focus onto that one
     #@browser.windows.last.use
-    @browser.switch_window
-    #@browser.window(index: 1).use
+    #@browser.switch_window
+    @browser.window(index: 1).use
     sleep 2
   end
 

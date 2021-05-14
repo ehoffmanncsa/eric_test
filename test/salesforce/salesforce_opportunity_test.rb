@@ -41,7 +41,7 @@ class SalesforceOpportunityTest < Common
   end
 
   def open_opportunity(athlete_first_name, athlete_last_name)
-    @browser.element(text: "#{athlete_first_name} #{athlete_last_name}").click
+    @browser.element(title: "#{athlete_first_name} #{athlete_last_name}").click
     sleep 2
   end
 
