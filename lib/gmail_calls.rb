@@ -16,6 +16,13 @@ class GmailCalls
     @conn = Gmail.connect(username, password)
   end
 
+  def get_connection_2
+    # login to gmail using email address and app password (not regular password)
+    username = Default.static_info['gmail_2']['username']
+    password = Default.static_info['gmail_2']['app_pass']
+    @conn = Gmail.connect(username, password)
+  end
+
   def parse_body(email, keyword = nil)
     if keyword.nil?
       @msg = email.message.to_s

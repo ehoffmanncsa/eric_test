@@ -103,6 +103,13 @@ gmail:
   # For human access to this inbox see OnePassword shared vault Automation Gmail
   google_voice: '802-676-0642'
 
+# automation gmail
+gmail_2:
+  username: 'ncsa.massemails@gmail.com'
+  app_pass: 'fsncxeiiamhvmwwy'
+# For human access to this inbox see OnePassword shared vault Automation Gmail
+
+
 # Existing sports
 sport_ids: [17633, 17634, 17635, 17638, 17639, 17644, 17645,
             17652, 17653, 17659, 17660, 17665, 17666, 17683,
