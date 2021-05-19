@@ -1,8 +1,8 @@
 # encoding: utf-8
 require_relative '../test_helper'
 
-# This test will automate sending email with same subject to 20 or more people
-# and mapping their email_type in database, email type of mass emails = 1001
+# This test will automate sending email single camp email
+# and mapping their email_type in database, email type of camp email = 1002
 
 class SendCampEmail < Common
   def setup
