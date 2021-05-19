@@ -23,8 +23,9 @@ class UI
 
     port = ENV['PORT'].nil? ? 4444 : ENV['PORT'].split(':')[0]
 
-    opts = { timeout: 120, url: "http://kb-jenkins01:#{port}/wd/hub" }
-    self.driver = Watir::Browser.new :"#{browser}", opts
+    browser_opts = { timeout: 120, url: "http://kb-jenkins01:#{port}/wd/hub" }
+    self.driver = Watir::Browser.new :"#{browser}", options: browser_opts
+    #Watir::Browser.new :"#{browser}", opts
     self.driver.driver.file_detector = lambda do |args|
       # args => ["/path/to/file"]
       str = args.first.to_s
@@ -63,6 +64,7 @@ class UI
   end
 
   def local
-    self.driver = Watir::Browser.new :"#{browser}", {timeout: 120}
+    browser_opts = { timeout: 120 }
+    self.driver = Watir::Browser.new :"#{browser}", options: browser_opts
   end
 end
