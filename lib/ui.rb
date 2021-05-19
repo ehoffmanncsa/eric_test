@@ -64,7 +64,6 @@ class UI
   end
 
   def local
-    browser_opts = { timeout: 120 }
-    self.driver = Watir::Browser.new :"#{browser}", options: browser_opts
+    self.driver = Watir::Browser.new :"#{browser}", {timeout: 120}
   end
 end
