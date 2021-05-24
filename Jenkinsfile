@@ -48,7 +48,7 @@ node {
           -e PORT=${PORT} \
           -e PATH=/usr/bin:/bin:/usr/local/bin:/sbin \
           --env-file .${ENV_NAME}-docker.env \
-          --privileged testbox 'gem i bundler -v 2.0.2 && bundle _2.0.2_ && rake test ${APPLICATION}'"
+          --privileged testbox 'gem i bundler -v 2.0.2 && bundle _2.0.2_ && env && rake test ${APPLICATION}'"
     } catch(error) {
         println error
         currentBuild.result = 'FAILURE'
