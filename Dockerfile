@@ -2,7 +2,8 @@ FROM phusion/passenger-ruby25:0.9.35
 MAINTAINER Tiffany Rea <trea@ncsasports.org>
 
 RUN apt-get update \
-  && apt-get install -y parallel
+  && apt-get install -y parallel && \
+  apt-get install wget
 
 # Copy Freetds, install and cleanup
 COPY freetds-1.00.21.tar.gz freetds-1.00.21.tar.gz
@@ -14,6 +15,12 @@ RUN tar -xzf freetds-1.00.21.tar.gz && \
   cd ../ && \
   rm freetds-1.00.21.tar.gz && \
   rm -rf freetds-1.00.21
+
+# Install Firefox
+RUN wget https://ftp.mozilla.org/pub/firefox/releases/79.0/linux-x86_64/en-US/firefox-79.0.tar.bz2 && \
+  tar xvf firefox-79.0.tar.bz2 && \
+  mv firefox/ /usr/lib/firefox && \
+  ln -s /usr/lib/firefox /usr/bin/firefox
 
 # Copy repo code into tmp/qa_regression
 RUN mkdir /tmp/qa_regression
