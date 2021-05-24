@@ -46,7 +46,6 @@ node {
           -v ${PWD}:/tmp/qa_regression \
           -e ENV_NAME=${ENV_NAME} \
           -e PORT=${PORT} \
-          -e PATH=/usr/bin:/bin:/usr/local/bin:/sbin \
           --env-file .${ENV_NAME}-docker.env \
           --privileged testbox 'gem i bundler -v 2.0.2 && bundle _2.0.2_ && env && rake test ${APPLICATION}'"
     } catch(error) {
