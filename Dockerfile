@@ -16,12 +16,6 @@ RUN tar -xzf freetds-1.00.21.tar.gz && \
   rm freetds-1.00.21.tar.gz && \
   rm -rf freetds-1.00.21
 
-# Install Firefox
-RUN wget https://ftp.mozilla.org/pub/firefox/releases/79.0/linux-x86_64/en-US/firefox-79.0.tar.bz2 && \
-  tar xvf firefox-79.0.tar.bz2 && \
-  mv firefox/ /usr/lib/firefox && \
-  ln -s /usr/lib/firefox /usr/bin/firefox
-
 # Copy repo code into tmp/qa_regression
 RUN mkdir /tmp/qa_regression
 WORKDIR /tmp/qa_regression
