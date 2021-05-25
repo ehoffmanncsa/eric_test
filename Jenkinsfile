@@ -21,10 +21,10 @@ node {
       print err
     }
 
-    sh 'docker pull elgalu/selenium';
     sh 'docker pull dosel/zalenium';
 
     sh "docker run --restart=unless-stopped \
+        -e PULL_SELENIUM_IMAGE=true \
         -d -it --name ${SEL_GRID} -p ${PORT} \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v ${PWD}:/tmp/node/tmp/qa_regression \

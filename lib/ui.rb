@@ -24,6 +24,7 @@ class UI
     port = ENV['PORT'].nil? ? 4444 : ENV['PORT'].split(':')[0]
 
     opts = { timeout: 120, url: "http://kb-jenkins01:#{port}/wd/hub" }
+    # opts = { timeout: 120, url: "http://aws-jenkins:#{port}/wd/hub" }
     self.driver = Watir::Browser.new browser.to_sym, options: opts
     self.driver.driver.file_detector = lambda do |args|
       # args => ["/path/to/file"]
