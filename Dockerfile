@@ -2,8 +2,7 @@ FROM phusion/passenger-ruby25:0.9.35
 MAINTAINER Tiffany Rea <trea@ncsasports.org>
 
 RUN apt-get update \
-  && apt-get install -y parallel && \
-  apt-get install wget
+  && apt-get install -y parallel
 
 # Copy Freetds, install and cleanup
 COPY freetds-1.00.21.tar.gz freetds-1.00.21.tar.gz
