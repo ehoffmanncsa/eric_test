@@ -46,6 +46,13 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     @browser.element(text: 'I Accept').click
   end
 
+  def check_redirected_to_welcome_workshop
+    # this check is only for premium enrollment - PREM-4933
+    current_url = @browser.url
+    failure_msg = "User is not redirected to Welcome Workshop- current url is #{current_url}"
+    assert_includes current_url, 'education/search_classes?title=welcome+workshop', failure_msg
+  end
+
   def goto_membership_info
     @browser.goto(@clientrms['base_url'] + @clientrms['membership_info'])
   end
@@ -87,6 +94,8 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     accept_agreement
 
     MSFinish.setup_billing_enroll_now
+
+    check_redirected_to_welcome_workshop
 
     goto_membership_info
     check_membership_features

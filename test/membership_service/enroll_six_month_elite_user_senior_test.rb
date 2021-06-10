@@ -71,11 +71,11 @@ class EnrollSixMonthEliteSeniorTest < Common
     assert_equal @package, actual_package, 'Incorrect premium package shown'
   end
 
-  def check_redirected_to_coachsession
-    # this check is only for premium enrollment - SALES-1427
+  def check_redirected_to_welcome_workshop
+    # this check is only for premium enrollment - PREM-4933
     current_url = @browser.url
-    failure_msg = "User is not redirected to coaching session - current url is #{current_url}"
-    assert_includes current_url, 'coaching_session_requests/new', failure_msg
+    failure_msg = "User is not redirected to Welcome Workshop- current url is #{current_url}"
+    assert_includes current_url, 'education/search_classes?title=welcome+workshop', failure_msg
   end
 
   def test_six_month_enroll_elite_senior
@@ -94,7 +94,7 @@ class EnrollSixMonthEliteSeniorTest < Common
 
     MSFinish.setup_billing_enroll_now
 
-    check_redirected_to_coachsession
+    check_redirected_to_welcome_workshop
 
     goto_membership_info
     check_membership_features

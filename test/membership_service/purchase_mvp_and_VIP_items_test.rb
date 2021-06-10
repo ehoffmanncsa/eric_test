@@ -23,11 +23,11 @@ class PurchaseMVPAndVIPItemsTests < Common
     @browser.goto(clientrms['base_url']+ clientrms['membership_info'])
   end
 
-  def check_redirected_to_coachsession
-    # this check is only for premium enrollment - SALES-1427
+  def check_redirected_to_welcome_workshop
+    # this check is only for premium enrollment - PREM-4933
     current_url = @browser.url
-    failure_msg = "User is not redirected to coaching session - current url is #{current_url}"
-    assert_includes current_url, 'coaching_session_requests/new', failure_msg
+    failure_msg = "User is not redirected to Welcome Workshop- current url is #{current_url}"
+    assert_includes current_url, 'education/search_classes?title=welcome+workshop', failure_msg
   end
 
   def check_membership_features
@@ -63,7 +63,7 @@ class PurchaseMVPAndVIPItemsTests < Common
   def test_purchase_mvp_and_VIP_items
     @vip_items_picked = MSConvenient.buy_combo(@recruit_email, 'mvp')
 
-    check_redirected_to_coachsession
+    check_redirected_to_welcome_workshop
 
     goto_membership_info
     check_membership_features
