@@ -2,10 +2,11 @@
 
 require_relative '../test_helper'
 
-# MS Regression
-# UI Test: Enroll Now as a Champion User - senior, one-time payment plan
-# on-time payment does not get a welcome call
-class EnrollNowOneTimeChampionSeniorTest < Common
+# Dashboard Regression
+# UI Test: Enroll as a Champion User - Senior, one-time payment, then sign up for a Welcome Workshop
+# Verify Welcome Workshop displays on dashboard after signing up
+
+class WelcomeWorkshopOneTimeTest < Common
   def setup
     super
 
@@ -25,11 +26,6 @@ class EnrollNowOneTimeChampionSeniorTest < Common
 
   def teardown
     super
-  end
-
-  def check_membership_cost
-    @membership_cost = @browser.element('data-test-id': 'package-card-total-Champion').text
-    return @membership_cost.gsub!(/[^0-9]/, '').to_i unless @membership_cost.nil?
   end
 
   def select_one_month_payment
@@ -53,34 +49,25 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     assert_includes current_url, 'education/search_classes?title=welcome+workshop', failure_msg
   end
 
-  def goto_membership_info
-    @browser.goto(@clientrms['base_url'] + @clientrms['membership_info'])
+  def signup_welcome_workshop
+    @browser.button(value: 'Sign Up').click
+    sleep 2
   end
 
-  def goto_payments
-    @browser.goto(@clientrms['base_url'] + @clientrms['payments_page'])
-  end
-
-  def check_membership_features
-    ui_list = MSTestTemplate.get_UI_features_list
-    expected_list = Default.static_info['membership_service']['champion_features']
-
-    assert_equal expected_list.sort, ui_list.sort, 'Membership features NOT matching what is expected'
-  end
-
-  def check_displayed_payment_info
+  def verify_signed_up
     failure = []
-    failure << 'One time price is not displaying' unless @browser.html.include? "#{@membership_cost}"
+    failure << 'Athlete is not signed up for Welcome Workshop' unless @browser.html.include? 'Signed Up'
     assert_empty failure
   end
 
-  def check_displayed_payment_paid_in_full
+  def verify_dashboard_welcome_workshop
     failure = []
-    failure << 'Paid in full not displaying' unless @browser.html.include? "Paid in full"
+    failure << 'Welcome Workshop header is not displayed' unless @browser.html.include? 'Your Next Recruiting Session'
+    failure << 'Welcome Workshop is not displayed' unless @browser.html.include? 'Welcome Workshop'
     assert_empty failure
   end
 
-  def test_enroll_now_one_time_champion_senior
+  def test_welcome_workshop_signup_one_time
     MSSetup.set_password
     MSSetup.goto_offerings
     sleep 2
@@ -89,19 +76,16 @@ class EnrollNowOneTimeChampionSeniorTest < Common
     MSSetup.goto_offerings
 
     select_one_month_payment
-    check_membership_cost
     select_champion
     accept_agreement
 
     MSFinish.setup_billing_enroll_now
 
     check_redirected_to_welcome_workshop
-
-    goto_membership_info
-    check_membership_features
-
-    goto_payments
-    check_displayed_payment_info
-    check_displayed_payment_paid_in_full
+    signup_welcome_workshop
+    verify_signed_up
+    UIActions.goto_dashboard
+    sleep 2
+    verify_dashboard_welcome_workshop
   end
 end
