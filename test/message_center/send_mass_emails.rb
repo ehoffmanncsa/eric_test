@@ -2,7 +2,8 @@
 require_relative '../test_helper'
 
 # This test will automate sending email with same subject to 20 or more people
-# and mapping their email_type in database, email type of mass emails = 1001
+# and mapping their email_type in database, email type of mass emails = 1000 as per the new update
+#https://ncsasports.atlassian.net/browse/PREM-4857
 
 class SendMassEmails < Common
   def setup
@@ -16,9 +17,9 @@ class SendMassEmails < Common
    end
 
     def send_mass_emails
-        emails_to_test = ['mikedanny.tester@test.recruitinginfo.org','tonyfresh.ncsa@test.recruitinginfo.org','ernest.beahan@test.recruitinginfo.org','versie.nader@test.recruitinginfo.org','marty.smith@test.recruitinginfo.org','evelin.king@test.recruitinginfo.org','kesin.louis@test.recruitinginfo.org','paulina.vega@test.recruitinginfo.org',
-        'sheryl.vega@test.recruitinginfo.org','sprint.regression2@test.recruitinginfo.org','hello.ncsa@test.recruitinginfo.org','alberto.neives@test.recruitinginfo.org','sprint.ncsa6@test.recruitinginfo.org','rujuta.diwekar@test.recruitinginfo.org','apriltesting.ncsa@test.recruitinginfo.org','david.peterson@test.recruitinginfo.org',
-        'delpha.grady@test.recruitinginfo.org','gretta.ruecker@test.recruitinginfo.org', 'rozanne.schultz@test.recruitinginfo.org','melynda.schneider@test.recruitinginfo.org','lisette.brakus@test.recruitinginfo.org']
+        emails_to_test = ['mikedanny.tester@test.recruitinginfo.org','versie.nader@test.recruitinginfo.org','marty.smith@test.recruitinginfo.org','evelin.king@test.recruitinginfo.org','kesin.louis@test.recruitinginfo.org','paulina.vega@test.recruitinginfo.org',
+        'sheryl.vega@test.recruitinginfo.org','sprint.regression2@test.recruitinginfo.org','hello.ncsa@test.recruitinginfo.org','alberto.neives@test.recruitinginfo.org','sprint.ncsa6@test.recruitinginfo.org','apriltesting.ncsa@test.recruitinginfo.org','david.peterson@test.recruitinginfo.org',
+        'delpha.grady@test.recruitinginfo.org','gretta.ruecker@test.recruitinginfo.org','melynda.schneider@test.recruitinginfo.org','lisette.brakus@test.recruitinginfo.org','akshil.wilkinson@test.recruitinginfo.org','dhruvin.johnson@test.recruitinginfo.org','<erica.vega@test.recruitinginfo.org>','joshua.johnson7@test.recruitinginfo.org','jones.hall@test.recruitinginfo.org']
         send_email_hash = {to: emails_to_test, from: 'hsaraiyancsa@gmail.com', subject: 'Automated_mass_emails', content: 'These are mass emails'}
         @gmail.get_connection_2
         @gmail.send_email(send_email_hash)
