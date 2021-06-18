@@ -21,7 +21,7 @@ class InviteCSVAthletesTest < Common
     TED.setup(@browser)
 
     # generate new data to athletes.csv
-    AtheteCSV.new.make_it
+    AthleteCSV.new.make_it
     @names, @emails = get_athlete_info
   end
 
@@ -81,7 +81,7 @@ class InviteCSVAthletesTest < Common
     end
   end
 
-  def test_invite_athetes_csv
+  def test_invite_athletes_csv
     UIActions.ted_login
     TED.go_to_athlete_tab
 
