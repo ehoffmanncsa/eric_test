@@ -8,7 +8,7 @@ class EnrollWith18MoPlanTest < Common
   def setup
     super
 
-    enroll_yr = %w[freshman sophomore junior].sample
+    enroll_yr = %w[freshman sophomore].sample
     @package = %w[elite mvp].sample # not applicable for champion
     @clientrms = Default.env_config['clientrms']
 
