@@ -48,7 +48,7 @@ class FreeSampleTest < Common
 
   def verify_sample_report_message_center
     failure = []
-    unless @browser.html.include? 'Hi Student, can you send me your 40yrd dash timing.'
+    unless @browser.html.include? 'Coach Ryan'
       failure << 'Message Center sample is not displaying'
     end
     assert_empty failure
